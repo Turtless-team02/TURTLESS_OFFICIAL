@@ -6,6 +6,7 @@
     <title>TURTLESS</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
+        /* 기존 CSS 디자인 전부 유지 */
         :root {
             --dan-red: #c1272d;
             --dan-red-dark: #a31f24;
@@ -15,306 +16,100 @@
             --border-color: #eaeaea;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; }
 
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            color: var(--text-main);
-            background-color: #ffffff;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* 헤더 */
         header {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
+            position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px); padding: 20px 5%; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000;
         }
+        .logo { font-size: 28px; font-weight: 900; color: var(--dan-red); letter-spacing: -1px; cursor: pointer; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.2s ease; }
+        .nav-links a:hover { color: var(--dan-red); }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--dan-red);
-            letter-spacing: -1px;
-            cursor: pointer;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            transition: color 0.2s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--dan-red);
-        }
-
-        /* 드롭다운 메뉴 스타일 */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
+        .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
-            display: none; 
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: white;
-            min-width: 140px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 12px;
-            padding: 10px 0;
-            z-index: 1000;
-            border: 1px solid var(--border-color);
-            margin-top: 15px; 
+            display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            background-color: white; min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px; padding: 10px 0; z-index: 1000; border: 1px solid var(--border-color); margin-top: 15px; 
         }
-
-        .dropdown-content.show {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .dropdown-content a {
-            padding: 10px 20px;
-            text-decoration: none;
-            display: block;
-            color: var(--text-main);
-            font-size: 15px;
-            font-weight: 500;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .dropdown-content a:hover {
-            background-color: var(--bg-gray);
-            color: var(--dan-red);
-        }
+        .dropdown-content.show { display: flex; flex-direction: column; }
+        .dropdown-content a { padding: 10px 20px; text-decoration: none; display: block; color: var(--text-main); font-size: 15px; font-weight: 500; text-align: center; transition: all 0.2s; }
+        .dropdown-content a:hover { background-color: var(--bg-gray); color: var(--dan-red); }
 
         .login-btn {
-            background-color: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--text-main);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-left: 10px;
+            background-color: transparent; color: var(--text-main); border: 1px solid var(--text-main);
+            padding: 8px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-left: 10px;
         }
+        .login-btn:hover { background-color: var(--text-main); color: white; }
 
-        .login-btn:hover {
-            background-color: var(--text-main);
-            color: white;
-        }
-
-        /* 풀와이드 히어로 섹션 */
         .hero {
-            width: 100%;
-            height: 60vh;
-            min-height: 400px;
-            background-color: var(--dan-red);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 0 20px;
+            width: 100%; height: 60vh; min-height: 400px; background-color: var(--dan-red);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px;
         }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
+        .hero p { font-size: 1.2rem; font-weight: 400; opacity: 0.9; }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-        }
+        .section { width: 100%; padding: 100px 5%; }
+        .section.gray { background-color: var(--bg-gray); }
+        .inner { max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; letter-spacing: -1px; }
+        .section-subtitle { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); border-bottom: 2px solid var(--dan-red); display: inline-block; padding-bottom: 5px; }
 
-        .hero p {
-            font-size: 1.2rem;
-            font-weight: 400;
-            opacity: 0.9;
-        }
-
-        /* 공통 섹션 스타일 */
-        .section {
-            width: 100%;
-            padding: 100px 5%;
-        }
-
-        .section.gray {
-            background-color: var(--bg-gray);
-        }
-
-        .inner {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 50px;
-            letter-spacing: -1px;
-        }
-
-        /* 카드형 UI */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-        }
-
-        .card-media {
-            width: 100%;
-            height: 220px;
-            background-color: #ebebeb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: white;
-        }
-
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+        .card-media { width: 100%; height: 220px; background-color: #ebebeb; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; }
         .youtube-bg { background-color: #FF0000; }
         .insta-bg { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .project-bg { background-color: var(--text-main); }
 
-        .card-content {
-            padding: 30px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        .card-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-content h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--text-main); }
+        .card-content p { color: var(--text-sub); font-size: 1rem; margin-bottom: 20px; flex-grow: 1; }
 
-        .card-content h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: var(--text-main);
-        }
-
-        .card-content p {
-            color: var(--text-sub);
-            font-size: 1rem;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        /* SNS 연결 버튼 */
-        .sns-link-btn {
-            display: block;
-            text-align: center;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
-            transition: opacity 0.3s;
-        }
-        
+        .sns-link-btn { display: block; text-align: center; width: 100%; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; color: white; transition: opacity 0.3s; }
         .sns-link-btn:hover { opacity: 0.8; }
         .btn-youtube { background-color: #FF0000; }
         .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        /* 팝업 로그인 모달 */
-        #login-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
+        /* 미디어 & 갤러리 분할 섹션 */
+        .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
+        .media-youtube, .media-gallery { flex: 1; min-width: 300px; }
 
-        .modal-content {
-            background: white;
-            width: 90%;
-            max-width: 400px;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            position: relative;
-        }
+        .youtube-list { display: flex; flex-direction: column; gap: 20px; }
+        .youtube-item { display: flex; gap: 15px; text-decoration: none; color: var(--text-main); background: white; padding: 10px; border-radius: 12px; border: 1px solid var(--border-color); transition: all 0.3s; }
+        .youtube-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-3px); border-color: var(--dan-red); }
+        .youtube-thumb { width: 160px; height: 90px; border-radius: 8px; object-fit: cover; background-color: #eee; }
+        .youtube-info { display: flex; flex-direction: column; justify-content: center; }
+        .youtube-info h4 { font-size: 1.1rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .youtube-info span { font-size: 0.85rem; color: var(--text-sub); }
 
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: var(--text-sub);
-        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .gallery-item { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer; }
+        .gallery-item img:hover { transform: scale(1.05); }
 
+        #login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative; }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; background: none; border: none; color: var(--text-sub); }
         .modal-content h2 { margin-bottom: 25px; font-size: 1.8rem; text-align: center; }
-        .modal-content input, .modal-content select {
-            width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color);
-            border-radius: 10px; font-size: 15px; background-color: var(--bg-gray); outline: none;
-        }
+        .modal-content input, .modal-content select { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 15px; background-color: var(--bg-gray); outline: none; }
         .modal-content input:focus, .modal-content select:focus { border-color: var(--dan-red); background-color: #fff; }
-        .modal-content .action-btn {
-            width: 100%; background-color: var(--dan-red); color: white; padding: 15px; border: none;
-            border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
-        }
+        .modal-content .action-btn { width: 100%; background-color: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .modal-content .action-btn:hover { background-color: var(--dan-red-dark); }
 
-        #member-actions, #admin-panel {
-            display: none; margin-top: 40px; padding: 40px; background: white;
-            border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--dan-red);
-        }
+        #member-actions, #admin-panel { display: none; margin-top: 40px; padding: 40px; background: white; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--dan-red); }
         #admin-panel { border-left-color: var(--text-main); }
-
         footer { background-color: #111; color: #888; padding: 60px 5%; text-align: center; font-size: 0.9rem; }
     </style>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        // addDoc 모듈을 추가하여 데이터 삽입이 가능하도록 수정했습니다.
+        import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
@@ -329,18 +124,21 @@
         try {
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
+            console.log("Firebase 초기화 완료");
         } catch (e) {
             console.log("Firebase 미설정 상태");
         }
 
+        // 모달 제어
         window.openLoginModal = function() { document.getElementById('login-modal').style.display = 'flex'; };
         window.closeLoginModal = function() { document.getElementById('login-modal').style.display = 'none'; };
 
+        // 로그인 로직 (공백 제거 포함)
         window.login = async function() {
             const school = document.getElementById('school').value;
             const grade = document.getElementById('grade').value;
-            const name = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const name = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
 
             if(!db) { alert("Firebase 연결이 필요합니다."); return; }
 
@@ -356,10 +154,57 @@
                     closeLoginModal();
                     document.getElementById('member-actions').style.display = 'block';
                     document.getElementById('login-btn-top').innerText = '로그아웃';
+                    document.getElementById('login-btn-top').onclick = () => location.reload();
                     
-                    if (userData.role === "admin") { document.getElementById('admin-panel').style.display = 'block'; }
-                } else { alert("정보가 일치하지 않습니다."); }
+                    if (userData.role === "admin") { 
+                        document.getElementById('admin-panel').style.display = 'block'; 
+                    }
+                } else { alert("정보가 일치하지 않습니다. 이름, 학교, 비밀번호를 다시 확인하세요."); }
             } catch (error) { console.error("로그인 에러:", error); }
+        };
+
+        // --- 데이터베이스 일괄 등록 함수 (최초 1회만 개발자 콘솔에서 실행) ---
+        window.initializeDB = async function() {
+            if(!db) { alert("DB가 연결되지 않았습니다."); return; }
+            
+            const turtlessMembers = [
+                { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "ky1234", role: "member" },
+                { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "jm1234", role: "member" },
+                { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "jy1234", role: "member" },
+                { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "tk1234", role: "member" },
+                { school: "서울공업고", grade: "1학년", name: "이영진", pass: "yj1234", role: "member" },
+                { school: "서울공업고", grade: "1학년", name: "이희담", pass: "hd1234", role: "member" },
+                { school: "서울공업고", grade: "3학년", name: "박우영", pass: "wy1234", role: "member" },
+                { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "ai1234", role: "member" },
+                { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "kw1234", role: "member" },
+                { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "hn1234", role: "member" },
+                { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "sy1234", role: "member" },
+                { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "ys1234", role: "member" },
+                { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "sj1234", role: "member" },
+                { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "jb1234", role: "member" },
+                { school: "용산고", grade: "1학년", name: "권우진", pass: "admin1234!", role: "admin" }, // 관리자
+                { school: "용산고", grade: "1학년", name: "정나후", pass: "nh1234", role: "member" },
+                { school: "용산고", grade: "1학년", name: "김시우", pass: "su1234", role: "member" },
+                { school: "용산고", grade: "1학년", name: "채준현", pass: "ch1234", role: "member" },
+                { school: "용산철도고", grade: "2학년", name: "정지우", pass: "ju1234", role: "member" },
+                { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "wj1234", role: "member" },
+                { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "sh1234", role: "member" },
+                { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "ya1234", role: "member" },
+                { school: "용산철도고", grade: "2학년", name: "송주원", pass: "jw1234", role: "member" }
+            ];
+
+            const usersRef = collection(db, "users");
+            console.log("팀원 23명 데이터 등록을 시작합니다...");
+            
+            for (const member of turtlessMembers) {
+                try {
+                    await addDoc(usersRef, member);
+                    console.log(`[등록 완료] ${member.school} - ${member.name}`);
+                } catch (error) {
+                    console.error(`[등록 실패] ${member.name}:`, error);
+                }
+            }
+            alert("23명의 명단이 데이터베이스에 모두 성공적으로 등록되었습니다!");
         };
     </script>
 </head>
@@ -371,28 +216,28 @@
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="intro-btn">소개</a>
                 <div class="dropdown-content" id="intro-dropdown">
-                    <a href="#">팀 소개</a>
-                    <a href="#">팀원 소개</a>
-                    <a href="#">경력</a>
-                    <a href="#">슬로건</a>
-                    <a href="#">로고</a>
+                    <a href="intro_team.html">팀 소개</a>
+                    <a href="intro_member.html">팀원 소개</a>
+                    <a href="intro_career.html">경력</a>
+                    <a href="intro_slogan.html">슬로건</a>
+                    <a href="intro_logo.html">로고</a>
                 </div>
             </div>
             
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="value-btn">가치</a>
                 <div class="dropdown-content" id="value-dropdown">
-                    <a href="#">핵심가치</a>
-                    <a href="#">사회공헌</a>
-                    <a href="#">슬로건</a>
-                    <a href="#">ESG</a>
+                    <a href="value_core.html">핵심가치</a>
+                    <a href="value_social.html">사회공헌</a>
+                    <a href="value_slogan.html">슬로건</a>
+                    <a href="value_esg.html">ESG</a>
                 </div>
             </div>
 
-            <a href="#">주요 활동</a>
-            <a href="#">PR 갤러리</a>
-            <a href="#">후원문의</a>
-            <a href="#">미니게임</a>
+            <a href="activity.html">주요 활동</a>
+            <a href="pr_gallery.html">PR 갤러리</a>
+            <a href="sponsorship.html">후원문의</a>
+            <a href="minigame.html">미니게임</a>
             
             <button class="login-btn" id="login-btn-top" onclick="openLoginModal()">팀원 로그인</button>
         </div>
@@ -404,6 +249,7 @@
             <h2>팀원 인증</h2>
             <select id="school">
                 <option value="경기기계공업고">경기기계공업고</option>
+                <option value="경복비즈니스고">경복비즈니스고</option>
                 <option value="서울공업고">서울공업고</option>
                 <option value="서울매그넷고">서울매그넷고</option>
                 <option value="선린인터넷고">선린인터넷고</option>
@@ -423,7 +269,7 @@
 
     <section class="hero">
         <h1>“Back to the Beginning, Beyond the Ocean”</h1>
-        <p>서울시 고등학교 23명의 팀원들이 만들어가는 TURTLESS SSRC 프로젝트</p>
+        <p>용산철도고 및 연합 학교 23명의 팀원들이 만들어가는 TURTLESS SSRC 프로젝트</p>
     </section>
 
     <section class="section">
@@ -454,7 +300,7 @@
                     <div class="card-content">
                         <h3>진행 중인 프로젝트</h3>
                         <p>7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
-                        <a href="#" class="sns-link-btn" style="background-color: var(--text-main);">프로젝트 자세히 보기</a>
+                        <a href="project.html" class="sns-link-btn" style="background-color: var(--text-main);">프로젝트 자세히 보기</a>
                     </div>
                 </div>
 
@@ -474,6 +320,51 @@
     </section>
 
     <section class="section gray">
+        <div class="inner">
+            <div class="media-split">
+                
+                <div class="media-youtube">
+                    <h2 class="section-subtitle">Latest on YouTube</h2>
+                    <div class="youtube-list">
+                        <a href="유튜브_영상_링크_1" target="_blank" class="youtube-item">
+                            <img src="https://img.youtube.com/vi/영상아이디1/mqdefault.jpg" alt="영상 썸네일 1" class="youtube-thumb">
+                            <div class="youtube-info">
+                                <h4>최신 활동 비하인드 스토리 #1</h4>
+                                <span>TURTLESS • 조회수 120회</span>
+                            </div>
+                        </a>
+                        <a href="유튜브_영상_링크_2" target="_blank" class="youtube-item">
+                            <img src="https://img.youtube.com/vi/영상아이디2/mqdefault.jpg" alt="영상 썸네일 2" class="youtube-thumb">
+                            <div class="youtube-info">
+                                <h4>팀 연합 회의 스케치 현장</h4>
+                                <span>TURTLESS • 조회수 85회</span>
+                            </div>
+                        </a>
+                        <a href="유튜브_영상_링크_3" target="_blank" class="youtube-item">
+                            <img src="https://img.youtube.com/vi/영상아이디3/mqdefault.jpg" alt="영상 썸네일 3" class="youtube-thumb">
+                            <div class="youtube-info">
+                                <h4>SSRC 프로젝트 엔지니어링 테스트</h4>
+                                <span>TURTLESS • 조회수 210회</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="media-gallery">
+                    <h2 class="section-subtitle">Our Gallery</h2>
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Photo+1" alt="활동 사진 1"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Photo+2" alt="활동 사진 2"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Photo+3" alt="활동 사진 3"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Photo+4" alt="활동 사진 4"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
         <div class="inner" style="text-align: center;">
             <h2 class="section-title">Our Team</h2>
             <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto; color: var(--text-sub);">
@@ -489,35 +380,21 @@
     </footer>
 
     <script>
-        // 드롭다운 토글 함수 (여러 개의 드롭다운을 관리하기 위함)
         function toggleDropdown(e, dropdownId) {
             e.preventDefault(); 
-            
-            // 다른 열려있는 드롭다운 모두 닫기
             const dropdowns = document.getElementsByClassName("dropdown-content");
             for (let i = 0; i < dropdowns.length; i++) {
                 if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) {
                     dropdowns[i].classList.remove('show');
                 }
             }
-            
-            // 클릭한 드롭다운 토글
             document.getElementById(dropdownId).classList.toggle('show');
         }
 
-        // '소개' 메뉴 클릭 시
-        document.getElementById('intro-btn').addEventListener('click', function(e) {
-            toggleDropdown(e, 'intro-dropdown');
-        });
+        document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
+        document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
 
-        // '가치' 메뉴 클릭 시
-        document.getElementById('value-btn').addEventListener('click', function(e) {
-            toggleDropdown(e, 'value-dropdown');
-        });
-
-        // 바탕을 클릭하면 모든 드롭다운 닫기
         window.addEventListener('click', function(e) {
-            // 클릭한 요소가 '.drop-btn' 클래스를 가지지 않은 경우에만 작동
             if (!e.target.matches('.drop-btn')) {
                 const dropdowns = document.getElementsByClassName("dropdown-content");
                 for (let i = 0; i < dropdowns.length; i++) {
