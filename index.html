@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TURTLESS - 용산철도고 팀 홍보</title>
     <style>
-        /* 단청색 팔레트 */
+        /* 단청색 팔레트 (레드 메인) */
         :root {
+            --dan-red: #c1272d;   /* 붉은색 (메인) */
             --dan-green: #005b4f; /* 옥색/초록 */
-            --dan-red: #c1272d;   /* 붉은색 */
             --dan-yellow: #fbb03b;/* 노란색 */
             --dan-blue: #1e3b70;  /* 청색 */
             --dan-bg: #f4ebd0;    /* 한지 느낌 배경 */
@@ -22,15 +22,15 @@
             color: #333;
         }
 
-        /* 헤더 및 네비게이션 */
+        /* 헤더 및 네비게이션 (단청 레드 적용) */
         header {
-            background-color: var(--dan-green);
+            background-color: var(--dan-red);
             color: white;
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 5px solid var(--dan-red);
+            border-bottom: 5px solid var(--dan-green);
         }
 
         .logo {
@@ -42,17 +42,30 @@
         .nav-links {
             display: flex;
             gap: 20px;
+            align-items: center;
         }
 
-        .nav-links a {
+        .nav-links a, .nav-links button {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover, .nav-links button:hover {
             color: var(--dan-yellow);
+        }
+
+        /* 팀원 로그인 특별 버튼 */
+        .login-btn {
+            background-color: var(--dan-yellow) !important;
+            color: var(--dan-red) !important;
+            padding: 5px 15px;
+            border-radius: 20px;
         }
 
         .menu-btn {
@@ -64,7 +77,7 @@
             cursor: pointer;
         }
 
-        /* 모바일 메뉴 */
+        /* 모바일 메뉴 (3선) */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -72,11 +85,11 @@
                 position: absolute;
                 top: 60px;
                 right: 0;
-                background-color: var(--dan-green);
+                background-color: var(--dan-red);
                 width: 100%;
                 text-align: center;
                 padding: 20px 0;
-                border-bottom: 5px solid var(--dan-red);
+                border-bottom: 5px solid var(--dan-green);
             }
             .nav-links.active {
                 display: flex;
@@ -96,42 +109,44 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* 로그인 폼 */
+        /* 로그인 폼 (초기에는 숨김) */
         #login-section {
-            display: flex;
+            display: none;
             flex-direction: column;
             gap: 15px;
             max-width: 400px;
-            margin: 0 auto;
+            margin: 0 auto 40px auto;
+            padding: 20px;
+            border: 2px solid var(--dan-red);
+            border-radius: 10px;
+            background-color: #fffaf0;
         }
 
-        input, select, button {
+        input, select, .action-btn {
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        button {
-            background-color: var(--dan-blue);
+        .action-btn {
+            background-color: var(--dan-red);
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
         }
 
-        button:hover {
-            background-color: var(--dan-red);
+        .action-btn:hover {
+            background-color: var(--dan-green);
         }
 
-        /* 숨겨진 콘텐츠 (로그인 후 표시) */
-        #dashboard {
+        /* 팀원 전용 기능 (초기에는 숨김) */
+        #member-actions, #admin-panel {
             display: none;
         }
 
-        /* 관리자 전용 메뉴 */
         #admin-panel {
-            display: none;
             background-color: var(--dan-yellow);
             padding: 15px;
             border-radius: 5px;
@@ -140,12 +155,12 @@
             font-weight: bold;
         }
 
-        /* 미디어 섹션 */
+        /* 미디어 섹션 (누구나 볼 수 있음) */
         .media-section {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .media-box {
@@ -155,6 +170,7 @@
             padding: 20px;
             border-radius: 8px;
             text-align: center;
+            border-top: 4px solid var(--dan-red);
         }
 
         iframe {
@@ -167,7 +183,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // ⚠️ 여기에 본인의 Firebase 설정 키를 넣어야 실제 로그인이 작동합니다!
         const firebaseConfig = {
             apiKey: "본인의_API_KEY",
             authDomain: "본인의_DOMAIN",
@@ -177,16 +192,21 @@
             appId: "1:123456789:web:abcdefg"
         };
 
-        // 아직 키를 넣지 않았을 때 에러가 나지 않도록 임시 방어 코드
         let db;
         try {
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
         } catch (e) {
-            console.log("Firebase가 아직 설정되지 않았습니다.");
+            console.log("Firebase가 설정되지 않았습니다.");
         }
 
-        // 글로벌 함수로 등록 (HTML 버튼에서 호출하기 위함)
+        // 로그인 창 열기 토글
+        window.toggleLogin = function() {
+            const loginSec = document.getElementById('login-section');
+            loginSec.style.display = loginSec.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        // 로그인 실행
         window.login = async function() {
             const school = document.getElementById('school').value;
             const grade = document.getElementById('grade').value;
@@ -194,12 +214,11 @@
             const pass = document.getElementById('password').value;
 
             if(!db) {
-                alert("Firebase 데이터베이스가 아직 연결되지 않았습니다. 코드에 설정 키를 입력해주세요!");
+                alert("Firebase 데이터베이스가 아직 연결되지 않았습니다. 실제 사용 시 키를 세팅해주세요.");
                 return;
             }
 
             try {
-                // 파이어베이스 DB 'users' 컬렉션에서 정보 검색
                 const usersRef = collection(db, "users");
                 const q = query(usersRef, 
                     where("school", "==", school), 
@@ -211,15 +230,15 @@
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    // 로그인 성공
                     const userData = querySnapshot.docs[0].data();
-                    alert(`환영합니다, ${userData.school} ${userData.name} 팀원님!`);
+                    alert(`로그인 성공! ${userData.name} 팀원님 환영합니다.`);
                     
+                    // 로그인 폼 숨기고 숨겨진 기능들 보여주기
                     document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'block';
-                    document.getElementById('welcome-message').innerText = `환영합니다, ${userData.name}님!`;
+                    document.getElementById('member-actions').style.display = 'block';
+                    document.getElementById('login-btn-top').innerText = `${userData.name}님 (로그아웃)`;
                     
-                    // 권우진 학생 (관리자) 권한 처리
+                    // 관리자(권우진) 권한 체크
                     if (userData.role === "admin") {
                         document.getElementById('admin-panel').style.display = 'block';
                         document.getElementById('admin-menu-link').style.display = 'inline';
@@ -229,7 +248,6 @@
                 }
             } catch (error) {
                 console.error("로그인 에러:", error);
-                alert("로그인 처리 중 오류가 발생했습니다.");
             }
         };
 
@@ -245,15 +263,17 @@
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
         <div class="nav-links" id="nav-links">
             <a href="#">팀 소개</a>
-            <a href="#">게시판</a>
+            <a href="#">홍보 게시판</a>
             <a href="#">갤러리</a>
             <a href="#" id="admin-menu-link" style="display:none; color: var(--dan-yellow);">[메뉴 수정]</a>
+            <button class="login-btn" id="login-btn-top" onclick="toggleLogin()">팀원 로그인</button>
         </div>
     </header>
 
     <div class="container">
+        
         <div id="login-section">
-            <h2 style="text-align:center; color: var(--dan-blue);">팀원 로그인</h2>
+            <h3 style="text-align:center; color: var(--dan-red); margin-top:0;">팀원 인증</h3>
             <select id="school">
                 <option value="경기기계공업고">경기기계공업고</option>
                 <option value="경복비즈니스고">경복비즈니스고</option>
@@ -268,30 +288,32 @@
                 <option value="2학년">2학년</option>
                 <option value="3학년">3학년</option>
             </select>
-            <input type="text" id="username" placeholder="이름 입력 (예: 권우진)">
+            <input type="text" id="username" placeholder="이름 입력">
             <input type="password" id="password" placeholder="초기 비밀번호 6자리">
-            <button onclick="login()">접속하기</button>
+            <button class="action-btn" onclick="login()">인증하기</button>
         </div>
 
-        <div id="dashboard">
-            <h2 id="welcome-message"></h2>
-            
-            <div id="admin-panel">
-                👑 관리자 권한 확인됨: 3선 메뉴 및 항목 수정 권한이 활성화되었습니다.
-                <button style="margin-left: 10px; background-color: var(--dan-red);">메뉴 편집기 열기</button>
-            </div>
+        <div id="member-actions" style="margin-bottom: 30px; background: #fff; border: 2px solid var(--dan-green); padding: 20px; border-radius: 8px;">
+            <h3 style="color: var(--dan-green);">새 홍보물 작성</h3>
+            <textarea style="width: 100%; height: 100px; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc;" placeholder="홍보 내용을 입력하세요..."></textarea><br><br>
+            <button class="action-btn">게시글 등록</button>
+        </div>
 
-            <div style="margin-bottom: 30px; background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-                <h3>새 게시글 작성</h3>
-                <textarea style="width: 100%; height: 100px; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc;" placeholder="내용을 입력하세요..."></textarea><br><br>
-                <button>게시글 등록 (준비중)</button>
-            </div>
+        <div id="admin-panel">
+            👑 관리자 권한 확인됨: 사이트 메뉴 및 설정 수정이 활성화되었습니다.
+            <button style="margin-left: 10px; background-color: var(--dan-red); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">메뉴 편집기</button>
+        </div>
+
+        <div id="public-dashboard">
+            <h2 style="color: var(--dan-red);">TURTLESS 팀의 활동을 확인해보세요!</h2>
+            <p>용산철도고 및 연합 학교 팀원들이 만들어가는 멋진 프로젝트 홍보 공간입니다.</p>
 
             <div class="media-section">
                 <div class="media-box">
                     <h3>YouTube 영상</h3>
                     <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
+                
                 <div class="media-box">
                     <h3>Instagram 갤러리</h3>
                     <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top: 15px;">
@@ -301,6 +323,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </body>
