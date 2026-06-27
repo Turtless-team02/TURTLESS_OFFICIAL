@@ -89,11 +89,25 @@
         .youtube-info-large h4 { font-size: 1.4rem; margin-bottom: 8px; line-height: 1.4; }
         .youtube-info-large span { font-size: 0.95rem; color: var(--dan-red); font-weight: bold; }
 
-
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .gallery-item { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer; }
         .gallery-item img:hover { transform: scale(1.05); }
+
+        /* 공지사항 & 배너 디자인 추가 */
+        .notice-board { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .notice-item:last-child { border-bottom: none; }
+        .notice-badge { background: var(--dan-red); color: white; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; margin-right: 15px; font-weight: bold; min-width: 45px; text-align: center; }
+        .notice-item p { flex-grow: 1; margin: 0; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--text-main); font-weight: 500; }
+        .notice-item p:hover { text-decoration: underline; color: var(--dan-red); }
+        .notice-date { font-size: 0.85rem; color: var(--text-sub); margin-left: 10px; }
+
+        .mini-banner { background: linear-gradient(135deg, var(--text-main), #333); color: white; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; height: 180px; }
+        .mini-banner h3 { font-size: 1.3rem; margin-bottom: 10px; }
+        .mini-banner p { font-size: 0.95rem; color: #ccc; margin-bottom: 20px; }
+        .mini-banner a { display: inline-block; background: var(--dan-red); color: white; text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; transition: background 0.3s; }
+        .mini-banner a:hover { background: var(--dan-red-dark); }
 
         /* 모달 스타일 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -250,11 +264,37 @@
                 </div>
                 <div class="media-gallery">
                     <h2 class="section-subtitle">Our Gallery</h2>
-                    <div class="gallery-grid">
+                    <div class="gallery-grid" style="margin-bottom: 40px;">
                         <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+1" alt="사진 1"></div>
                         <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+2" alt="사진 2"></div>
                         <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+3" alt="사진 3"></div>
                         <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+4" alt="사진 4"></div>
+                    </div>
+
+                    <h2 class="section-subtitle">Notice</h2>
+                    <div class="notice-board" style="margin-bottom: 40px;">
+                        <div class="notice-item">
+                            <span class="notice-badge">공지</span>
+                            <p>TURTLESS 연합 팀 1기 신규 팀원 모집 안내</p>
+                            <span class="notice-date">26.06.28</span>
+                        </div>
+                        <div class="notice-item">
+                            <span class="notice-badge" style="background:#444;">일정</span>
+                            <p>6월 정기 엔지니어링 파트 회의</p>
+                            <span class="notice-date">26.06.25</span>
+                        </div>
+                        <div class="notice-item">
+                            <span class="notice-badge" style="background:#444;">일정</span>
+                            <p>기획팀 ESG 사회공헌 프로젝트 아이디에이션</p>
+                            <span class="notice-date">26.06.20</span>
+                        </div>
+                    </div>
+
+                    <h2 class="section-subtitle">Support Us</h2>
+                    <div class="mini-banner">
+                        <h3>함께 성장할 파트너를 찾습니다</h3>
+                        <p>TURTLESS의 열정에 날개를 달아주세요.</p>
+                        <a href="sponsorship.html">후원 문의하기 →</a>
                     </div>
                 </div>
             </div>
@@ -367,12 +407,15 @@
         }
 
         async function loadSlider() {
-            if(!db) { renderSlider(); return; }
+            renderSlider(); // 파이어베이스 기다리지 않고 즉시 기본 슬라이드 띄우기 (로딩 지연 해결)
+            if(!db) return;
             try {
                 const snap = await getDoc(doc(db, "settings", "main_slider"));
-                if(snap.exists()) sliderData = snap.data().slides;
+                if(snap.exists()) {
+                    sliderData = snap.data().slides;
+                    renderSlider(); // 서버 데이터 가져오면 조용히 새로고침
+                }
             } catch(e) { console.error("슬라이더 연동 실패:", e); }
-            renderSlider();
         }
 
         let slideIdx = 0; let timer;
@@ -407,7 +450,19 @@
 
         function startTimer() {
             clearInterval(timer);
-            timer = setInterval(() => { slideIdx = (slideIdx + 1) % sliderData.length; showSlide(slideIdx); }, 5000);
+            timer = setInterval(() => { showSlide((slideIdx + 1) % sliderData.length); }, 5000);
+        }
+
+        // 터치(스와이프)로 슬라이드 넘기기 기능 추가
+        let touchstartX = 0; let touchendX = 0;
+        const sliderSection = document.getElementById('hero-slider');
+        if(sliderSection) {
+            sliderSection.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
+            sliderSection.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                if (touchendX < touchstartX - 50) showSlide((slideIdx + 1) % sliderData.length); // 다음
+                if (touchendX > touchstartX + 50) showSlide((slideIdx - 1 + sliderData.length) % sliderData.length); // 이전
+            });
         }
 
         window.buildSliderEditInputs = () => {
@@ -503,4 +558,3 @@
     </script>
 </body>
 </html>
-
