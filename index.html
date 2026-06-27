@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>TURTLESS</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+        // 파이어베이스 설정 (본인의 Firebase 프로젝트에서 발급받은 키 입력)
+        const firebaseConfig = {
+            apiKey: "본인의_API_KEY",
+            authDomain: "turtless-project.firebaseapp.com",
+            projectId: "turtless-project",
+            storageBucket: "turtless-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdefg"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 글로벌 함수로 만들기 (HTML 버튼에서 호출 가능하도록)
+        window.login = async function() {
+            const school = document.getElementById('school').value;
+            const grade = document.getElementById('grade').value;
+            const name = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            try {
+                // 파이어베이스 DB의 'users' 목록에서 정보가 일치하는 사람 찾기
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, 
+                    where("school", "==", school), 
+                    where("grade", "==", grade), 
+                    where("name", "==", name),
+                    where("pass", "==", pass) // DB에서 직접 비밀번호 대조
+                );
+
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    // 일치하는 데이터가 있으면 로그인 성공!
+                    const userData = querySnapshot.docs[0].data();
+                    alert(`환영합니다, ${userData.name}님!`);
+                    
+                    document.getElementById('login-section').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    
+                    if (userData.role === "admin") {
+                        document.getElementById('admin-panel').style.display = 'block';
+                    }
+                } else {
+                    alert("정보가 일치하지 않습니다.");
+                }
+            } catch (error) {
+                console.error("로그인 에러:", error);
+            }
+        };
+    </script>
+</head>
+<body>
+    </body>
+</html>
