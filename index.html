@@ -80,13 +80,15 @@
 
         .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
         .media-youtube, .media-gallery { flex: 1; min-width: 300px; }
-        
-        .youtube-main-card { display: block; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+       
+        .youtube-main-card { display: block; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .youtube-main-card:last-child { margin-bottom: 0; }
         .youtube-main-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--dan-red); }
         .youtube-thumb-large { width: 100%; aspect-ratio: 16/9; object-fit: cover; background-color: #eee; }
         .youtube-info-large { padding: 20px; }
         .youtube-info-large h4 { font-size: 1.4rem; margin-bottom: 8px; line-height: 1.4; }
         .youtube-info-large span { font-size: 0.95rem; color: var(--dan-red); font-weight: bold; }
+
 
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .gallery-item { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
@@ -476,18 +478,24 @@
             try {
                 const res = await fetch(apiUrl); const data = await res.json();
                 if(data.status === 'ok' && data.items.length > 0) {
-                    const video = data.items[0]; 
-                    const pubDate = new Date(video.pubDate.replace(' ', 'T'));
-                    const dateStr = `${pubDate.getFullYear()}.${pubDate.getMonth()+1}.${pubDate.getDate()}`;
+                    let html = '';
+                    // 최신 영상 최대 3개 바인딩으로 수정된 부분
+                    const maxVideos = Math.min(data.items.length, 3);
                     
-                    const html = `
-                    <a href="${video.link}" target="_blank" class="youtube-main-card">
-                        <img src="${video.thumbnail}" alt="${video.title}" class="youtube-thumb-large">
-                        <div class="youtube-info-large">
-                            <h4>${video.title}</h4>
-                            <span>TURTLESS Official • ${dateStr}</span>
-                        </div>
-                    </a>`;
+                    for(let i = 0; i < maxVideos; i++) {
+                        const video = data.items[i]; 
+                        const pubDate = new Date(video.pubDate.replace(' ', 'T'));
+                        const dateStr = `${pubDate.getFullYear()}.${pubDate.getMonth()+1}.${pubDate.getDate()}`;
+                        
+                        html += `
+                        <a href="${video.link}" target="_blank" class="youtube-main-card">
+                            <img src="${video.thumbnail}" alt="${video.title}" class="youtube-thumb-large">
+                            <div class="youtube-info-large">
+                                <h4>${video.title}</h4>
+                                <span>TURTLESS Official • ${dateStr}</span>
+                            </div>
+                        </a>`;
+                    }
                     document.getElementById('youtube-auto-list').innerHTML = html;
                 }
             } catch (error) { console.error(error); document.getElementById('youtube-auto-list').innerHTML = "<p>영상을 불러오지 못했습니다.</p>"; }
@@ -495,3 +503,4 @@
     </script>
 </body>
 </html>
+
