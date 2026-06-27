@@ -3,29 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TURTLESS</title>
+    <title>TURTLESS - 청소년 연합 ESG 팀</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --dan-red: #c1272d;
-            --dan-red-dark: #a31f24;
-            --bg-gray: #f8f9fa;
-            --text-main: #111111;
-            --text-sub: #666666;
-            --border-color: #eaeaea;
-        }
-
+        :root { --dan-red: #c1272d; --text-main: #111111; --text-sub: #666666; --border-color: #eaeaea; --bg-gray: #f8f9fa; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: white; line-height: 1.6; overflow-x: hidden; }
 
-        /* 헤더 & 모바일 메뉴 스타일 */
-        header {
-            position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px); padding: 20px 5%; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000;
-        }
-        .logo { font-size: 28px; font-weight: 900; color: var(--dan-red); letter-spacing: -1px; cursor: pointer; }
-        
+        /* 상단 네비게이션 헤더 */
+        header { position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000; }
+        .logo { font-size: 28px; font-weight: 900; color: var(--dan-red); cursor: pointer; }
         .hamburger { display: none; font-size: 30px; cursor: pointer; color: var(--text-main); }
         .close-menu { display: none; }
         
@@ -34,96 +21,66 @@
         .nav-links a:hover { color: var(--dan-red); }
 
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-            background-color: white; min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 12px; padding: 10px 0; z-index: 1000; border: 1px solid var(--border-color); margin-top: 15px; 
-        }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px; padding: 10px 0; z-index: 1000; border: 1px solid var(--border-color); margin-top: 15px; }
         .dropdown-content.show { display: flex; flex-direction: column; }
-        .dropdown-content a { padding: 10px 20px; text-decoration: none; display: block; color: var(--text-main); font-size: 15px; font-weight: 500; text-align: center; transition: all 0.2s; }
+        .dropdown-content a { padding: 10px 20px; text-decoration: none; display: block; color: var(--text-main); font-size: 15px; font-weight: 500; text-align: center; }
         .dropdown-content a:hover { background-color: var(--bg-gray); color: var(--dan-red); }
 
         .login-btn { background-color: transparent; color: var(--text-main); border: 1px solid var(--text-main); padding: 8px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-left: 10px; }
         .login-btn:hover { background-color: var(--text-main); color: white; }
 
-        /* 모바일 반응형 (768px 이하) */
+        /* 모바일 반응형 메뉴 */
         @media (max-width: 768px) {
             .hamburger { display: block; }
-            .nav-links {
-                position: fixed; top: 0; right: -100%; width: 250px; height: 100vh;
-                background: white; flex-direction: column; align-items: flex-start;
-                padding: 80px 30px 30px 30px; transition: right 0.3s ease; z-index: 1001;
-                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 250px; height: 100vh; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px 30px 30px; transition: right 0.3s ease; z-index: 1001; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
             .nav-links.active { right: 0; }
-            .close-menu { 
-                display: block; position: absolute; top: 20px; right: 25px; 
-                font-size: 35px; background: none; border: none; cursor: pointer; color: var(--text-main);
-            }
+            .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 35px; background: none; border: none; cursor: pointer; color: var(--text-main); }
             .nav-links > a, .nav-links .dropdown, .login-btn { width: 100%; margin: 10px 0; text-align: left; margin-left: 0; }
             .dropdown-content { position: static; box-shadow: none; border: none; margin-top: 5px; transform: none; min-width: 100%; padding-left: 15px;}
             .dropdown-content a { text-align: left; padding: 8px 10px; }
         }
 
-        .hero { width: 100%; height: 60vh; min-height: 400px; background-color: var(--dan-red); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; }
-        .hero h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
-        .hero p { font-size: 1.2rem; font-weight: 400; opacity: 0.9; }
+        /* 메인 배너 섹션 */
+        .hero { background: linear-gradient(135deg, #111 0%, #333 100%); color: white; text-align: center; padding: 120px 5% 100px 5%; }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 20px; line-height: 1.2; letter-spacing: -1px; }
+        .hero h1 span { color: var(--dan-red); }
+        .hero p { font-size: 1.2rem; color: #ccc; margin-bottom: 40px; font-weight: 400; }
+        .hero-btn { background-color: var(--dan-red); color: white; padding: 15px 35px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: background 0.3s; display: inline-block; }
+        .hero-btn:hover { background-color: #a01f24; }
+
+        /* 팀원 전용 게시판 섹션 */
+        .section { padding: 80px 5%; max-width: 900px; margin: 0 auto; }
+        .section h2 { font-size: 2rem; margin-bottom: 20px; font-weight: 800; text-align: center; }
         
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            .hero p { font-size: 1rem; }
-        }
+        #board-login-msg { text-align: center; padding: 40px; background: var(--bg-gray); border-radius: 12px; font-weight: bold; color: var(--text-sub); margin-bottom: 40px; }
+        #board-content { display: none; }
+        
+        .post-form { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 30px; }
+        .post-form textarea { width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; resize: none; margin-bottom: 15px; outline: none; font-family: inherit; }
+        .post-form textarea:focus { border-color: var(--dan-red); }
+        .post-btn { background: var(--text-main); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .post-btn:hover { background: var(--dan-red); }
 
-        .section { width: 100%; padding: 100px 5%; }
-        .section.gray { background-color: var(--bg-gray); }
-        .inner { max-width: 1200px; margin: 0 auto; }
-        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; letter-spacing: -1px; text-align: center; }
-        .section-subtitle { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); border-bottom: 2px solid var(--dan-red); display: inline-block; padding-bottom: 5px; }
+        .post-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--bg-gray); }
+        .post-author { font-weight: 700; color: var(--dan-red); font-size: 1.1rem; }
+        .post-author span { font-size: 0.8rem; color: var(--text-sub); font-weight: 400; margin-left: 5px; }
+        .post-date { font-size: 0.8rem; color: #999; }
+        .post-body { font-size: 1rem; color: var(--text-main); white-space: pre-wrap; word-break: break-all; }
+        .delete-btn { background: none; border: none; color: #999; cursor: pointer; font-size: 0.8rem; margin-left: 10px; transition: color 0.2s; }
+        .delete-btn:hover { color: var(--dan-red); text-decoration: underline; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
-        .card-media { width: 100%; height: 220px; background-color: #ebebeb; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; }
-        .youtube-bg { background-color: #FF0000; }
-        .insta-bg { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-        .project-bg { background-color: var(--text-main); }
-        .card-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-content h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--text-main); }
-        .card-content p { color: var(--text-sub); font-size: 1rem; margin-bottom: 20px; flex-grow: 1; }
-
-        .sns-link-btn { display: block; text-align: center; width: 100%; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; color: white; transition: opacity 0.3s; }
-        .sns-link-btn:hover { opacity: 0.8; }
-        .btn-youtube { background-color: #FF0000; }
-        .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-
-        .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
-        .media-youtube, .media-gallery { flex: 1; min-width: 300px; }
-        .youtube-list { display: flex; flex-direction: column; gap: 20px; }
-        .youtube-item { display: flex; gap: 15px; text-decoration: none; color: var(--text-main); background: white; padding: 10px; border-radius: 12px; border: 1px solid var(--border-color); transition: all 0.3s; }
-        .youtube-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-3px); border-color: var(--dan-red); }
-        .youtube-thumb { width: 160px; height: 90px; border-radius: 8px; object-fit: cover; background-color: #eee; }
-        .youtube-info { display: flex; flex-direction: column; justify-content: center; }
-        .youtube-info h4 { font-size: 1.1rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .youtube-info span { font-size: 0.85rem; color: var(--text-sub); }
-
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .gallery-item { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer; }
-        .gallery-item img:hover { transform: scale(1.05); }
-
-        /* 모달 스타일 */
+        /* 로그인 모달 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative; }
+        .modal-content { background: white; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
         .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; background: none; border: none; color: var(--text-sub); }
-        .modal-content h2 { margin-bottom: 25px; font-size: 1.8rem; text-align: center; }
-        .modal-content input, .modal-content select { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 15px; background-color: var(--bg-gray); outline: none; }
+        .modal-content h2 { margin-bottom: 25px; font-size: 1.5rem; text-align: center; }
+        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background-color: var(--bg-gray); outline: none; }
         .modal-content input:focus, .modal-content select:focus { border-color: var(--dan-red); background-color: #fff; }
-        .modal-content .action-btn { width: 100%; background-color: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .modal-content .action-btn:hover { background-color: var(--dan-red-dark); }
-
-        #member-actions, #admin-panel { display: none; margin-top: 40px; padding: 40px; background: white; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--dan-red); }
-        #admin-panel { border-left-color: var(--text-main); }
-        footer { background-color: #111; color: #888; padding: 60px 5%; text-align: center; font-size: 0.9rem; }
+        .modal-content .action-btn { width: 100%; background-color: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .modal-content .action-btn:hover { background-color: #a01f24; }
+        
+        footer { background-color: #111; color: #888; padding: 40px 5%; text-align: center; font-size: 0.9rem; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -137,26 +94,27 @@
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="intro-btn">소개</a>
                 <div class="dropdown-content" id="intro-dropdown">
-                    <a href="intro_team.html">팀 소개</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">팀 소개</a>
                     <a href="intro_member.html">팀원 소개</a>
-                    <a href="intro_career.html">경력</a>
-                    <a href="intro_slogan.html">슬로건</a>
-                    <a href="intro_logo.html">로고</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">경력</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">슬로건</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">로고</a>
                 </div>
             </div>
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="value-btn">가치</a>
                 <div class="dropdown-content" id="value-dropdown">
-                    <a href="value_core.html">핵심가치</a>
-                    <a href="value_social.html">사회공헌</a>
-                    <a href="value_slogan.html">슬로건</a>
-                    <a href="value_esg.html">ESG</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">핵심가치</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">사회공헌</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">슬로건</a>
+                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">ESG</a>
                 </div>
             </div>
-            <a href="activity.html">주요 활동</a>
-            <a href="pr_gallery.html">PR 갤러리</a>
-            <a href="sponsorship.html">후원문의</a>
-            <a href="minigame.html">미니게임</a>
+            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">주요 활동</a>
+            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">PR 갤러리</a>
+            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">후원문의</a>
+            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">미니게임</a>
+            
             <button class="login-btn" id="login-btn-top" onclick="openLoginModal()">팀원 로그인</button>
         </div>
     </header>
@@ -184,99 +142,40 @@
             <button class="action-btn" onclick="firebaseLogin()">인증하기</button>
         </div>
     </div>
-    <div id="pw-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closePwModal()">×</button>
-            <h2>비밀번호 변경</h2>
-            <p style="margin-bottom: 20px; font-size:0.9rem; color:var(--text-sub); text-align:center;">새로운 비밀번호를 입력해주세요.</p>
-            <input type="password" id="old-pw" placeholder="현재 비밀번호">
-            <input type="password" id="new-pw" placeholder="새 비밀번호">
-            <button class="action-btn" onclick="changePassword()">변경하기</button>
-        </div>
+
+    <div class="hero">
+        <h1>지속가능한 미래를 그리는<br><span>TURTLESS</span></h1>
+        <p>환경을 생각하는 청소년 연합 ESG 팀입니다.</p>
+        <a href="intro_member.html" class="hero-btn">팀원 만나보기</a>
     </div>
 
-    <section class="hero">
-        <h1>“Back to the Beginning, Beyond the Ocean”</h1>
-        <p>서울시 고등학교 23명의 학생들이 만들어가는 TURTLESS SSRC 프로젝트</p>
-    </section>
-
-    <section class="section">
-        <div class="inner">
-            <h2 class="section-title">Official SNS & PR</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="card-media youtube-bg">▶</div>
-                    <div class="card-content">
-                        <h3>TURTLESS 유튜브</h3>
-                        <p>팀의 공식 활동 영상과 프로젝트 비하인드 스토리를 생생하게 만나보세요.</p>
-                        <a href="https://youtube.com/@turtlessum?si=lrgCx4jl212yguEt" target="_blank" class="sns-link-btn btn-youtube">유튜브 채널 방문하기</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-media insta-bg">📷</div>
-                    <div class="card-content">
-                        <h3>TURTLESS 인스타그램</h3>
-                        <p>팀원들의 열정 넘치는 활동 모습과 가장 빠른 최신 공지사항을 확인하실 수 있습니다.</p>
-                        <a href="https://www.instagram.com/turtless_11379?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="sns-link-btn btn-insta">인스타그램 방문하기</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-media project-bg">⚙️</div>
-                    <div class="card-content">
-                        <h3>진행 중인 프로젝트</h3>
-                        <p>7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
-                        <a href="project.html" class="sns-link-btn" style="background-color: var(--text-main);">프로젝트 자세히 보기</a>
-                    </div>
-                </div>
-            </div>
-
-            <div id="member-actions">
-                <h3 style="color: var(--dan-red); margin-bottom: 20px; display: inline-block;">팀원 전용 게시판</h3>
-                <button onclick="openPwModal()" style="float: right; background: white; color: var(--text-main); padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; font-weight: bold;">비밀번호 변경</button>
-                <div style="clear: both;"></div>
-                <textarea style="width: 100%; height: 120px; padding: 15px; border-radius: 8px; border: 1px solid #ccc; margin-top:10px;" placeholder="새로운 소식을 작성하세요..."></textarea>
-                <button style="background: var(--text-main); color: #fff; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer;">등록하기</button>
-            </div>
-            <div id="admin-panel">
-                <h3 style="margin-bottom: 10px;">👑 관리자 권한 메뉴</h3>
-                <p>권우진님, 사이트 내 콘텐츠 수정 및 팀원 권한 관리가 가능합니다.</p>
-            </div>
+    <div class="section">
+        <h2>팀원 소통 게시판</h2>
+        
+        <div id="board-login-msg">
+            <p>팀원들만 볼 수 있는 공간입니다.</p>
+            <button class="action-btn" style="width: auto; padding: 10px 20px; margin-top: 15px; background: var(--dan-red); color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer;" onclick="openLoginModal()">로그인하기</button>
         </div>
-    </section>
 
-    <section class="section gray">
-        <div class="inner">
-            <div class="media-split">
-                <div class="media-youtube">
-                    <h2 class="section-subtitle">Latest on YouTube</h2>
-                    <div id="youtube-auto-list" class="youtube-list">
-                        <p style="text-align:center; padding: 20px;">영상을 불러오는 중입니다...</p>
-                    </div>
-                </div>
-                <div class="media-gallery">
-                    <h2 class="section-subtitle">Our Gallery</h2>
-                    <div class="gallery-grid">
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+1" alt="사진 1"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+2" alt="사진 2"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+3" alt="사진 3"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+4" alt="사진 4"></div>
-                    </div>
-                </div>
+        <div id="board-content">
+            <div class="post-form">
+                <textarea id="post-text" rows="3" placeholder="오늘 팀 프로젝트 진행 상황이나, 남기고 싶은 말을 자유롭게 적어주세요!"></textarea>
+                <button class="post-btn" onclick="submitPost()">📝 게시글 등록</button>
             </div>
+            
+            <div id="post-list">
+                </div>
         </div>
-    </section>
+    </div>
 
     <footer>
         <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
         <p style="margin-top: 10px; opacity: 0.6;">용산철도고등학교 기반 SSRC 연합 팀</p>
-        <button onclick="initializeDB()" style="margin-top: 30px; padding: 12px 20px; background-color: var(--dan-red); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-block;">
-            🚨 관리자용: 최초 1회 명단 DB 등록하기 (클릭)
-        </button>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -288,104 +187,152 @@
         };
         
         let db;
-        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch (e) { console.log("Firebase 미설정 상태"); }
+        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch (e) {}
 
-        let currentUserId = null; let currentUserData = null;
+        let currentUserId = null;
+        let currentUserData = null;
 
         window.openLoginModal = () => document.getElementById('login-modal').style.display = 'flex';
         window.closeLoginModal = () => document.getElementById('login-modal').style.display = 'none';
-        window.openPwModal = () => { document.getElementById('old-pw').value = ''; document.getElementById('new-pw').value = ''; document.getElementById('pw-modal').style.display = 'flex'; };
-        window.closePwModal = () => document.getElementById('pw-modal').style.display = 'none';
 
+        // 1. 로그인 기능
         window.firebaseLogin = async function() {
-            const school = document.getElementById('school').value; const grade = document.getElementById('grade').value;
-            const name = document.getElementById('username').value.trim(); const pass = document.getElementById('password').value.trim();
-            if(!db) return;
+            const school = document.getElementById('school').value;
+            const grade = document.getElementById('grade').value;
+            const name = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+
+            if(!name || !pass) return alert("이름과 비밀번호를 입력해주세요.");
+
             try {
                 const q = query(collection(db, "users"), where("school", "==", school), where("grade", "==", grade), where("name", "==", name), where("pass", "==", pass));
                 const querySnapshot = await getDocs(q);
+
                 if (!querySnapshot.empty) {
-                    currentUserId = querySnapshot.docs[0].id; currentUserData = querySnapshot.docs[0].data();
-                    alert(`${currentUserData.name} 팀원님 인증에 성공했습니다.`);
-                    closeLoginModal(); document.getElementById('member-actions').style.display = 'block';
+                    currentUserId = querySnapshot.docs[0].id;
+                    currentUserData = querySnapshot.docs[0].data();
+                    
+                    alert(`${currentUserData.name} 팀원님 환영합니다!`);
+                    closeLoginModal();
+                    
+                    // 로그인 성공 시 버튼 및 화면 전환
                     document.getElementById('login-btn-top').innerText = '로그아웃';
                     document.getElementById('login-btn-top').onclick = () => location.reload();
-                    if (currentUserData.role === "admin") document.getElementById('admin-panel').style.display = 'block';
-                } else alert("정보가 일치하지 않거나 비밀번호가 틀렸습니다.");
-            } catch (error) { console.error(error); }
+                    
+                    document.getElementById('board-login-msg').style.display = 'none';
+                    document.getElementById('board-content').style.display = 'block';
+                    
+                    loadPosts(); // 게시글 불러오기
+                } else {
+                    alert("정보가 일치하지 않거나 비밀번호가 틀렸습니다.");
+                }
+            } catch (error) { console.error(error); alert("로그인 중 오류가 발생했습니다."); }
         };
 
-        window.changePassword = async function() {
-            const oldPw = document.getElementById('old-pw').value.trim(); const newPw = document.getElementById('new-pw').value.trim();
-            if(oldPw !== currentUserData.pass) return alert("현재 비밀번호가 일치하지 않습니다.");
-            if(newPw.length < 4) return alert("새 비밀번호는 4자리 이상으로 설정해주세요.");
+        // 2. 게시글 작성
+        window.submitPost = async function() {
+            const text = document.getElementById('post-text').value.trim();
+            if (!text) return alert("내용을 입력해주세요!");
+
             try {
-                await updateDoc(doc(db, "users", currentUserId), { pass: newPw });
-                currentUserData.pass = newPw; alert("비밀번호가 성공적으로 변경되었습니다!"); closePwModal();
-            } catch (error) { console.error(error); }
+                await addDoc(collection(db, "board"), {
+                    author: currentUserData.name,
+                    school: currentUserData.school,
+                    text: text,
+                    timestamp: new Date().getTime(),
+                    authorId: currentUserId
+                });
+                document.getElementById('post-text').value = '';
+                alert("게시글이 등록되었습니다.");
+                loadPosts(); // 작성 후 다시 불러오기
+            } catch (error) { console.error(error); alert("글쓰기 실패!"); }
         };
 
-        window.initializeDB = async function() {
-            if(!db) return;
-            const members = [
-                { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "ky1234", role: "member" }, { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "jm1234", role: "member" },
-                { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "jy1234", role: "member" }, { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "tk1234", role: "member" },
-                { school: "서울공업고", grade: "1학년", name: "이영진", pass: "yj1234", role: "member" }, { school: "서울공업고", grade: "1학년", name: "이희담", pass: "hd1234", role: "member" }, { school: "서울공업고", grade: "3학년", name: "박우영", pass: "wy1234", role: "member" },
-                { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "ai1234", role: "member" }, { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "kw1234", role: "member" }, { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "hn1234", role: "member" },
-                { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "sy1234", role: "member" }, { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "ys1234", role: "member" }, { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "sj1234", role: "member" }, { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "jb1234", role: "member" },
-                { school: "용산고", grade: "1학년", name: "권우진", pass: "admin1234!", role: "admin" }, { school: "용산고", grade: "1학년", name: "정나후", pass: "nh1234", role: "member" }, { school: "용산고", grade: "1학년", name: "김시우", pass: "su1234", role: "member" }, { school: "용산고", grade: "1학년", name: "채준현", pass: "ch1234", role: "member" },
-                { school: "용산철도고", grade: "2학년", name: "정지우", pass: "ju1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "wj1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "sh1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "ya1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "송주원", pass: "jw1234", role: "member" }
-            ];
-            for (const member of members) { await addDoc(collection(db, "users"), member); }
-            alert("23명 팀원 데이터가 DB에 정상적으로 모두 등록되었습니다!");
+        // 3. 게시글 불러오기
+        async function loadPosts() {
+            const listDiv = document.getElementById('post-list');
+            listDiv.innerHTML = '<p style="text-align:center; color:#888;">게시글을 불러오는 중...</p>';
+
+            try {
+                const q = query(collection(db, "board"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                let html = '';
+                if(querySnapshot.empty) {
+                    html = '<p style="text-align:center; color:#888;">아직 작성된 글이 없습니다. 첫 글을 남겨보세요!</p>';
+                } else {
+                    querySnapshot.forEach((postDoc) => {
+                        const post = postDoc.data();
+                        const date = new Date(post.timestamp).toLocaleString();
+                        
+                        // 내가 쓴 글이면 삭제 버튼 표시, 관리자(권우진)면 모든 글 삭제 가능
+                        let deleteHtml = '';
+                        if (post.authorId === currentUserId || (currentUserData && currentUserData.role === 'admin')) {
+                            deleteHtml = `<button class="delete-btn" onclick="deletePost('${postDoc.id}')">삭제</button>`;
+                        }
+
+                        html += `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div class="post-author">${post.author} <span>(${post.school})</span></div>
+                                <div style="display:flex; align-items:center;">
+                                    <div class="post-date">${date}</div>
+                                    ${deleteHtml}
+                                </div>
+                            </div>
+                            <div class="post-body">${post.text}</div>
+                        </div>`;
+                    });
+                }
+                listDiv.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                listDiv.innerHTML = '<p style="text-align:center; color:red;">게시글을 불러오는데 실패했습니다.</p>';
+            }
+        }
+
+        // 4. 게시글 삭제
+        window.deletePost = async function(postId) {
+            if(confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+                try {
+                    await deleteDoc(doc(db, "board", postId));
+                    alert("삭제되었습니다.");
+                    loadPosts(); // 삭제 후 리스트 새로고침
+                } catch(error) { console.error(error); alert("삭제 실패!"); }
+            }
         };
     </script>
 
     <script>
-        // 모바일 햄버거 메뉴 토글
         const hamburgerBtn = document.getElementById('hamburger');
         const closeMenuBtn = document.getElementById('close-menu');
         const navLinks = document.getElementById('nav-links');
-
+        
         hamburgerBtn.addEventListener('click', () => { navLinks.classList.add('active'); });
         closeMenuBtn.addEventListener('click', () => { navLinks.classList.remove('active'); });
 
-        // 드롭다운 기능
         function toggleDropdown(e, dropdownId) {
             e.preventDefault(); 
             const dropdowns = document.getElementsByClassName("dropdown-content");
             for (let i = 0; i < dropdowns.length; i++) {
-                if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
+                if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) {
+                    dropdowns[i].classList.remove('show');
+                }
             }
             document.getElementById(dropdownId).classList.toggle('show');
         }
+        
         document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
         document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
-
-        // 유튜브 최신 영상 불러오기
-        async function fetchLatestYouTube() {
-            const channelID = 'UC8QwTy46OaCGdTauiPYkeow'; 
-            const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`;
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-            
-            try {
-                const res = await fetch(apiUrl); const data = await res.json();
-                if(data.status === 'ok') {
-                    const videos = data.items.slice(0, 3); let html = '';
-                    videos.forEach(video => {
-                        const pubDate = new Date(video.pubDate.replace(' ', 'T'));
-                        const dateStr = `${pubDate.getFullYear()}.${pubDate.getMonth()+1}.${pubDate.getDate()}`;
-                        html += `
-                        <a href="${video.link}" target="_blank" class="youtube-item">
-                            <img src="${video.thumbnail}" alt="${video.title}" class="youtube-thumb">
-                            <div class="youtube-info"><h4>${video.title}</h4><span>TURTLESS • ${dateStr}</span></div>
-                        </a>`;
-                    });
-                    document.getElementById('youtube-auto-list').innerHTML = html;
+        
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.drop-btn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) { 
+                    dropdowns[i].classList.remove('show'); 
                 }
-            } catch (error) { console.error(error); }
-        }
-        window.onload = fetchLatestYouTube;
+            }
+        });
     </script>
 </body>
 </html>
