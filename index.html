@@ -54,7 +54,7 @@
 
         .nav-links {
             display: flex;
-            gap: 40px;
+            gap: 30px;
             align-items: center;
         }
 
@@ -70,6 +70,49 @@
             color: var(--dan-red);
         }
 
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none; 
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            min-width: 140px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            z-index: 1000;
+            border: 1px solid var(--border-color);
+            margin-top: 15px; 
+        }
+
+        .dropdown-content.show {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-content a {
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--bg-gray);
+            color: var(--dan-red);
+        }
+
         .login-btn {
             background-color: transparent;
             color: var(--text-main);
@@ -79,6 +122,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+            margin-left: 10px;
         }
 
         .login-btn:hover {
@@ -324,10 +368,32 @@
     <header>
         <div class="logo">TURTLESS</div>
         <div class="nav-links">
-            <a href="#">소개</a>
-            <a href="#">가치</a>
+            <div class="dropdown">
+                <a href="#" class="drop-btn" id="intro-btn">소개</a>
+                <div class="dropdown-content" id="intro-dropdown">
+                    <a href="#">팀 소개</a>
+                    <a href="#">팀원 소개</a>
+                    <a href="#">경력</a>
+                    <a href="#">슬로건</a>
+                    <a href="#">로고</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <a href="#" class="drop-btn" id="value-btn">가치</a>
+                <div class="dropdown-content" id="value-dropdown">
+                    <a href="#">핵심가치</a>
+                    <a href="#">사회공헌</a>
+                    <a href="#">슬로건</a>
+                    <a href="#">ESG</a>
+                </div>
+            </div>
+
             <a href="#">주요 활동</a>
             <a href="#">PR 갤러리</a>
+            <a href="#">후원문의</a>
+            <a href="#">미니게임</a>
+            
             <button class="login-btn" id="login-btn-top" onclick="openLoginModal()">팀원 로그인</button>
         </div>
     </header>
@@ -422,5 +488,45 @@
         <p style="margin-top: 10px; opacity: 0.6;">용산철도고등학교 기반 SSRC 연합 팀</p>
     </footer>
 
+    <script>
+        // 드롭다운 토글 함수 (여러 개의 드롭다운을 관리하기 위함)
+        function toggleDropdown(e, dropdownId) {
+            e.preventDefault(); 
+            
+            // 다른 열려있는 드롭다운 모두 닫기
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) {
+                    dropdowns[i].classList.remove('show');
+                }
+            }
+            
+            // 클릭한 드롭다운 토글
+            document.getElementById(dropdownId).classList.toggle('show');
+        }
+
+        // '소개' 메뉴 클릭 시
+        document.getElementById('intro-btn').addEventListener('click', function(e) {
+            toggleDropdown(e, 'intro-dropdown');
+        });
+
+        // '가치' 메뉴 클릭 시
+        document.getElementById('value-btn').addEventListener('click', function(e) {
+            toggleDropdown(e, 'value-dropdown');
+        });
+
+        // 바탕을 클릭하면 모든 드롭다운 닫기
+        window.addEventListener('click', function(e) {
+            // 클릭한 요소가 '.drop-btn' 클래스를 가지지 않은 경우에만 작동
+            if (!e.target.matches('.drop-btn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    if (dropdowns[i].classList.contains('show')) {
+                        dropdowns[i].classList.remove('show');
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
