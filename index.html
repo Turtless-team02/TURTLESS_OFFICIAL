@@ -18,14 +18,18 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; }
 
+        /* 헤더 & 모바일 메뉴 스타일 */
         header {
             position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px); padding: 20px 5%; display: flex; justify-content: space-between;
             align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000;
         }
         .logo { font-size: 28px; font-weight: 900; color: var(--dan-red); letter-spacing: -1px; cursor: pointer; }
-        .nav-links { display: flex; gap: 30px; align-items: center; }
         
+        .hamburger { display: none; font-size: 30px; cursor: pointer; color: var(--text-main); }
+        .close-menu { display: none; }
+        
+        .nav-links { display: flex; gap: 30px; align-items: center; }
         .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.2s ease; }
         .nav-links a:hover { color: var(--dan-red); }
 
@@ -42,9 +46,33 @@
         .login-btn { background-color: transparent; color: var(--text-main); border: 1px solid var(--text-main); padding: 8px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-left: 10px; }
         .login-btn:hover { background-color: var(--text-main); color: white; }
 
+        /* 모바일 반응형 (768px 이하) */
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 250px; height: 100vh;
+                background: white; flex-direction: column; align-items: flex-start;
+                padding: 80px 30px 30px 30px; transition: right 0.3s ease; z-index: 1001;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { right: 0; }
+            .close-menu { 
+                display: block; position: absolute; top: 20px; right: 25px; 
+                font-size: 35px; background: none; border: none; cursor: pointer; color: var(--text-main);
+            }
+            .nav-links > a, .nav-links .dropdown, .login-btn { width: 100%; margin: 10px 0; text-align: left; margin-left: 0; }
+            .dropdown-content { position: static; box-shadow: none; border: none; margin-top: 5px; transform: none; min-width: 100%; padding-left: 15px;}
+            .dropdown-content a { text-align: left; padding: 8px 10px; }
+        }
+
         .hero { width: 100%; height: 60vh; min-height: 400px; background-color: var(--dan-red); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; }
         .hero h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
         .hero p { font-size: 1.2rem; font-weight: 400; opacity: 0.9; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+        }
 
         .section { width: 100%; padding: 100px 5%; }
         .section.gray { background-color: var(--bg-gray); }
@@ -52,14 +80,13 @@
         .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; letter-spacing: -1px; text-align: center; }
         .section-subtitle { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); border-bottom: 2px solid var(--dan-red); display: inline-block; padding-bottom: 5px; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
         .card-media { width: 100%; height: 220px; background-color: #ebebeb; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; }
         .youtube-bg { background-color: #FF0000; }
         .insta-bg { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .project-bg { background-color: var(--text-main); }
-
         .card-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
         .card-content h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--text-main); }
         .card-content p { color: var(--text-sub); font-size: 1rem; margin-bottom: 20px; flex-grow: 1; }
@@ -84,14 +111,7 @@
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer; }
         .gallery-item img:hover { transform: scale(1.05); }
 
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 40px; }
-        .member-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: all 0.2s; }
-        .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
-        .member-school { font-size: 0.85rem; color: var(--dan-red); font-weight: 800; margin-bottom: 6px; }
-        .member-name { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
-        .member-grade { font-size: 0.9rem; color: var(--text-sub); }
-
-        /* 모달 스타일 공통 */
+        /* 모달 스타일 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative; }
         .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; background: none; border: none; color: var(--text-sub); }
@@ -109,8 +129,11 @@
 <body>
 
     <header>
-        <div class="logo" onclick="location.reload()">TURTLESS</div>
-        <div class="nav-links">
+        <div class="logo" onclick="location.href='index.html'">TURTLESS</div>
+        <div class="hamburger" id="hamburger">☰</div>
+        
+        <div class="nav-links" id="nav-links">
+            <button class="close-menu" id="close-menu">×</button>
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="intro-btn">소개</a>
                 <div class="dropdown-content" id="intro-dropdown">
@@ -134,7 +157,6 @@
             <a href="pr_gallery.html">PR 갤러리</a>
             <a href="sponsorship.html">후원문의</a>
             <a href="minigame.html">미니게임</a>
-            
             <button class="login-btn" id="login-btn-top" onclick="openLoginModal()">팀원 로그인</button>
         </div>
     </header>
@@ -162,7 +184,6 @@
             <button class="action-btn" onclick="firebaseLogin()">인증하기</button>
         </div>
     </div>
-
     <div id="pw-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-btn" onclick="closePwModal()">×</button>
@@ -211,14 +232,11 @@
 
             <div id="member-actions">
                 <h3 style="color: var(--dan-red); margin-bottom: 20px; display: inline-block;">팀원 전용 게시판</h3>
-                
                 <button onclick="openPwModal()" style="float: right; background: white; color: var(--text-main); padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; font-weight: bold;">비밀번호 변경</button>
                 <div style="clear: both;"></div>
-
                 <textarea style="width: 100%; height: 120px; padding: 15px; border-radius: 8px; border: 1px solid #ccc; margin-top:10px;" placeholder="새로운 소식을 작성하세요..."></textarea>
                 <button style="background: var(--text-main); color: #fff; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer;">등록하기</button>
             </div>
-
             <div id="admin-panel">
                 <h3 style="margin-bottom: 10px;">👑 관리자 권한 메뉴</h3>
                 <p>권우진님, 사이트 내 콘텐츠 수정 및 팀원 권한 관리가 가능합니다.</p>
@@ -238,247 +256,136 @@
                 <div class="media-gallery">
                     <h2 class="section-subtitle">Our Gallery</h2>
                     <div class="gallery-grid">
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+1" alt="사이트 사진 1"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+2" alt="사이트 사진 2"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+3" alt="사이트 사진 3"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+4" alt="사이트 사진 4"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+1" alt="사진 1"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+2" alt="사진 2"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+3" alt="사진 3"></div>
+                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+4" alt="사진 4"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section">
-        <div class="inner">
-            <h2 class="section-title">Our Team</h2>
-            <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto 40px auto; color: var(--text-sub); text-align: center;">
-                7개 학교의 인재들이 모여 TURTLESS라는 하나의 이름으로 혁신을 만들어갑니다.
-            </p>
-            <div id="team-grid-container" class="team-grid"></div>
-        </div>
-    </section>
-
     <footer>
         <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
         <p style="margin-top: 10px; opacity: 0.6;">용산철도고등학교 기반 SSRC 연합 팀</p>
-        
         <button onclick="initializeDB()" style="margin-top: 30px; padding: 12px 20px; background-color: var(--dan-red); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-block;">
             🚨 관리자용: 최초 1회 명단 DB 등록하기 (클릭)
         </button>
-        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">*DB 등록을 성공한 이후에는 코드에서 이 버튼(button 태그)을 지워주시면 깔끔합니다.</p>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // 본인의 파이어베이스 설정값으로 채워주세요
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", authDomain: "YOUR_DOMAIN", projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_BUCKET", messagingSenderId: "123456789", appId: "1:123456789:web:abcdefg"
+            apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
+            authDomain: "turtless-web.firebaseapp.com",
+            projectId: "turtless-web",
+            storageBucket: "turtless-web.firebasestorage.app",
+            messagingSenderId: "794305996729",
+            appId: "1:794305996729:web:cf7132e77cc5621c5bb868"
         };
         
         let db;
-        try { 
-            const app = initializeApp(firebaseConfig); 
-            db = getFirestore(app); 
-        } catch (e) { 
-            console.log("Firebase 미설정 상태"); 
-        }
+        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch (e) { console.log("Firebase 미설정 상태"); }
 
-        let currentUserId = null;
-        let currentUserData = null;
+        let currentUserId = null; let currentUserData = null;
 
         window.openLoginModal = () => document.getElementById('login-modal').style.display = 'flex';
         window.closeLoginModal = () => document.getElementById('login-modal').style.display = 'none';
-
-        window.openPwModal = () => {
-            document.getElementById('old-pw').value = '';
-            document.getElementById('new-pw').value = '';
-            document.getElementById('pw-modal').style.display = 'flex';
-        };
+        window.openPwModal = () => { document.getElementById('old-pw').value = ''; document.getElementById('new-pw').value = ''; document.getElementById('pw-modal').style.display = 'flex'; };
         window.closePwModal = () => document.getElementById('pw-modal').style.display = 'none';
 
         window.firebaseLogin = async function() {
-            const school = document.getElementById('school').value;
-            const grade = document.getElementById('grade').value;
-            const name = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-
-            if(!db) { alert("Firebase 설정이 올바르지 않습니다."); return; }
-
+            const school = document.getElementById('school').value; const grade = document.getElementById('grade').value;
+            const name = document.getElementById('username').value.trim(); const pass = document.getElementById('password').value.trim();
+            if(!db) return;
             try {
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, where("school", "==", school), where("grade", "==", grade), where("name", "==", name), where("pass", "==", pass));
+                const q = query(collection(db, "users"), where("school", "==", school), where("grade", "==", grade), where("name", "==", name), where("pass", "==", pass));
                 const querySnapshot = await getDocs(q);
-
                 if (!querySnapshot.empty) {
-                    currentUserId = querySnapshot.docs[0].id;
-                    currentUserData = querySnapshot.docs[0].data();
-
+                    currentUserId = querySnapshot.docs[0].id; currentUserData = querySnapshot.docs[0].data();
                     alert(`${currentUserData.name} 팀원님 인증에 성공했습니다.`);
-                    closeLoginModal();
-                    
-                    document.getElementById('member-actions').style.display = 'block';
+                    closeLoginModal(); document.getElementById('member-actions').style.display = 'block';
                     document.getElementById('login-btn-top').innerText = '로그아웃';
                     document.getElementById('login-btn-top').onclick = () => location.reload();
-
-                    if (currentUserData.role === "admin") {
-                        document.getElementById('admin-panel').style.display = 'block';
-                    }
-                } else {
-                    alert("정보가 일치하지 않거나 비밀번호가 틀렸습니다.");
-                }
-            } catch (error) { 
-                console.error(error); 
-                alert("로그인 중 오류가 발생했습니다.");
-            }
+                    if (currentUserData.role === "admin") document.getElementById('admin-panel').style.display = 'block';
+                } else alert("정보가 일치하지 않거나 비밀번호가 틀렸습니다.");
+            } catch (error) { console.error(error); }
         };
 
         window.changePassword = async function() {
-            const oldPw = document.getElementById('old-pw').value.trim();
-            const newPw = document.getElementById('new-pw').value.trim();
-
-            if(oldPw !== currentUserData.pass) {
-                alert("현재 비밀번호가 일치하지 않습니다.");
-                return;
-            }
-            if(newPw.length < 4) {
-                alert("새 비밀번호는 4자리 이상으로 설정해주세요.");
-                return;
-            }
-
+            const oldPw = document.getElementById('old-pw').value.trim(); const newPw = document.getElementById('new-pw').value.trim();
+            if(oldPw !== currentUserData.pass) return alert("현재 비밀번호가 일치하지 않습니다.");
+            if(newPw.length < 4) return alert("새 비밀번호는 4자리 이상으로 설정해주세요.");
             try {
-                const userRef = doc(db, "users", currentUserId);
-                await updateDoc(userRef, { pass: newPw });
-                currentUserData.pass = newPw; 
-                
-                alert("비밀번호가 성공적으로 변경되었습니다! 다음부터는 새 비밀번호로 로그인해주세요.");
-                closePwModal();
-            } catch (error) {
-                console.error(error);
-                alert("비밀번호 변경 중 오류가 발생했습니다.");
-            }
+                await updateDoc(doc(db, "users", currentUserId), { pass: newPw });
+                currentUserData.pass = newPw; alert("비밀번호가 성공적으로 변경되었습니다!"); closePwModal();
+            } catch (error) { console.error(error); }
         };
 
-        // 버튼을 클릭했을 때 실행되는 함수!
         window.initializeDB = async function() {
-            if(!db) { alert("파이어베이스 정보가 입력되지 않았습니다."); return; }
+            if(!db) return;
             const members = [
-                { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "ky1234", role: "member" },
-                { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "jm1234", role: "member" },
-                { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "jy1234", role: "member" },
-                { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "tk1234", role: "member" },
-                { school: "서울공업고", grade: "1학년", name: "이영진", pass: "yj1234", role: "member" },
-                { school: "서울공업고", grade: "1학년", name: "이희담", pass: "hd1234", role: "member" },
-                { school: "서울공업고", grade: "3학년", name: "박우영", pass: "wy1234", role: "member" },
-                { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "ai1234", role: "member" },
-                { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "kw1234", role: "member" },
-                { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "hn1234", role: "member" },
-                { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "sy1234", role: "member" },
-                { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "ys1234", role: "member" },
-                { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "sj1234", role: "member" },
-                { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "jb1234", role: "member" },
-                { school: "용산고", grade: "1학년", name: "권우진", pass: "admin1234!", role: "admin" }, 
-                { school: "용산고", grade: "1학년", name: "정나후", pass: "nh1234", role: "member" },
-                { school: "용산고", grade: "1학년", name: "김시우", pass: "su1234", role: "member" },
-                { school: "용산고", grade: "1학년", name: "채준현", pass: "ch1234", role: "member" },
-                { school: "용산철도고", grade: "2학년", name: "정지우", pass: "ju1234", role: "member" },
-                { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "wj1234", role: "member" },
-                { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "sh1234", role: "member" },
-                { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "ya1234", role: "member" },
-                { school: "용산철도고", grade: "2학년", name: "송주원", pass: "jw1234", role: "member" }
+                { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "ky1234", role: "member" }, { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "jm1234", role: "member" },
+                { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "jy1234", role: "member" }, { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "tk1234", role: "member" },
+                { school: "서울공업고", grade: "1학년", name: "이영진", pass: "yj1234", role: "member" }, { school: "서울공업고", grade: "1학년", name: "이희담", pass: "hd1234", role: "member" }, { school: "서울공업고", grade: "3학년", name: "박우영", pass: "wy1234", role: "member" },
+                { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "ai1234", role: "member" }, { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "kw1234", role: "member" }, { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "hn1234", role: "member" },
+                { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "sy1234", role: "member" }, { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "ys1234", role: "member" }, { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "sj1234", role: "member" }, { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "jb1234", role: "member" },
+                { school: "용산고", grade: "1학년", name: "권우진", pass: "admin1234!", role: "admin" }, { school: "용산고", grade: "1학년", name: "정나후", pass: "nh1234", role: "member" }, { school: "용산고", grade: "1학년", name: "김시우", pass: "su1234", role: "member" }, { school: "용산고", grade: "1학년", name: "채준현", pass: "ch1234", role: "member" },
+                { school: "용산철도고", grade: "2학년", name: "정지우", pass: "ju1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "wj1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "sh1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "ya1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "송주원", pass: "jw1234", role: "member" }
             ];
-            
-            const usersRef = collection(db, "users");
-            for (const member of members) {
-                await addDoc(usersRef, member);
-            }
-            alert("23명 팀원 데이터가 DB에 정상적으로 모두 등록되었습니다! 이제 로그인과 비밀번호 변경이 가능합니다.");
-        };
-
-        window.renderTeamMembers = function() {
-            const container = document.getElementById('team-grid-container');
-            const displayMembers = [
-                { school: "경기기계공업고", grade: "2학년", name: "김기율" }, { school: "경기기계공업고", grade: "2학년", name: "이재민" },
-                { school: "경복비즈니스고", grade: "2학년", name: "채준영" }, { school: "경복비즈니스고", grade: "2학년", name: "김태균" },
-                { school: "서울공업고", grade: "1학년", name: "이영진" }, { school: "서울공업고", grade: "1학년", name: "이희담" }, { school: "서울공업고", grade: "3학년", name: "박우영" },
-                { school: "서울매그넷고", grade: "1학년", name: "김아인" }, { school: "서울매그넷고", grade: "1학년", name: "류경원" }, { school: "서울매그넷고", grade: "1학년", name: "장혜나" },
-                { school: "선린인터넷고", grade: "1학년", name: "김시윤" }, { school: "선린인터넷고", grade: "1학년", name: "김윤상" }, { school: "선린인터넷고", grade: "2학년", name: "강석주" }, { school: "선린인터넷고", grade: "2학년", name: "이준범" },
-                { school: "용산고", grade: "1학년", name: "권우진" }, { school: "용산고", grade: "1학년", name: "정나후" }, { school: "용산고", grade: "1학년", name: "김시우" }, { school: "용산고", grade: "1학년", name: "채준현" },
-                { school: "용산철도고", grade: "2학년", name: "정지우" }, { school: "용산철도고", grade: "2학년", name: "홍우진" }, { school: "용산철도고", grade: "2학년", name: "김승혁" }, { school: "용산철도고", grade: "2학년", name: "강윤아" }, { school: "용산철도고", grade: "2학년", name: "송주원" }
-            ];
-            
-            let html = '';
-            displayMembers.forEach(member => {
-                html += `
-                <div class="member-card">
-                    <div class="member-school">${member.school}</div>
-                    <div class="member-name">${member.name}</div>
-                    <div class="member-grade">${member.grade}</div>
-                </div>
-                `;
-            });
-            container.innerHTML = html;
+            for (const member of members) { await addDoc(collection(db, "users"), member); }
+            alert("23명 팀원 데이터가 DB에 정상적으로 모두 등록되었습니다!");
         };
     </script>
 
     <script>
+        // 모바일 햄버거 메뉴 토글
+        const hamburgerBtn = document.getElementById('hamburger');
+        const closeMenuBtn = document.getElementById('close-menu');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburgerBtn.addEventListener('click', () => { navLinks.classList.add('active'); });
+        closeMenuBtn.addEventListener('click', () => { navLinks.classList.remove('active'); });
+
+        // 드롭다운 기능
         function toggleDropdown(e, dropdownId) {
             e.preventDefault(); 
             const dropdowns = document.getElementsByClassName("dropdown-content");
             for (let i = 0; i < dropdowns.length; i++) {
-                if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) {
-                    dropdowns[i].classList.remove('show');
-                }
+                if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
             }
             document.getElementById(dropdownId).classList.toggle('show');
         }
         document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
         document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
-        window.addEventListener('click', function(e) {
-            if (!e.target.matches('.drop-btn')) {
-                const dropdowns = document.getElementsByClassName("dropdown-content");
-                for (let i = 0; i < dropdowns.length; i++) { dropdowns[i].classList.remove('show'); }
-            }
-        });
 
+        // 유튜브 최신 영상 불러오기
         async function fetchLatestYouTube() {
             const channelID = 'UC8QwTy46OaCGdTauiPYkeow'; 
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`;
             const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
             
             try {
-                const res = await fetch(apiUrl);
-                const data = await res.json();
-                
+                const res = await fetch(apiUrl); const data = await res.json();
                 if(data.status === 'ok') {
-                    const videos = data.items.slice(0, 3);
-                    let html = '';
+                    const videos = data.items.slice(0, 3); let html = '';
                     videos.forEach(video => {
                         const pubDate = new Date(video.pubDate.replace(' ', 'T'));
                         const dateStr = `${pubDate.getFullYear()}.${pubDate.getMonth()+1}.${pubDate.getDate()}`;
                         html += `
                         <a href="${video.link}" target="_blank" class="youtube-item">
-                            <img src="${video.thumbnail}" alt="${video.title} 썸네일" class="youtube-thumb">
-                            <div class="youtube-info">
-                                <h4>${video.title}</h4>
-                                <span>TURTLESS • ${dateStr}</span>
-                            </div>
-                        </a>
-                        `;
+                            <img src="${video.thumbnail}" alt="${video.title}" class="youtube-thumb">
+                            <div class="youtube-info"><h4>${video.title}</h4><span>TURTLESS • ${dateStr}</span></div>
+                        </a>`;
                     });
                     document.getElementById('youtube-auto-list').innerHTML = html;
                 }
             } catch (error) { console.error(error); }
         }
-
-        window.onload = function() {
-            fetchLatestYouTube();
-            setTimeout(() => {
-                if(typeof renderTeamMembers === 'function') renderTeamMembers();
-            }, 500);
-        };
+        window.onload = fetchLatestYouTube;
     </script>
 </body>
 </html>
