@@ -6,387 +6,109 @@
     <title>팀원 소개 - TURTLESS</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --dan-red: #c1272d; --text-main: #111111; --text-sub: #666666; --border-color: #eaeaea; --bg-gray: #f8f9fa; }
+        :root { --dan-red: #c1272d; --bg-gray: #f8f9fa; --text-main: #111111; --text-sub: #666666; --border-color: #eaeaea; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: var(--bg-gray); line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: var(--bg-gray); }
 
-        /* 상단 네비게이션 헤더 */
+        /* 상단 메뉴바 (index.html과 동일) */
         header { position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000; }
         .logo { font-size: 28px; font-weight: 900; color: var(--dan-red); cursor: pointer; }
-        .hamburger { display: none; font-size: 30px; cursor: pointer; color: var(--text-main); }
-        .close-menu { display: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; }
+
+        /* 본문 영역 */
+        .container { max-width: 1200px; margin: 80px auto; padding: 0 5%; text-align: center; }
+        h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; }
+        p.subtitle { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 50px; }
+
+        /* 명함형 팀원 그리드 */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
         
-        .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.2s ease; }
-        .nav-links a:hover { color: var(--dan-red); }
-
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px; padding: 10px 0; z-index: 1000; border: 1px solid var(--border-color); margin-top: 15px; }
-        .dropdown-content.show { display: flex; flex-direction: column; }
-        .dropdown-content a { padding: 10px 20px; text-decoration: none; display: block; color: var(--text-main); font-size: 15px; font-weight: 500; text-align: center; }
-        .dropdown-content a:hover { background-color: var(--bg-gray); color: var(--dan-red); }
-
-        .login-btn { background-color: transparent; color: var(--text-main); border: 1px solid var(--text-main); padding: 8px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-left: 10px; }
-        .login-btn:hover { background-color: var(--text-main); color: white; }
-
-        /* 모바일 반응형 메뉴 */
-        @media (max-width: 768px) {
-            .hamburger { display: block; }
-            .nav-links { position: fixed; top: 0; right: -100%; width: 250px; height: 100vh; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px 30px 30px; transition: right 0.3s ease; z-index: 1001; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
-            .nav-links.active { right: 0; }
-            .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 35px; background: none; border: none; cursor: pointer; color: var(--text-main); }
-            .nav-links > a, .nav-links .dropdown, .login-btn { width: 100%; margin: 10px 0; text-align: left; margin-left: 0; }
-            .dropdown-content { position: static; box-shadow: none; border: none; margin-top: 5px; transform: none; min-width: 100%; padding-left: 15px;}
-            .dropdown-content a { text-align: left; padding: 8px 10px; }
-        }
-
-        /* 팀원 소개 섹션 */
-        .section { width: 100%; padding: 80px 5%; max-width: 1200px; margin: 0 auto; text-align: center;}
-        .section h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; }
+        .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); transition: transform 0.3s; }
+        .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
         
-        /* 로그인 시 나타나는 관리 버튼들 (사진등록, 비번변경) */
-        #member-actions-container { display: none; margin-bottom: 40px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
-        .action-btn-outline { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s; margin: 0 5px; }
-        .action-btn-outline:hover { border-color: var(--dan-red); color: var(--dan-red); }
-        .upload-btn { background: var(--dan-red); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s; margin: 0 5px; }
-        .upload-btn:hover { background: var(--dan-red-dark); }
+        /* 사진 영역 & NO IMAGE */
+        .photo-area { width: 100%; aspect-ratio: 1/1; background-color: #e2e2e2; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .photo-area img { width: 100%; height: 100%; object-fit: cover; }
+        .no-image { color: #999; font-weight: bold; font-size: 1.2rem; letter-spacing: 1px; }
 
-        /* 팀원 카드 그리드 */
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 30px; }
-        .member-card { background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s; }
-        .member-card:hover { transform: translateY(-10px); }
-        
-        /* 마우스 올리면 사진 바뀌는 효과 CSS */
-        .profile-img-wrap { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background-color: #eee; }
-        .profile-img-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease-in-out; }
-        .img-hover { opacity: 0; }
-        .profile-img-wrap:hover .img-default { opacity: 0; }
-        .profile-img-wrap:hover .img-hover { opacity: 1; }
-
-        .member-info { padding: 20px; text-align: center; }
-        .member-school { font-size: 0.9rem; color: var(--dan-red); font-weight: 800; margin-bottom: 5px; }
-        .member-name { font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
-        .member-grade { font-size: 0.9rem; color: var(--text-sub); margin-top: 2px; }
-
-        /* 모달 창 공통 스타일 */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; background: none; border: none; color: var(--text-sub); }
-        .modal-content h2 { margin-bottom: 25px; font-size: 1.5rem; text-align: center; }
-        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background-color: var(--bg-gray); outline: none; }
-        .modal-content input:focus, .modal-content select:focus { border-color: var(--dan-red); background-color: #fff; }
-        .modal-content .action-btn { width: 100%; background-color: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .file-label { display: block; text-align: left; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: var(--text-main); }
-        
-        footer { background-color: #111; color: #888; padding: 40px 5%; text-align: center; font-size: 0.9rem; margin-top: 50px; }
+        .info-area { padding: 20px; text-align: left; }
+        .info-area .school { font-size: 0.9rem; color: var(--dan-red); font-weight: 700; margin-bottom: 5px; }
+        .info-area .name { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
+        .info-area .grade { font-size: 0.9rem; color: var(--text-sub); margin-left: 5px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo" onclick="location.href='index.html'">TURTLESS</div>
-        <div class="hamburger" id="hamburger">☰</div>
-        
-        <div class="nav-links" id="nav-links">
-            <button class="close-menu" id="close-menu">×</button>
-            <div class="dropdown">
-                <a href="#" class="drop-btn" id="intro-btn">소개</a>
-                <div class="dropdown-content" id="intro-dropdown">
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">팀 소개</a>
-                    <a href="intro_member.html">팀원 소개</a>
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">경력</a>
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">슬로건</a>
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">로고</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <a href="#" class="drop-btn" id="value-btn">가치</a>
-                <div class="dropdown-content" id="value-dropdown">
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">핵심가치</a>
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">사회공헌</a>
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">슬로건</a>
-                    <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">ESG</a>
-                </div>
-            </div>
-            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">주요 활동</a>
-            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">PR 갤러리</a>
-            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">후원문의</a>
-            <a href="javascript:alert('페이지 준비중입니다. html 파일을 생성해주세요!');">미니게임</a>
-            
-            <button class="login-btn" id="login-btn-top" onclick="openLoginModal()">팀원 로그인</button>
-        </div>
+        <div class="nav-links"><a href="index.html">← 메인으로 돌아가기</a></div>
     </header>
 
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeLoginModal()">×</button>
-            <h2>팀원 인증</h2>
-            <select id="school">
-                <option value="경기기계공업고">경기기계공업고</option>
-                <option value="경복비즈니스고">경복비즈니스고</option>
-                <option value="서울공업고">서울공업고</option>
-                <option value="서울매그넷고">서울매그넷고</option>
-                <option value="선린인터넷고">선린인터넷고</option>
-                <option value="용산고">용산고</option>
-                <option value="용산철도고">용산철도고</option>
-            </select>
-            <select id="grade">
-                <option value="1학년">1학년</option>
-                <option value="2학년">2학년</option>
-                <option value="3학년">3학년</option>
-            </select>
-            <input type="text" id="username" placeholder="이름 (예: 권우진)">
-            <input type="password" id="password" placeholder="비밀번호">
-            <button class="action-btn" onclick="firebaseLogin()">인증하기</button>
-        </div>
-    </div>
-
-    <div id="pw-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closePwModal()">×</button>
-            <h2>비밀번호 변경</h2>
-            <input type="password" id="old-pw" placeholder="현재 비밀번호">
-            <input type="password" id="new-pw" placeholder="새 비밀번호 (4자리 이상)">
-            <button class="action-btn" onclick="changePassword()">변경하기</button>
-        </div>
-    </div>
-
-    <div id="photo-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closePhotoModal()">×</button>
-            <h2>내 프로필 사진 등록</h2>
-            <label class="file-label">1. 기본 사진 (평소에 보일 사진)</label>
-            <input type="file" id="img-default-upload" accept="image/*">
-            <label class="file-label" style="margin-top: 15px;">2. 재미있는 사진 (마우스 올렸을 때)</label>
-            <input type="file" id="img-hover-upload" accept="image/*">
-            <button class="action-btn" onclick="uploadPhotos()">저장하기</button>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 10px; text-align: center;">*정사각형 모양의 사진이 가장 예쁩니다.</p>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>Our Team</h2>
-        <p style="margin-bottom:30px; color:var(--text-sub);">마우스 커서를 팀원 사진 위에 올려보세요!</p>
+    <div class="container">
+        <h1>TURTLESS 팀원 소개</h1>
+        <p class="subtitle">지속가능한 미래를 만들어가는 23명의 팀원들을 소개합니다.</p>
         
-        <div id="member-actions-container">
-            <h3 style="color: var(--dan-red); margin-bottom: 15px; font-size: 1.1rem;">🛠️ 내 정보 관리</h3>
-            <button class="action-btn-outline" onclick="openPwModal()">🔒 비밀번호 변경</button>
-            <button class="upload-btn" onclick="openPhotoModal()">📸 프로필 사진 등록/변경</button>
-        </div>
-
-        <div class="team-grid" id="team-grid-container">
-            <p style="text-align: center; width: 100%; color: #888;">데이터를 불러오는 중입니다...</p>
+        <div id="member-list" class="member-grid">
+            <p style="grid-column: 1/-1; text-align:center; padding: 50px; color:#888;">데이터를 불러오는 중입니다...</p>
         </div>
     </div>
-
-    <footer>
-        <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
-        <p style="margin-top: 10px; opacity: 0.6;">용산철도고등학교 기반 SSRC 연합 팀</p>
-    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
             authDomain: "turtless-web.firebaseapp.com",
-            projectId: "turtless-web",
-            storageBucket: "turtless-web.firebasestorage.app",
-            messagingSenderId: "794305996729",
-            appId: "1:794305996729:web:cf7132e77cc5621c5bb868"
+            projectId: "turtless-web"
         };
         
-        let db;
-        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch (e) {}
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        let currentUserId = null;
-        let currentUserData = null;
-
-        window.openLoginModal = () => document.getElementById('login-modal').style.display = 'flex';
-        window.closeLoginModal = () => document.getElementById('login-modal').style.display = 'none';
-        window.openPwModal = () => { document.getElementById('old-pw').value = ''; document.getElementById('new-pw').value = ''; document.getElementById('pw-modal').style.display = 'flex'; };
-        window.closePwModal = () => document.getElementById('pw-modal').style.display = 'none';
-        window.openPhotoModal = () => document.getElementById('photo-modal').style.display = 'flex';
-        window.closePhotoModal = () => document.getElementById('photo-modal').style.display = 'none';
-
-        // 🌟 [핵심] DB가 비어있으면 코드 안에서 알아서 23명을 자동 등록합니다!
-        async function checkAndAutoSeedDB() {
-            if(!db) return;
-            const usersRef = collection(db, "users");
-            const snapshot = await getDocs(usersRef);
-            
-            // DB에 데이터가 하나도 없을 때만 실행됨
-            if (snapshot.empty) {
-                console.log("DB가 비어있어 초기 데이터를 자동 등록합니다...");
-                const members = [
-                    { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "ky1234", role: "member" }, { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "jm1234", role: "member" },
-                    { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "jy1234", role: "member" }, { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "tk1234", role: "member" },
-                    { school: "서울공업고", grade: "1학년", name: "이영진", pass: "yj1234", role: "member" }, { school: "서울공업고", grade: "1학년", name: "이희담", pass: "hd1234", role: "member" }, { school: "서울공업고", grade: "3학년", name: "박우영", pass: "wy1234", role: "member" },
-                    { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "ai1234", role: "member" }, { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "kw1234", role: "member" }, { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "hn1234", role: "member" },
-                    { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "sy1234", role: "member" }, { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "ys1234", role: "member" }, { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "sj1234", role: "member" }, { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "jb1234", role: "member" },
-                    { school: "용산고", grade: "1학년", name: "권우진", pass: "admin1234!", role: "admin" }, { school: "용산고", grade: "1학년", name: "정나후", pass: "nh1234", role: "member" }, { school: "용산고", grade: "1학년", name: "김시우", pass: "su1234", role: "member" }, { school: "용산고", grade: "1학년", name: "채준현", pass: "ch1234", role: "member" },
-                    { school: "용산철도고", grade: "2학년", name: "정지우", pass: "ju1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "wj1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "sh1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "ya1234", role: "member" }, { school: "용산철도고", grade: "2학년", name: "송주원", pass: "jw1234", role: "member" }
-                ];
-                for (const member of members) { await addDoc(usersRef, member); }
-                console.log("초기 데이터 등록 완료");
-            }
-        }
-
-        // 🌟 [핵심] 외부인 누구나 볼 수 있는 명단 불러오기 함수
-        async function fetchTeamMembers() {
-            if(!db) return;
-            const container = document.getElementById('team-grid-container');
-            container.innerHTML = ''; 
-
+        async function loadMembers() {
+            const listDiv = document.getElementById('member-list');
             try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                let members = [];
-                querySnapshot.forEach((doc) => { members.push(doc.data()); });
-
-                // 학교 기준 가나다 정렬
-                members.sort((a, b) => a.school.localeCompare(b.school) || a.name.localeCompare(b.name));
+                // 가나다 순(학교 기준) 정렬해서 불러오기
+                const q = query(collection(db, "users"), orderBy("school"), orderBy("name"));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    listDiv.innerHTML = '<p style="grid-column: 1/-1;">등록된 팀원이 없습니다.</p>';
+                    return;
+                }
 
                 let html = '';
-                members.forEach(member => {
-                    // 기본 회색 이미지 설정
-                    const defaultImg = member.imgDefault ? member.imgDefault : 'https://via.placeholder.com/400x400/dddddd/666666?text=No+Image';
-                    const hoverImg = member.imgHover ? member.imgHover : defaultImg;
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    // 사진 URL이 있으면 이미지를, 없으면 NO IMAGE 텍스트 출력
+                    const photoHtml = data.photoUrl 
+                        ? `<img src="${data.photoUrl}" alt="${data.name} 사진">` 
+                        : `<div class="no-image">NO IMAGE</div>`;
 
                     html += `
-                    <div class="member-card">
-                        <div class="profile-img-wrap">
-                            <img src="${defaultImg}" class="img-default" alt="${member.name} 기본사진">
-                            <img src="${hoverImg}" class="img-hover" alt="${member.name} 호버사진">
+                        <div class="member-card">
+                            <div class="photo-area">
+                                ${photoHtml}
+                            </div>
+                            <div class="info-area">
+                                <div class="school">${data.school}</div>
+                                <div class="name">${data.name} <span class="grade">${data.grade}</span></div>
+                            </div>
                         </div>
-                        <div class="member-info">
-                            <div class="member-school">${member.school}</div>
-                            <div class="member-name">${member.name}</div>
-                            <div class="member-grade">${member.grade}</div>
-                        </div>
-                    </div>`;
+                    `;
                 });
-                container.innerHTML = html;
+                listDiv.innerHTML = html;
+
             } catch (error) {
-                container.innerHTML = '<p>데이터를 불러올 수 없습니다.</p>';
+                console.error(error);
+                listDiv.innerHTML = '<p style="grid-column: 1/-1; color:red;">데이터를 불러오지 못했습니다.</p>';
             }
         }
 
-        // 로그인 기능
-        window.firebaseLogin = async function() {
-            const school = document.getElementById('school').value;
-            const grade = document.getElementById('grade').value;
-            const name = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-
-            try {
-                const q = query(collection(db, "users"), where("school", "==", school), where("grade", "==", grade), where("name", "==", name), where("pass", "==", pass));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    currentUserId = querySnapshot.docs[0].id;
-                    currentUserData = querySnapshot.docs[0].data();
-                    
-                    alert(`${currentUserData.name} 팀원님 환영합니다!`);
-                    closeLoginModal();
-                    
-                    // 로그인 시 관리 기능 노출
-                    document.getElementById('member-actions-container').style.display = 'block';
-                    document.getElementById('login-btn-top').innerText = '로그아웃';
-                    document.getElementById('login-btn-top').onclick = () => location.reload();
-                } else {
-                    alert("정보가 일치하지 않거나 비밀번호가 틀렸습니다.");
-                }
-            } catch (error) { console.error(error); }
-        };
-
-        // 비밀번호 변경 기능
-        window.changePassword = async function() {
-            const oldPw = document.getElementById('old-pw').value.trim();
-            const newPw = document.getElementById('new-pw').value.trim();
-
-            if(oldPw !== currentUserData.pass) return alert("현재 비밀번호가 틀렸습니다.");
-            if(newPw.length < 4) return alert("새 비밀번호는 4자리 이상 입력해주세요.");
-
-            try {
-                await updateDoc(doc(db, "users", currentUserId), { pass: newPw });
-                currentUserData.pass = newPw; 
-                alert("비밀번호가 성공적으로 변경되었습니다!");
-                closePwModal();
-            } catch (error) { console.error(error); }
-        };
-
-        // 사진 압축 및 등록 로직
-        function compressImage(file, callback) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 400; let width = img.width; let height = img.height;
-                    if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
-                    else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.7)); 
-                }
-                img.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-
-        window.uploadPhotos = async function() {
-            const fileDefault = document.getElementById('img-default-upload').files[0];
-            const fileHover = document.getElementById('img-hover-upload').files[0];
-
-            if(!fileDefault && !fileHover) return alert("등록할 사진을 선택해주세요.");
-
-            let updateData = {}; let processed = 0;
-            let totalToProcess = (fileDefault ? 1 : 0) + (fileHover ? 1 : 0);
-
-            const finalizeUpdate = async () => {
-                try {
-                    await updateDoc(doc(db, "users", currentUserId), updateData);
-                    alert("사진이 성공적으로 저장되었습니다!");
-                    closePhotoModal(); fetchTeamMembers();
-                } catch (error) { console.error(error); }
-            };
-
-            if(fileDefault) compressImage(fileDefault, (base64) => { updateData.imgDefault = base64; processed++; if(processed === totalToProcess) finalizeUpdate(); });
-            if(fileHover) compressImage(fileHover, (base64) => { updateData.imgHover = base64; processed++; if(processed === totalToProcess) finalizeUpdate(); });
-        };
-
-        // 페이지 열릴 때 동작 순서: DB 비어있는지 체크 -> 명단 불러오기
-        window.onload = async function() {
-            await checkAndAutoSeedDB(); 
-            fetchTeamMembers(); 
-        };
+        window.onload = loadMembers;
     </script>
 
-    <script>
-        // 모바일 햄버거 메뉴 동작
-        const hamburgerBtn = document.getElementById('hamburger');
-        const closeMenuBtn = document.getElementById('close-menu');
-        const navLinks = document.getElementById('nav-links');
-        hamburgerBtn.addEventListener('click', () => { navLinks.classList.add('active'); });
-        closeMenuBtn.addEventListener('click', () => { navLinks.classList.remove('active'); });
-
-        function toggleDropdown(e, dropdownId) {
-            e.preventDefault(); 
-            const dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                if (dropdowns[i].id !== dropdownId && dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
-            }
-            document.getElementById(dropdownId).classList.toggle('show');
-        }
-        document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
-        document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
-        window.addEventListener('click', function(e) {
-            if (!e.target.matches('.drop-btn')) {
-                const dropdowns = document.getElementsByClassName("dropdown-content");
-                for (let i = 0; i < dropdowns.length; i++) { dropdowns[i].classList.remove('show'); }
-            }
-        });
-    </script>
 </body>
 </html>
