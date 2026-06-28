@@ -145,9 +145,9 @@
         .info-area .name { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
         .info-area .grade { font-size: 0.9rem; color: var(--text-sub); margin-left: 5px; }
 
-        /* 💡 수정 모드 (CMS) 전용 스타일 */
-        .editable-content { transition: all 0.3s; border-radius: 4px; padding: 2px 5px; margin: -2px -5px; }
-        .edit-mode .editable-content { border: 2px dashed var(--dan-red); background-color: rgba(193, 39, 45, 0.05); outline: none; cursor: text; min-height: 20px; display: inline-block; width: 100%; }
+        /* 💡 수정 모드 (CMS) 전용 스타일 개선 */
+        .editable-content { transition: all 0.3s; border-radius: 4px; }
+        .edit-mode .editable-content { border: 2px dashed var(--dan-red); background-color: rgba(193, 39, 45, 0.05); outline: none; cursor: text; min-height: 24px; padding: 5px; display: inline-block; width: auto; }
         .edit-mode .editable-content:focus { background-color: white; border-style: solid; box-shadow: 0 0 10px rgba(193, 39, 45, 0.2); }
         
         #save-float-btn {
@@ -464,7 +464,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
@@ -485,20 +485,35 @@
 
         let currentUserId = null; let currentUserData = null;
 
-        // 팀원 명단 불러오기
+        // 💡 1. 팀원 명단 불러오기 (JS 정렬 방식 적용 완료)
         async function loadMembers() {
             const listDiv = document.getElementById('member-list');
             if (!listDiv || !db) return;
             try {
-                const q = query(collection(db, "users"), orderBy("school"), orderBy("name"));
+                // 복합 색인 에러 우회를 위해 전체를 불러옵니다.
+                const q = collection(db, "users");
                 const snapshot = await getDocs(q);
-                if (snapshot.empty) { listDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">등록된 팀원이 없습니다.</p>'; return; }
+                
+                if (snapshot.empty) { 
+                    listDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">등록된 팀원이 없습니다.</p>'; 
+                    return; 
+                }
+
+                let members = [];
+                snapshot.forEach(doc => members.push(doc.data()));
+
+                // 자바스크립트로 학교순 -> 이름순 정렬
+                members.sort((a, b) => {
+                    if (a.school === b.school) return a.name.localeCompare(b.name);
+                    return a.school.localeCompare(b.school);
+                });
 
                 let html = '';
-                const defaultImg = "2093.jpg"; const hoverImg = "2097.jpg";
+                // 깃허브에 올리신 파일명 반영
+                const defaultImg = "2093.jpg";
+                const hoverImg = "2097.jpg";
 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
+                members.forEach(data => {
                     const userImg = data.profileImage ? data.profileImage : defaultImg;
                     const hoverEvent = data.profileImage ? "" : `onmouseover="this.src='${hoverImg}'" onmouseout="this.src='${defaultImg}'"`;
 
@@ -506,13 +521,16 @@
                         <div class="member-card">
                             <div class="photo-area"><img src="${userImg}" ${hoverEvent} alt="${data.name} 사진"></div>
                             <div class="info-area">
-                                <div class="school">${data.school}</div>
-                                <div class="name">${data.name} <span class="grade">${data.grade}</span></div>
+                                <div class="school">${data.school || ''}</div>
+                                <div class="name">${data.name || ''} <span class="grade">${data.grade || ''}</span></div>
                             </div>
                         </div>`;
                 });
                 listDiv.innerHTML = html;
-            } catch (error) { listDiv.innerHTML = '<p style="grid-column: 1/-1; color:red; text-align:center;">데이터를 불러오지 못했습니다.</p>'; }
+            } catch (error) { 
+                console.error("멤버 로드 에러:", error);
+                listDiv.innerHTML = '<p style="grid-column: 1/-1; color:var(--dan-red); text-align:center; font-weight:bold;">데이터를 불러오지 못했습니다. DB 연결을 확인해주세요.</p>'; 
+            }
         }
 
         // 로그인 / 모달 처리
@@ -573,7 +591,7 @@
             } catch (error) { statusText.innerText = "❌ 업로드 오류 (Storage 규칙 확인)"; }
         };
 
-        // 💡 슬라이더 관련 기능
+        // 슬라이더 관련 기능
         let sliderData = [
             { title: "“Back to the Beginning, Beyond the Ocean”", sub: "서울시 고등학교 23명의 학생들이 만들어가는 프로젝트", img: "" },
             { title: "두 번째 슬라이드 제목", sub: "부제목 내용을 입력해 주세요.", img: "" },
@@ -656,9 +674,7 @@
             catch(e) { alert("저장 실패"); }
         };
 
-        // 💡💡 핵심: 페이지 내용(CMS) 파이어베이스 연동 로직
-        
-        // 1. 페이지 로드 시 파이어베이스에서 저장된 텍스트 내용 불러오기
+        // 💡 2. 페이지 내용(CMS) 직접 수정 기능 완벽화
         async function loadPageContent() {
             if (!db) return;
             try {
@@ -666,7 +682,6 @@
                 if(snap.exists()) {
                     const data = snap.data();
                     document.querySelectorAll('.editable-content').forEach(el => {
-                        // DB에 해당 id로 저장된 내용이 있으면 덮어씌움
                         if (data[el.id] !== undefined) {
                             el.innerHTML = data[el.id];
                         }
@@ -675,61 +690,57 @@
             } catch(e) { console.error("내용 불러오기 실패:", e); }
         }
 
-        // 2. 수정 모드 켜기/끄기 토글
         let isEditMode = false;
         window.toggleEditMode = () => {
-            if(!currentUserData || currentUserData.role !== 'admin') return alert("권한이 없습니다.");
+            if(!currentUserData || currentUserData.role !== 'admin') return alert("관리자 권한이 필요합니다.");
             
             isEditMode = !isEditMode;
             const btn = document.getElementById('toggle-edit-btn');
             
             if (isEditMode) {
                 document.body.classList.add('edit-mode');
-                // 모든 editable-content 요소들을 타이핑 가능하게 만듦
-                document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = "true");
+                // 브라우저 호환성을 높이기 위해 setAttribute 사용
+                document.querySelectorAll('.editable-content').forEach(el => el.setAttribute("contenteditable", "true"));
                 document.getElementById('save-float-btn').style.display = 'block';
                 btn.innerText = "❌ 수정 모드 끄기";
                 btn.style.background = "#dc3545";
-                alert("수정 모드가 켜졌습니다. 메뉴를 돌아다니며 점선 테두리 안의 글씨를 클릭해 직접 수정하세요. 완료 후 우측 하단 저장 버튼을 꼭 눌러주세요!");
+                alert("수정 모드가 켜졌습니다. 점선 테두리가 쳐진 텍스트를 클릭해서 자유롭게 고치세요!\n\n(참고: 수정 후 우측 하단의 [저장] 버튼을 눌러야 영구 반영됩니다.)");
             } else {
                 document.body.classList.remove('edit-mode');
-                document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = "false");
+                document.querySelectorAll('.editable-content').forEach(el => el.setAttribute("contenteditable", "false"));
                 document.getElementById('save-float-btn').style.display = 'none';
                 btn.innerText = "📝 페이지 내용 직접 수정 켜기";
                 btn.style.background = "#28a745";
             }
         };
 
-        // 3. 수정한 내용을 파이어베이스에 한방에 저장하기
         window.savePageContent = async () => {
             const dataToSave = {};
-            // 화면에 있는 모든 editable-content 요소의 현재 글씨를 긁어옴
             document.querySelectorAll('.editable-content').forEach(el => {
                 dataToSave[el.id] = el.innerHTML;
             });
 
             try {
-                // 파이어베이스에 저장 (merge: true는 기존 데이터 지우지 않고 합치기)
+                // DB에 'settings' 컬렉션의 'page_content' 문서로 병합 저장
                 await setDoc(doc(db, "settings", "page_content"), Object.assign({}, dataToSave), {merge: true});
-                alert("🎉 모든 페이지 내용이 성공적으로 저장되었습니다!");
-                toggleEditMode(); // 저장 후 수정 모드 깔끔하게 끄기
+                alert("🎉 모든 내용이 성공적으로 저장되었습니다!");
+                toggleEditMode(); // 저장 후 자동으로 수정 모드 끄기
             } catch(e) { 
-                alert("저장에 실패했습니다: " + e.message); 
+                console.error(e);
+                alert("저장에 실패했습니다. 관리자 권한(Firebase Rules)을 확인하세요.\n에러: " + e.message); 
             }
         };
 
-        // 페이지 켜질 때 실행되는 함수 묶음
         window.addEventListener('DOMContentLoaded', () => {
             fetchLatestYouTube();
             loadSlider();
             loadMembers(); 
-            loadPageContent(); // 💡 DB에서 저장된 텍스트 내용 불러오기 실행
+            loadPageContent(); 
         });
 
     </script>
 
     <script>
-        // 네비게이션 및 메뉴 관련 스크립트
         const hamburgerBtn = document.getElementById('hamburger');
         const closeMenuBtn = document.getElementById('close-menu');
         const navLinks = document.getElementById('nav-links');
