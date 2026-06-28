@@ -137,6 +137,9 @@
     </style>
 </head>
 <body>
+    <button id="upload-btn-temp" onclick="uploadAll()" style="display:block; width:100%; padding:20px; background:blue; color:white; font-size:20px; font-weight:bold; text-align:center; border:none; cursor:pointer; z-index:9999; position:relative;">
+        🚀 여기를 눌러 명단 23명 한방에 파이어베이스에 넣기!
+    </button>
 
     <header>
         <div class="logo" onclick="navigate('home')">TURTLESS</div>
@@ -311,7 +314,9 @@
                 </div>
             </div>
         </section>
-    </div> <section id="page-intro_team" class="subpage section">
+    </div> 
+    
+    <section id="page-intro_team" class="subpage section">
         <div class="inner">
             <div class="subpage-header">
                 <h2 class="subpage-title">팀 소개</h2>
@@ -356,8 +361,9 @@
     </footer>
 
     <script type="module">
+        // 🔥 addDoc 모듈이 추가되었습니다.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -370,6 +376,51 @@
         
         let db;
         try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch (e) { console.log("Firebase 로드 실패"); }
+
+        // 🔥 23명 자동 업로드 함수 추가
+        window.uploadAll = async () => {
+            const members = [
+                { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "1234", role: "user" },
+                { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "1234", role: "user" },
+                { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "1234", role: "user" },
+                { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "1234", role: "user" },
+                { school: "서울공업고", grade: "1학년", name: "이영진", pass: "1234", role: "user" },
+                { school: "서울공업고", grade: "1학년", name: "이희담", pass: "1234", role: "user" },
+                { school: "서울공업고", grade: "3학년", name: "박우영", pass: "1234", role: "user" },
+                { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "1234", role: "user" },
+                { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "1234", role: "user" },
+                { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "1234", role: "user" },
+                { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "1234", role: "user" },
+                { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "1234", role: "user" },
+                { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "1234", role: "user" },
+                { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "1234", role: "user" },
+                { school: "용산고", grade: "1학년", name: "권우진", pass: "1234", role: "admin" }, // 권우진만 admin으로 설정됨
+                { school: "용산고", grade: "1학년", name: "정나후", pass: "1234", role: "user" },
+                { school: "용산고", grade: "1학년", name: "김시우", pass: "1234", role: "user" },
+                { school: "용산고", grade: "1학년", name: "채준현", pass: "1234", role: "user" },
+                { school: "용산철도고", grade: "2학년", name: "정지우", pass: "1234", role: "user" },
+                { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "1234", role: "user" },
+                { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "1234", role: "user" },
+                { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "1234", role: "user" },
+                { school: "용산철도고", grade: "2학년", name: "송주원", pass: "1234", role: "user" }
+            ];
+
+            const btn = document.getElementById("upload-btn-temp");
+            btn.innerText = "데이터 넣는 중... (약 3초 소요)";
+            btn.disabled = true;
+
+            try {
+                for (const member of members) {
+                    await addDoc(collection(db, "users"), member);
+                }
+                alert("🎉 23명 명단이 파이어베이스에 성공적으로 들어갔습니다! 버튼은 이제 지워도 됩니다.");
+                btn.style.display = "none";
+            } catch (e) {
+                alert("오류가 발생했습니다: " + e.message);
+                btn.innerText = "다시 시도하기";
+                btn.disabled = false;
+            }
+        };
 
         let currentUserId = null; let currentUserData = null;
 
