@@ -104,7 +104,6 @@
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer; }
         .gallery-item img:hover { transform: scale(1.05); }
 
-        /* 공지사항 & 배너 디자인 */
         .notice-board { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
         .notice-item:last-child { border-bottom: none; }
@@ -135,7 +134,7 @@
         
         footer { background-color: #111; color: #888; padding: 60px 5%; text-align: center; font-size: 0.9rem; }
 
-        /* 💡 통합된 팀원 명단 그리드 스타일 */
+        /* 팀원 명단 그리드 스타일 */
         .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; margin-top: 30px; }
         .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); transition: transform 0.3s; text-align: left; }
         .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
@@ -145,12 +144,23 @@
         .info-area .school { font-size: 0.9rem; color: var(--dan-red); font-weight: 700; margin-bottom: 5px; }
         .info-area .name { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
         .info-area .grade { font-size: 0.9rem; color: var(--text-sub); margin-left: 5px; }
+
+        /* 💡 수정 모드 (CMS) 전용 스타일 */
+        .editable-content { transition: all 0.3s; border-radius: 4px; padding: 2px 5px; margin: -2px -5px; }
+        .edit-mode .editable-content { border: 2px dashed var(--dan-red); background-color: rgba(193, 39, 45, 0.05); outline: none; cursor: text; min-height: 20px; display: inline-block; width: 100%; }
+        .edit-mode .editable-content:focus { background-color: white; border-style: solid; box-shadow: 0 0 10px rgba(193, 39, 45, 0.2); }
+        
+        #save-float-btn {
+            display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+            padding: 15px 30px; background: var(--dan-red); color: white; font-weight: 900;
+            border-radius: 50px; box-shadow: 0 10px 25px rgba(193, 39, 45, 0.4);
+            cursor: pointer; border: none; font-size: 16px; transition: transform 0.2s;
+        }
+        #save-float-btn:hover { transform: scale(1.05); background: var(--dan-red-dark); }
     </style>
 </head>
 <body>
-    <button id="upload-btn-temp" onclick="uploadAll()" style="display:block; width:100%; padding:20px; background:blue; color:white; font-size:20px; font-weight:bold; text-align:center; border:none; cursor:pointer; z-index:9999; position:relative;">
-        🚀 여기를 눌러 명단 23명 한방에 파이어베이스에 넣기!
-    </button>
+    <button id="save-float-btn" onclick="savePageContent()">💾 전체 변경사항 저장</button>
 
     <header>
         <div class="logo" onclick="navigate('home')">TURTLESS</div>
@@ -258,8 +268,8 @@
                     <div class="card">
                         <div class="card-media project-bg">⚙️</div>
                         <div class="card-content">
-                            <h3>진행 중인 프로젝트</h3>
-                            <p>7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
+                            <h3 id="home-proj-title" class="editable-content">진행 중인 프로젝트</h3>
+                            <p id="home-proj-desc" class="editable-content">7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
                             <a onclick="navigate('project')" class="sns-link-btn" style="background-color: var(--text-main); cursor: pointer;">프로젝트 자세히 보기</a>
                         </div>
                     </div>
@@ -282,7 +292,10 @@
                 <div id="admin-panel">
                     <h3 style="margin-bottom: 10px;">👑 관리자 권한 메뉴</h3>
                     <p>권우진님, 사이트 내 콘텐츠 수정 및 팀원 권한 관리가 가능합니다.</p>
-                    <button onclick="openSliderEditModal()" class="action-btn" style="width: auto; padding: 10px 25px; background: var(--text-main); margin-top:15px; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">메인 슬라이더 5장 수정하기</button>
+                    <div style="display: flex; gap: 10px; margin-top:15px; flex-wrap: wrap;">
+                        <button onclick="openSliderEditModal()" class="action-btn" style="width: auto; padding: 10px 25px; background: var(--text-main); margin-top:0; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">메인 슬라이더 5장 수정하기</button>
+                        <button onclick="toggleEditMode()" class="action-btn" id="toggle-edit-btn" style="width: auto; padding: 10px 25px; background: #28a745; margin-top:0; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">📝 페이지 내용 직접 수정 켜기</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -309,25 +322,25 @@
                         <div class="notice-board" style="margin-bottom: 40px;">
                             <div class="notice-item">
                                 <span class="notice-badge">공지</span>
-                                <p>TURTLESS 후원사 모집 안내</p>
-                                <span class="notice-date">26.06.28</span>
+                                <p id="notice-1" class="editable-content">TURTLESS 후원사 모집 안내</p>
+                                <span id="date-1" class="notice-date editable-content">26.06.28</span>
                             </div>
                             <div class="notice-item">
                                 <span class="notice-badge" style="background:#444;">일정</span>
-                                <p>6월 팀 전체 구성 및 첫 회의</p>
-                                <span class="notice-date">26.06.25</span>
+                                <p id="notice-2" class="editable-content">6월 팀 전체 구성 및 첫 회의</p>
+                                <span id="date-2" class="notice-date editable-content">26.06.25</span>
                             </div>
                             <div class="notice-item">
                                 <span class="notice-badge" style="background:#444;">일정</span>
-                                <p>마케팅팀 ESG 사회공헌 프로젝트 아이디어</p>
-                                <span class="notice-date">26.06.20</span>
+                                <p id="notice-3" class="editable-content">마케팅팀 ESG 사회공헌 프로젝트 아이디어</p>
+                                <span id="date-3" class="notice-date editable-content">26.06.20</span>
                             </div>
                         </div>
 
                         <h2 class="section-subtitle">Support Us</h2>
                         <div class="mini-banner">
-                            <h3>함께 성장할 파트너를 찾습니다</h3>
-                            <p>TURTLESS의 열정에 날개를 달아주세요.</p>
+                            <h3 id="banner-title" class="editable-content">함께 성장할 파트너를 찾습니다</h3>
+                            <p id="banner-desc" class="editable-content">TURTLESS의 열정에 날개를 달아주세요.</p>
                             <a onclick="navigate('sponsorship')">후원 문의하기 →</a>
                         </div>
                     </div>
@@ -339,11 +352,11 @@
     <section id="page-intro_team" class="subpage section">
         <div class="inner">
             <div class="subpage-header">
-                <h2 class="subpage-title">팀 소개</h2>
-                <p class="subpage-desc">TURTLESS SSRC 프로젝트를 이끄는 우리를 소개합니다.</p>
+                <h2 id="t-intro_team" class="subpage-title editable-content">팀 소개</h2>
+                <p id="d-intro_team" class="subpage-desc editable-content">TURTLESS SSRC 프로젝트를 이끄는 우리를 소개합니다.</p>
             </div>
             <div class="card" style="padding: 40px; text-align: center;">
-                <p>여기에 팀 소개 내용을 꾸며서 넣어주세요.</p>
+                <div id="b-intro_team" class="editable-content">여기에 팀 소개 내용을 자유롭게 작성해 주세요. (관리자 모드에서 클릭하여 수정 가능합니다)</div>
             </div>
         </div>
     </section>
@@ -351,8 +364,8 @@
     <section id="page-intro_member" class="subpage section">
         <div class="inner">
             <div class="subpage-header">
-                <h2 class="subpage-title">팀원 소개</h2>
-                <p class="subpage-desc">열정 넘치는 23명의 학생들을 만나보세요.</p>
+                <h2 id="t-intro_member" class="subpage-title editable-content">팀원 소개</h2>
+                <p id="d-intro_member" class="subpage-desc editable-content">열정 넘치는 23명의 학생들을 만나보세요.</p>
             </div>
             <div id="member-list" class="member-grid">
                 <p style="grid-column: 1/-1; text-align:center; padding: 50px; color:#888;">데이터를 불러오는 중입니다...</p>
@@ -361,56 +374,87 @@
     </section>
 
     <section id="page-intro_career" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">경력</h2><p class="subpage-desc">TURTLESS가 걸어온 길입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-career" class="subpage-title editable-content">경력</h2><p id="d-career" class="subpage-desc editable-content">TURTLESS가 걸어온 길입니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-career" class="editable-content">경력 사항을 자유롭게 적어주세요.</div></div>
+        </div>
     </section>
     
     <section id="page-intro_slogan" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">팀 슬로건</h2><p class="subpage-desc">우리를 표현하는 한 줄입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-slogan" class="subpage-title editable-content">팀 슬로건</h2><p id="d-slogan" class="subpage-desc editable-content">우리를 표현하는 한 줄입니다.</p></div>
+            <div class="card" style="padding: 40px; text-align: center; font-size: 24px; font-weight: bold;"><div id="b-slogan" class="editable-content">Back to the Beginning, Beyond the Ocean.</div></div>
+        </div>
     </section>
 
     <section id="page-intro_logo" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">로고 소개</h2><p class="subpage-desc">로고에 담긴 의미를 확인하세요.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-logo" class="subpage-title editable-content">로고 소개</h2><p id="d-logo" class="subpage-desc editable-content">로고에 담긴 의미를 확인하세요.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-logo" class="editable-content">로고 의미를 작성해 주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-value_core" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">핵심 가치</h2><p class="subpage-desc">TURTLESS가 가장 중요하게 생각하는 철학입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-core" class="subpage-title editable-content">핵심 가치</h2><p id="d-core" class="subpage-desc editable-content">TURTLESS가 가장 중요하게 생각하는 철학입니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-core" class="editable-content">핵심 가치 내용을 작성해 주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-value_social" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">사회공헌</h2><p class="subpage-desc">세상을 향한 따뜻한 발걸음입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-social" class="subpage-title editable-content">사회공헌</h2><p id="d-social" class="subpage-desc editable-content">세상을 향한 따뜻한 발걸음입니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-social" class="editable-content">사회공헌 활동 내역을 작성해 주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-value_slogan" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">가치 슬로건</h2><p class="subpage-desc">우리가 지향하는 핵심 가치 슬로건입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-vslogan" class="subpage-title editable-content">가치 슬로건</h2><p id="d-vslogan" class="subpage-desc editable-content">우리가 지향하는 핵심 가치 슬로건입니다.</p></div>
+            <div class="card" style="padding: 40px; text-align:center; font-size: 20px;"><div id="b-vslogan" class="editable-content">가치 슬로건을 입력해 주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-value_esg" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">ESG 경영</h2><p class="subpage-desc">지속가능한 성장을 위한 우리의 약속입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-esg" class="subpage-title editable-content">ESG 경영</h2><p id="d-esg" class="subpage-desc editable-content">지속가능한 성장을 위한 우리의 약속입니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-esg" class="editable-content">ESG 경영 실천 내용을 입력해 주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-activity" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">주요 활동</h2><p class="subpage-desc">함께 이뤄낸 주요 성과들입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-act" class="subpage-title editable-content">주요 활동</h2><p id="d-act" class="subpage-desc editable-content">함께 이뤄낸 주요 성과들입니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-act" class="editable-content">주요 활동 내역을 자유롭게 작성해 주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-pr_gallery" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">PR 갤러리</h2><p class="subpage-desc">열정 넘치는 활동 사진을 모았습니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-pr" class="subpage-title editable-content">PR 갤러리</h2><p id="d-pr" class="subpage-desc editable-content">열정 넘치는 활동 사진을 모았습니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-pr" class="editable-content">PR 갤러리 안내 문구를 입력해주세요. (사진 갤러리 구조는 추후 확장 가능)</div></div>
+        </div>
     </section>
 
     <section id="page-sponsorship" class="subpage section">
         <div class="inner">
-            <div class="subpage-header">
-                <h2 class="subpage-title">후원 문의</h2>
-                <p class="subpage-desc">TURTLESS와 함께할 파트너를 기다립니다.</p>
-            </div>
+            <div class="subpage-header"><h2 id="t-spon" class="subpage-title editable-content">후원 문의</h2><p id="d-spon" class="subpage-desc editable-content">TURTLESS와 함께할 파트너를 기다립니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-spon" class="editable-content">후원 안내 및 연락처(이메일 등)를 작성해 주세요.</div></div>
         </div>
     </section>
 
     <section id="page-minigame" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">미니게임</h2><p class="subpage-desc">잠시 쉬어가는 시간입니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-game" class="subpage-title editable-content">미니게임</h2><p id="d-game" class="subpage-desc editable-content">잠시 쉬어가는 시간입니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-game" class="editable-content">미니게임 안내글을 적어주세요.</div></div>
+        </div>
     </section>
 
     <section id="page-project" class="subpage section">
-        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">진행 중인 프로젝트</h2><p class="subpage-desc">혁신적인 연합 프로젝트를 소개합니다.</p></div></div>
+        <div class="inner">
+            <div class="subpage-header"><h2 id="t-proj" class="subpage-title editable-content">진행 중인 프로젝트</h2><p id="d-proj" class="subpage-desc editable-content">혁신적인 연합 프로젝트를 소개합니다.</p></div>
+            <div class="card" style="padding: 40px;"><div id="b-proj" class="editable-content">진행 중인 프로젝트의 상세 내용을 마음껏 적어주세요!</div></div>
+        </div>
     </section>
 
     <footer>
@@ -420,8 +464,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, addDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        // 👇 Storage 관련 모듈 추가
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
@@ -437,107 +480,46 @@
         try { 
             const app = initializeApp(firebaseConfig); 
             db = getFirestore(app); 
-            storage = getStorage(app); // Storage 초기화
+            storage = getStorage(app); 
         } catch (e) { console.log("Firebase 로드 실패"); }
 
-        // 23명 자동 업로드 함수
-        window.uploadAll = async () => {
-            const members = [
-                { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "1234", role: "user" },
-                { school: "경기기계공업고", grade: "2학년", name: "이재민", pass: "1234", role: "user" },
-                { school: "경복비즈니스고", grade: "2학년", name: "채준영", pass: "1234", role: "user" },
-                { school: "경복비즈니스고", grade: "2학년", name: "김태균", pass: "1234", role: "user" },
-                { school: "서울공업고", grade: "1학년", name: "이영진", pass: "1234", role: "user" },
-                { school: "서울공업고", grade: "1학년", name: "이희담", pass: "1234", role: "user" },
-                { school: "서울공업고", grade: "3학년", name: "박우영", pass: "1234", role: "user" },
-                { school: "서울매그넷고", grade: "1학년", name: "김아인", pass: "1234", role: "user" },
-                { school: "서울매그넷고", grade: "1학년", name: "류경원", pass: "1234", role: "user" },
-                { school: "서울매그넷고", grade: "1학년", name: "장혜나", pass: "1234", role: "user" },
-                { school: "선린인터넷고", grade: "1학년", name: "김시윤", pass: "1234", role: "user" },
-                { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "1234", role: "user" },
-                { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "1234", role: "user" },
-                { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "1234", role: "user" },
-                { school: "용산고", grade: "1학년", name: "권우진", pass: "1234", role: "admin" },
-                { school: "용산고", grade: "1학년", name: "정나후", pass: "1234", role: "user" },
-                { school: "용산고", grade: "1학년", name: "김시우", pass: "1234", role: "user" },
-                { school: "용산고", grade: "1학년", name: "채준현", pass: "1234", role: "user" },
-                { school: "용산철도고", grade: "2학년", name: "정지우", pass: "1234", role: "user" },
-                { school: "용산철도고", grade: "2학년", name: "홍우진", pass: "1234", role: "user" },
-                { school: "용산철도고", grade: "2학년", name: "김승혁", pass: "1234", role: "user" },
-                { school: "용산철도고", grade: "2학년", name: "강윤아", pass: "1234", role: "user" },
-                { school: "용산철도고", grade: "2학년", name: "송주원", pass: "1234", role: "user" }
-            ];
+        let currentUserId = null; let currentUserData = null;
 
-            const btn = document.getElementById("upload-btn-temp");
-            btn.innerText = "데이터 넣는 중... (약 3초 소요)";
-            btn.disabled = true;
-
-            try {
-                for (const member of members) {
-                    await addDoc(collection(db, "users"), member);
-                }
-                alert("🎉 23명 명단이 파이어베이스에 성공적으로 들어갔습니다! 버튼은 이제 지워도 됩니다.");
-                btn.style.display = "none";
-            } catch (e) {
-                alert("오류가 발생했습니다: " + e.message);
-                btn.innerText = "다시 시도하기";
-                btn.disabled = false;
-            }
-        };
-
-        // 💡 수정됨: 파이어베이스에서 팀원 명단 불러오기 (개인 프로필 이미지 적용)
+        // 팀원 명단 불러오기
         async function loadMembers() {
             const listDiv = document.getElementById('member-list');
             if (!listDiv || !db) return;
             try {
-                // 학교 기준, 이름 순으로 정렬해서 불러옵니다.
                 const q = query(collection(db, "users"), orderBy("school"), orderBy("name"));
                 const snapshot = await getDocs(q);
-                
-                if (snapshot.empty) {
-                    listDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">등록된 팀원이 없습니다.</p>';
-                    return;
-                }
+                if (snapshot.empty) { listDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">등록된 팀원이 없습니다.</p>'; return; }
 
                 let html = '';
-                // 💡 준비하신 기본 이미지와 Hover 이미지 파일명 (폴더 내에 같은 이름으로 위치해야 함)
-                const defaultImg = "2093.jpg"; 
-                const hoverImg = "2097.jpg";
+                const defaultImg = "2093.jpg"; const hoverImg = "2097.jpg";
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    
-                    // DB에 저장된 프로필 이미지가 있으면 그것을, 없으면 기본 이미지(2093.jpg)를 사용
                     const userImg = data.profileImage ? data.profileImage : defaultImg;
-                    // 개인 이미지를 올리지 않은 사람에게만 hover 효과 적용
                     const hoverEvent = data.profileImage ? "" : `onmouseover="this.src='${hoverImg}'" onmouseout="this.src='${defaultImg}'"`;
 
                     html += `
                         <div class="member-card">
-                            <div class="photo-area">
-                                <img src="${userImg}" ${hoverEvent} alt="${data.name} 사진">
-                            </div>
+                            <div class="photo-area"><img src="${userImg}" ${hoverEvent} alt="${data.name} 사진"></div>
                             <div class="info-area">
                                 <div class="school">${data.school}</div>
                                 <div class="name">${data.name} <span class="grade">${data.grade}</span></div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
                 listDiv.innerHTML = html;
-            } catch (error) {
-                console.error(error);
-                listDiv.innerHTML = '<p style="grid-column: 1/-1; color:red; text-align:center;">데이터를 불러오지 못했습니다.</p>';
-            }
+            } catch (error) { listDiv.innerHTML = '<p style="grid-column: 1/-1; color:red; text-align:center;">데이터를 불러오지 못했습니다.</p>'; }
         }
 
-        let currentUserId = null; let currentUserData = null;
-
-        window.openLoginModal = () => { document.getElementById('username').value = ''; document.getElementById('password').value = ''; document.getElementById('login-modal').style.display = 'flex'; };
+        // 로그인 / 모달 처리
+        window.openLoginModal = () => { document.getElementById('login-modal').style.display = 'flex'; };
         window.closeLoginModal = () => document.getElementById('login-modal').style.display = 'none';
-        window.openPwModal = () => { document.getElementById('old-pw').value = ''; document.getElementById('new-pw').value = ''; document.getElementById('pw-modal').style.display = 'flex'; };
+        window.openPwModal = () => { document.getElementById('pw-modal').style.display = 'flex'; };
         window.closePwModal = () => document.getElementById('pw-modal').style.display = 'none';
-        
         window.openSliderEditModal = () => { buildSliderEditInputs(); document.getElementById('slider-edit-modal').style.display = 'flex'; };
         window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display = 'none';
 
@@ -549,82 +531,51 @@
             const btn = document.getElementById('login-submit-btn');
 
             if(!name || !pass) return alert("이름과 비밀번호를 입력해주세요.");
-            if(!db) return alert("서버에 연결할 수 없습니다. 잠시 후 시도해주세요.");
-
-            btn.innerText = "서버 확인 중...";
-            btn.disabled = true;
+            btn.innerText = "서버 확인 중..."; btn.disabled = true;
 
             try {
                 const q = query(collection(db, "users"), where("school", "==", school), where("grade", "==", grade), where("name", "==", name), where("pass", "==", pass));
                 const querySnapshot = await getDocs(q);
                 
                 if (!querySnapshot.empty) {
-                    currentUserId = querySnapshot.docs[0].id; 
-                    currentUserData = querySnapshot.docs[0].data();
-                    
+                    currentUserId = querySnapshot.docs[0].id; currentUserData = querySnapshot.docs[0].data();
                     alert(`${currentUserData.name} 팀원님 환영합니다!`);
                     closeLoginModal(); 
                     document.getElementById('member-actions').style.display = 'block';
                     document.getElementById('login-btn-top').innerText = '로그아웃';
                     document.getElementById('login-btn-top').onclick = () => location.reload();
                     if (currentUserData.role === "admin") document.getElementById('admin-panel').style.display = 'block';
-                } else {
-                    alert("정보가 일치하지 않습니다. 이름 오타나 비밀번호를 다시 확인해주세요.");
-                }
-            } catch (error) { 
-                console.error(error); 
-                alert("네트워크 오류가 발생했습니다.");
-            } finally {
-                btn.innerText = "인증하기";
-                btn.disabled = false;
-            }
+                } else { alert("정보가 일치하지 않습니다."); }
+            } catch (error) { alert("네트워크 오류가 발생했습니다."); } finally { btn.innerText = "인증하기"; btn.disabled = false; }
         };
 
         window.changePassword = async function() {
             const oldPw = document.getElementById('old-pw').value.trim(); const newPw = document.getElementById('new-pw').value.trim();
             if(oldPw !== currentUserData.pass) return alert("현재 비밀번호가 일치하지 않습니다.");
             if(newPw.length < 4) return alert("새 비밀번호는 4자리 이상으로 설정해주세요.");
-            try {
-                await updateDoc(doc(db, "users", currentUserId), { pass: newPw });
-                currentUserData.pass = newPw; alert("비밀번호가 성공적으로 변경되었습니다!"); closePwModal();
-            } catch (error) { console.error(error); }
+            try { await updateDoc(doc(db, "users", currentUserId), { pass: newPw }); currentUserData.pass = newPw; alert("비밀번호 변경 완료!"); closePwModal(); } 
+            catch (error) { console.error(error); }
         };
 
-        // 👇 새롭게 추가된 프로필 이미지 업로드 함수
+        // 개인 프로필 사진 업로드
         window.uploadProfileImage = async (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (!currentUserId || !storage) return alert("로그인 상태이거나 파이어베이스 Storage 설정에 문제가 있습니다.");
-
+            const file = event.target.files[0]; if (!file || !currentUserId || !storage) return;
             const statusText = document.getElementById('upload-status');
-            statusText.innerText = "🚀 사진을 서버로 전송하는 중입니다... 잠시만 기다려주세요!";
-
+            statusText.innerText = "🚀 사진 업로드 중...";
             try {
-                // 1. 파이어베이스 Storage에 파일 업로드 (경로: profiles/유저ID_현재시간)
                 const storageRef = ref(storage, `profiles/${currentUserId}_${Date.now()}`);
                 await uploadBytes(storageRef, file);
-                
-                // 2. 업로드된 파일의 다운로드 URL 가져오기
                 const downloadURL = await getDownloadURL(storageRef);
-
-                // 3. Firestore의 내 유저 문서에 profileImage 주소 업데이트
                 await updateDoc(doc(db, "users", currentUserId), { profileImage: downloadURL });
-                
-                currentUserData.profileImage = downloadURL; // 로컬 데이터도 갱신
-                statusText.innerText = "✅ 프로필 사진 업데이트가 완료되었습니다!";
-                alert("프로필 사진이 성공적으로 변경되었습니다!");
-
-                // 4. 변경된 사진이 보이도록 명단 다시 불러오기
+                currentUserData.profileImage = downloadURL; 
+                statusText.innerText = "✅ 프로필 사진 업데이트 완료!"; alert("사진 변경 성공!");
                 loadMembers();
-                
-            } catch (error) {
-                console.error("사진 업로드 실패:", error);
-                statusText.innerText = "❌ 업로드 중 오류가 발생했습니다. (Storage 규칙을 확인해주세요)";
-            }
+            } catch (error) { statusText.innerText = "❌ 업로드 오류 (Storage 규칙 확인)"; }
         };
 
+        // 💡 슬라이더 관련 기능
         let sliderData = [
-            { title: "“Back to the Beginning, Beyond the Ocean”", sub: "서울시 고등학교 23명의 학생들이 만들어가는 TURTLESS SSRC 프로젝트", img: "" },
+            { title: "“Back to the Beginning, Beyond the Ocean”", sub: "서울시 고등학교 23명의 학생들이 만들어가는 프로젝트", img: "" },
             { title: "두 번째 슬라이드 제목", sub: "부제목 내용을 입력해 주세요.", img: "" },
             { title: "세 번째 슬라이드 제목", sub: "부제목 내용을 입력해 주세요.", img: "" },
             { title: "네 번째 슬라이드 제목", sub: "부제목 내용을 입력해 주세요.", img: "" },
@@ -647,32 +598,25 @@
             if(!db) return;
             try {
                 const snap = await getDoc(doc(db, "settings", "main_slider"));
-                if(snap.exists()) {
-                    sliderData = snap.data().slides;
-                    renderSlider(); 
-                }
-            } catch(e) { console.error("슬라이더 연동 실패:", e); }
+                if(snap.exists()) { sliderData = snap.data().slides; renderSlider(); }
+            } catch(e) {}
         }
 
         let slideIdx = 0; let timer;
         function renderSlider() {
-            const content = document.getElementById('slider-content');
-            const dots = document.getElementById('slider-dots');
+            const content = document.getElementById('slider-content'); const dots = document.getElementById('slider-dots');
             if(!content || !dots) return;
             content.innerHTML = ''; dots.innerHTML = '';
             
             sliderData.forEach((s, i) => {
-                const div = document.createElement('div');
-                div.className = `slide ${i === 0 ? 'active' : ''}`;
+                const div = document.createElement('div'); div.className = `slide ${i === 0 ? 'active' : ''}`;
                 const imgUrl = getDirectLink(s.img);
                 if(imgUrl) div.style.backgroundImage = `url('${imgUrl}')`;
                 div.innerHTML = `<h1>${s.title}</h1><p>${s.sub}</p>`;
                 content.appendChild(div);
 
-                const dot = document.createElement('div');
-                dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
-                dot.onclick = () => showSlide(i);
-                dots.appendChild(dot);
+                const dot = document.createElement('div'); dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => showSlide(i); dots.appendChild(dot);
             });
             startTimer();
         }
@@ -684,30 +628,15 @@
             startTimer();
         }
 
-        function startTimer() {
-            clearInterval(timer);
-            timer = setInterval(() => { showSlide((slideIdx + 1) % sliderData.length); }, 5000);
-        }
-
-        let touchstartX = 0; let touchendX = 0;
-        const sliderSection = document.getElementById('hero-slider');
-        if(sliderSection) {
-            sliderSection.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
-            sliderSection.addEventListener('touchend', e => {
-                touchendX = e.changedTouches[0].screenX;
-                if (touchendX < touchstartX - 50) showSlide((slideIdx + 1) % sliderData.length); 
-                if (touchendX > touchstartX + 50) showSlide((slideIdx - 1 + sliderData.length) % sliderData.length); 
-            });
-        }
+        function startTimer() { clearInterval(timer); timer = setInterval(() => { showSlide((slideIdx + 1) % sliderData.length); }, 5000); }
 
         window.buildSliderEditInputs = () => {
             const container = document.getElementById('slider-inputs-container');
-            if(!container) return;
             container.innerHTML = '';
             sliderData.forEach((s, i) => {
                 container.innerHTML += `<div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #ddd; text-align:left;">
                     <h4 style="margin-bottom:8px; color:var(--dan-red);">슬라이드 ${i+1} 설정</h4>
-                    <label style="font-size:12px; font-weight:bold;">이미지 링크 (구글드라이브 혹은 일반URL)</label>
+                    <label style="font-size:12px; font-weight:bold;">이미지 링크</label>
                     <input type="text" id="edit-img-${i}" value="${s.img||''}" style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px;">
                     <label style="font-size:12px; font-weight:bold;">제목</label>
                     <input type="text" id="edit-title-${i}" value="${s.title||''}" style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px;">
@@ -721,28 +650,86 @@
             if(!currentUserData || currentUserData.role !== 'admin') return;
             const newSlides = [];
             for(let i=0; i<5; i++){
-                newSlides.push({
-                    img: document.getElementById(`edit-img-${i}`).value.trim(),
-                    title: document.getElementById(`edit-title-${i}`).value,
-                    sub: document.getElementById(`edit-sub-${i}`).value
-                });
+                newSlides.push({ img: document.getElementById(`edit-img-${i}`).value.trim(), title: document.getElementById(`edit-title-${i}`).value, sub: document.getElementById(`edit-sub-${i}`).value });
             }
-            try {
-                await setDoc(doc(db, "settings", "main_slider"), { slides: newSlides });
-                sliderData = newSlides;
-                alert("성공적으로 저장 및 동기화되었습니다!"); closeSliderEditModal(); renderSlider();
-            } catch(e) { alert("저장에 실패했습니다."); }
+            try { await setDoc(doc(db, "settings", "main_slider"), { slides: newSlides }); sliderData = newSlides; alert("슬라이더 저장 완료!"); closeSliderEditModal(); renderSlider(); } 
+            catch(e) { alert("저장 실패"); }
         };
 
-        // 페이지 켜질 때 실행되는 묶음
+        // 💡💡 핵심: 페이지 내용(CMS) 파이어베이스 연동 로직
+        
+        // 1. 페이지 로드 시 파이어베이스에서 저장된 텍스트 내용 불러오기
+        async function loadPageContent() {
+            if (!db) return;
+            try {
+                const snap = await getDoc(doc(db, "settings", "page_content"));
+                if(snap.exists()) {
+                    const data = snap.data();
+                    document.querySelectorAll('.editable-content').forEach(el => {
+                        // DB에 해당 id로 저장된 내용이 있으면 덮어씌움
+                        if (data[el.id] !== undefined) {
+                            el.innerHTML = data[el.id];
+                        }
+                    });
+                }
+            } catch(e) { console.error("내용 불러오기 실패:", e); }
+        }
+
+        // 2. 수정 모드 켜기/끄기 토글
+        let isEditMode = false;
+        window.toggleEditMode = () => {
+            if(!currentUserData || currentUserData.role !== 'admin') return alert("권한이 없습니다.");
+            
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('toggle-edit-btn');
+            
+            if (isEditMode) {
+                document.body.classList.add('edit-mode');
+                // 모든 editable-content 요소들을 타이핑 가능하게 만듦
+                document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = "true");
+                document.getElementById('save-float-btn').style.display = 'block';
+                btn.innerText = "❌ 수정 모드 끄기";
+                btn.style.background = "#dc3545";
+                alert("수정 모드가 켜졌습니다. 메뉴를 돌아다니며 점선 테두리 안의 글씨를 클릭해 직접 수정하세요. 완료 후 우측 하단 저장 버튼을 꼭 눌러주세요!");
+            } else {
+                document.body.classList.remove('edit-mode');
+                document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = "false");
+                document.getElementById('save-float-btn').style.display = 'none';
+                btn.innerText = "📝 페이지 내용 직접 수정 켜기";
+                btn.style.background = "#28a745";
+            }
+        };
+
+        // 3. 수정한 내용을 파이어베이스에 한방에 저장하기
+        window.savePageContent = async () => {
+            const dataToSave = {};
+            // 화면에 있는 모든 editable-content 요소의 현재 글씨를 긁어옴
+            document.querySelectorAll('.editable-content').forEach(el => {
+                dataToSave[el.id] = el.innerHTML;
+            });
+
+            try {
+                // 파이어베이스에 저장 (merge: true는 기존 데이터 지우지 않고 합치기)
+                await setDoc(doc(db, "settings", "page_content"), Object.assign({}, dataToSave), {merge: true});
+                alert("🎉 모든 페이지 내용이 성공적으로 저장되었습니다!");
+                toggleEditMode(); // 저장 후 수정 모드 깔끔하게 끄기
+            } catch(e) { 
+                alert("저장에 실패했습니다: " + e.message); 
+            }
+        };
+
+        // 페이지 켜질 때 실행되는 함수 묶음
         window.addEventListener('DOMContentLoaded', () => {
             fetchLatestYouTube();
             loadSlider();
             loadMembers(); 
+            loadPageContent(); // 💡 DB에서 저장된 텍스트 내용 불러오기 실행
         });
+
     </script>
 
     <script>
+        // 네비게이션 및 메뉴 관련 스크립트
         const hamburgerBtn = document.getElementById('hamburger');
         const closeMenuBtn = document.getElementById('close-menu');
         const navLinks = document.getElementById('nav-links');
@@ -761,33 +748,21 @@
         document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
         document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
 
-        // 페이지 전환(SPA) 네비게이션 함수
         function navigate(pageId) {
-            if (pageId === 'home') {
-                document.getElementById('page-home').style.display = 'block';
-            } else {
-                document.getElementById('page-home').style.display = 'none';
-            }
+            if (pageId === 'home') document.getElementById('page-home').style.display = 'block';
+            else document.getElementById('page-home').style.display = 'none';
 
             const allSubpages = document.querySelectorAll('.subpage');
             allSubpages.forEach(page => page.classList.remove('active'));
 
             if (pageId !== 'home') {
                 const targetPage = document.getElementById('page-' + pageId);
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                } else {
-                    alert("해당 페이지가 아직 준비되지 않았습니다.");
-                    document.getElementById('page-home').style.display = 'block';
-                }
+                if (targetPage) targetPage.classList.add('active');
             }
 
             navLinks.classList.remove('active');
             const dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                dropdowns[i].classList.remove('show');
-            }
-
+            for (let i = 0; i < dropdowns.length; i++) dropdowns[i].classList.remove('show');
             window.scrollTo(0, 0);
         }
 
@@ -800,25 +775,21 @@
                 const res = await fetch(apiUrl); const data = await res.json();
                 if(data.status === 'ok' && data.items.length > 0) {
                     let html = '';
-                    const maxVideos = Math.min(data.items.length, 3);
-                    
-                    for(let i = 0; i < maxVideos; i++) {
+                    for(let i = 0; i < Math.min(data.items.length, 3); i++) {
                         const video = data.items[i]; 
                         const pubDate = new Date(video.pubDate.replace(' ', 'T'));
-                        const dateStr = `${pubDate.getFullYear()}.${pubDate.getMonth()+1}.${pubDate.getDate()}`;
-                        
                         html += `
                         <a href="${video.link}" target="_blank" class="youtube-main-card">
                             <img src="${video.thumbnail}" alt="${video.title}" class="youtube-thumb-large">
                             <div class="youtube-info-large">
                                 <h4>${video.title}</h4>
-                                <span>TURTLESS Official • ${dateStr}</span>
+                                <span>TURTLESS Official • ${pubDate.getFullYear()}.${pubDate.getMonth()+1}.${pubDate.getDate()}</span>
                             </div>
                         </a>`;
                     }
                     document.getElementById('youtube-auto-list').innerHTML = html;
                 }
-            } catch (error) { console.error(error); document.getElementById('youtube-auto-list').innerHTML = "<p>영상을 불러오지 못했습니다.</p>"; }
+            } catch (error) { document.getElementById('youtube-auto-list').innerHTML = "<p>영상을 불러오지 못했습니다.</p>"; }
         }
     </script>
 </body>
