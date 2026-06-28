@@ -43,7 +43,7 @@
             .dropdown-content a { text-align: left; padding: 8px 10px; }
         }
 
-        /* 💡 페이지 전환(SPA) 스타일 추가 */
+        /* 페이지 전환(SPA) 스타일 */
         #page-home { display: block; }
         .subpage { display: none; padding: 80px 5%; min-height: 70vh; animation: fadeIn 0.4s ease-in-out; }
         .subpage.active { display: block; }
@@ -104,7 +104,7 @@
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; cursor: pointer; }
         .gallery-item img:hover { transform: scale(1.05); }
 
-        /* 공지사항 & 배너 디자인 추가 */
+        /* 공지사항 & 배너 디자인 */
         .notice-board { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
         .notice-item:last-child { border-bottom: none; }
@@ -134,6 +134,17 @@
         #admin-panel { border-left-color: var(--text-main); }
         
         footer { background-color: #111; color: #888; padding: 60px 5%; text-align: center; font-size: 0.9rem; }
+
+        /* 💡 통합된 팀원 명단 그리드 스타일 */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; margin-top: 30px; }
+        .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); transition: transform 0.3s; text-align: left; }
+        .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
+        .photo-area { width: 100%; aspect-ratio: 1/1; background-color: #e2e2e2; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; }
+        .photo-area img { width: 100%; height: 100%; object-fit: cover; transition: all 0.3s ease-in-out; }
+        .info-area { padding: 20px; }
+        .info-area .school { font-size: 0.9rem; color: var(--dan-red); font-weight: 700; margin-bottom: 5px; }
+        .info-area .name { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
+        .info-area .grade { font-size: 0.9rem; color: var(--text-sub); margin-left: 5px; }
     </style>
 </head>
 <body>
@@ -197,6 +208,7 @@
             <button id="login-submit-btn" class="action-btn" onclick="firebaseLogin()">인증하기</button>
         </div>
     </div>
+    
     <div id="pw-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-btn" onclick="closePwModal()">×</button>
@@ -258,7 +270,15 @@
                     <button onclick="openPwModal()" style="float: right; background: white; color: var(--text-main); padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; font-weight: bold;">비밀번호 변경</button>
                     <div style="clear: both;"></div>
                     <p style="margin-top: 10px;">환영합니다! 팀원 전용 기능이 활성화되었습니다.</p>
+                    
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--border-color);">
+                        <h4 style="margin-bottom: 10px;">내 프로필 사진 변경</h4>
+                        <input type="file" id="profile-upload-input" accept="image/*" style="display: none;" onchange="uploadProfileImage(event)">
+                        <button onclick="document.getElementById('profile-upload-input').click()" class="action-btn" style="width: auto; padding: 10px 20px;">사진 선택 및 올리기</button>
+                        <p id="upload-status" style="margin-top: 10px; font-size: 0.9rem; color: var(--dan-red); font-weight: bold;"></p>
+                    </div>
                 </div>
+                
                 <div id="admin-panel">
                     <h3 style="margin-bottom: 10px;">👑 관리자 권한 메뉴</h3>
                     <p>권우진님, 사이트 내 콘텐츠 수정 및 팀원 권한 관리가 가능합니다.</p>
@@ -334,16 +354,46 @@
                 <h2 class="subpage-title">팀원 소개</h2>
                 <p class="subpage-desc">열정 넘치는 23명의 학생들을 만나보세요.</p>
             </div>
+            <div id="member-list" class="member-grid">
+                <p style="grid-column: 1/-1; text-align:center; padding: 50px; color:#888;">데이터를 불러오는 중입니다...</p>
+            </div>
         </div>
     </section>
 
+    <section id="page-intro_career" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">경력</h2><p class="subpage-desc">TURTLESS가 걸어온 길입니다.</p></div></div>
+    </section>
+    
+    <section id="page-intro_slogan" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">팀 슬로건</h2><p class="subpage-desc">우리를 표현하는 한 줄입니다.</p></div></div>
+    </section>
+
+    <section id="page-intro_logo" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">로고 소개</h2><p class="subpage-desc">로고에 담긴 의미를 확인하세요.</p></div></div>
+    </section>
+
     <section id="page-value_core" class="subpage section">
-        <div class="inner">
-            <div class="subpage-header">
-                <h2 class="subpage-title">핵심 가치</h2>
-                <p class="subpage-desc">TURTLESS가 가장 중요하게 생각하는 철학입니다.</p>
-            </div>
-        </div>
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">핵심 가치</h2><p class="subpage-desc">TURTLESS가 가장 중요하게 생각하는 철학입니다.</p></div></div>
+    </section>
+
+    <section id="page-value_social" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">사회공헌</h2><p class="subpage-desc">세상을 향한 따뜻한 발걸음입니다.</p></div></div>
+    </section>
+
+    <section id="page-value_slogan" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">가치 슬로건</h2><p class="subpage-desc">우리가 지향하는 핵심 가치 슬로건입니다.</p></div></div>
+    </section>
+
+    <section id="page-value_esg" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">ESG 경영</h2><p class="subpage-desc">지속가능한 성장을 위한 우리의 약속입니다.</p></div></div>
+    </section>
+
+    <section id="page-activity" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">주요 활동</h2><p class="subpage-desc">함께 이뤄낸 주요 성과들입니다.</p></div></div>
+    </section>
+
+    <section id="page-pr_gallery" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">PR 갤러리</h2><p class="subpage-desc">열정 넘치는 활동 사진을 모았습니다.</p></div></div>
     </section>
 
     <section id="page-sponsorship" class="subpage section">
@@ -355,15 +405,24 @@
         </div>
     </section>
 
+    <section id="page-minigame" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">미니게임</h2><p class="subpage-desc">잠시 쉬어가는 시간입니다.</p></div></div>
+    </section>
+
+    <section id="page-project" class="subpage section">
+        <div class="inner"><div class="subpage-header"><h2 class="subpage-title">진행 중인 프로젝트</h2><p class="subpage-desc">혁신적인 연합 프로젝트를 소개합니다.</p></div></div>
+    </section>
+
     <footer>
         <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
         <p style="margin-top: 10px; opacity: 0.6;">용산철도고등학교 기반 SSRC 연합 팀</p>
     </footer>
 
     <script type="module">
-        // 🔥 addDoc 모듈이 추가되었습니다.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, addDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        // 👇 Storage 관련 모듈 추가
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -374,10 +433,14 @@
             appId: "1:794305996729:web:cf7132e77cc5621c5bb868"
         };
         
-        let db;
-        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch (e) { console.log("Firebase 로드 실패"); }
+        let db, storage;
+        try { 
+            const app = initializeApp(firebaseConfig); 
+            db = getFirestore(app); 
+            storage = getStorage(app); // Storage 초기화
+        } catch (e) { console.log("Firebase 로드 실패"); }
 
-        // 🔥 23명 자동 업로드 함수 추가
+        // 23명 자동 업로드 함수
         window.uploadAll = async () => {
             const members = [
                 { school: "경기기계공업고", grade: "2학년", name: "김기율", pass: "1234", role: "user" },
@@ -394,7 +457,7 @@
                 { school: "선린인터넷고", grade: "1학년", name: "김윤상", pass: "1234", role: "user" },
                 { school: "선린인터넷고", grade: "2학년", name: "강석주", pass: "1234", role: "user" },
                 { school: "선린인터넷고", grade: "2학년", name: "이준범", pass: "1234", role: "user" },
-                { school: "용산고", grade: "1학년", name: "권우진", pass: "1234", role: "admin" }, // 권우진만 admin으로 설정됨
+                { school: "용산고", grade: "1학년", name: "권우진", pass: "1234", role: "admin" },
                 { school: "용산고", grade: "1학년", name: "정나후", pass: "1234", role: "user" },
                 { school: "용산고", grade: "1학년", name: "김시우", pass: "1234", role: "user" },
                 { school: "용산고", grade: "1학년", name: "채준현", pass: "1234", role: "user" },
@@ -422,13 +485,55 @@
             }
         };
 
+        // 💡 수정됨: 파이어베이스에서 팀원 명단 불러오기 (개인 프로필 이미지 적용)
+        async function loadMembers() {
+            const listDiv = document.getElementById('member-list');
+            if (!listDiv || !db) return;
+            try {
+                // 학교 기준, 이름 순으로 정렬해서 불러옵니다.
+                const q = query(collection(db, "users"), orderBy("school"), orderBy("name"));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    listDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">등록된 팀원이 없습니다.</p>';
+                    return;
+                }
+
+                let html = '';
+                // 💡 준비하신 기본 이미지와 Hover 이미지 파일명 (폴더 내에 같은 이름으로 위치해야 함)
+                const defaultImg = "2093.jpg"; 
+                const hoverImg = "2097.jpg";
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    
+                    // DB에 저장된 프로필 이미지가 있으면 그것을, 없으면 기본 이미지(2093.jpg)를 사용
+                    const userImg = data.profileImage ? data.profileImage : defaultImg;
+                    // 개인 이미지를 올리지 않은 사람에게만 hover 효과 적용
+                    const hoverEvent = data.profileImage ? "" : `onmouseover="this.src='${hoverImg}'" onmouseout="this.src='${defaultImg}'"`;
+
+                    html += `
+                        <div class="member-card">
+                            <div class="photo-area">
+                                <img src="${userImg}" ${hoverEvent} alt="${data.name} 사진">
+                            </div>
+                            <div class="info-area">
+                                <div class="school">${data.school}</div>
+                                <div class="name">${data.name} <span class="grade">${data.grade}</span></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                listDiv.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                listDiv.innerHTML = '<p style="grid-column: 1/-1; color:red; text-align:center;">데이터를 불러오지 못했습니다.</p>';
+            }
+        }
+
         let currentUserId = null; let currentUserData = null;
 
-        window.openLoginModal = () => {
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('login-modal').style.display = 'flex';
-        };
+        window.openLoginModal = () => { document.getElementById('username').value = ''; document.getElementById('password').value = ''; document.getElementById('login-modal').style.display = 'flex'; };
         window.closeLoginModal = () => document.getElementById('login-modal').style.display = 'none';
         window.openPwModal = () => { document.getElementById('old-pw').value = ''; document.getElementById('new-pw').value = ''; document.getElementById('pw-modal').style.display = 'flex'; };
         window.closePwModal = () => document.getElementById('pw-modal').style.display = 'none';
@@ -483,6 +588,39 @@
                 await updateDoc(doc(db, "users", currentUserId), { pass: newPw });
                 currentUserData.pass = newPw; alert("비밀번호가 성공적으로 변경되었습니다!"); closePwModal();
             } catch (error) { console.error(error); }
+        };
+
+        // 👇 새롭게 추가된 프로필 이미지 업로드 함수
+        window.uploadProfileImage = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!currentUserId || !storage) return alert("로그인 상태이거나 파이어베이스 Storage 설정에 문제가 있습니다.");
+
+            const statusText = document.getElementById('upload-status');
+            statusText.innerText = "🚀 사진을 서버로 전송하는 중입니다... 잠시만 기다려주세요!";
+
+            try {
+                // 1. 파이어베이스 Storage에 파일 업로드 (경로: profiles/유저ID_현재시간)
+                const storageRef = ref(storage, `profiles/${currentUserId}_${Date.now()}`);
+                await uploadBytes(storageRef, file);
+                
+                // 2. 업로드된 파일의 다운로드 URL 가져오기
+                const downloadURL = await getDownloadURL(storageRef);
+
+                // 3. Firestore의 내 유저 문서에 profileImage 주소 업데이트
+                await updateDoc(doc(db, "users", currentUserId), { profileImage: downloadURL });
+                
+                currentUserData.profileImage = downloadURL; // 로컬 데이터도 갱신
+                statusText.innerText = "✅ 프로필 사진 업데이트가 완료되었습니다!";
+                alert("프로필 사진이 성공적으로 변경되었습니다!");
+
+                // 4. 변경된 사진이 보이도록 명단 다시 불러오기
+                loadMembers();
+                
+            } catch (error) {
+                console.error("사진 업로드 실패:", error);
+                statusText.innerText = "❌ 업로드 중 오류가 발생했습니다. (Storage 규칙을 확인해주세요)";
+            }
         };
 
         let sliderData = [
@@ -596,9 +734,11 @@
             } catch(e) { alert("저장에 실패했습니다."); }
         };
 
+        // 페이지 켜질 때 실행되는 묶음
         window.addEventListener('DOMContentLoaded', () => {
             fetchLatestYouTube();
             loadSlider();
+            loadMembers(); 
         });
     </script>
 
@@ -621,7 +761,7 @@
         document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
         document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
 
-        // 💡 페이지 전환(SPA) 네비게이션 함수
+        // 페이지 전환(SPA) 네비게이션 함수
         function navigate(pageId) {
             if (pageId === 'home') {
                 document.getElementById('page-home').style.display = 'block';
