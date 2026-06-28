@@ -21,7 +21,7 @@
         .close-menu { display: none; }
         
         .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.2s ease; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.2s ease; cursor: pointer; }
         .nav-links a:hover { color: var(--dan-red); }
 
         .dropdown { position: relative; display: inline-block; }
@@ -43,7 +43,17 @@
             .dropdown-content a { text-align: left; padding: 8px 10px; }
         }
 
-        /* 💡 이미지 슬라이더 레이아웃 스타일 구조 */
+        /* 💡 페이지 전환(SPA) 스타일 추가 */
+        #page-home { display: block; }
+        .subpage { display: none; padding: 80px 5%; min-height: 70vh; animation: fadeIn 0.4s ease-in-out; }
+        .subpage.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .subpage-header { text-align: center; margin-bottom: 50px; }
+        .subpage-title { font-size: 2.5rem; font-weight: 900; color: var(--dan-red); margin-bottom: 15px; }
+        .subpage-desc { font-size: 1.1rem; color: var(--text-sub); }
+
+        /* 이미지 슬라이더 레이아웃 스타일 구조 */
         .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 400px; background-color: var(--dan-red); overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; background-size: cover; background-position: center; }
         .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: -1; }
@@ -106,7 +116,7 @@
         .mini-banner { background: linear-gradient(135deg, var(--text-main), #333); color: white; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; height: 180px; }
         .mini-banner h3 { font-size: 1.3rem; margin-bottom: 10px; }
         .mini-banner p { font-size: 0.95rem; color: #ccc; margin-bottom: 20px; }
-        .mini-banner a { display: inline-block; background: var(--dan-red); color: white; text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; transition: background 0.3s; }
+        .mini-banner a { display: inline-block; background: var(--dan-red); color: white; text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; transition: background 0.3s; cursor: pointer; }
         .mini-banner a:hover { background: var(--dan-red-dark); }
 
         /* 모달 스타일 */
@@ -129,7 +139,7 @@
 <body>
 
     <header>
-        <div class="logo" onclick="location.href='index.html'">TURTLESS</div>
+        <div class="logo" onclick="navigate('home')">TURTLESS</div>
         <div class="hamburger" id="hamburger">☰</div>
         
         <div class="nav-links" id="nav-links">
@@ -137,26 +147,26 @@
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="intro-btn">소개</a>
                 <div class="dropdown-content" id="intro-dropdown">
-                    <a href="intro_team.html">팀 소개</a>
-                    <a href="intro_member.html">팀원 소개</a>
-                    <a href="intro_career.html">경력</a>
-                    <a href="intro_slogan.html">슬로건</a>
-                    <a href="intro_logo.html">로고</a>
+                    <a onclick="navigate('intro_team')">팀 소개</a>
+                    <a onclick="navigate('intro_member')">팀원 소개</a>
+                    <a onclick="navigate('intro_career')">경력</a>
+                    <a onclick="navigate('intro_slogan')">슬로건</a>
+                    <a onclick="navigate('intro_logo')">로고</a>
                 </div>
             </div>
             <div class="dropdown">
                 <a href="#" class="drop-btn" id="value-btn">가치</a>
                 <div class="dropdown-content" id="value-dropdown">
-                    <a href="value_core.html">핵심가치</a>
-                    <a href="value_social.html">사회공헌</a>
-                    <a href="value_slogan.html">슬로건</a>
-                    <a href="value_esg.html">ESG</a>
+                    <a onclick="navigate('value_core')">핵심가치</a>
+                    <a onclick="navigate('value_social')">사회공헌</a>
+                    <a onclick="navigate('value_slogan')">슬로건</a>
+                    <a onclick="navigate('value_esg')">ESG</a>
                 </div>
             </div>
-            <a href="activity.html">주요 활동</a>
-            <a href="pr_gallery.html">PR 갤러리</a>
-            <a href="sponsorship.html">후원문의</a>
-            <a href="minigame.html">미니게임</a>
+            <a onclick="navigate('activity')">주요 활동</a>
+            <a onclick="navigate('pr_gallery')">PR 갤러리</a>
+            <a onclick="navigate('sponsorship')">후원문의</a>
+            <a onclick="navigate('minigame')">미니게임</a>
             <button class="login-btn" id="login-btn-top" onclick="openLoginModal()">팀원 로그인</button>
         </div>
     </header>
@@ -204,99 +214,138 @@
         </div>
     </div>
 
-    <section class="hero-slider" id="hero-slider">
-        <div id="slider-content"></div>
-        <div class="slider-nav" id="slider-dots"></div>
-    </section>
+    <div id="page-home">
+        <section class="hero-slider" id="hero-slider">
+            <div id="slider-content"></div>
+            <div class="slider-nav" id="slider-dots"></div>
+        </section>
 
-    <section class="section">
+        <section class="section">
+            <div class="inner">
+                <h2 class="section-title">Official SNS & PR</h2>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-media youtube-bg">▶</div>
+                        <div class="card-content">
+                            <h3>TURTLESS 유튜브</h3>
+                            <p>팀의 공식 활동 영상과 프로젝트 비하인드 스토리를 생생하게 만나보세요.</p>
+                            <a href="https://youtube.com/@turtlessum?si=lrgCx4jl212yguEt" target="_blank" class="sns-link-btn btn-youtube">유튜브 채널 방문하기</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-media insta-bg">📷</div>
+                        <div class="card-content">
+                            <h3>TURTLESS 인스타그램</h3>
+                            <p>팀원들의 열정 넘치는 활동 모습과 가장 빠른 최신 공지사항을 확인하실 수 있습니다.</p>
+                            <a href="https://www.instagram.com/turtless_11379?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="sns-link-btn btn-insta">인스타그램 방문하기</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-media project-bg">⚙️</div>
+                        <div class="card-content">
+                            <h3>진행 중인 프로젝트</h3>
+                            <p>7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
+                            <a onclick="navigate('project')" class="sns-link-btn" style="background-color: var(--text-main); cursor: pointer;">프로젝트 자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="member-actions">
+                    <h3 style="color: var(--dan-red); margin-bottom: 20px; display: inline-block;">팀원 전용 메뉴</h3>
+                    <button onclick="openPwModal()" style="float: right; background: white; color: var(--text-main); padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; font-weight: bold;">비밀번호 변경</button>
+                    <div style="clear: both;"></div>
+                    <p style="margin-top: 10px;">환영합니다! 팀원 전용 기능이 활성화되었습니다.</p>
+                </div>
+                <div id="admin-panel">
+                    <h3 style="margin-bottom: 10px;">👑 관리자 권한 메뉴</h3>
+                    <p>권우진님, 사이트 내 콘텐츠 수정 및 팀원 권한 관리가 가능합니다.</p>
+                    <button onclick="openSliderEditModal()" class="action-btn" style="width: auto; padding: 10px 25px; background: var(--text-main); margin-top:15px; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">메인 슬라이더 5장 수정하기</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section gray">
+            <div class="inner">
+                <div class="media-split">
+                    <div class="media-youtube">
+                        <h2 class="section-subtitle">Latest on YouTube</h2>
+                        <div id="youtube-auto-list">
+                            <p style="text-align:center; padding: 20px;">영상을 불러오는 중입니다...</p>
+                        </div>
+                    </div>
+                    <div class="media-gallery">
+                        <h2 class="section-subtitle">Our Gallery</h2>
+                        <div class="gallery-grid" style="margin-bottom: 40px;">
+                            <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+1" alt="사진 1"></div>
+                            <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+2" alt="사진 2"></div>
+                            <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+3" alt="사진 3"></div>
+                            <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+4" alt="사진 4"></div>
+                        </div>
+
+                        <h2 class="section-subtitle">Notice</h2>
+                        <div class="notice-board" style="margin-bottom: 40px;">
+                            <div class="notice-item">
+                                <span class="notice-badge">공지</span>
+                                <p>TURTLESS 후원사 모집 안내</p>
+                                <span class="notice-date">26.06.28</span>
+                            </div>
+                            <div class="notice-item">
+                                <span class="notice-badge" style="background:#444;">일정</span>
+                                <p>6월 팀 전체 구성 및 첫 회의</p>
+                                <span class="notice-date">26.06.25</span>
+                            </div>
+                            <div class="notice-item">
+                                <span class="notice-badge" style="background:#444;">일정</span>
+                                <p>마케팅팀 ESG 사회공헌 프로젝트 아이디어</p>
+                                <span class="notice-date">26.06.20</span>
+                            </div>
+                        </div>
+
+                        <h2 class="section-subtitle">Support Us</h2>
+                        <div class="mini-banner">
+                            <h3>함께 성장할 파트너를 찾습니다</h3>
+                            <p>TURTLESS의 열정에 날개를 달아주세요.</p>
+                            <a onclick="navigate('sponsorship')">후원 문의하기 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div> <section id="page-intro_team" class="subpage section">
         <div class="inner">
-            <h2 class="section-title">Official SNS & PR</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="card-media youtube-bg">▶</div>
-                    <div class="card-content">
-                        <h3>TURTLESS 유튜브</h3>
-                        <p>팀의 공식 활동 영상과 프로젝트 비하인드 스토리를 생생하게 만나보세요.</p>
-                        <a href="https://youtube.com/@turtlessum?si=lrgCx4jl212yguEt" target="_blank" class="sns-link-btn btn-youtube">유튜브 채널 방문하기</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-media insta-bg">📷</div>
-                    <div class="card-content">
-                        <h3>TURTLESS 인스타그램</h3>
-                        <p>팀원들의 열정 넘치는 활동 모습과 가장 빠른 최신 공지사항을 확인하실 수 있습니다.</p>
-                        <a href="https://www.instagram.com/turtless_11379?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="sns-link-btn btn-insta">인스타그램 방문하기</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-media project-bg">⚙️</div>
-                    <div class="card-content">
-                        <h3>진행 중인 프로젝트</h3>
-                        <p>7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
-                        <a href="project.html" class="sns-link-btn" style="background-color: var(--text-main);">프로젝트 자세히 보기</a>
-                    </div>
-                </div>
+            <div class="subpage-header">
+                <h2 class="subpage-title">팀 소개</h2>
+                <p class="subpage-desc">TURTLESS SSRC 프로젝트를 이끄는 우리를 소개합니다.</p>
             </div>
-
-            <div id="member-actions">
-                <h3 style="color: var(--dan-red); margin-bottom: 20px; display: inline-block;">팀원 전용 메뉴</h3>
-                <button onclick="openPwModal()" style="float: right; background: white; color: var(--text-main); padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; font-weight: bold;">비밀번호 변경</button>
-                <div style="clear: both;"></div>
-                <p style="margin-top: 10px;">환영합니다! 팀원 전용 기능이 활성화되었습니다.</p>
-            </div>
-            <div id="admin-panel">
-                <h3 style="margin-bottom: 10px;">👑 관리자 권한 메뉴</h3>
-                <p>권우진님, 사이트 내 콘텐츠 수정 및 팀원 권한 관리가 가능합니다.</p>
-                <button onclick="openSliderEditModal()" class="action-btn" style="width: auto; padding: 10px 25px; background: var(--text-main); margin-top:15px; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">메인 슬라이더 5장 수정하기</button>
+            <div class="card" style="padding: 40px; text-align: center;">
+                <p>여기에 팀 소개 내용을 꾸며서 넣어주세요.</p>
             </div>
         </div>
     </section>
 
-    <section class="section gray">
+    <section id="page-intro_member" class="subpage section">
         <div class="inner">
-            <div class="media-split">
-                <div class="media-youtube">
-                    <h2 class="section-subtitle">Latest on YouTube</h2>
-                    <div id="youtube-auto-list">
-                        <p style="text-align:center; padding: 20px;">영상을 불러오는 중입니다...</p>
-                    </div>
-                </div>
-                <div class="media-gallery">
-                    <h2 class="section-subtitle">Our Gallery</h2>
-                    <div class="gallery-grid" style="margin-bottom: 40px;">
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+1" alt="사진 1"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+2" alt="사진 2"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+3" alt="사진 3"></div>
-                        <div class="gallery-item"><img src="https://via.placeholder.com/300x300?text=Site+Photo+4" alt="사진 4"></div>
-                    </div>
+            <div class="subpage-header">
+                <h2 class="subpage-title">팀원 소개</h2>
+                <p class="subpage-desc">열정 넘치는 23명의 학생들을 만나보세요.</p>
+            </div>
+        </div>
+    </section>
 
-                    <h2 class="section-subtitle">Notice</h2>
-                    <div class="notice-board" style="margin-bottom: 40px;">
-                        <div class="notice-item">
-                            <span class="notice-badge">공지</span>
-                            <p>TURTLESS 후원사 모집 안내</p>
-                            <span class="notice-date">26.06.28</span>
-                        </div>
-                        <div class="notice-item">
-                            <span class="notice-badge" style="background:#444;">일정</span>
-                            <p>6월 팀 전체 구성 및 첫 회의</p>
-                            <span class="notice-date">26.06.25</span>
-                        </div>
-                        <div class="notice-item">
-                            <span class="notice-badge" style="background:#444;">일정</span>
-                            <p>마케팅팀 ESG 사회공헌 프로젝트 아이디어</p>
-                            <span class="notice-date">26.06.20</span>
-                        </div>
-                    </div>
+    <section id="page-value_core" class="subpage section">
+        <div class="inner">
+            <div class="subpage-header">
+                <h2 class="subpage-title">핵심 가치</h2>
+                <p class="subpage-desc">TURTLESS가 가장 중요하게 생각하는 철학입니다.</p>
+            </div>
+        </div>
+    </section>
 
-                    <h2 class="section-subtitle">Support Us</h2>
-                    <div class="mini-banner">
-                        <h3>함께 성장할 파트너를 찾습니다</h3>
-                        <p>TURTLESS의 열정에 날개를 달아주세요.</p>
-                        <a href="sponsorship.html">후원 문의하기 →</a>
-                    </div>
-                </div>
+    <section id="page-sponsorship" class="subpage section">
+        <div class="inner">
+            <div class="subpage-header">
+                <h2 class="subpage-title">후원 문의</h2>
+                <p class="subpage-desc">TURTLESS와 함께할 파트너를 기다립니다.</p>
             </div>
         </div>
     </section>
@@ -333,7 +382,6 @@
         window.openPwModal = () => { document.getElementById('old-pw').value = ''; document.getElementById('new-pw').value = ''; document.getElementById('pw-modal').style.display = 'flex'; };
         window.closePwModal = () => document.getElementById('pw-modal').style.display = 'none';
         
-        // 💡 슬라이더 모달 제어용 글로벌 바인딩
         window.openSliderEditModal = () => { buildSliderEditInputs(); document.getElementById('slider-edit-modal').style.display = 'flex'; };
         window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display = 'none';
 
@@ -386,7 +434,6 @@
             } catch (error) { console.error(error); }
         };
 
-        // 💡 실시간 이미지 슬라이더 동적 로직 기본 구조 정의
         let sliderData = [
             { title: "“Back to the Beginning, Beyond the Ocean”", sub: "서울시 고등학교 23명의 학생들이 만들어가는 TURTLESS SSRC 프로젝트", img: "" },
             { title: "두 번째 슬라이드 제목", sub: "부제목 내용을 입력해 주세요.", img: "" },
@@ -407,13 +454,13 @@
         }
 
         async function loadSlider() {
-            renderSlider(); // 파이어베이스 기다리지 않고 즉시 기본 슬라이드 띄우기 (로딩 지연 해결)
+            renderSlider(); 
             if(!db) return;
             try {
                 const snap = await getDoc(doc(db, "settings", "main_slider"));
                 if(snap.exists()) {
                     sliderData = snap.data().slides;
-                    renderSlider(); // 서버 데이터 가져오면 조용히 새로고침
+                    renderSlider(); 
                 }
             } catch(e) { console.error("슬라이더 연동 실패:", e); }
         }
@@ -453,15 +500,14 @@
             timer = setInterval(() => { showSlide((slideIdx + 1) % sliderData.length); }, 5000);
         }
 
-        // 터치(스와이프)로 슬라이드 넘기기 기능 추가
         let touchstartX = 0; let touchendX = 0;
         const sliderSection = document.getElementById('hero-slider');
         if(sliderSection) {
             sliderSection.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
             sliderSection.addEventListener('touchend', e => {
                 touchendX = e.changedTouches[0].screenX;
-                if (touchendX < touchstartX - 50) showSlide((slideIdx + 1) % sliderData.length); // 다음
-                if (touchendX > touchstartX + 50) showSlide((slideIdx - 1 + sliderData.length) % sliderData.length); // 이전
+                if (touchendX < touchstartX - 50) showSlide((slideIdx + 1) % sliderData.length); 
+                if (touchendX > touchstartX + 50) showSlide((slideIdx - 1 + sliderData.length) % sliderData.length); 
             });
         }
 
@@ -499,7 +545,6 @@
             } catch(e) { alert("저장에 실패했습니다."); }
         };
 
-        // 💡 기존 로드 메커니즘 통합 유지
         window.addEventListener('DOMContentLoaded', () => {
             fetchLatestYouTube();
             loadSlider();
@@ -525,6 +570,36 @@
         document.getElementById('intro-btn').addEventListener('click', function(e) { toggleDropdown(e, 'intro-dropdown'); });
         document.getElementById('value-btn').addEventListener('click', function(e) { toggleDropdown(e, 'value-dropdown'); });
 
+        // 💡 페이지 전환(SPA) 네비게이션 함수
+        function navigate(pageId) {
+            if (pageId === 'home') {
+                document.getElementById('page-home').style.display = 'block';
+            } else {
+                document.getElementById('page-home').style.display = 'none';
+            }
+
+            const allSubpages = document.querySelectorAll('.subpage');
+            allSubpages.forEach(page => page.classList.remove('active'));
+
+            if (pageId !== 'home') {
+                const targetPage = document.getElementById('page-' + pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                } else {
+                    alert("해당 페이지가 아직 준비되지 않았습니다.");
+                    document.getElementById('page-home').style.display = 'block';
+                }
+            }
+
+            navLinks.classList.remove('active');
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                dropdowns[i].classList.remove('show');
+            }
+
+            window.scrollTo(0, 0);
+        }
+
         async function fetchLatestYouTube() {
             const channelID = 'UC8QwTy46OaCGdTauiPYkeow'; 
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`;
@@ -534,7 +609,6 @@
                 const res = await fetch(apiUrl); const data = await res.json();
                 if(data.status === 'ok' && data.items.length > 0) {
                     let html = '';
-                    // 최신 영상 최대 3개 바인딩으로 수정된 부분
                     const maxVideos = Math.min(data.items.length, 3);
                     
                     for(let i = 0; i < maxVideos; i++) {
