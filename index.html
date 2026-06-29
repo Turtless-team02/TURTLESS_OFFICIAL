@@ -164,7 +164,7 @@
         <button class="dash-btn-sm" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
         
         <input type="file" id="editor-img-upload" style="display:none" accept="image/*" onchange="window.insertEditorImage(this)">
-        <button class="dash-btn-sm" style="background:var(--dan-red);" onclick="document.getElementById('editor-img-upload').click()">🖼️ 이미지 삽입</button>
+        <button class="dash-btn-sm" style="background:var(--dan-red);" onmousedown="window.saveEditorSelection()" onclick="document.getElementById('editor-img-upload').click()">🖼️ 이미지 삽입</button>
     </div>
 
     <button id="save-float-btn" onclick="window.savePageContent()">💾 전체 변경사항 저장</button>
@@ -378,6 +378,14 @@
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
         let sliderData = []; 
+        let savedEditorRange = null;
+
+        window.saveEditorSelection = () => {
+            const sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                savedEditorRange = sel.getRangeAt(0);
+            }
+        };
 
         window.applyCustomFontSize = (size) => {
             if (!size) return;
@@ -482,8 +490,19 @@
                 const storageRef = ref(storage, `editor/${Date.now()}_${input.files[0].name}`);
                 await uploadBytes(storageRef, input.files[0]);
                 const url = await getDownloadURL(storageRef);
+                
+                const sel = window.getSelection();
+                if (savedEditorRange) {
+                    sel.removeAllRanges();
+                    sel.addRange(savedEditorRange);
+                }
+                
                 document.execCommand('insertImage', false, url);
-            } catch(e) { alert("이미지 업로드 실패"); }
+                input.value = '';
+            } catch(e) { 
+                console.error(e);
+                alert("이미지 업로드 실패"); 
+            }
         };
 
         window.uploadSliderImg = async (input, idx) => {
