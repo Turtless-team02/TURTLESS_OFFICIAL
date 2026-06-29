@@ -491,10 +491,19 @@
             } catch(e){ alert("업로드 실패"); }
         };
 
-        function getYoutubeId(url) {
+        // 🛠️ 어떠한 형태의 유튜브 링크(유튜브 RSS 포함)에서도 비디오 ID를 확실하게 뽑아내는 방어 함수
+        function extractYoutubeId(url) {
+            if (!url) return null;
+            // 1. RSS 피드용 파라미터 매칭 (v=ID 형태 또는 v/ID 형태)
+            let match = url.match(/[?&]v=([^&#]+)/);
+            if (match && match[1]) return match[1].trim();
+            
+            // 2. 표준 및 공유 링크 매칭 (watch, embed, youtu.be 등)
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[7].length === 11) ? match[7] : null;
+            match = url.match(regExp);
+            if (match && match[7] && match[7].length === 11) return match[7].trim();
+            
+            return null;
         }
 
         async function loadActivities() {
@@ -531,9 +540,9 @@
                     const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`);
                     const cacheBuster = Date.now();
                     fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&_cb=${cacheBuster}`).then(r => r.json()).then(data => {
-                        if(data.items) {
+                        if(data && data.items) {
                             data.items.slice(0,3).forEach(item => {
-                                const vId = getYoutubeId(item.link);
+                                const vId = extractYoutubeId(item.link);
                                 if (vId) {
                                     ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg" alt="youtube thumbnail"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
                                 }
