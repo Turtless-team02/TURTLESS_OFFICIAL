@@ -513,13 +513,25 @@
                             let item = data.items[i];
                             let title = item.title;
                             let link = item.link;
-                            let vId = link.split('v=')[1]?.split('&')[0];
-                            let thumb = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
+                            
+                            let thumb = item.thumbnail;
+                            
+                            if (!thumb) {
+                                let vId = "";
+                                if (link.includes("v=")) {
+                                    vId = link.split("v=")[1].substring(0, 11);
+                                } else if (link.includes("youtu.be/")) {
+                                    vId = link.split("youtu.be/")[1].substring(0, 11);
+                                } else if (link.includes("shorts/")) {
+                                    vId = link.split("shorts/")[1].substring(0, 11);
+                                }
+                                thumb = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
+                            }
                             
                             ytList.innerHTML += `
                                 <a href="${link}" target="_blank" class="unified-card">
                                     <div class="card-top">
-                                        <img src="${thumb}" alt="youtube thumbnail">
+                                        <img src="${thumb}" alt="youtube thumbnail" onerror="this.src='https://dummyimage.com/600x400/000/fff&text=No+Thumbnail'">
                                     </div>
                                     <div class="card-bottom">
                                         <h4>${title}</h4>
