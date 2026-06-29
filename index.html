@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TURTLESS</title>
+    <title>TURTLESS | Youth Engineering Union</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,132 +13,120 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; }
 
-        header { position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000; }
-        .logo { font-size: 28px; font-weight: 900; color: var(--dan-red); letter-spacing: -1px; cursor: pointer; }
+        header { position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 18px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000; }
+        .logo { font-size: 26px; font-weight: 900; color: var(--dan-red); letter-spacing: -1.5px; cursor: pointer; }
         
-        .hamburger { display: none; font-size: 30px; cursor: pointer; color: var(--text-main); }
+        .hamburger { display: none; font-size: 28px; cursor: pointer; color: var(--text-main); }
         .close-menu { display: none; }
         
-        .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.2s ease; cursor: pointer; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 15px; transition: color 0.2s; cursor: pointer; }
         .nav-links a:hover { color: var(--dan-red); }
 
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px; padding: 10px 0; z-index: 1000; border: 1px solid var(--border-color); margin-top: 15px; }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; min-width: 150px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px; padding: 10px 0; z-index: 1000; border: 1px solid var(--border-color); margin-top: 15px; }
         .dropdown-content.show { display: flex; flex-direction: column; }
-        .dropdown-content a { padding: 10px 20px; text-decoration: none; display: block; color: var(--text-main); font-size: 15px; font-weight: 500; text-align: center; transition: all 0.2s; }
+        .dropdown-content a { padding: 10px 20px; text-decoration: none; display: block; color: var(--text-main); font-size: 14px; font-weight: 500; text-align: center; }
         .dropdown-content a:hover { background-color: var(--bg-gray); color: var(--dan-red); }
 
-        .login-btn { background-color: transparent; color: var(--text-main); border: 1px solid var(--text-main); padding: 8px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-left: 10px; }
+        .login-btn { background-color: transparent; color: var(--text-main); border: 1.5px solid var(--text-main); padding: 7px 18px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-size: 14px; }
         .login-btn:hover { background-color: var(--text-main); color: white; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .hamburger { display: block; }
-            .nav-links { position: fixed; top: 0; right: -100%; width: 250px; height: 100vh; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px 30px 30px; transition: right 0.3s ease; z-index: 1001; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 260px; height: 100vh; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px; transition: right 0.3s ease; z-index: 1001; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
             .nav-links.active { right: 0; }
-            .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 35px; background: none; border: none; cursor: pointer; color: var(--text-main); }
-            .nav-links > a, .nav-links .dropdown, .login-btn { width: 100%; margin: 10px 0; text-align: left; margin-left: 0; }
-            .dropdown-content { position: static; box-shadow: none; border: none; margin-top: 5px; transform: none; min-width: 100%; padding-left: 15px;}
+            .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 30px; background: none; border: none; cursor: pointer; }
+            .nav-links > a, .nav-links .dropdown { width: 100%; text-align: left; }
+            .dropdown-content { position: static; transform: none; box-shadow: none; border: none; width: 100%; padding-left: 20px; }
         }
 
         #page-home { display: block; }
-        .subpage { display: none; padding: 80px 5%; min-height: 70vh; animation: fadeIn 0.4s ease-in-out; }
+        .subpage { display: none; padding: 80px 5%; min-height: 80vh; animation: fadeIn 0.4s ease-in-out; }
         .subpage.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 히어로 슬라이더 */
-        .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 400px; background-color: #333; overflow: hidden; }
+        /* 💡 슬라이더 배경색 단청레드 고정 */
+        .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 450px; background-color: var(--dan-red); overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; background-size: cover; background-position: center; }
         .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: -1; }
         .slide.active { opacity: 1; z-index: 2; }
-        .slide h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
-        .slide p { font-size: 1.2rem; font-weight: 400; opacity: 0.9; }
+        .slide h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
 
         .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 10; }
-        .slider-dot { width: 12px; height: 12px; background-color: rgba(255, 255, 255, 0.4); border-radius: 50%; cursor: pointer; }
-        .slider-dot.active { background-color: white; }
+        .slider-dot { width: 10px; height: 10px; background-color: rgba(255, 255, 255, 0.4); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .slider-dot.active { background-color: white; width: 30px; border-radius: 10px; }
 
         .section { width: 100%; padding: 80px 5%; }
         .section.gray { background-color: var(--bg-gray); }
         .inner { max-width: 1200px; margin: 0 auto; }
-        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; letter-spacing: -1px; text-align: center; }
-        .section-subtitle { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); border-bottom: 2px solid var(--dan-red); display: inline-block; padding-bottom: 5px; }
+        .section-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 50px; letter-spacing: -1.5px; text-align: center; }
+        .section-subtitle { font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); border-bottom: 3px solid var(--dan-red); display: inline-block; padding-bottom: 5px; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: transform 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .card-media { width: 100%; height: 220px; background-color: #ebebeb; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; }
+        .card { background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.05); transition: all 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-10px); }
+        .card-media { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; font-size: 45px; color: white; }
         .card-content { padding: 30px; flex-grow: 1; }
+        .card-content h3 { font-size: 1.3rem; margin-bottom: 12px; font-weight: 800; }
+        .card-content p { color: var(--text-sub); font-size: 0.95rem; margin-bottom: 20px; }
 
-        .sns-link-btn { display: block; text-align: center; width: 100%; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; color: white; transition: opacity 0.3s; }
-        
-        /* 하단 레이아웃 스플릿 구성 복구 */
+        /* 💡 유튜브 리스트 간격 및 썸네일 디자인 */
         .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
-        .media-youtube { flex: 1.2; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
+        .media-youtube { flex: 1.3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; } /* 영상 사이 공간 조절 */
         .media-info-block { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* 유튜브 개별 카드 크기 및 스타일 복구 */
-        .youtube-main-card { display: block; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .youtube-main-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--dan-red); }
-        .youtube-thumb-large { width: 100%; aspect-ratio: 16/9; object-fit: cover; background-color: #eee; }
-        .youtube-info-large { padding: 18px; }
+        .youtube-main-card { display: flex; flex-direction: column; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .youtube-main-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
+        .youtube-thumb-wrap { width: 100%; aspect-ratio: 16/9; background-color: #000; overflow: hidden; }
+        .youtube-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .youtube-info-large { padding: 15px 20px; }
+        .youtube-info-large h4 { font-size: 1rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* 우측 블록 크기 통일화 (유튜브 하나의 크기와 정확히 매칭) */
-        .right-content-box { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; aspect-ratio: 16/11; position: relative; overflow: hidden; }
+        /* 💡 우측 칸들 높이 규격 통일화 (유튜브 카드 높이와 연동) */
+        .right-content-box { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; min-height: 200px; overflow: hidden; }
 
-        /* 💡 사진 4개 2x2 그리드 배치 스타일 */
-        .home-photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; height: 100%; }
-        .home-photo-item { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); background-color: #f0f0f0; cursor: pointer; }
-        .home-photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .home-photo-item:hover img { transform: scale(1.05); }
+        .home-photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; height: 100%; }
+        .home-photo-item { border-radius: 8px; overflow: hidden; border: 1px solid #eee; background-color: #f7f7f7; cursor: pointer; aspect-ratio: 1/1; }
+        .home-photo-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Notice 공지사항 보드 */
-        .notice-board { display: flex; flex-direction: column; gap: 5px; justify-content: flex-start; }
-        .notice-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f5f5f5; cursor: pointer; transition: background 0.2s; border-radius: 8px; }
+        .notice-board { justify-content: flex-start; padding: 10px 15px; }
+        .notice-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f9f9f9; cursor: pointer; transition: background 0.2s; }
         .notice-item:hover { background-color: var(--bg-gray); }
         .notice-item:last-child { border-bottom: none; }
-        .notice-badge { background: var(--dan-red); color: white; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; margin-right: 15px; font-weight: bold; min-width: 45px; text-align: center; }
+        .notice-badge { background: var(--dan-red); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; margin-right: 12px; font-weight: 800; min-width: 40px; text-align: center; }
         
-        /* 💡 단청레드 배너 완벽 복구 */
-        .mini-banner { background: linear-gradient(135deg, var(--dan-red), var(--dan-red-dark)); color: white; text-align: center; align-items: center; }
-        .mini-banner h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px; }
-        .mini-banner a { display: inline-block; background: white; color: var(--dan-red); text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; transition: all 0.3s; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .mini-banner a:hover { transform: scale(1.05); background: var(--bg-gray); }
+        .mini-banner { background: linear-gradient(135deg, var(--dan-red), var(--dan-red-dark)); color: white; text-align: center; }
+        .mini-banner h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.3; }
+        .mini-banner a { display: inline-block; background: white; color: var(--dan-red); text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.3s; }
+        .mini-banner a:hover { transform: scale(1.05); }
 
-        /* 팀원 소개 명단 그리드 */
-        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; margin-top: 30px; }
-        .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); transition: all 0.3s; }
-        .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
-        .photo-area { width: 100%; aspect-ratio: 1/1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
+        .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
+        .photo-area { width: 100%; aspect-ratio: 1/1; background-color: #f0f0f0; }
         .photo-area img { width: 100%; height: 100%; object-fit: cover; }
-        .info-area { padding: 20px; text-align: left; }
-        .info-area .school { font-size: 0.85rem; color: var(--dan-red); font-weight: 700; margin-bottom: 5px; }
-        .info-area .name { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+        .info-area { padding: 20px; }
+        .info-area .school { font-size: 0.8rem; color: var(--dan-red); font-weight: 800; margin-bottom: 4px; }
+        .info-area .name { font-size: 1.15rem; font-weight: 900; }
+        .info-area .grade { font-size: 0.8rem; color: #888; margin-left: 5px; }
 
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-        .gallery-item { width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); position: relative; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        .new-badge { background: #e62117; color: white; font-size: 9px; padding: 1px 4px; border-radius: 3px; margin-left: 5px; font-weight: 900; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.3; } }
 
-        .new-badge { background: #e62117; color: white; font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-left: 5px; font-weight: 900; display: inline-block; animation: blink 1s infinite; vertical-align: middle; }
-        @keyframes blink { 50% { opacity: 0.5; } }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 90%; max-width: 450px; padding: 40px; border-radius: 20px; position: relative; }
-        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; }
-        .action-btn { width: 100%; background: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-
-        #member-actions, #admin-panel { display: none; margin-top: 40px; padding: 30px; background: white; border-radius: 16px; border-left: 6px solid var(--dan-red); box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-
+        #member-actions, #admin-panel { display: none; margin-top: 40px; padding: 30px; background: white; border-radius: 20px; border-left: 6px solid var(--dan-red); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .editable-content { transition: all 0.2s; border-radius: 4px; }
-        body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important; background-color: rgba(193, 39, 45, 0.05) !important; cursor: text; min-height: 20px; }
+        body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important; background-color: rgba(193, 39, 45, 0.05) !important; cursor: text; padding: 4px; min-height: 20px; }
         #save-float-btn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999; padding: 15px 30px; background: var(--dan-red); color: white; font-weight: 900; border-radius: 50px; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        
-        .upload-box { background: #f9f9f9; border: 2px dashed #ccc; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: none; }
-        .filter-container { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .filter-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        .filter-btn.active { background: var(--dan-red); color: white; }
 
+        .upload-box { background: #fdfdfd; border: 2px dashed #ddd; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: none; }
         .dynamic-item { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 20px; position: relative; transition: all 0.5s ease; }
-        .dynamic-item.highlight-focus { border-color: var(--dan-red); box-shadow: 0 0 25px rgba(193, 39, 45, 0.4); transform: scale(1.02); }
+        .dynamic-item.highlight-focus { border-color: var(--dan-red); box-shadow: 0 0 20px rgba(193, 39, 45, 0.3); transform: scale(1.02); }
+
+        .subpage-header { text-align: center; margin-bottom: 50px; }
+        .subpage-title { font-size: 2.5rem; font-weight: 900; color: var(--dan-red); margin-bottom: 10px; }
+        .subpage-desc { font-size: 1rem; color: #888; }
+        
+        .content-card { background: white; border-radius: 20px; padding: 40px; border: 1px solid var(--border-color); box-shadow: 0 5px 20px rgba(0,0,0,0.02); margin-top: 20px; line-height: 1.8; }
     </style>
 </head>
 <body>
@@ -146,11 +134,11 @@
 
     <header>
         <div class="logo" onclick="navigate('home')">TURTLESS</div>
-        <div class="hamburger" id="hamburger">☰</div>
+        <div class="hamburger" onclick="document.getElementById('nav-links').classList.add('active')">☰</div>
         <div class="nav-links" id="nav-links">
-            <button class="close-menu" id="close-menu" onclick="document.getElementById('nav-links').classList.remove('active')">×</button>
+            <button class="close-menu" onclick="document.getElementById('nav-links').classList.remove('active')">×</button>
             <div class="dropdown">
-                <a href="#" class="drop-btn" onclick="document.getElementById('intro-dropdown').classList.toggle('show')">소개</a>
+                <a href="#" class="drop-btn" onclick="toggleDrop('intro-dropdown')">소개</a>
                 <div class="dropdown-content" id="intro-dropdown">
                     <a onclick="navigate('intro_team')">팀 소개</a>
                     <a onclick="navigate('intro_member')">팀원 소개</a>
@@ -160,12 +148,11 @@
                 </div>
             </div>
             <div class="dropdown">
-                <a href="#" class="drop-btn" onclick="document.getElementById('value-dropdown').classList.toggle('show')">가치</a>
+                <a href="#" class="drop-btn" onclick="toggleDrop('value-dropdown')">가치</a>
                 <div class="dropdown-content" id="value-dropdown">
                     <a onclick="navigate('value_core')">핵심가치</a>
                     <a onclick="navigate('value_social')">사회공헌</a>
-                    <a onclick="navigate('value_slogan')">슬로건</a>
-                    <a onclick="navigate('value_esg')">ESG</a>
+                    <a onclick="navigate('value_esg')">ESG 경영</a>
                 </div>
             </div>
             <a onclick="navigate('activity')">주요 활동</a>
@@ -178,8 +165,8 @@
 
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="close-btn" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:24px; cursor:pointer;" onclick="closeLoginModal()">×</button>
-            <h2 style="text-align:center; margin-bottom:20px;">팀원 인증</h2>
+            <button class="close-btn" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;" onclick="closeLoginModal()">×</button>
+            <h2 style="text-align:center; margin-bottom:25px; font-weight:900;">팀원 인증</h2>
             <select id="school">
                 <option value="경기기계공업고">경기기계공업고</option><option value="경복비즈니스고">경복비즈니스고</option>
                 <option value="서울공업고">서울공업고</option><option value="서울매그넷고">서울매그넷고</option>
@@ -193,11 +180,11 @@
     </div>
 
     <div id="slider-edit-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 550px; max-height: 80vh; overflow-y: auto;">
-            <button class="close-btn" style="float:right; cursor:pointer; background:none; border:none; font-size:20px;" onclick="closeSliderEditModal()">×</button>
-            <h2 style="margin-bottom:15px;">슬라이더 수정</h2>
+        <div class="modal-content" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <button class="close-btn" style="float:right; border:none; background:none; font-size:20px; cursor:pointer;" onclick="closeSliderEditModal()">×</button>
+            <h2 style="margin-bottom:20px; font-weight:900;">슬라이더 개별 관리</h2>
             <div id="slider-inputs-container"></div>
-            <button class="action-btn" onclick="saveSliderData()">DB 저장 및 실시간 적용</button>
+            <button class="action-btn" onclick="saveSliderData()">데이터 동기화 저장</button>
         </div>
     </div>
 
@@ -215,7 +202,7 @@
                         <div class="card-media" style="background:#FF0000;">▶</div>
                         <div class="card-content">
                             <h3>TURTLESS 유튜브</h3>
-                            <p style="margin-bottom:15px;">팀의 공식 활동 영상과 비하인드 스토리를 만나보세요.</p>
+                            <p>공식 프로젝트 메인 영상과 생생한 현장 스케치를 만나보세요.</p>
                             <a href="https://youtube.com/@turtlessum" target="_blank" class="sns-link-btn" style="background:#FF0000;">유튜브 방문하기</a>
                         </div>
                     </div>
@@ -223,7 +210,7 @@
                         <div class="card-media" style="background: linear-gradient(45deg, #f09433, #bc1888);">📷</div>
                         <div class="card-content">
                             <h3>TURTLESS 인스타그램</h3>
-                            <p style="margin-bottom:15px;">열정 넘치는 활동 모습과 공지사항을 확인하세요.</p>
+                            <p>열정 넘치는 활동 모습과 공지사항을 확인하세요.</p>
                             <a href="https://www.instagram.com/turtless_11379" target="_blank" class="sns-link-btn" style="background: linear-gradient(45deg, #f09433, #bc1888);">인스타그램 방문하기</a>
                         </div>
                     </div>
@@ -231,27 +218,27 @@
                         <div class="card-media" style="background:#111;">⚙️</div>
                         <div class="card-content">
                             <h3 id="home-proj-title" class="editable-content">진행 중인 프로젝트</h3>
-                            <p id="home-proj-desc" class="editable-content" style="margin-bottom:15px;">7개 연합 학교가 함께 만드는 혁신적인 결과물입니다.</p>
-                            <a onclick="navigate('project')" class="sns-link-btn" style="background:#111; cursor:pointer;">프로젝트 자세히 보기</a>
+                            <p id="home-proj-desc" class="editable-content">7개 연합 학교가 함께 만드는 혁신적인 결과물입니다.</p>
+                            <a onclick="navigate('project')" class="sns-link-btn" style="background:#111; cursor:pointer;">상세 리포트 보기</a>
                         </div>
                     </div>
                 </div>
 
                 <div id="member-actions">
-                    <h3 style="color: var(--dan-red); margin-bottom: 10px;">📋 팀원 대시보드 메뉴</h3>
+                    <h3 style="color: var(--dan-red); margin-bottom: 10px;">📋 팀원 메뉴</h3>
                     <p id="welcome-msg" style="margin-bottom:15px; font-weight:700;"></p>
                     <div style="border-top: 1px dashed #ddd; padding-top:15px;">
-                        <h4>내 프로필 사진 등록/변경</h4>
                         <input type="file" id="profile-upload-input" accept="image/*" style="display:none;" onchange="uploadProfileImage(event)">
-                        <button onclick="document.getElementById('profile-upload-input').click()" style="padding:8px 15px; cursor:pointer; margin-top:5px;">사진 선택</button>
+                        <button onclick="document.getElementById('profile-upload-input').click()" style="padding:6px 15px; cursor:pointer; font-weight:700; font-size:13px; border-radius:5px;">프로필 사진 변경</button>
+                        <span id="upload-status" style="margin-left:10px; color:var(--dan-red); font-size:13px;"></span>
                     </div>
                 </div>
 
                 <div id="admin-panel">
-                    <h3 style="margin-bottom:10px;">👑 최고 관리자 제어 센터</h3>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:8px;">슬라이더 개별 설정</button>
-                        <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:8px;">📝 직접 텍스트 수정 켜기</button>
+                    <h3 style="margin-bottom:12px; font-weight:900;">👑 관리자 대시보드</h3>
+                    <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                        <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">슬라이더 5장 편집</button>
+                        <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
                     </div>
                 </div>
             </div>
@@ -260,32 +247,19 @@
         <section class="section gray">
             <div class="inner">
                 <div class="media-split">
-                    <div class="media-youtube">
-                        <h2 class="section-subtitle">Latest on YouTube</h2>
-                        <div id="youtube-auto-list">
-                            <p style="text-align:center; padding:20px; color:#999;">유튜브 연동 인프라 로딩 중...</p>
+                    <div class="media-youtube" id="youtube-auto-list">
                         </div>
-                    </div>
                     
                     <div class="media-info-block">
-                        <h2 class="section-subtitle">Media & Highlights</h2>
-                        
-                        <div class="right-content-box">
-                            <div class="home-photo-grid" id="home-gallery-4grid">
-                                <div class="home-photo-item"></div><div class="home-photo-item"></div>
-                                <div class="home-photo-item"></div><div class="home-photo-item"></div>
-                            </div>
+                        <div class="right-content-box" style="padding:10px;">
+                            <div class="home-photo-grid" id="home-gallery-4grid"></div>
                         </div>
                         
-                        <div class="right-content-box notice-board" id="home-notice-board">
-                            <p style="text-align:center; padding:20px; color:#999;">최신 공지글 동기화 중...</p>
-                        </div>
+                        <div class="right-content-box notice-board" id="home-notice-board"></div>
                         
                         <div class="right-content-box mini-banner">
-                            <h3 id="banner-title" class="editable-content">함께 성장할 파트너를 찾습니다</h3>
-                            <div>
-                                <a onclick="navigate('sponsorship')">후원 문의하기 →</a>
-                            </div>
+                            <h3 id="banner-title" class="editable-content">TURTLESS와 함께할<br>파트너를 찾습니다</h3>
+                            <div><a onclick="navigate('sponsorship')">후원 문의하기 →</a></div>
                         </div>
                     </div>
                 </div>
@@ -293,65 +267,22 @@
         </section>
     </div>
 
-    <section id="page-intro_member" class="subpage section">
-        <div class="inner">
-            <div class="subpage-header">
-                <h2 id="t-intro_member" class="subpage-title editable-content">팀원 소개</h2>
-                <p id="d-intro_member" class="subpage-desc editable-content">TURTLESS와 함께하는 열정 넘치는 23명의 팀원들입니다.</p>
-            </div>
-            <div id="member-list" class="member-grid"></div>
-        </div>
-    </section>
+    <section id="page-intro_team" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">팀 소개</h2></div><div class="content-card"><div id="b-intro_team" class="editable-content">이곳에 팀 소개 내용을 작성해 주세요.</div></div></div></section>
+    <section id="page-intro_career" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Our Career</h2></div><div class="content-card"><div id="b-career" class="editable-content">주요 연혁 및 경력 사항을 작성해 주세요.</div></div></div></section>
+    <section id="page-intro_slogan" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Slogan</h2></div><div class="content-card" style="text-align:center;"><div id="b-slogan" class="editable-content" style="font-size: 28px; font-weight: 900; color: var(--dan-red);">“Back to the Beginning, Beyond the Ocean”</div></div></div></section>
+    <section id="page-intro_logo" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Identity</h2></div><div class="content-card"><div id="b-logo" class="editable-content">로고 및 아이덴티티에 담긴 의미를 작성해 주세요.</div></div></div></section>
+    <section id="page-value_core" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Core Values</h2></div><div class="content-card"><div id="b-core" class="editable-content">핵심 가치 내용을 작성해 주세요.</div></div></div></section>
+    <section id="page-value_social" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">사회공헌</h2></div><div class="content-card"><div id="b-social" class="editable-content">사회공헌 활동 내역을 작성해 주세요.</div></div></div></section>
+    <section id="page-value_esg" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">ESG 경영</h2></div><div class="content-card"><div id="b-esg" class="editable-content">ESG 경영 실천 내용을 작성해 주세요.</div></div></div></section>
+    <section id="page-sponsorship" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">후원문의</h2></div><div class="content-card"><div id="b-spon" class="editable-content">후원 및 협업 문의 안내를 작성해 주세요.</div></div></div></section>
 
-    <section id="page-activity" class="subpage section">
-        <div class="inner">
-            <div class="subpage-header"><h2 id="t-act" class="subpage-title editable-content">주요 활동</h2></div>
-            <div id="activity-upload-box" class="upload-box">
-                <h3 style="margin-bottom:10px;">✏️ 새 활동 내역 등록하기</h3>
-                <input type="text" id="act-input-title" placeholder="활동 명칭을 적어주세요."><br>
-                <textarea id="act-input-desc" rows="5" placeholder="활동 세부 사항을 기재해 주세요."></textarea><br>
-                <button class="action-btn" onclick="window.addActivityItem()" style="width:auto; padding:10px 25px;">활동 기록 저장</button>
-            </div>
-            <div id="activity-dynamic-list"></div>
-        </div>
-    </section>
+    <section id="page-intro_member" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Team Members</h2><p class="subpage-desc">TURTLESS 7개교 연합 23명의 학생들</p></div><div id="member-list" class="member-grid"></div></div></section>
+    <section id="page-activity" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Main Activities</h2></div><div id="activity-upload-box" class="upload-box"><h3 style="margin-bottom:15px;">✏️ 새 활동 기록</h3><input type="text" id="act-input-title" placeholder="제목"><textarea id="act-input-desc" rows="4" placeholder="내용"></textarea><button class="action-btn" onclick="window.addActivityItem()" style="width:auto; padding:10px 20px;">활동 등록</button></div><div id="activity-dynamic-list"></div></div></section>
+    <section id="page-pr_gallery" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">PR Gallery</h2></div><div id="gallery-upload-box" class="upload-box"><h3 style="margin-bottom:15px;">📷 사진 업로드</h3><select id="gallery-input-category"><option value="엔지니어링">엔지니어링</option><option value="마케팅">마케팅</option><option value="회계">회계</option><option value="전략">전략</option></select><input type="file" id="gallery-file-input" accept="image/*"><button class="action-btn" onclick="window.addGalleryItem()" style="width:auto; padding:10px 20px; margin-top:5px;">사진 저장</button></div><div class="filter-container"><button class="filter-btn active" onclick="window.filterGallery('전체', this)">전체</button><button class="filter-btn" onclick="window.filterGallery('엔지니어링', this)">엔지니어링</button><button class="filter-btn" onclick="window.filterGallery('마케팅', this)">마케팅</button><button class="filter-btn" onclick="window.filterGallery('회계', this)">회계</button><button class="filter-btn" onclick="window.filterGallery('전략', this)">전략</button></div><div id="gallery-dynamic-grid" class="gallery-grid"></div></div></section>
+    <section id="page-minigame" class="subpage section"><div class="inner"><div class="content-card"><h4>Mini Game Center</h4><div id="b-game" class="editable-content">준비 중인 미니게임 허브입니다.</div></div></div></section>
+    <section id="page-project" class="subpage section"><div class="inner"><div class="content-card"><h4>Project Report</h4><div id="b-proj" class="editable-content">진행 중인 연합 프로젝트의 상세 리포트입니다.</div></div></div></section>
 
-    <section id="page-pr_gallery" class="subpage section">
-        <div class="inner">
-            <div class="subpage-header"><h2 id="t-pr" class="subpage-title editable-content">PR 갤러리</h2></div>
-            <div id="gallery-upload-box" class="upload-box">
-                <h3 style="margin-bottom:10px;">📷 갤러리 신규 이미지 업로드</h3>
-                <select id="gallery-input-category">
-                    <option value="엔지니어링">엔지니어링</option><option value="마케팅">마케팅</option>
-                    <option value="회계">회계</option><option value="전략">전략</option>
-                </select><br>
-                <input type="file" id="gallery-file-input" accept="image/*"><br>
-                <button class="action-btn" onclick="window.addGalleryItem()" style="width:auto; padding:10px 25px; margin-top:5px;">서버에 저장</button>
-            </div>
-            <div class="filter-container">
-                <button class="filter-btn active" onclick="window.filterGallery('전체', this)">전체</button>
-                <button class="filter-btn" onclick="window.filterGallery('엔지니어링', this)">엔지니어링</button>
-                <button class="filter-btn" onclick="window.filterGallery('마케팅', this)">마케팅</button>
-                <button class="filter-btn" onclick="window.filterGallery('회계', this)">회계</button>
-                <button class="filter-btn" onclick="window.filterGallery('전략', this)">전략</button>
-            </div>
-            <div id="gallery-dynamic-grid" class="gallery-grid"></div>
-        </div>
-    </section>
-
-    <section id="page-intro_team" class="subpage section"><div class="inner"><div id="b-intro_team" class="editable-content">팀 소개 내용</div></div></section>
-    <section id="page-intro_career" class="subpage section"><div class="inner"><div id="b-career" class="editable-content">경력 내용</div></div></section>
-    <section id="page-intro_slogan" class="subpage section"><div class="inner"><div id="b-slogan" class="editable-content">슬로건</div></div></section>
-    <section id="page-intro_logo" class="subpage section"><div class="inner"><div id="b-logo" class="editable-content">로고 의미</div></div></section>
-    <section id="page-value_core" class="subpage section"><div class="inner"><div id="b-core" class="editable-content">핵심 가치</div></div></section>
-    <section id="page-value_social" class="subpage section"><div class="inner"><div id="b-social" class="editable-content">사회공헌</div></div></section>
-    <section id="page-value_slogan" class="subpage section"><div class="inner"><div id="b-vslogan" class="editable-content">가치 슬로건</div></div></section>
-    <section id="page-value_esg" class="subpage section"><div class="inner"><div id="b-esg" class="editable-content">ESG 경영 정보</div></div></section>
-    <section id="page-sponsorship" class="subpage section"><div class="inner"><div id="b-spon" class="editable-content">후원문의 상세 안내 가이드</div></div></section>
-    <section id="page-minigame" class="subpage section"><div class="inner"><div id="b-game" class="editable-content">미니게임 인프라 허브</div></div></section>
-    <section id="page-project" class="subpage section"><div class="inner"><div id="b-proj" class="editable-content">진행 프로젝트 리포트</div></div></section>
-
-    <footer><p>© 2026 TURTLESS TEAM. All rights reserved.</p></footer>
+    <footer style="background:#111; color:#555; padding:60px 5%; text-align:center; font-size:14px;"><p>© 2026 TURTLESS TEAM. All rights reserved.</p></footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -374,7 +305,7 @@
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
 
-        // 1. 팀원 명단 연동
+        // 1. 팀원 연동
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
@@ -382,25 +313,21 @@
                 const snap = await getDocs(collection(db, "users"));
                 let arr = []; snap.forEach(d => arr.push(d.data()));
                 arr.sort((a,b) => a.school === b.school ? a.name.localeCompare(b.name) : a.school.localeCompare(b.school));
-                
-                let html = '';
+                let h = '';
                 arr.forEach(m => {
                     const img = m.profileImage || "2093.jpg";
                     const hvr = m.profileImage ? "" : `onmouseover="this.src='2097.jpg'" onmouseout="this.src='2093.jpg'"`;
-                    html += `<div class="member-card">
-                        <div class="photo-area"><img src="${img}" ${hvr}></div>
-                        <div class="info-area"><div class="school">${m.school}</div><div class="name">${m.name} <span style="font-size:12px; color:#999;">${m.grade}</span></div></div>
-                    </div>`;
+                    h += `<div class="member-card"><div class="photo-area"><img src="${img}" ${hvr}></div><div class="info-area"><div class="school">${m.school}</div><div class="name">${m.name} <span class="grade">${m.grade}</span></div></div></div>`;
                 });
-                list.innerHTML = html;
-            } catch(e){ console.error(e); }
+                list.innerHTML = h;
+            } catch(e){}
         }
 
-        // 2. 활동 내역 + 공지사항 + 유튜브 + 💡홈화면 4분할 이미지 로딩 복구
+        // 2. 활동 게시글 & 유튜브 연동
         async function loadActivities() {
             const list = document.getElementById('activity-dynamic-list');
             const notice = document.getElementById('home-notice-board');
-            const youtubeList = document.getElementById('youtube-auto-list');
+            const ytList = document.getElementById('youtube-auto-list');
             try {
                 const snap = await getDocs(collection(db, "activities"));
                 let items = []; snap.forEach(d => items.push({id:d.id, ...d.data()}));
@@ -410,117 +337,90 @@
                     let h = '';
                     items.forEach(i => {
                         const isN = (Date.now() - (i.createdAt||0)) < 86400000 ? '<span class="new-badge">NEW</span>' : '';
-                        const del = (currentUserData && currentUserData.role === 'admin') ? `<button onclick="window.deleteActivity('${i.id}')" style="position:absolute; top:20px; right:20px; cursor:pointer; background:#fff; border:1px solid #ddd; padding:4px 8px; border-radius:4px;">삭제</button>` : '';
-                        h += `<div class="dynamic-item" id="act-${i.id}">${del}<h3>${i.title} ${isN}</h3><p style="white-space:pre-wrap; margin-top:10px; color:var(--text-sub);">${i.desc}</p><br><small style="color:#aaa;">작성: ${i.writer || '팀원'}</small></div>`;
+                        const del = (currentUserData && currentUserData.role === 'admin') ? `<button onclick="window.deleteActivity('${i.id}')" style="position:absolute; top:30px; right:30px; cursor:pointer; padding:2px 8px; font-size:12px; border-radius:4px; border:1px solid #ddd; background:white;">삭제</button>` : '';
+                        h += `<div class="dynamic-item" id="act-${i.id}">${del}<h3>${i.title} ${isN}</h3><p style="margin-top:10px; color:#555; white-space:pre-wrap;">${i.desc}</p><br><small style="color:#aaa;">작성: ${i.writer || '팀원'}</small></div>`;
                     });
-                    list.innerHTML = h || '<p>등록된 주요 활동이 존재하지 않습니다.</p>';
+                    list.innerHTML = h || '<p style="text-align:center; padding:40px; color:#999;">활동 기록이 없습니다.</p>';
                 }
 
                 if(notice) {
-                    let nh = '';
-                    const topThree = items.slice(0,3);
-                    if(topThree.length === 0) {
-                        notice.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">공지사항이 없습니다.</p>';
-                    } else {
-                        topThree.forEach(i => {
-                            const isN = (Date.now() - (i.createdAt||0)) < 86400000 ? '<span class="new-badge">NEW</span>' : '';
-                            nh += `<div class="notice-item" onclick="window.goAct('${i.id}')"><span class="notice-badge">소식</span><p style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex-grow:1; font-weight:500; font-size:14px;">${i.title} ${isN}</p></div>`;
-                        });
-                        notice.innerHTML = nh;
-                    }
+                    let nh = '<h2 class="section-subtitle" style="margin-bottom:15px; font-size:1.1rem; border-bottom:2px solid var(--dan-red);">Latest Notice</h2>';
+                    const top3 = items.slice(0,3);
+                    top3.forEach(i => {
+                        const isN = (Date.now() - (i.createdAt||0)) < 86400000 ? '<span class="new-badge">NEW</span>' : '';
+                        nh += `<div class="notice-item" onclick="window.goAct('${i.id}')"><span class="notice-badge">공지</span><p style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex-grow:1; font-weight:700; font-size:14px;">${i.title} ${isN}</p></div>`;
+                    });
+                    notice.innerHTML = nh || '<p style="text-align:center; font-size:13px; color:#999;">최신 소식 없음</p>';
                 }
 
-                if(youtubeList) {
-                    youtubeList.innerHTML = `
-                        <a href="https://youtube.com/@turtlessum" target="_blank" class="youtube-main-card">
-                            <div class="youtube-thumb-large" style="background-image:url('https://img.youtube.com/vi/lrgCx4jl212yguEt/mqdefault.jpg'); background-size:cover;"></div>
-                            <div class="youtube-info-large"><h4>TURTLESS 공식 프로젝트 메인 영상</h4></div>
-                        </a>
-                        <a href="https://youtube.com/@turtlessum" target="_blank" class="youtube-main-card">
-                            <div class="youtube-thumb-large" style="background: #222; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">TURTLESS 활동 Clip #2</div>
-                            <div class="youtube-info-large"><h4>7개 연합엔지니어링 팀 인터뷰 및 스케치</h4></div>
-                        </a>
-                        <a href="https://youtube.com/@turtlessum" target="_blank" class="youtube-main-card">
-                            <div class="youtube-thumb-large" style="background: #444; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">TURTLESS 활동 Clip #1</div>
-                            <div class="youtube-info-large"><h4>팀 빌딩 및 오리엔테이션 브이로그</h4></div>
-                        </a>
-                    `;
+                if(ytList) {
+                    const ids = ['lrgCx4jl212yguEt', 'W_mY_n3z1_M', 'dQw4w9WgXcQ']; 
+                    let yh = '<h2 class="section-subtitle">Youtube Media</h2>';
+                    ids.forEach((id, idx) => {
+                        yh += `<a href="https://youtube.com/watch?v=${id}" target="_blank" class="youtube-main-card">
+                            <div class="youtube-thumb-wrap"><img src="https://img.youtube.com/vi/${id}/mqdefault.jpg"></div>
+                            <div class="youtube-info-large"><h4>TURTLESS Official Activity CLIP #${3-idx}</h4></div>
+                        </a>`;
+                    });
+                    ytList.innerHTML = yh;
                 }
-            } catch(e){ console.error(e); }
+            } catch(e){}
         }
 
-        // Notice 포커스 하이라이트 함수
-        window.goAct = (id) => { 
-            navigate('activity'); 
-            setTimeout(() => { 
-                const el = document.getElementById('act-'+id); 
-                if(el){ 
-                    el.scrollIntoView({behavior:'smooth', block:'center'}); 
-                    el.classList.add('highlight-focus'); 
-                    setTimeout(()=>el.classList.remove('highlight-focus'), 2000); 
-                } 
-            }, 300); 
-        };
-
-        window.deleteActivity = async (id) => { if(confirm("삭제하시겠습니까?")){ await deleteDoc(doc(db, "activities", id)); loadActivities(); } };
+        window.goAct = (id) => { navigate('activity'); setTimeout(() => { const el = document.getElementById('act-'+id); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.classList.add('highlight-focus'); setTimeout(()=>el.classList.remove('highlight-focus'), 2000); }}, 300); };
+        window.deleteActivity = async (id) => { if(confirm("삭제?")) { await deleteDoc(doc(db, "activities", id)); loadActivities(); } };
         window.addActivityItem = async () => {
             const t = document.getElementById('act-input-title').value.trim();
             const d = document.getElementById('act-input-desc').value.trim();
-            if(!t || !d) return alert("데이터를 기입하세요.");
-            await addDoc(collection(db, "activities"), { title:t, desc:d, writer:currentUserData.name || '팀원', createdAt:Date.now() });
-            document.getElementById('act-input-title').value = '';
-            document.getElementById('act-input-desc').value = '';
-            alert("활동이 성공적으로 등록되었습니다."); loadActivities();
+            if(!t || !d) return alert("내용 기입 요망");
+            await addDoc(collection(db, "activities"), { title:t, desc:d, writer:currentUserData.name, createdAt:Date.now() });
+            document.getElementById('act-input-title').value = ''; document.getElementById('act-input-desc').value = '';
+            loadActivities();
         };
 
-        // 3. PR 갤러리 로드 및 홈화면 4칸 자동 연동 로직
+        // 3. 갤러리 및 홈화면 그리드
         async function loadGallery() {
             try {
                 const snap = await getDocs(collection(db, "gallery"));
                 cachedGallery = []; snap.forEach(d => cachedGallery.push({id:d.id, ...d.data()}));
                 cachedGallery.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-                
                 window.renderGallery('전체');
                 
-                // 💡 홈화면 1층 우측 박스에 최신 이미지 4개 배치
-                const home4grid = document.getElementById('home-gallery-4grid');
-                if(home4grid) {
+                const homeGrid = document.getElementById('home-gallery-4grid');
+                if(homeGrid) {
                     let gh = '';
-                    const topFour = cachedGallery.slice(0, 4);
-                    for(let x=0; x<4; x++) {
-                        const src = topFour[x] ? topFour[x].url : "2093.jpg"; // 사진 없으면 기본 placeholder
+                    for(let i=0; i<4; i++) {
+                        const src = cachedGallery[i] ? cachedGallery[i].url : "2093.jpg";
                         gh += `<div class="home-photo-item" onclick="navigate('pr_gallery')"><img src="${src}"></div>`;
                     }
-                    home4grid.innerHTML = gh;
+                    homeGrid.innerHTML = gh;
                 }
-            } catch(e){ console.error(e); }
+            } catch(e){}
         }
-
         window.renderGallery = (cat) => {
             const grid = document.getElementById('gallery-dynamic-grid'); if(!grid) return;
             let items = cat === '전체' ? cachedGallery : cachedGallery.filter(i => i.category === cat);
             let h = '';
             items.forEach(i => {
-                const del = (currentUserData && currentUserData.role === 'admin') ? `<button onclick="window.deleteGallery('${i.id}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; cursor:pointer; padding:2px 6px; border-radius:3px; font-weight:bold;">X</button>` : '';
-                h += `<div class="gallery-item"><img src="${i.url}">${del}<span style="position:absolute; bottom:5px; left:5px; background:rgba(0,0,0,0.6); color:white; font-size:10px; padding:2px 6px; border-radius:3px;">${i.category}</span></div>`;
+                const del = (currentUserData && currentUserData.role === 'admin') ? `<button onclick="window.deleteGallery('${i.id}')" style="position:absolute; top:8px; right:8px; background:red; color:white; border:none; padding:4px 8px; cursor:pointer; font-weight:900; border-radius:4px; font-size:10px;">삭제</button>` : '';
+                h += `<div class="gallery-item"><img src="${i.url}">${del}<span style="position:absolute; bottom:5px; left:5px; background:rgba(0,0,0,0.5); color:white; font-size:10px; padding:2px 6px;">${i.category}</span></div>`;
             });
-            grid.innerHTML = h || '<p style="grid-column:1/-1; text-align:center; padding:30px; color:#999;">등록된 사진이 없습니다.</p>';
+            grid.innerHTML = h || '<p style="grid-column:1/-1; text-align:center; padding:50px;">사진 없음</p>';
         };
         window.filterGallery = (cat, btn) => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); window.renderGallery(cat); };
-        window.deleteGallery = async (id) => { if(confirm("삭제하시겠습니까?")){ await deleteDoc(doc(db, "gallery", id)); loadGallery(); } };
+        window.deleteGallery = async (id) => { if(confirm("삭제?")) { await deleteDoc(doc(db, "gallery", id)); loadGallery(); } };
         window.addGalleryItem = async () => {
             const f = document.getElementById('gallery-file-input').files[0];
             const c = document.getElementById('gallery-input-category').value;
-            if(!f) return alert("파일을 선택하세요.");
-            const r = ref(storage, `gallery/${Date.now()}_${f.name}`);
+            if(!f) return;
+            const r = ref(storage, `gallery/${Date.now()}`);
             await uploadBytes(r, f);
             const u = await getDownloadURL(r);
             await addDoc(collection(db, "gallery"), { url:u, category:c, createdAt:Date.now() });
-            document.getElementById('gallery-file-input').value = '';
-            alert("갤러리에 사진이 반영되었습니다."); loadGallery();
+            loadGallery();
         };
 
-        // 4. 팀원 인증 및 CMS 편집 모드
+        // 4. 인증 & CMS
         window.firebaseLogin = async () => {
             const s = document.getElementById('school').value; const g = document.getElementById('grade').value;
             const n = document.getElementById('username').value.trim(); const p = document.getElementById('password').value.trim();
@@ -528,8 +428,8 @@
             const snap = await getDocs(qU);
             if(!snap.empty) {
                 currentUserId = snap.docs[0].id; currentUserData = snap.docs[0].data();
-                alert(n + " 팀원님 인증 완료되었습니다."); closeLoginModal();
-                document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원 계정 연동 상태`;
+                alert(n + "님 환영합니다."); closeLoginModal();
+                document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원 전용 권한 활성화`;
                 document.getElementById('member-actions').style.display = 'block';
                 document.getElementById('activity-upload-box').style.display = 'block';
                 document.getElementById('gallery-upload-box').style.display = 'block';
@@ -537,7 +437,7 @@
                 document.getElementById('login-btn-top').onclick = () => location.reload();
                 if(currentUserData.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
                 loadActivities(); loadGallery();
-            } else { alert("인증 정보가 일치하지 않습니다."); }
+            } else { alert("정보 오류"); }
         };
 
         window.uploadProfileImage = async (e) => {
@@ -546,7 +446,7 @@
             await uploadBytes(r, f);
             const u = await getDownloadURL(r);
             await updateDoc(doc(db, "users", currentUserId), { profileImage: u });
-            alert("내 프로필 이미지가 수정되었습니다."); loadMembers();
+            alert("변경됨"); loadMembers();
         };
 
         window.toggleEditMode = () => {
@@ -558,21 +458,20 @@
         window.savePageContent = async () => {
             let data = {}; document.querySelectorAll('.editable-content').forEach(el => data[el.id] = el.innerHTML);
             await setDoc(doc(db, "settings", "page_content"), data, {merge:true});
-            alert("수정사항이 저장되었습니다."); window.toggleEditMode();
+            alert("성공적으로 저장되었습니다."); window.toggleEditMode();
         };
 
-        // 5. 메인 로테이션 슬라이더 (5장 완벽 작동)
+        // 5. 슬라이더 (단청레드 배경 유지)
         let sliderData = [
-            {title:"“Back to the Beginning, Beyond the Ocean”", sub:"서울시 고등학교 23명의 학생들이 만드는 TURTLESS", img:""},
+            {title:"“Back to the Beginning, Beyond the Ocean”", sub:"서울시 23명의 학생들이 만드는 TURTLESS", img:""},
             {title:"초협력 연합 엔지니어링 네트워크", sub:"기술과 기획의 하모니를 만들어갑니다.", img:""},
-            {title:"공식 프로젝트 리포트 안내", sub:"지속 가능한 미래 가치를 위한 한 걸음", img:""},
-            {title:"PR 미디어 쇼케이스 전개", sub:"공식 인스타그램 및 유튜브 피드 스트리밍", img:""},
-            {title:"2026 TURTLESS PARTNERSHIP", sub:"새로운 미래 청소년 생태계를 후원해주세요.", img:""}
+            {title:"Hyper-Collaboration", sub:"미래 공학 생태계를 이끄는 아이디어", img:""},
+            {title:"Activity Archive", sub:"TURTLESS의 실시간 활동 기록을 확인하세요.", img:""},
+            {title:"Partnership", sub:"지속 가능한 가치를 함께 만들어가세요.", img:""}
         ];
         async function loadSlider() {
             try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists()) sliderData = s.data().slides; } catch(e){}
             const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
-            if(!c || !d) return;
             c.innerHTML = ''; d.innerHTML = '';
             sliderData.forEach((s, i) => {
                 c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
@@ -581,18 +480,25 @@
             startS();
         }
         window.showS = (n) => { 
-            document.querySelectorAll('.slide').forEach((s,i) => s.classList.toggle('active', i===n));
-            document.querySelectorAll('.slider-dot').forEach((s,i) => s.classList.toggle('active', i===n));
+            const sls = document.querySelectorAll('.slide'); const dots = document.querySelectorAll('.slider-dot');
+            if(!sls.length) return;
+            sls.forEach((s,i) => s.classList.toggle('active', i===n));
+            dots.forEach((s,i) => s.classList.toggle('active', i===n));
         };
-        function startS() { setInterval(() => { let curr = sliderData.findIndex((s,i)=>document.querySelectorAll('.slide')[i].classList.contains('active')); let next = (curr + 1) % sliderData.length; showS(next); }, 4500); }
+        function startS() { setInterval(() => { 
+            const sls = document.querySelectorAll('.slide');
+            if(!sls.length) return;
+            let curr = Array.from(sls).findIndex(s => s.classList.contains('active'));
+            showS((curr + 1) % sls.length); 
+        }, 4500); }
 
         window.openSliderEditModal = () => {
             let h = ''; sliderData.forEach((s,i) => {
-                h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;">
-                    <strong style="color:var(--dan-red)"># 슬라이드 ${i+1}</strong><br>
-                    <label style="font-size:12px; font-weight:bold;">배경 이미지 주소 Link</label><input id="s-img-${i}" value="${s.img}"><br>
-                    <label style="font-size:12px; font-weight:bold;">메인 타이틀 글귀</label><input id="s-t-${i}" value="${s.title}"><br>
-                    <label style="font-size:12px; font-weight:bold;">서브 타이틀 설명글</label><input id="s-s-${i}" value="${s.sub}">
+                h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
+                    <strong>슬라이드 ${i+1}</strong><br>
+                    <label>이미지 주소</label><input id="s-img-${i}" value="${s.img}">
+                    <label>메인 제목</label><input id="s-t-${i}" value="${s.title}">
+                    <label>설명글</label><input id="s-s-${i}" value="${s.sub}">
                 </div>`;
             });
             document.getElementById('slider-inputs-container').innerHTML = h;
@@ -601,9 +507,13 @@
         window.saveSliderData = async () => {
             let news = []; for(let i=0; i<sliderData.length; i++) news.push({ img:document.getElementById(`s-img-${i}`).value, title:document.getElementById(`s-t-${i}`).value, sub:document.getElementById(`s-s-${i}`).value });
             await setDoc(doc(db, "settings", "main_slider"), { slides:news });
-            alert("슬라이더 구성이 성공적으로 커스텀 저장되었습니다."); location.reload();
+            alert("저장됨"); location.reload();
         };
 
+        window.toggleDrop = (id) => {
+            document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('show'); });
+            document.getElementById(id).classList.toggle('show');
+        };
         window.openLoginModal = () => document.getElementById('login-modal').style.display='flex';
         window.closeLoginModal = () => document.getElementById('login-modal').style.display='none';
         window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display='none';
@@ -612,21 +522,15 @@
             loadMembers(); loadSlider(); loadActivities(); loadGallery();
             getDoc(doc(db, "settings", "page_content")).then(s => { if(s.exists()){ let d = s.data(); document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.innerHTML = d[el.id]; }); } });
         });
-    </script>
 
-    <script>
-        function navigate(id) {
+        window.navigate = function(id) {
             document.getElementById('page-home').style.display = id === 'home' ? 'block' : 'none';
             document.querySelectorAll('.subpage').forEach(p => p.classList.remove('active'));
-            if(id !== 'home') {
-                const target = document.getElementById('page-'+id);
-                if(target) target.classList.add('active');
-            }
+            if(id !== 'home') document.getElementById('page-'+id).classList.add('active');
             document.getElementById('nav-links').classList.remove('active');
             document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
             window.scrollTo(0,0);
-        }
-        document.getElementById('hamburger').onclick = () => document.getElementById('nav-links').classList.add('active');
+        };
     </script>
 </body>
 </html>
