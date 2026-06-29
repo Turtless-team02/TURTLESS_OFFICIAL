@@ -35,7 +35,7 @@
             .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 30px; background: none; border: none; cursor: pointer; }
         }
 
-        #edit-toolbar { display: none; position: fixed; top: 90px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid var(--dan-red); padding: 10px 20px; border-radius: 50px; z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; width: 90%; max-width: 600px; }
+        #edit-toolbar { display: none; position: fixed; top: 90px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid var(--dan-red); padding: 10px 20px; border-radius: 50px; z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; width: 90%; max-width: 650px; }
         #edit-toolbar.active { display: flex; }
         #edit-toolbar select, #edit-toolbar input { padding: 5px 10px; border-radius: 8px; border: 1px solid #ddd; outline: none; font-size: 13px; }
         #edit-toolbar label { font-size: 12px; font-weight: 800; color: var(--dan-red); }
@@ -144,16 +144,20 @@
             <option value="Courier Prime">코리어 (타자기)</option>
             <option value="Arial">Arial</option>
         </select>
+        
         <label>크기</label>
-        <select onchange="window.applyFontSize(this.value)">
-            <option value="3">보통</option>
-            <option value="1">매우 작게</option>
-            <option value="2">작게</option>
-            <option value="4">크게</option>
-            <option value="5">매우 크게</option>
-            <option value="6">대제목</option>
-            <option value="7">초대형</option>
+        <select onchange="window.applyCustomFontSize(this.value)">
+            <option value="">크기 선택</option>
+            <option value="12px">12px (매우작게)</option>
+            <option value="14px">14px (본문 작게)</option>
+            <option value="16px">16px (기본 본문)</option>
+            <option value="18px">18px (본문 크게)</option>
+            <option value="20px">20px (소제목)</option>
+            <option value="24px">24px (중제목)</option>
+            <option value="32px">32px (대제목)</option>
+            <option value="42px">42px (초대형)</option>
         </select>
+        
         <button class="dash-btn-sm" onclick="document.execCommand('bold', false, null)"><b>B</b></button>
         <button class="dash-btn-sm" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
         
@@ -176,7 +180,8 @@
                     <a onclick="navigate('intro_career')">경력</a>
                     <a onclick="navigate('intro_slogan')">슬로건</a>
                     <a onclick="navigate('intro_logo')">로고</a>
-                    <a onclick="navigate('intro_sponsor')">후원사</a> </div>
+                    <a onclick="navigate('intro_sponsor')">후원사</a>
+                </div>
             </div>
             <div class="dropdown">
                 <a class="drop-btn" onclick="toggleDrop('value-dropdown')">가치</a>
@@ -322,7 +327,9 @@
     <section id="page-intro_career" class="subpage"><div class="inner"><h2 class="subpage-title">경력</h2><div class="content-card"><div id="b-career" class="editable-content">여기에 경력 사항을 입력하세요.</div></div></div></section>
     <section id="page-intro_slogan" class="subpage"><div class="inner"><h2 class="subpage-title">슬로건</h2><div class="content-card"><div id="b-slogan" class="editable-content">여기에 슬로건을 입력하세요.</div></div></div></section>
     <section id="page-intro_logo" class="subpage"><div class="inner"><h2 class="subpage-title">로고</h2><div class="content-card"><div id="b-logo" class="editable-content">여기에 로고 설명 및 이미지를 입력하세요.</div></div></div></section>
-    <section id="page-intro_sponsor" class="subpage"><div class="inner"><h2 class="subpage-title">후원사 소개</h2><div class="content-card"><div id="b-intro_sponsor" class="editable-content">함께하는 든든한 후원사들을 소개합니다.</div></div></div></section> <section id="page-value_core" class="subpage"><div class="inner"><h2 class="subpage-title">핵심가치</h2><div class="content-card"><div id="b-value-core" class="editable-content">핵심가치 내용을 입력하세요.</div></div></div></section>
+    <section id="page-intro_sponsor" class="subpage"><div class="inner"><h2 class="subpage-title">후원사 소개</h2><div class="content-card"><div id="b-intro_sponsor" class="editable-content">함께하는 든든한 후원사들을 소개합니다.</div></div></div></section>
+    
+    <section id="page-value_core" class="subpage"><div class="inner"><h2 class="subpage-title">핵심가치</h2><div class="content-card"><div id="b-value-core" class="editable-content">핵심가치 내용을 입력하세요.</div></div></div></section>
     <section id="page-value_social" class="subpage"><div class="inner"><h2 class="subpage-title">사회공헌</h2><div class="content-card"><div id="b-value-soc" class="editable-content">사회공헌 활동을 입력하세요.</div></div></div></section>
     <section id="page-value_esg" class="subpage"><div class="inner"><h2 class="subpage-title">ESG 경영</h2><div class="content-card"><div id="b-value-esg" class="editable-content">ESG 경영 철학을 입력하세요.</div></div></div></section>
     
@@ -348,8 +355,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, query, where, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; // 🛠️ deleteDoc 추가
-        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"; // 🛠️ deleteObject 추가
+        import { getFirestore, collection, getDocs, doc, setDoc, query, where, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -366,6 +373,34 @@
 
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
+
+        window.applyCustomFontSize = (size) => {
+            if (!size) return;
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            
+            const range = selection.getRangeAt(0);
+            if (range.collapsed) return;
+
+            const span = document.createElement('span');
+            span.style.fontSize = size;
+            span.style.display = 'inline-block';
+            span.style.lineHeight = '1.4';
+            
+            try {
+                range.surroundContents(span);
+            } catch(e) {
+                document.execCommand('styleWithCSS', false, true);
+                document.execCommand('fontSize', false, '3');
+                const fontElements = range.commonAncestorContainer.parentElement.querySelectorAll('font');
+                fontElements.forEach(el => {
+                    if (el.getAttribute('size') === '3') {
+                        el.removeAttribute('size');
+                        el.style.fontSize = size;
+                    }
+                });
+            }
+        };
 
         async function loadMembers() {
             const list = document.getElementById('member-list');
@@ -406,6 +441,7 @@
         };
 
         window.uploadActivity = async () => {
+            if(!currentUserData) return;
             const title = document.getElementById('new-act-title').value.trim();
             const content = document.getElementById('new-act-content').value.trim();
             if(!title || !content) return;
@@ -416,8 +452,9 @@
         };
 
         window.uploadGalleryImage = async () => {
+            if(!currentUserData) return;
             const fileInput = document.getElementById('new-gal-file');
-            const categorySelect = document.getElementById('new-gal-category').value; // 🛠️ 카테고리 값 가져오기
+            const categorySelect = document.getElementById('new-gal-category').value;
             const finalCategory = categorySelect === "종합" ? "종합" : categorySelect; 
 
             if(!fileInput.files || !fileInput.files[0]) return;
@@ -431,7 +468,6 @@
             } catch(e){}
         };
 
-        // 🛠️ 편집기에서 사용할 이미지 업로드 기능
         window.insertEditorImage = async (input) => {
             if(!input.files || !input.files[0]) return;
             try {
@@ -455,6 +491,12 @@
             } catch(e){ alert("업로드 실패"); }
         };
 
+        function getYoutubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length === 11) ? match[7] : null;
+        }
+
         async function loadActivities() {
             const notice = document.getElementById('home-notice-board');
             const ytList = document.getElementById('youtube-auto-list');
@@ -474,7 +516,6 @@
                     let ah = ''; 
                     const isAdmin = currentUserData && currentUserData.role === 'admin';
                     items.forEach(i => { 
-                        // 🛠️ 관리자일 경우에만 삭제 버튼 생성
                         const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteActivity('${i.id}')">🗑️ 삭제</button>` : '';
                         ah += `<div class="act-list-item" id="act-${i.id}">
                             ${delBtn}
@@ -484,22 +525,25 @@
                     });
                     actPageContent.innerHTML = ah || '<p>등록된 활동 없음</p>';
                 }
+                
                 if(ytList) {
                     ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
                     const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`);
-                    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&_cacheBuster=${Date.now()}`).then(r => r.json()).then(data => {
+                    const cacheBuster = Date.now();
+                    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&_cb=${cacheBuster}`).then(r => r.json()).then(data => {
                         if(data.items) {
                             data.items.slice(0,3).forEach(item => {
-                                const vId = item.link.split('v=')[1];
-                                ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
+                                const vId = getYoutubeId(item.link);
+                                if (vId) {
+                                    ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg" alt="youtube thumbnail"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
+                                }
                             });
                         }
-                    });
+                    }).catch(e => {});
                 }
             } catch(e){}
         }
 
-        // 🛠️ 삭제 기능 (활동)
         window.deleteActivity = async (id) => {
             if(!confirm("정말 이 활동 게시물을 삭제하시겠습니까?")) return;
             try { await deleteDoc(doc(db, "activities", id)); alert("삭제되었습니다."); loadActivities(); } 
@@ -516,14 +560,17 @@
                 
                 const homeGrid = document.getElementById('home-gallery-4grid');
                 if(homeGrid) {
-                    let gh = ''; for(let i=0; i<4; i++) { gh += `<div class="home-photo-item"><img src="${cachedGallery[i]?cachedGallery[i].url:'2093.jpg'}"></div>`; }
+                    let gh = ''; 
+                    for(let i=0; i<4; i++) { 
+                        const imgUrl = cachedGallery[i] ? cachedGallery[i].url : "https://dummyimage.com/300x300/f0f0f0/999999&text=TURTLESS";
+                        gh += `<div class="home-photo-item"><img src="${imgUrl}"></div>`; 
+                    }
                     homeGrid.innerHTML = gh;
                 }
-                window.filterGallery('종합'); // 🛠️ 초기 로드 시 '종합' 탭 강제 실행
+                window.filterGallery('종합');
             } catch(e){}
         }
 
-        // 🛠️ 갤러리 카테고리 필터링 렌더링 기능
         window.filterGallery = (category) => {
             document.querySelectorAll('#gallery-filters .filter-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.innerText === category);
@@ -550,12 +597,10 @@
             galleryPage.innerHTML = ph === '<div class="gallery-grid"></div>' ? '<p>이 카테고리에 등록된 이미지가 없습니다.</p>' : ph;
         };
 
-        // 🛠️ 삭제 기능 (갤러리 사진)
         window.deleteGallery = async (id, url) => {
             if(!confirm("정말 이 사진을 삭제하시겠습니까?")) return;
             try { 
                 await deleteDoc(doc(db, "gallery", id)); 
-                // Storage에서도 파일 삭제 (선택적)
                 try { await deleteObject(ref(storage, url)); } catch(err) {} 
                 alert("삭제되었습니다."); loadGallery(); 
             } catch(e) { alert("삭제 실패"); }
@@ -570,8 +615,8 @@
                 alert(n + "님 인증 성공"); closeLoginModal();
                 document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원`;
                 document.getElementById('member-actions').style.display = 'block';
-                if(currentUserData.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
-                loadActivities(); loadGallery(); // 🛠️ 로그인 후 권한에 맞게 버튼 다시 그리기
+                if(currentUserData?.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
+                loadActivities(); loadGallery();
             } else { alert("인증 실패"); }
         };
 
@@ -583,8 +628,6 @@
             document.getElementById('save-float-btn').style.display = isEditMode ? 'block' : 'none'; 
         };
 
-        window.applyFontSize = (val) => { document.execCommand('fontSize', false, val); };
-
         window.savePageContent = async () => { 
             let data = {}; document.querySelectorAll('.editable-content').forEach(el => data[el.id] = el.innerHTML); 
             await setDoc(doc(db, "settings", "page_content"), data, {merge:true}); 
@@ -595,6 +638,7 @@
         async function loadSlider() {
             try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists()) sliderData = s.data().slides; } catch(e){}
             const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
+            if(!c || !d) return;
             c.innerHTML = ''; d.innerHTML = '';
             sliderData.forEach((s, i) => {
                 c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
