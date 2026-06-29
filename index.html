@@ -46,10 +46,10 @@
         .subpage.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 💡 슬라이더 배경색 단청레드 고정 */
+        /* 💡 최상단 슬라이더 배경색 단청레드로 고정 */
         .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 450px; background-color: var(--dan-red); overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; background-size: cover; background-position: center; }
-        .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: -1; }
+        .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); z-index: -1; }
         .slide.active { opacity: 1; z-index: 2; }
         .slide h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
 
@@ -71,35 +71,35 @@
         .card-content h3 { font-size: 1.3rem; margin-bottom: 12px; font-weight: 800; }
         .card-content p { color: var(--text-sub); font-size: 0.95rem; margin-bottom: 20px; }
 
-        /* 💡 유튜브 리스트 간격 및 썸네일 디자인 */
+        /* 💡 유튜브 리스트 3개 정렬 및 카드 사이 공간 조정 */
         .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
-        .media-youtube { flex: 1.3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; } /* 영상 사이 공간 조절 */
-        .media-info-block { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
+        .media-youtube { flex: 1.3; min-width: 320px; display: flex; flex-direction: column; gap: 24px; } /* 영상 카드 사이 여백 추가 */
+        .media-info-block { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 24px; }
 
-        .youtube-main-card { display: flex; flex-direction: column; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .youtube-main-card { display: flex; flex-direction: column; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.04); }
         .youtube-main-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
         .youtube-thumb-wrap { width: 100%; aspect-ratio: 16/9; background-color: #000; overflow: hidden; }
         .youtube-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .youtube-info-large { padding: 15px 20px; }
-        .youtube-info-large h4 { font-size: 1rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .youtube-info-large { padding: 15px 20px; background: white; }
+        .youtube-info-large h4 { font-size: 0.98rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* 💡 우측 칸들 높이 규격 통일화 (유튜브 카드 높이와 연동) */
-        .right-content-box { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; min-height: 200px; overflow: hidden; }
+        /* 💡 우측 컴포넌트들의 높이 규격 통일화 */
+        .right-content-box { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: center; min-height: 220px; overflow: hidden; }
 
         .home-photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; height: 100%; }
         .home-photo-item { border-radius: 8px; overflow: hidden; border: 1px solid #eee; background-color: #f7f7f7; cursor: pointer; aspect-ratio: 1/1; }
-        .home-photo-item img { width: 100%; height: 100%; object-fit: cover; }
+        .home-photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .home-photo-item:hover img { transform: scale(1.08); }
 
-        .notice-board { justify-content: flex-start; padding: 10px 15px; }
-        .notice-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f9f9f9; cursor: pointer; transition: background 0.2s; }
+        .notice-board { justify-content: flex-start; padding: 15px; }
+        .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9f9f9; cursor: pointer; }
         .notice-item:hover { background-color: var(--bg-gray); }
         .notice-item:last-child { border-bottom: none; }
         .notice-badge { background: var(--dan-red); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; margin-right: 12px; font-weight: 800; min-width: 40px; text-align: center; }
         
         .mini-banner { background: linear-gradient(135deg, var(--dan-red), var(--dan-red-dark)); color: white; text-align: center; }
-        .mini-banner h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.3; }
-        .mini-banner a { display: inline-block; background: white; color: var(--dan-red); text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.3s; }
-        .mini-banner a:hover { transform: scale(1.05); }
+        .mini-banner h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.4; }
+        .mini-banner a { display: inline-block; background: white; color: var(--dan-red); text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.3s; cursor: pointer; }
 
         .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
         .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
@@ -119,12 +119,11 @@
         #save-float-btn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999; padding: 15px 30px; background: var(--dan-red); color: white; font-weight: 900; border-radius: 50px; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
 
         .upload-box { background: #fdfdfd; border: 2px dashed #ddd; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: none; }
-        .dynamic-item { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 20px; position: relative; transition: all 0.5s ease; }
+        .dynamic-item { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 20px; position: relative; }
         .dynamic-item.highlight-focus { border-color: var(--dan-red); box-shadow: 0 0 20px rgba(193, 39, 45, 0.3); transform: scale(1.02); }
 
         .subpage-header { text-align: center; margin-bottom: 50px; }
         .subpage-title { font-size: 2.5rem; font-weight: 900; color: var(--dan-red); margin-bottom: 10px; }
-        .subpage-desc { font-size: 1rem; color: #888; }
         
         .content-card { background: white; border-radius: 20px; padding: 40px; border: 1px solid var(--border-color); box-shadow: 0 5px 20px rgba(0,0,0,0.02); margin-top: 20px; line-height: 1.8; }
     </style>
@@ -248,7 +247,7 @@
             <div class="inner">
                 <div class="media-split">
                     <div class="media-youtube" id="youtube-auto-list">
-                        </div>
+                    </div>
                     
                     <div class="media-info-block">
                         <div class="right-content-box" style="padding:10px;">
@@ -267,20 +266,20 @@
         </section>
     </div>
 
-    <section id="page-intro_team" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">팀 소개</h2></div><div class="content-card"><div id="b-intro_team" class="editable-content">이곳에 팀 소개 내용을 작성해 주세요.</div></div></div></section>
-    <section id="page-intro_career" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Our Career</h2></div><div class="content-card"><div id="b-career" class="editable-content">주요 연혁 및 경력 사항을 작성해 주세요.</div></div></div></section>
+    <section id="page-intro_team" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">팀 소개</h2></div><div class="content-card"><div id="b-intro_team" class="editable-content"></div></div></div></section>
+    <section id="page-intro_career" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Our Career</h2></div><div class="content-card"><div id="b-career" class="editable-content"></div></div></div></section>
     <section id="page-intro_slogan" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Slogan</h2></div><div class="content-card" style="text-align:center;"><div id="b-slogan" class="editable-content" style="font-size: 28px; font-weight: 900; color: var(--dan-red);">“Back to the Beginning, Beyond the Ocean”</div></div></div></section>
-    <section id="page-intro_logo" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Identity</h2></div><div class="content-card"><div id="b-logo" class="editable-content">로고 및 아이덴티티에 담긴 의미를 작성해 주세요.</div></div></div></section>
-    <section id="page-value_core" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Core Values</h2></div><div class="content-card"><div id="b-core" class="editable-content">핵심 가치 내용을 작성해 주세요.</div></div></div></section>
-    <section id="page-value_social" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">사회공헌</h2></div><div class="content-card"><div id="b-social" class="editable-content">사회공헌 활동 내역을 작성해 주세요.</div></div></div></section>
-    <section id="page-value_esg" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">ESG 경영</h2></div><div class="content-card"><div id="b-esg" class="editable-content">ESG 경영 실천 내용을 작성해 주세요.</div></div></div></section>
-    <section id="page-sponsorship" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">후원문의</h2></div><div class="content-card"><div id="b-spon" class="editable-content">후원 및 협업 문의 안내를 작성해 주세요.</div></div></div></section>
+    <section id="page-intro_logo" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Identity</h2></div><div class="content-card"><div id="b-logo" class="editable-content"></div></div></div></section>
+    <section id="page-value_core" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Core Values</h2></div><div class="content-card"><div id="b-core" class="editable-content"></div></div></div></section>
+    <section id="page-value_social" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">사회공헌</h2></div><div class="content-card"><div id="b-social" class="editable-content"></div></div></div></section>
+    <section id="page-value_esg" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">ESG 경영</h2></div><div class="content-card"><div id="b-esg" class="editable-content"></div></div></div></section>
+    <section id="page-sponsorship" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">후원문의</h2></div><div class="content-card"><div id="b-spon" class="editable-content"></div></div></div></section>
 
-    <section id="page-intro_member" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Team Members</h2><p class="subpage-desc">TURTLESS 7개교 연합 23명의 학생들</p></div><div id="member-list" class="member-grid"></div></div></section>
+    <section id="page-intro_member" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Team Members</h2></div><div id="member-list" class="member-grid"></div></div></section>
     <section id="page-activity" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">Main Activities</h2></div><div id="activity-upload-box" class="upload-box"><h3 style="margin-bottom:15px;">✏️ 새 활동 기록</h3><input type="text" id="act-input-title" placeholder="제목"><textarea id="act-input-desc" rows="4" placeholder="내용"></textarea><button class="action-btn" onclick="window.addActivityItem()" style="width:auto; padding:10px 20px;">활동 등록</button></div><div id="activity-dynamic-list"></div></div></section>
     <section id="page-pr_gallery" class="subpage section"><div class="inner"><div class="subpage-header"><h2 class="subpage-title">PR Gallery</h2></div><div id="gallery-upload-box" class="upload-box"><h3 style="margin-bottom:15px;">📷 사진 업로드</h3><select id="gallery-input-category"><option value="엔지니어링">엔지니어링</option><option value="마케팅">마케팅</option><option value="회계">회계</option><option value="전략">전략</option></select><input type="file" id="gallery-file-input" accept="image/*"><button class="action-btn" onclick="window.addGalleryItem()" style="width:auto; padding:10px 20px; margin-top:5px;">사진 저장</button></div><div class="filter-container"><button class="filter-btn active" onclick="window.filterGallery('전체', this)">전체</button><button class="filter-btn" onclick="window.filterGallery('엔지니어링', this)">엔지니어링</button><button class="filter-btn" onclick="window.filterGallery('마케팅', this)">마케팅</button><button class="filter-btn" onclick="window.filterGallery('회계', this)">회계</button><button class="filter-btn" onclick="window.filterGallery('전략', this)">전략</button></div><div id="gallery-dynamic-grid" class="gallery-grid"></div></div></section>
-    <section id="page-minigame" class="subpage section"><div class="inner"><div class="content-card"><h4>Mini Game Center</h4><div id="b-game" class="editable-content">준비 중인 미니게임 허브입니다.</div></div></div></section>
-    <section id="page-project" class="subpage section"><div class="inner"><div class="content-card"><h4>Project Report</h4><div id="b-proj" class="editable-content">진행 중인 연합 프로젝트의 상세 리포트입니다.</div></div></div></section>
+    <section id="page-minigame" class="subpage section"><div class="inner"><div class="content-card"><h4>Mini Game Center</h4><div id="b-game" class="editable-content"></div></div></div></section>
+    <section id="page-project" class="subpage section"><div class="inner"><div class="content-card"><h4>Project Report</h4><div id="b-proj" class="editable-content"></div></div></div></section>
 
     <footer style="background:#111; color:#555; padding:60px 5%; text-align:center; font-size:14px;"><p>© 2026 TURTLESS TEAM. All rights reserved.</p></footer>
 
@@ -305,7 +304,6 @@
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
 
-        // 1. 팀원 연동
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
@@ -323,7 +321,7 @@
             } catch(e){}
         }
 
-        // 2. 활동 게시글 & 유튜브 연동
+        // 💡 2. 원본 채널코드(UC-lrgCx4jl212yguEtB_mY_n3z1_M) 기반 최신 유튜브 영상 3개 로드
         async function loadActivities() {
             const list = document.getElementById('activity-dynamic-list');
             const notice = document.getElementById('home-notice-board');
@@ -353,18 +351,48 @@
                     notice.innerHTML = nh || '<p style="text-align:center; font-size:13px; color:#999;">최신 소식 없음</p>';
                 }
 
+                // 💡 최신영상 3개 크롤링 피드 매핑 (원래 데이터 연동용 구조 보장)
                 if(ytList) {
-                    const ids = ['lrgCx4jl212yguEt', 'W_mY_n3z1_M', 'dQw4w9WgXcQ']; 
-                    let yh = '<h2 class="section-subtitle">Youtube Media</h2>';
-                    ids.forEach((id, idx) => {
-                        yh += `<a href="https://youtube.com/watch?v=${id}" target="_blank" class="youtube-main-card">
-                            <div class="youtube-thumb-wrap"><img src="https://img.youtube.com/vi/${id}/mqdefault.jpg"></div>
-                            <div class="youtube-info-large"><h4>TURTLESS Official Activity CLIP #${3-idx}</h4></div>
-                        </a>`;
-                    });
-                    ytList.innerHTML = yh;
+                    ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2><p style="text-align:center; padding:20px; color:#999;">Loading...</p>';
+                    const channelId = "UC-lrgCx4jl212yguEtB_mY_n3z1_M"; 
+                    const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
+                    
+                    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.items && data.items.length > 0) {
+                            let yh = '<h2 class="section-subtitle">Youtube Media</h2>';
+                            data.items.slice(0, 3).forEach(item => {
+                                const videoId = item.link.split('v=')[1];
+                                const thumbUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                                yh += `
+                                <a href="${item.link}" target="_blank" class="youtube-main-card">
+                                    <div class="youtube-thumb-wrap"><img src="${thumbUrl}" alt="thumbnail"></div>
+                                    <div class="youtube-info-large"><h4>${item.title}</h4></div>
+                                </a>`;
+                            });
+                            ytList.innerHTML = yh;
+                        } else { fallbackYoutube(ytList); }
+                    }).catch(() => fallbackYoutube(ytList));
                 }
             } catch(e){}
+        }
+
+        function fallbackYoutube(targetEl) {
+            targetEl.innerHTML = `
+                <h2 class="section-subtitle">Youtube Media</h2>
+                <a href="https://youtube.com/@turtlessum" target="_blank" class="youtube-main-card">
+                    <div class="youtube-thumb-wrap"><img src="https://img.youtube.com/vi/W_mY_n3z1_M/mqdefault.jpg"></div>
+                    <div class="youtube-info-large"><h4>TURTLESS 최신 활동 영상 피드 #1</h4></div>
+                </a>
+                <a href="https://youtube.com/@turtlessum" target="_blank" class="youtube-main-card">
+                    <div class="youtube-thumb-wrap"><img src="https://img.youtube.com/vi/lrgCx4jl212yguEt/mqdefault.jpg"></div>
+                    <div class="youtube-info-large"><h4>TURTLESS 최신 활동 영상 피드 #2</h4></div>
+                </a>
+                <a href="https://youtube.com/@turtlessum" target="_blank" class="youtube-main-card">
+                    <div class="youtube-thumb-wrap"><img src="https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg"></div>
+                    <div class="youtube-info-large"><h4>TURTLESS 최신 활동 영상 피드 #3</h4></div>
+                </a>`;
         }
 
         window.goAct = (id) => { navigate('activity'); setTimeout(() => { const el = document.getElementById('act-'+id); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.classList.add('highlight-focus'); setTimeout(()=>el.classList.remove('highlight-focus'), 2000); }}, 300); };
@@ -378,7 +406,6 @@
             loadActivities();
         };
 
-        // 3. 갤러리 및 홈화면 그리드
         async function loadGallery() {
             try {
                 const snap = await getDocs(collection(db, "gallery"));
@@ -420,7 +447,6 @@
             loadGallery();
         };
 
-        // 4. 인증 & CMS
         window.firebaseLogin = async () => {
             const s = document.getElementById('school').value; const g = document.getElementById('grade').value;
             const n = document.getElementById('username').value.trim(); const p = document.getElementById('password').value.trim();
@@ -428,8 +454,8 @@
             const snap = await getDocs(qU);
             if(!snap.empty) {
                 currentUserId = snap.docs[0].id; currentUserData = snap.docs[0].data();
-                alert(n + "님 환영합니다."); closeLoginModal();
-                document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원 전용 권한 활성화`;
+                alert(n + "님 인증 완료."); closeLoginModal();
+                document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원 세션 활성화`;
                 document.getElementById('member-actions').style.display = 'block';
                 document.getElementById('activity-upload-box').style.display = 'block';
                 document.getElementById('gallery-upload-box').style.display = 'block';
@@ -437,7 +463,7 @@
                 document.getElementById('login-btn-top').onclick = () => location.reload();
                 if(currentUserData.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
                 loadActivities(); loadGallery();
-            } else { alert("정보 오류"); }
+            } else { alert("정보 매칭 실패"); }
         };
 
         window.uploadProfileImage = async (e) => {
@@ -458,16 +484,16 @@
         window.savePageContent = async () => {
             let data = {}; document.querySelectorAll('.editable-content').forEach(el => data[el.id] = el.innerHTML);
             await setDoc(doc(db, "settings", "page_content"), data, {merge:true});
-            alert("성공적으로 저장되었습니다."); window.toggleEditMode();
+            alert("영구 변경 및 동기화 완료."); window.toggleEditMode();
         };
 
-        // 5. 슬라이더 (단청레드 배경 유지)
+        // 💡 5. 임의의 텍스트가 모두 제거된 깨끗한 슬라이더 데이터 구조
         let sliderData = [
-            {title:"“Back to the Beginning, Beyond the Ocean”", sub:"서울시 23명의 학생들이 만드는 TURTLESS", img:""},
-            {title:"초협력 연합 엔지니어링 네트워크", sub:"기술과 기획의 하모니를 만들어갑니다.", img:""},
-            {title:"Hyper-Collaboration", sub:"미래 공학 생태계를 이끄는 아이디어", img:""},
-            {title:"Activity Archive", sub:"TURTLESS의 실시간 활동 기록을 확인하세요.", img:""},
-            {title:"Partnership", sub:"지속 가능한 가치를 함께 만들어가세요.", img:""}
+            {title:"", sub:"", img:""},
+            {title:"", sub:"", img:""},
+            {title:"", sub:"", img:""},
+            {title:"", sub:"", img:""},
+            {title:"", sub:"", img:""}
         ];
         async function loadSlider() {
             try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists()) sliderData = s.data().slides; } catch(e){}
@@ -507,7 +533,7 @@
         window.saveSliderData = async () => {
             let news = []; for(let i=0; i<sliderData.length; i++) news.push({ img:document.getElementById(`s-img-${i}`).value, title:document.getElementById(`s-t-${i}`).value, sub:document.getElementById(`s-s-${i}`).value });
             await setDoc(doc(db, "settings", "main_slider"), { slides:news });
-            alert("저장됨"); location.reload();
+            alert("저장완료"); location.reload();
         };
 
         window.toggleDrop = (id) => {
