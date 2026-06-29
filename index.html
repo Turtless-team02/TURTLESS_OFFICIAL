@@ -218,7 +218,7 @@
         <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
             <button style="float:right; border:none; background:none; font-size:20px; cursor:pointer;" onclick="closeSliderEditModal()">×</button>
             <h2 style="margin-bottom:10px; font-weight:900;">슬라이더 통합 관리</h2>
-            <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">원하는 만큼 슬라이드를 추가하거나 편집할 수 있습니다.</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">슬라이드를 추가하거나 편집할 수 있습니다.</p>
             <div id="slider-inputs-container"></div>
             <button class="dash-btn-sm" onclick="window.addSliderInputRow()" style="background:#111; width:100%; padding:10px; margin-bottom:15px; border-radius:8px;">➕ 슬라이드 항목 추가</button>
             <button class="action-btn" onclick="saveSliderData()">변경사항 최종 저장</button>
@@ -375,7 +375,7 @@
 
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
-        let sliderData = []; // 전역 동적 배열로 전환
+        let sliderData = []; 
 
         window.applyCustomFontSize = (size) => {
             if (!size) return;
@@ -395,16 +395,29 @@
             }
         };
 
-        // 중복 방지 타겟팅 .innerHTML 초기화 전면 도입
+        // 🚨 [수정 완 1] 팀원 소개 중복 노출 차단 코어 로직
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
-            list.innerHTML = ''; // 렌더링 전 DOM 초기화로 중복 버그 원천 해결
+            
+            // 렌더링을 시작하기 전에 내부 HTML을 완전히 비워서 누적 중복 방지
+            list.innerHTML = ''; 
+            
             try {
                 const snap = await getDocs(collection(db, "users"));
-                let arr = []; let seenIds = new Set();
-                snap.forEach(d => { if (!seenIds.has(d.id)) { seenIds.add(d.id); arr.push({ id: d.id, ...d.data() }); } });
+                let arr = []; 
+                let seenIds = new Set(); // 고유 ID 판별셋 추가
+                
+                snap.forEach(d => { 
+                    // 이미 불러온 ID를 가지고 있다면 배열에 담지 않고 스킵 (중복 원천 차단)
+                    if (!seenIds.has(d.id)) { 
+                        seenIds.add(d.id); 
+                        arr.push({ id: d.id, ...d.data() }); 
+                    } 
+                });
+                
                 arr.sort((a,b) => a.school === b.school ? a.name.localeCompare(b.name) : a.school.localeCompare(b.school));
+                
                 let h = '';
                 arr.forEach(m => {
                     const imgDefault = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Default";
@@ -636,19 +649,21 @@
             alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
         };
 
-        // 🔗 동적 슬라이드 무제한 로드 및 갯수 유실 차단 코어 엔진
+        // 🚨 [수정 완 2] 홈화면 슬라이드 개수 유실 및 내용 꼬임 완전 차단 로직
         async function loadSlider() {
             const c = document.getElementById('slider-content'); 
             const d = document.getElementById('slider-dots');
             if(!c || !d) return;
+            
+            // 기존 렌더링 초기화
             c.innerHTML = ''; d.innerHTML = '';
             
             try { 
                 const s = await getDoc(doc(db, "settings", "main_slider")); 
+                // DB 데이터가 완벽히 존재할 때만 전역 변수 sliderData를 바인딩하여 2개 강제 초기화 현상 차단
                 if(s.exists() && s.data().slides && s.data().slides.length > 0) {
-                    sliderData = s.data().slides; // 기존 기본값 배열 덮어쓰기 완전 차단
+                    sliderData = s.data().slides; 
                 } else {
-                    // DB가 비어있을 때만 노출할 기본값 디폴트 세팅
                     sliderData = [
                         {title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff&text=TURTLESS+1"},
                         {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"https://dummyimage.com/1200x600/c1272d/fff&text=SLOGAN"}
@@ -658,6 +673,7 @@
                 sliderData = [{title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff"}];
             }
             
+            // 정확히 저장된 데이터의 개수만큼 루프 실행
             sliderData.forEach((s, i) => {
                 c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
                 d.innerHTML += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
@@ -680,12 +696,12 @@
                     <strong>슬라이드 항목 ${i+1}</strong>
                     <button type="button" onclick="window.removeSliderRow(${i})" style="position:absolute; top:12px; right:15px; background:none; border:none; color:#dc3545; font-weight:bold; cursor:pointer; font-size:12px;">❌ 삭제</button>
                     <div style="display:flex; gap:10px; margin: 8px 0;">
-                        <input id="s-img-${i}" value="${s.img}" placeholder="이미지 주소">
+                        <input id="s-img-${i}" value="${s.img}" placeholder="이미지 주소" style="width:100%; padding:5px;">
                         <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 찾기</button>
                         <input type="file" id="s-file-${i}" style="display:none" onchange="window.uploadSliderImg(this, ${i})">
                     </div>
-                    <input id="s-t-${i}" value="${s.title}" placeholder="제목">
-                    <input id="s-s-${i}" value="${s.sub}" placeholder="부제">
+                    <input id="s-t-${i}" value="${s.title}" placeholder="제목" style="width:100%; padding:5px; margin-bottom:5px;">
+                    <input id="s-s-${i}" value="${s.sub}" placeholder="부제" style="width:100%; padding:5px;">
                 </div>`; 
             });
             document.getElementById('slider-inputs-container').innerHTML = h;
