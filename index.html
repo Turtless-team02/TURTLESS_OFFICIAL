@@ -39,19 +39,15 @@
             .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 35px; background: none; border: none; cursor: pointer; color: var(--text-main); }
             .nav-links > a, .nav-links .dropdown, .login-btn { width: 100%; margin: 10px 0; text-align: left; margin-left: 0; }
             .dropdown-content { position: static; box-shadow: none; border: none; margin-top: 5px; transform: none; min-width: 100%; padding-left: 15px;}
-            .dropdown-content a { text-align: left; padding: 8px 10px; }
         }
 
         #page-home { display: block; }
         .subpage { display: none; padding: 80px 5%; min-height: 70vh; animation: fadeIn 0.4s ease-in-out; }
         .subpage.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .subpage-header { text-align: center; margin-bottom: 50px; }
-        .subpage-title { font-size: 2.5rem; font-weight: 900; color: var(--dan-red); margin-bottom: 15px; }
-        .subpage-desc { font-size: 1.1rem; color: var(--text-sub); }
 
-        .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 400px; background-color: var(--dan-red); overflow: hidden; }
+        /* 💡 히어로 슬라이더 복구 */
+        .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 400px; background-color: #333; overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; background-size: cover; background-position: center; }
         .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: -1; }
         .slide.active { opacity: 1; z-index: 2; }
@@ -62,94 +58,63 @@
         .slider-dot { width: 12px; height: 12px; background-color: rgba(255, 255, 255, 0.4); border-radius: 50%; cursor: pointer; }
         .slider-dot.active { background-color: white; }
 
-        .section { width: 100%; padding: 100px 5%; }
+        .section { width: 100%; padding: 80px 5%; }
         .section.gray { background-color: var(--bg-gray); }
         .inner { max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; letter-spacing: -1px; text-align: center; }
         .section-subtitle { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); border-bottom: 2px solid var(--dan-red); display: inline-block; padding-bottom: 5px; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+        .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: transform 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
         .card-media { width: 100%; height: 220px; background-color: #ebebeb; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; }
-        .youtube-bg { background-color: #FF0000; }
-        .insta-bg { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-        .project-bg { background-color: var(--text-main); }
-        .card-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-content h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--text-main); }
-        .card-content p { color: var(--text-sub); font-size: 1rem; margin-bottom: 20px; flex-grow: 1; }
+        .card-content { padding: 30px; flex-grow: 1; }
 
         .sns-link-btn { display: block; text-align: center; width: 100%; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; color: white; transition: opacity 0.3s; }
-        .sns-link-btn:hover { opacity: 0.8; }
-        .btn-youtube { background-color: #FF0000; }
-        .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-
-        .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
-        .media-youtube, .media-gallery { flex: 1; min-width: 300px; }
-       
-        .youtube-main-card { display: block; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .youtube-main-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--dan-red); }
-        .youtube-thumb-large { width: 100%; aspect-ratio: 16/9; object-fit: cover; background-color: #eee; }
-        .youtube-info-large { padding: 20px; }
-
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-        .gallery-item { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); position: relative; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-        .delete-overlay-btn { position: absolute; top: 10px; right: 10px; background: rgba(193,39,45,0.9); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; display: none; font-size: 12px; z-index: 10; }
         
-        .category-badge { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .new-badge { background: #e62117; color: white; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 900; display: inline-block; vertical-align: middle; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* 💡 팀원 카드 복구 스타일 */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; margin-top: 30px; }
+        .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); transition: all 0.3s; }
+        .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
+        .photo-area { width: 100%; aspect-ratio: 1/1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .photo-area img { width: 100%; height: 100%; object-fit: cover; }
+        .info-area { padding: 20px; text-align: left; }
+        .info-area .school { font-size: 0.85rem; color: var(--dan-red); font-weight: 700; margin-bottom: 5px; }
+        .info-area .name { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
 
-        .notice-board { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
-        .notice-item:hover { background-color: var(--bg-gray); }
+        /* 공지사항 스타일 */
+        .notice-board { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 10px 20px; }
+        .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
         .notice-item:last-child { border-bottom: none; }
         .notice-badge { background: var(--dan-red); color: white; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; margin-right: 15px; font-weight: bold; min-width: 45px; text-align: center; }
-        
-        .mini-banner { background: linear-gradient(135deg, var(--text-main), #333); color: white; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; height: 180px; }
-        .mini-banner a { display: inline-block; background: var(--dan-red); color: white; text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; transition: background 0.3s; cursor: pointer; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .gallery-item { width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); position: relative; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 💡 24시간 내 NEW 배지 */
+        .new-badge { background: #e62117; color: white; font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-left: 5px; font-weight: 900; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 90%; max-width: 400px; padding: 40px; border-radius: 20px; position: relative; }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; background: none; border: none; color: var(--text-sub); }
-        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 15px; background-color: var(--bg-gray); outline: none; }
-        .modal-content .action-btn { width: 100%; background-color: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .modal-content { background: white; width: 90%; max-width: 450px; padding: 40px; border-radius: 20px; position: relative; }
+        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .action-btn { width: 100%; background: var(--dan-red); color: white; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-        #member-actions, #admin-panel { display: none; margin-top: 40px; padding: 40px; background: white; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--dan-red); }
-        #admin-panel { border-left-color: var(--text-main); }
-        
-        footer { background-color: #111; color: #888; padding: 60px 5%; text-align: center; font-size: 0.9rem; }
+        #member-actions, #admin-panel { display: none; margin-top: 40px; padding: 30px; background: white; border-radius: 16px; border-left: 6px solid var(--dan-red); box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
 
-        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; margin-top: 30px; }
-        .member-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); transition: transform 0.3s; }
-        .photo-area { width: 100%; aspect-ratio: 1/1; background-color: #e2e2e2; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .photo-area img { width: 100%; height: 100%; object-fit: cover; }
-        .info-area { padding: 20px; }
-        .info-area .school { font-size: 0.9rem; color: var(--dan-red); font-weight: 700; }
-        .info-area .name { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
-
-        .upload-box { background: #fdfdfd; border: 2px dashed #ccc; border-radius: 12px; padding: 30px; margin-bottom: 40px; display: none; text-align: left; }
-        .dynamic-list { display: flex; flex-direction: column; gap: 20px; margin-top: 25px; }
-        
-        /* 💡 포커스 포인팅 하이라이트 애니메이션 추가 */
-        .dynamic-item { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; transition: all 0.5s ease; }
-        .dynamic-item.highlight-focus { border-color: var(--dan-red); box-shadow: 0 0 20px rgba(193, 39, 45, 0.3); transform: scale(1.02); }
-        
-        .delete-btn { position: absolute; top: 20px; right: 20px; background: var(--dan-red); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; display: none; }
-
-        .filter-container { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
-        .filter-btn { background: white; border: 1px solid var(--border-color); padding: 8px 18px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; }
-        .filter-btn.active, .filter-btn:hover { background: var(--dan-red); color: white; border-color: var(--dan-red); }
-
+        /* CMS 편집 효과 */
         .editable-content { transition: all 0.2s; border-radius: 4px; }
-        body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important; background-color: rgba(193, 39, 45, 0.05) !important; outline: none; cursor: text; padding: 4px; min-height: 20px; }
+        body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important; background-color: rgba(193, 39, 45, 0.05) !important; cursor: text; min-height: 20px; }
         
-        #save-float-btn {
-            display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999;
-            padding: 15px 30px; background: var(--dan-red); color: white; font-weight: 900;
-            border-radius: 50px; box-shadow: 0 10px 25px rgba(193, 39, 45, 0.4); cursor: pointer; border: none;
-        }
+        #save-float-btn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999; padding: 15px 30px; background: var(--dan-red); color: white; font-weight: 900; border-radius: 50px; cursor: pointer; border: none; }
+        
+        .upload-box { background: #f9f9f9; border: 2px dashed #ccc; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: none; }
+        .filter-container { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .filter-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .filter-btn.active { background: var(--dan-red); color: white; }
+
+        .dynamic-item { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 15px; position: relative; transition: all 0.4s; }
+        .dynamic-item.highlight-focus { border-color: var(--dan-red); box-shadow: 0 0 15px rgba(193,39,45,0.3); transform: scale(1.01); }
     </style>
 </head>
 <body>
@@ -159,9 +124,9 @@
         <div class="logo" onclick="navigate('home')">TURTLESS</div>
         <div class="hamburger" id="hamburger">☰</div>
         <div class="nav-links" id="nav-links">
-            <button class="close-menu" id="close-menu">×</button>
+            <button class="close-menu" id="close-menu" onclick="document.getElementById('nav-links').classList.remove('active')">×</button>
             <div class="dropdown">
-                <a href="#" class="drop-btn" id="intro-btn">소개</a>
+                <a href="#" class="drop-btn" onclick="document.getElementById('intro-dropdown').classList.toggle('show')">소개</a>
                 <div class="dropdown-content" id="intro-dropdown">
                     <a onclick="navigate('intro_team')">팀 소개</a>
                     <a onclick="navigate('intro_member')">팀원 소개</a>
@@ -171,7 +136,7 @@
                 </div>
             </div>
             <div class="dropdown">
-                <a href="#" class="drop-btn" id="value-btn">가치</a>
+                <a href="#" class="drop-btn" onclick="document.getElementById('value-dropdown').classList.toggle('show')">가치</a>
                 <div class="dropdown-content" id="value-dropdown">
                     <a onclick="navigate('value_core')">핵심가치</a>
                     <a onclick="navigate('value_social')">사회공헌</a>
@@ -189,32 +154,24 @@
 
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeLoginModal()">×</button>
-            <h2>팀원 인증</h2>
+            <button class="close-btn" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:24px; cursor:pointer;" onclick="closeLoginModal()">×</button>
+            <h2 style="text-align:center; margin-bottom:20px;">팀원 인증</h2>
             <select id="school">
-                <option value="경기기계공업고">경기기계공업고</option>
-                <option value="경복비즈니스고">경복비즈니스고</option>
-                <option value="서울공업고">서울공업고</option>
-                <option value="서울매그넷고">서울매그넷고</option>
-                <option value="선린인터넷고">선린인터넷고</option>
-                <option value="용산고">용산고</option>
-                <option value="용산철도고">용산철도고</option>
+                <option value="경기기계공업고">경기기계공업고</option><option value="경복비즈니스고">경복비즈니스고</option>
+                <option value="서울공업고">서울공업고</option><option value="서울매그넷고">서울매그넷고</option>
+                <option value="선린인터넷고">선린인터넷고</option><option value="용산고">용산고</option><option value="용산철도고">용산철도고</option>
             </select>
-            <select id="grade">
-                <option value="1학년">1학년</option>
-                <option value="2학년">2학년</option>
-                <option value="3학년">3학년</option>
-            </select>
+            <select id="grade"><option value="1학년">1학년</option><option value="2학년">2학년</option><option value="3학년">3학년</option></select>
             <input type="text" id="username" placeholder="이름 (예: 권우진)">
             <input type="password" id="password" placeholder="비밀번호">
             <button id="login-submit-btn" class="action-btn" onclick="firebaseLogin()">인증하기</button>
         </div>
     </div>
-    
+
     <div id="slider-edit-modal" class="modal-overlay">
         <div class="modal-content" style="max-width: 550px; max-height: 80vh; overflow-y: auto;">
-            <button class="close-btn" onclick="closeSliderEditModal()">×</button>
-            <h2>슬라이더 수정</h2>
+            <button class="close-btn" style="float:right; cursor:pointer; background:none; border:none; font-size:20px;" onclick="closeSliderEditModal()">×</button>
+            <h2 style="margin-bottom:15px;">슬라이더 수정</h2>
             <div id="slider-inputs-container"></div>
             <button class="action-btn" onclick="saveSliderData()">DB 저장 및 실시간 적용</button>
         </div>
@@ -231,47 +188,47 @@
                 <h2 class="section-title">Official SNS & PR</h2>
                 <div class="grid">
                     <div class="card">
-                        <div class="card-media youtube-bg">▶</div>
+                        <div class="card-media" style="background:#FF0000;">▶</div>
                         <div class="card-content">
                             <h3>TURTLESS 유튜브</h3>
-                            <p>팀의 공식 활동 영상과 프로젝트 비하인드 스토리를 생생하게 만나보세요.</p>
-                            <a href="https://youtube.com/@turtlessum?si=lrgCx4jl212yguEt" target="_blank" class="sns-link-btn btn-youtube">유튜브 채널 방문하기</a>
+                            <p style="margin-bottom:15px;">팀의 공식 활동 영상과 비하인드 스토리를 만나보세요.</p>
+                            <a href="https://youtube.com/@turtlessum" target="_blank" class="sns-link-btn" style="background:#FF0000;">유튜브 방문하기</a>
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-media insta-bg">📷</div>
+                        <div class="card-media" style="background: linear-gradient(45deg, #f09433, #bc1888);">📷</div>
                         <div class="card-content">
                             <h3>TURTLESS 인스타그램</h3>
-                            <p>팀원들의 열정 넘치는 활동 모습과 가장 빠른 최신 공지사항을 확인하실 수 있습니다.</p>
-                            <a href="https://www.instagram.com/turtless_11379?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="sns-link-btn btn-insta">인스타그램 방문하기</a>
+                            <p style="margin-bottom:15px;">열정 넘치는 활동 모습과 공지사항을 확인하세요.</p>
+                            <a href="https://www.instagram.com/turtless_11379" target="_blank" class="sns-link-btn" style="background: linear-gradient(45deg, #f09433, #bc1888);">인스타그램 방문하기</a>
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-media project-bg">⚙️</div>
+                        <div class="card-media" style="background:#111;">⚙️</div>
                         <div class="card-content">
                             <h3 id="home-proj-title" class="editable-content">진행 중인 프로젝트</h3>
-                            <p id="home-proj-desc" class="editable-content">7개 연합 학교의 엔지니어링 파트와 기획 파트가 함께 협력하여 만들어내는 혁신적인 결과물입니다.</p>
-                            <a onclick="navigate('project')" class="sns-link-btn" style="background-color: var(--text-main); cursor: pointer;">프로젝트 자세히 보기</a>
+                            <p id="home-proj-desc" class="editable-content" style="margin-bottom:15px;">7개 연합 학교가 함께 만드는 혁신적인 결과물입니다.</p>
+                            <a onclick="navigate('project')" class="sns-link-btn" style="background:#111; cursor:pointer;">프로젝트 자세히 보기</a>
                         </div>
                     </div>
                 </div>
 
                 <div id="member-actions">
-                    <h3 style="color: var(--dan-red); margin-bottom: 10px;">📋 팀원 시스템 활성화됨</h3>
-                    <p id="welcome-msg" style="font-weight: bold; margin-bottom: 15px;"></p>
-                    <div style="padding-top:15px; border-top:1px dashed #ddd;">
-                        <h4>내 프로필 사진 업로드</h4>
-                        <input type="file" id="profile-upload-input" accept="image/*" style="display: none;" onchange="uploadProfileImage(event)">
-                        <button onclick="document.getElementById('profile-upload-input').click()" class="action-btn" style="width: auto; padding: 8px 15px; margin-top:5px;">사진 선택</button>
-                        <span id="upload-status" style="margin-left: 10px; font-size:0.9rem; color:var(--dan-red);"></span>
+                    <h3 style="color: var(--dan-red); margin-bottom: 10px;">📋 팀원 메뉴</h3>
+                    <p id="welcome-msg" style="margin-bottom:15px; font-weight:700;"></p>
+                    <div style="border-top: 1px dashed #ddd; padding-top:15px;">
+                        <h4>프로필 사진 업로드</h4>
+                        <input type="file" id="profile-upload-input" accept="image/*" style="display:none;" onchange="uploadProfileImage(event)">
+                        <button onclick="document.getElementById('profile-upload-input').click()" style="padding:8px 15px; cursor:pointer; margin-top:5px;">사진 선택</button>
+                        <span id="upload-status" style="margin-left:10px; color:var(--dan-red); font-size:14px;"></span>
                     </div>
                 </div>
-                
+
                 <div id="admin-panel">
-                    <h3 style="margin-bottom: 10px;">👑 최고 관리자 제어 패널</h3>
-                    <div style="display: flex; gap: 10px; margin-top:15px; flex-wrap: wrap;">
-                        <button onclick="openSliderEditModal()" class="action-btn" style="width: auto; padding: 10px 20px; background: var(--text-main); margin-top:0;">메인 슬라이더 수정</button>
-                        <button onclick="window.toggleEditMode()" class="action-btn" id="toggle-edit-btn" style="width: auto; padding: 10px 20px; background: #28a745; margin-top:0;">📝 페이지 내용 직접 수정 켜기</button>
+                    <h3 style="margin-bottom:10px;">👑 관리자 패널</h3>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:8px;">슬라이더 수정</button>
+                        <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:8px;">📝 직접 수정 켜기</button>
                     </div>
                 </div>
             </div>
@@ -279,38 +236,30 @@
 
         <section class="section gray">
             <div class="inner">
-                <div class="media-split">
-                    <div class="media-youtube">
-                        <h2 class="section-subtitle">Latest on YouTube</h2>
-                        <div id="youtube-auto-list"><p style="text-align:center; padding: 20px;">불러오는 중...</p></div>
-                    </div>
-                    <div class="media-gallery">
-                        <h2 class="section-subtitle">Notice (최신 주요 활동)</h2>
-                        <div class="notice-board" id="home-notice-board" style="margin-bottom: 40px;">
-                            <p style="text-align:center; color:#999; padding:10px;">연동된 공지사항을 불러오고 있습니다...</p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:50px;">
+                    <div>
+                        <h2 class="section-subtitle">Notice (실시간 연동)</h2>
+                        <div class="notice-board" id="home-notice-board">
+                            <p style="text-align:center; padding:20px; color:#999;">활동 글을 불러오는 중입니다...</p>
                         </div>
-                        <div class="mini-banner">
-                            <h3 id="banner-title" class="editable-content">함께 성장할 파트너를 찾습니다</h3>
-                            <a onclick="navigate('sponsorship')">후원 문의하기 →</a>
+                    </div>
+                    <div>
+                        <h2 class="section-subtitle">Support Us</h2>
+                        <div style="background:#111; color:white; padding:30px; border-radius:16px; text-align:center;">
+                            <h3 id="banner-title" class="editable-content" style="margin-bottom:10px;">함께 성장할 파트너를 찾습니다</h3>
+                            <a onclick="navigate('sponsorship')" style="color:var(--dan-red); font-weight:bold; cursor:pointer; text-decoration:none;">후원 문의하기 →</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    </div> 
-    
-    <section id="page-intro_team" class="subpage section">
-        <div class="inner">
-            <div class="subpage-header"><h2 id="t-intro_team" class="subpage-title editable-content">팀 소개</h2></div>
-            <div class="card" style="padding: 40px;"><div id="b-intro_team" class="editable-content">내용을 작성해 주세요.</div></div>
-        </div>
-    </section>
+    </div>
 
     <section id="page-intro_member" class="subpage section">
         <div class="inner">
             <div class="subpage-header">
                 <h2 id="t-intro_member" class="subpage-title editable-content">팀원 소개</h2>
-                <p id="d-intro_member" class="subpage-desc editable-content">열정 넘치는 23명의 학생들입니다.</p>
+                <p id="d-intro_member" class="subpage-desc editable-content">TURTLESS와 함께하는 열정 넘치는 23명의 팀원들입니다.</p>
             </div>
             <div id="member-list" class="member-grid"></div>
         </div>
@@ -318,72 +267,57 @@
 
     <section id="page-activity" class="subpage section">
         <div class="inner">
-            <div class="subpage-header">
-                <h2 id="t-act" class="subpage-title editable-content">주요 활동</h2>
-                <p id="d-act" class="subpage-desc editable-content">TURTLESS 연합 팀원들이 실시간으로 추가하는 활동 내역입니다.</p>
-            </div>
-
+            <div class="subpage-header"><h2 id="t-act" class="subpage-title editable-content">주요 활동</h2></div>
             <div id="activity-upload-box" class="upload-box">
-                <h3 style="margin-bottom: 15px; color:var(--dan-red);">✏️ 새 활동 기록 등록</h3>
-                <input type="text" id="act-input-title" placeholder="활동 제목을 입력하세요">
-                <textarea id="act-input-desc" rows="4" placeholder="활동 상세 내용을 입력하세요" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-family:inherit;"></textarea>
-                <button class="action-btn" onclick="window.addActivityItem()" style="width:auto; padding:10px 25px;">활동 등록하기</button>
+                <h3 style="margin-bottom:10px;">✏️ 활동 등록</h3>
+                <input type="text" id="act-input-title" placeholder="제목"><br>
+                <textarea id="act-input-desc" rows="4" placeholder="내용"></textarea><br>
+                <button class="action-btn" onclick="window.addActivityItem()" style="width:auto; padding:10px 20px;">등록</button>
             </div>
-
-            <div id="activity-dynamic-list" class="dynamic-list"></div>
+            <div id="activity-dynamic-list"></div>
         </div>
     </section>
 
     <section id="page-pr_gallery" class="subpage section">
         <div class="inner">
-            <div class="subpage-header">
-                <h2 id="t-pr" class="subpage-title editable-content">PR 갤러리</h2>
-                <p id="d-pr" class="subpage-desc editable-content">생생한 현장 활동 이미지를 공유합니다.</p>
-            </div>
-
+            <div class="subpage-header"><h2 id="t-pr" class="subpage-title editable-content">PR 갤러리</h2></div>
             <div id="gallery-upload-box" class="upload-box">
-                <h3 style="margin-bottom: 15px; color:var(--dan-red);">📷 새 사진 업로드</h3>
-                <select id="gallery-input-category" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:1px solid #ccc;">
-                    <option value="엔지니어링">엔지니어링</option>
-                    <option value="마케팅">마케팅</option>
-                    <option value="회계">회계</option>
-                    <option value="전략">전략</option>
-                </select>
-                <input type="file" id="gallery-file-input" accept="image/*">
-                <button class="action-btn" onclick="window.addGalleryItem()" style="width:auto; padding:10px 25px; margin-top:5px;">사진 저장하기</button>
-                <p id="gallery-status" style="margin-top: 10px; color: var(--dan-red); font-size:14px;"></p>
+                <h3 style="margin-bottom:10px;">📷 사진 업로드</h3>
+                <select id="gallery-input-category">
+                    <option value="엔지니어링">엔지니어링</option><option value="마케팅">마케팅</option>
+                    <option value="회계">회계</option><option value="전략">전략</option>
+                </select><br>
+                <input type="file" id="gallery-file-input" accept="image/*"><br>
+                <button class="action-btn" onclick="window.addGalleryItem()" style="width:auto; padding:10px 20px; margin-top:5px;">저장</button>
             </div>
-
             <div class="filter-container">
-                <button class="filter-btn active" onclick="window.filterGallery('전체', this)">전체보기</button>
+                <button class="filter-btn active" onclick="window.filterGallery('전체', this)">전체</button>
                 <button class="filter-btn" onclick="window.filterGallery('엔지니어링', this)">엔지니어링</button>
                 <button class="filter-btn" onclick="window.filterGallery('마케팅', this)">마케팅</button>
                 <button class="filter-btn" onclick="window.filterGallery('회계', this)">회계</button>
                 <button class="filter-btn" onclick="window.filterGallery('전략', this)">전략</button>
             </div>
-
             <div id="gallery-dynamic-grid" class="gallery-grid"></div>
         </div>
     </section>
 
-    <section id="page-intro_career" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-career" class="editable-content">경력 내용</div></div></div></section>
-    <section id="page-intro_slogan" class="subpage section"><div class="inner"><div class="card" style="padding: 40px; text-align: center;"><div id="b-slogan" class="editable-content">슬로건</div></div></div></section>
-    <section id="page-intro_logo" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-logo" class="editable-content">로고 의미</div></div></div></section>
-    <section id="page-value_core" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-core" class="editable-content">핵심 가치</div></div></div></section>
-    <section id="page-value_social" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-social" class="editable-content">사회공헌</div></div></div></section>
-    <section id="page-value_slogan" class="subpage section"><div class="inner"><div class="card" style="padding: 40px; text-align:center;"><div id="b-vslogan" class="editable-content">가치 슬로건</div></div></div></section>
-    <section id="page-value_esg" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-esg" class="editable-content">ESG 경영</div></div></div></section>
-    <section id="page-sponsorship" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-spon" class="editable-content">후원 안내</div></div></div></section>
-    <section id="page-minigame" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-game" class="editable-content">미니게임 안내</div></div></div></section>
-    <section id="page-project" class="subpage section"><div class="inner"><div class="card" style="padding: 40px;"><div id="b-proj" class="editable-content">프로젝트 상세</div></div></div></section>
+    <section id="page-intro_team" class="subpage section"><div class="inner"><div id="b-intro_team" class="editable-content">팀 소개 내용</div></div></section>
+    <section id="page-intro_career" class="subpage section"><div class="inner"><div id="b-career" class="editable-content">경력 내용</div></div></section>
+    <section id="page-intro_slogan" class="subpage section"><div class="inner"><div id="b-slogan" class="editable-content">슬로건</div></div></section>
+    <section id="page-intro_logo" class="subpage section"><div class="inner"><div id="b-logo" class="editable-content">로고 의미</div></div></section>
+    <section id="page-value_core" class="subpage section"><div class="inner"><div id="b-core" class="editable-content">핵심 가치</div></div></section>
+    <section id="page-value_social" class="subpage section"><div class="inner"><div id="b-social" class="editable-content">사회공헌</div></div></section>
+    <section id="page-value_slogan" class="subpage section"><div class="inner"><div id="b-vslogan" class="editable-content">가치 슬로건</div></div></section>
+    <section id="page-value_esg" class="subpage section"><div class="inner"><div id="b-esg" class="editable-content">ESG</div></div></section>
+    <section id="page-sponsorship" class="subpage section"><div class="inner"><div id="b-spon" class="editable-content">후원문의</div></div></section>
+    <section id="page-minigame" class="subpage section"><div class="inner"><div id="b-game" class="editable-content">미니게임</div></div></section>
+    <section id="page-project" class="subpage section"><div class="inner"><div id="b-proj" class="editable-content">프로젝트</div></div></section>
 
-    <footer>
-        <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
-    </footer>
+    <footer><p>© 2026 TURTLESS TEAM. All rights reserved.</p></footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, setDoc, addDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, setDoc, addDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
@@ -399,319 +333,206 @@
         const db = getFirestore(app); 
         const storage = getStorage(app); 
 
-        let currentUserId = null; 
-        let currentUserData = null;
-        let isEditMode = false;
-        let cachedGalleryItems = []; 
+        let currentUserId = null; let currentUserData = null;
+        let isEditMode = false; let cachedGallery = [];
 
-        function isNew(timestamp) {
-            if(!timestamp) return false;
-            return (Date.now() - timestamp) < (24 * 60 * 60 * 1000);
-        }
-
+        // 💡 1. 팀원 로드 (JS 정렬로 오류 방지)
         async function loadMembers() {
-            const listDiv = document.getElementById('member-list');
-            if (!listDiv) return;
+            const list = document.getElementById('member-list');
+            if(!list) return;
             try {
-                const snapshot = await getDocs(collection(db, "users"));
-                let members = [];
-                snapshot.forEach(doc => members.push(doc.data()));
-                members.sort((a, b) => {
-                    if (a.school === b.school) return a.name.localeCompare(b.name);
-                    return a.school.localeCompare(b.school);
-                });
+                const snap = await getDocs(collection(db, "users"));
+                let arr = []; snap.forEach(d => arr.push(d.data()));
+                arr.sort((a,b) => a.school === b.school ? a.name.localeCompare(b.name) : a.school.localeCompare(b.school));
+                
                 let html = '';
-                members.forEach(data => {
-                    const userImg = data.profileImage ? data.profileImage : "2093.jpg";
-                    const hoverEvent = data.profileImage ? "" : `onmouseover="this.src='2097.jpg'" onmouseout="this.src='2093.jpg'"`;
-                    html += `
-                        <div class="member-card">
-                            <div class="photo-area"><img src="${userImg}" ${hoverEvent} alt="사진"></div>
-                            <div class="info-area">
-                                <div class="school">${data.school || ''}</div>
-                                <div class="name">${data.name || ''} <span style="font-size:14px; color:#666;">${data.grade || ''}</span></div>
-                            </div>
-                        </div>`;
+                arr.forEach(m => {
+                    const img = m.profileImage || "2093.jpg";
+                    const hvr = m.profileImage ? "" : `onmouseover="this.src='2097.jpg'" onmouseout="this.src='2093.jpg'"`;
+                    html += `<div class="member-card">
+                        <div class="photo-area"><img src="${img}" ${hvr}></div>
+                        <div class="info-area"><div class="school">${m.school}</div><div class="name">${m.name} <span style="font-size:12px; color:#999;">${m.grade}</span></div></div>
+                    </div>`;
                 });
-                listDiv.innerHTML = html || '<p>등록된 멤버가 없습니다.</p>';
-            } catch (e) { console.error(e); }
+                list.innerHTML = html;
+            } catch(e){ console.log(e); }
         }
 
-        // 2. 주요 활동 로드 + 💡 Notice 클릭 시 해당 위치 포인팅 이동 기능 연동
+        // 💡 2. 활동 로드 & 홈화면 연동
         async function loadActivities() {
-            const container = document.getElementById('activity-dynamic-list');
-            const noticeBoard = document.getElementById('home-notice-board');
+            const list = document.getElementById('activity-dynamic-list');
+            const notice = document.getElementById('home-notice-board');
             try {
                 const snap = await getDocs(collection(db, "activities"));
-                let items = [];
-                snap.forEach(doc => items.push({id: doc.id, ...doc.data()}));
-                items.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-                
-                if(container) {
-                    let html = '';
-                    items.forEach(item => {
-                        const showDel = (currentUserData && currentUserData.role === 'admin') ? 'inline-block' : 'none';
-                        const newTag = isNew(item.createdAt) ? `<span class="new-badge">NEW</span>` : '';
-                        html += `
-                        <div class="dynamic-item" id="act-item-${item.id}">
-                            <button class="delete-btn" style="display:${showDel}" onclick="window.deleteActivityItem('${item.id}')">삭제</button>
-                            <h3 style="font-size:1.4rem; margin-bottom:10px; color:var(--text-main);">${item.title} ${newTag}</h3>
-                            <p style="color:var(--text-sub); white-space:pre-wrap;">${item.desc}</p>
-                            <span style="font-size:12px; color:#aaa; display:block; margin-top:15px;">작성자: ${item.writer || '팀원'}</span>
-                        </div>`;
+                let items = []; snap.forEach(d => items.push({id:d.id, ...d.data()}));
+                items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+
+                if(list) {
+                    let h = '';
+                    items.forEach(i => {
+                        const isN = (Date.now() - (i.createdAt||0)) < 86400000 ? '<span class="new-badge">NEW</span>' : '';
+                        const del = (currentUserData && currentUserData.role === 'admin') ? `<button onclick="window.deleteActivity('${i.id}')" style="position:absolute; top:20px; right:20px; cursor:pointer;">삭제</button>` : '';
+                        h += `<div class="dynamic-item" id="act-${i.id}">${del}<h3>${i.title} ${isN}</h3><p>${i.desc}</p><small>작성: ${i.writer}</small></div>`;
                     });
-                    container.innerHTML = html || '<p style="text-align:center; color:#999; padding:40px;">등록된 주요 활동이 없습니다.</p>';
+                    list.innerHTML = h || '<p>활동이 없습니다.</p>';
                 }
 
-                if(noticeBoard) {
-                    let noticeHtml = '';
-                    const topThree = items.slice(0, 3);
-                    if(topThree.length === 0) {
-                        noticeBoard.innerHTML = '<p style="text-align:center; color:#999; padding:10px;">등록된 최신 소식이 없습니다.</p>';
-                        return;
-                    }
-                    topThree.forEach((item, idx) => {
-                        const badgeColor = idx === 0 ? 'var(--dan-red)' : '#444';
-                        const badgeText = idx === 0 ? '최신' : '소식';
-                        const newTag = isNew(item.createdAt) ? `<span class="new-badge">NEW</span>` : '';
-                        // 💡 클릭 시 window.navigateToActivityItem 함수가 실행되도록 바인딩
-                        noticeHtml += `
-                        <div class="notice-item" onclick="window.navigateToActivityItem('${item.id}')">
-                            <span class="notice-badge" style="background:${badgeColor};">${badgeText}</span>
-                            <p style="flex-grow:1; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.title} ${newTag}</p>
-                        </div>`;
+                if(notice) {
+                    let nh = '';
+                    items.slice(0,3).forEach(i => {
+                        const isN = (Date.now() - (i.createdAt||0)) < 86400000 ? '<span class="new-badge">NEW</span>' : '';
+                        nh += `<div class="notice-item" onclick="window.goAct('${i.id}')"><span class="notice-badge">소식</span><p>${i.title} ${isN}</p></div>`;
                     });
-                    noticeBoard.innerHTML = noticeHtml;
+                    notice.innerHTML = nh || '<p>최신 소식이 없습니다.</p>';
                 }
-            } catch(e) { console.error(e); }
+            } catch(e){}
         }
 
-        // 💡 Notice 클릭 시 해당 위치로 점프 및 반짝임 하이라이트 기능 구현
-        window.navigateToActivityItem = (id) => {
-            // 1. 먼저 주요 활동 서브페이지로 화면 전환
-            navigate('activity');
-            
-            // 2. 비동기 렌더링 타이밍을 고려하여 타겟 엘리먼트 위치 추적
-            setTimeout(() => {
-                const targetEl = document.getElementById(`act-item-${id}`);
-                if(targetEl) {
-                    // 부드럽게 스크롤 스크롤링
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
-                    // 테두리 강조 클래스 추가
-                    targetEl.classList.add('highlight-focus');
-                    
-                    // 2초 뒤 하이라이트 효과 해제
-                    setTimeout(() => {
-                        targetEl.classList.remove('highlight-focus');
-                    }, 2000);
-                }
-            }, 100);
+        window.goAct = (id) => { navigate('activity'); setTimeout(() => { const el = document.getElementById('act-'+id); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.classList.add('highlight-focus'); setTimeout(()=>el.classList.remove('highlight-focus'),2000); }}, 300); };
+        window.deleteActivity = async (id) => { if(confirm("삭제하시겠습니까?")){ await deleteDoc(doc(db, "activities", id)); loadActivities(); } };
+        window.addActivityItem = async () => {
+            const t = document.getElementById('act-input-title').value;
+            const d = document.getElementById('act-input-desc').value;
+            if(!t || !d) return alert("입력해주세요.");
+            await addDoc(collection(db, "activities"), { title:t, desc:d, writer:currentUserData.name, createdAt:Date.now() });
+            alert("등록됨"); loadActivities();
         };
 
+        // 💡 3. 갤러리 로드
         async function loadGallery() {
             try {
                 const snap = await getDocs(collection(db, "gallery"));
-                cachedGalleryItems = [];
-                snap.forEach(doc => cachedGalleryItems.push({id: doc.id, ...doc.data()}));
-                cachedGalleryItems.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-                window.renderGalleryGrid(cachedGalleryItems);
-            } catch(e) { console.error(e); }
+                cachedGallery = []; snap.forEach(d => cachedGallery.push({id:d.id, ...d.data()}));
+                cachedGallery.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+                window.renderGallery('전체');
+            } catch(e){}
         }
+        window.renderGallery = (cat) => {
+            const grid = document.getElementById('gallery-dynamic-grid'); if(!grid) return;
+            let items = cat === '전체' ? cachedGallery : cachedGallery.filter(i => i.category === cat);
+            let h = '';
+            items.forEach(i => {
+                const del = (currentUserData && currentUserData.role === 'admin') ? `<button onclick="window.deleteGallery('${i.id}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; cursor:pointer;">X</button>` : '';
+                h += `<div class="gallery-item"><img src="${i.url}">${del}<span style="position:absolute; bottom:5px; left:5px; background:rgba(0,0,0,0.5); color:white; font-size:10px; padding:2px 5px;">${i.category}</span></div>`;
+            });
+            grid.innerHTML = h || '<p>사진이 없습니다.</p>';
+        };
+        window.filterGallery = (cat, btn) => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); window.renderGallery(cat); };
+        window.deleteGallery = async (id) => { if(confirm("삭제?")){ await deleteDoc(doc(db, "gallery", id)); loadGallery(); } };
+        window.addGalleryItem = async () => {
+            const f = document.getElementById('gallery-file-input').files[0];
+            const c = document.getElementById('gallery-input-category').value;
+            if(!f) return;
+            const r = ref(storage, `gallery/${Date.now()}`);
+            await uploadBytes(r, f);
+            const u = await getDownloadURL(r);
+            await addDoc(collection(db, "gallery"), { url:u, category:c, createdAt:Date.now() });
+            loadGallery();
+        };
 
-        window.renderGalleryGrid = (items) => {
-            const container = document.getElementById('gallery-dynamic-grid');
-            if(!container) return;
-            let html = '';
-            items.forEach(item => {
-                const showDel = (currentUserData && currentUserData.role === 'admin') ? 'inline-block' : 'none';
-                const newTag = isNew(item.createdAt) ? `<span class="new-badge" style="position:absolute; top:10px; left:10px; margin-left:0; z-index:5;">NEW</span>` : '';
-                html += `
-                <div class="gallery-item">
-                    ${newTag}
-                    <img src="${item.url}" alt="갤러리 이미지">
-                    <span class="category-badge">${item.category || '일반'}</span>
-                    <button class="delete-overlay-btn" style="display:${showDel}" onclick="window.deleteGalleryItem('${item.id}')">삭제</button>
+        // 💡 4. 로그인 & CMS & 슬라이더
+        window.firebaseLogin = async () => {
+            const s = document.getElementById('school').value; const g = document.getElementById('grade').value;
+            const n = document.getElementById('username').value.trim(); const p = document.getElementById('password').value.trim();
+            const qU = query(collection(db, "users"), where("school","==",s), where("grade","==",g), where("name","==",n), where("pass","==",p));
+            const snap = await getDocs(qU);
+            if(!snap.empty) {
+                currentUserId = snap.docs[0].id; currentUserData = snap.docs[0].data();
+                alert(n + "님 인증됨"); closeLoginModal();
+                document.getElementById('welcome-msg').innerText = `${s} ${g} ${n} 팀원님 환영합니다!`;
+                document.getElementById('member-actions').style.display = 'block';
+                document.getElementById('activity-upload-box').style.display = 'block';
+                document.getElementById('gallery-upload-box').style.display = 'block';
+                document.getElementById('login-btn-top').innerText = '로그아웃';
+                document.getElementById('login-btn-top').onclick = () => location.reload();
+                if(currentUserData.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
+                loadActivities(); loadGallery();
+            } else { alert("정보 불일치"); }
+        };
+
+        window.uploadProfileImage = async (e) => {
+            const f = e.target.files[0]; if(!f) return;
+            const r = ref(storage, `profiles/${currentUserId}`);
+            await uploadBytes(r, f);
+            const u = await getDownloadURL(r);
+            await updateDoc(doc(db, "users", currentUserId), { profileImage: u });
+            alert("변경됨"); loadMembers();
+        };
+
+        // CMS
+        window.toggleEditMode = () => {
+            isEditMode = !isEditMode;
+            document.body.classList.toggle('edit-mode', isEditMode);
+            document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = isEditMode);
+            document.getElementById('save-float-btn').style.display = isEditMode ? 'block' : 'none';
+        };
+        window.savePageContent = async () => {
+            let data = {}; document.querySelectorAll('.editable-content').forEach(el => data[el.id] = el.innerHTML);
+            await setDoc(doc(db, "settings", "page_content"), data, {merge:true});
+            alert("저장됨"); window.toggleEditMode();
+        };
+
+        // 슬라이더 복구 로직
+        let sliderData = [
+            {title:"“Back to the Beginning, Beyond the Ocean”", sub:"서울시 23명의 학생들이 만드는 TURTLESS", img:""},
+            {title:"두 번째 슬라이드", sub:"설명을 적어주세요", img:""},
+            {title:"세 번째 슬라이드", sub:"설명을 적어주세요", img:""},
+            {title:"네 번째 슬라이드", sub:"설명을 적어주세요", img:""},
+            {title:"다섯 번째 슬라이드", sub:"설명을 적어주세요", img:""}
+        ];
+        async function loadSlider() {
+            try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists()) sliderData = s.data().slides; } catch(e){}
+            const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
+            c.innerHTML = ''; d.innerHTML = '';
+            sliderData.forEach((s, i) => {
+                c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
+                d.innerHTML += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
+            });
+            startS();
+        }
+        window.showS = (n) => { 
+            document.querySelectorAll('.slide').forEach((s,i) => s.classList.toggle('active', i===n));
+            document.querySelectorAll('.slider-dot').forEach((s,i) => s.classList.toggle('active', i===n));
+        };
+        function startS() { setInterval(() => { let next = (sliderData.findIndex((s,i)=>document.querySelectorAll('.slide')[i].classList.contains('active')) + 1) % 5; showS(next); }, 5000); }
+
+        window.openSliderEditModal = () => {
+            let h = ''; sliderData.forEach((s,i) => {
+                h += `<div style="background:#eee; padding:10px; margin-bottom:10px;">
+                    <label>이미지 주소</label><input id="s-img-${i}" value="${s.img}">
+                    <label>제목</label><input id="s-t-${i}" value="${s.title}">
+                    <label>부제</label><input id="s-s-${i}" value="${s.sub}">
                 </div>`;
             });
-            container.innerHTML = html || '<p style="grid-column:1/-1; text-align:center; color:#999; padding:40px;">해당 카테고리에 업로드된 이미지가 없습니다.</p>';
+            document.getElementById('slider-inputs-container').innerHTML = h;
+            document.getElementById('slider-edit-modal').style.display = 'flex';
+        };
+        window.saveSliderData = async () => {
+            let news = []; for(let i=0; i<5; i++) news.push({ img:document.getElementById(`s-img-${i}`).value, title:document.getElementById(`s-t-${i}`).value, sub:document.getElementById(`s-s-${i}`).value });
+            await setDoc(doc(db, "settings", "main_slider"), { slides:news });
+            alert("저장됨"); location.reload();
         };
 
-        window.filterGallery = (category, btnElement) => {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            if(btnElement) btnElement.classList.add('active');
-            if(category === '전체') {
-                window.renderGalleryGrid(cachedGalleryItems);
-            } else {
-                window.renderGalleryGrid(cachedGalleryItems.filter(item => item.category === category));
-            }
-        };
-
-        window.addActivityItem = async () => {
-            const t = document.getElementById('act-input-title').value.trim();
-            const d = document.getElementById('act-input-desc').value.trim();
-            if(!t || !d) return alert("제목과 내용을 입력해 주세요.");
-            try {
-                await addDoc(collection(db, "activities"), { title: t, desc: d, writer: currentUserData.name, createdAt: Date.now() });
-                document.getElementById('act-input-title').value = '';
-                document.getElementById('act-input-desc').value = '';
-                alert("활동이 기록되었습니다!"); loadActivities();
-            } catch(e) { alert("저장 실패"); }
-        };
-
-        window.deleteActivityItem = async (id) => {
-            if(!confirm("이 활동 기록을 정말 삭제하시겠습니까?")) return;
-            await deleteDoc(doc(db, "activities", id)); alert("삭제되었습니다."); loadActivities();
-        };
-
-        window.addGalleryItem = async () => {
-            const file = document.getElementById('gallery-file-input').files[0];
-            const cat = document.getElementById('gallery-input-category').value;
-            if(!file) return alert("사진 파일을 선택해 주세요.");
-            const status = document.getElementById('gallery-status');
-            status.innerText = "서버 전송 중...";
-            try {
-                const refImg = ref(storage, `gallery/${Date.now()}_${file.name}`);
-                await uploadBytes(refImg, file);
-                const url = await getDownloadURL(refImg);
-                await addDoc(collection(db, "gallery"), { url: url, category: cat, createdAt: Date.now() });
-                status.innerText = ""; document.getElementById('gallery-file-input').value = "";
-                alert("사진이 추가되었습니다!"); loadGallery();
-            } catch(e) { status.innerText = "업로드 실패"; }
-        };
-
-        window.deleteGalleryItem = async (id) => {
-            if(!confirm("이 이미지를 갤러리에서 삭제하시겠습니까?")) return;
-            await deleteDoc(doc(db, "gallery", id)); alert("삭제되었습니다."); loadGallery();
-        };
-
-        window.firebaseLogin = async function() {
-            const school = document.getElementById('school').value; 
-            const grade = document.getElementById('grade').value;
-            const name = document.getElementById('username').value.replace(/\s+/g, '');
-            const pass = document.getElementById('password').value.trim();
-
-            if(!name || !pass) return alert("인증 정보를 입력해주세요.");
-            try {
-                const q = query(collection(db, "users"), where("school", "==", school), where("grade", "==", grade), where("name", "==", name), where("pass", "==", pass));
-                const snap = await getDocs(q);
-                if (!snap.empty) {
-                    currentUserId = snap.docs[0].id; currentUserData = snap.docs[0].data();
-                    alert(`${currentUserData.name} 팀원님 인증 확인되었습니다.`);
-                    closeLoginModal();
-                    
-                    document.getElementById('welcome-msg').innerText = `소속: ${currentUserData.school} ${currentUserData.grade} [${currentUserData.name}]`;
-                    document.getElementById('member-actions').style.display = 'block';
-                    document.getElementById('activity-upload-box').style.display = 'block';
-                    document.getElementById('gallery-upload-box').style.display = 'block';
-                    document.getElementById('login-btn-top').innerText = '로그아웃';
-                    document.getElementById('login-btn-top').onclick = () => location.reload();
-                    
-                    if (currentUserData.role === "admin") {
-                        document.getElementById('admin-panel').style.display = 'block';
-                    }
-                    loadActivities(); loadGallery();
-                } else { alert("인증 정보가 틀립니다."); }
-            } catch (e) { alert("통신 실패"); }
-        };
-
-        window.uploadProfileImage = async (event) => {
-            const file = event.target.files[0]; if (!file || !currentUserId) return;
-            document.getElementById('upload-status').innerText = "사진 저장 중...";
-            try {
-                const r = ref(storage, `profiles/${currentUserId}`);
-                await uploadBytes(r, file);
-                const url = await getDownloadURL(r);
-                await updateDoc(doc(db, "users", currentUserId), { profileImage: url });
-                document.getElementById('upload-status').innerText = "완료!"; alert("프로필 반영 성공!"); loadMembers();
-            } catch (e) { document.getElementById('upload-status').innerText = "오류"; }
-        };
-
-        window.toggleEditMode = () => {
-            if(!currentUserData || currentUserData.role !== 'admin') return alert("관리자만 접근 가능합니다.");
-            isEditMode = !isEditMode;
-            const btn = document.getElementById('toggle-edit-btn');
-            
-            if (isEditMode) {
-                document.body.classList.add('edit-mode');
-                document.querySelectorAll('.editable-content').forEach(el => {
-                    el.setAttribute("contenteditable", "true");
-                });
-                document.getElementById('save-float-btn').style.display = 'block';
-                btn.innerText = "❌ 수정 모드 끄기"; btn.style.background = "#dc3545";
-            } else {
-                document.body.classList.remove('edit-mode');
-                document.querySelectorAll('.editable-content').forEach(el => {
-                    el.setAttribute("contenteditable", "false");
-                });
-                document.getElementById('save-float-btn').style.display = 'none';
-                btn.innerText = "📝 페이지 내용 직접 수정 켜기"; btn.style.background = "#28a745";
-            }
-        };
-
-        window.savePageContent = async () => {
-            if(!currentUserData || currentUserData.role !== 'admin') return;
-            const pack = {};
-            document.querySelectorAll('.editable-content').forEach(el => {
-                pack[el.id] = el.innerHTML;
-            });
-            try {
-                await setDoc(doc(db, "settings", "page_content"), pack, { merge: true });
-                alert("페이지가 실시간으로 성공적으로 변경 보존되었습니다.");
-                window.toggleEditMode();
-            } catch(e) { alert("저장 권한 에러"); }
-        };
-
-        async function loadPageContent() {
-            try {
-                const snap = await getDoc(doc(db, "settings", "page_content"));
-                if(snap.exists()) {
-                    const data = snap.data();
-                    document.querySelectorAll('.editable-content').forEach(el => {
-                        if(data[el.id] !== undefined) el.innerHTML = data[el.id];
-                    });
-                }
-            } catch(e){}
-        }
-
-        let sliderData = [{title: "“Back to the Beginning, Beyond the Ocean”", sub: "서울시 고등학교 23명의 학생들", img: ""}];
-        async function loadSlider() {
-            try {
-                const snap = await getDoc(doc(db, "settings", "main_slider"));
-                if(snap.exists()) sliderData = snap.data().slides;
-            } catch(e){}
-            const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
-            if(!c || !d) return; c.innerHTML = ''; d.innerHTML = '';
-            sliderData.forEach((s, i) => {
-                c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img||''}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
-                d.innerHTML += `<div class="slider-dot ${i===0?'active':''}" onclick="document.querySelectorAll('.slide').forEach((x,j)=>x.classList.toggle('active',i===j))"></div>`;
-            });
-        }
-
-        window.openLoginModal = () => document.getElementById('login-modal').style.display = 'flex';
-        window.closeLoginModal = () => document.getElementById('login-modal').style.display = 'none';
+        window.openLoginModal = () => document.getElementById('login-modal').style.display='flex';
+        window.closeLoginModal = () => document.getElementById('login-modal').style.display='none';
+        window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display='none';
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadMembers(); loadPageContent(); loadSlider(); loadActivities(); loadGallery();
+            loadMembers(); loadSlider(); loadActivities(); loadGallery();
+            getDoc(doc(db, "settings", "page_content")).then(s => { if(s.exists()){ let d = s.data(); document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.innerHTML = d[el.id]; }); } });
         });
     </script>
 
     <script>
-        const hmb = document.getElementById('hamburger'); const cls = document.getElementById('close-menu'); const nvs = document.getElementById('nav-links');
-        hmb.addEventListener('click', () => nvs.classList.add('active')); cls.addEventListener('click', () => nvs.classList.remove('active'));
-        
-        // 💡 글로벌 스코프 유지를 위해 window 객체에 직접 매핑 보강
-        window.navigate = function(id) {
-            document.getElementById('page-home').style.display = (id === 'home') ? 'block' : 'none';
+        function navigate(id) {
+            document.getElementById('page-home').style.display = id === 'home' ? 'block' : 'none';
             document.querySelectorAll('.subpage').forEach(p => p.classList.remove('active'));
-            if(id !== 'home') { const t = document.getElementById('page-' + id); if(t) t.classList.add('active'); }
-            nvs.classList.remove('active');
-            document.querySelectorAll(".dropdown-content").forEach(d => d.classList.remove('show'));
+            if(id !== 'home') document.getElementById('page-'+id).classList.add('active');
+            document.getElementById('nav-links').classList.remove('active');
+            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
             window.scrollTo(0,0);
         }
-
-        document.getElementById('intro-btn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('intro-dropdown').classList.toggle('show'); });
-        document.getElementById('value-btn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('value-dropdown').classList.toggle('show'); });
+        document.getElementById('hamburger').onclick = () => document.getElementById('nav-links').classList.add('active');
     </script>
 </body>
 </html>
