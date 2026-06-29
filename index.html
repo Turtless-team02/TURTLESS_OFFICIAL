@@ -44,6 +44,14 @@
         .subpage.active { display: block; }
         .subpage-title { font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; color: var(--text-main); text-align: center; letter-spacing: -1px; }
         .content-card { background: white; padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 5px 25px rgba(0,0,0,0.03); max-width: 1000px; margin: 0 auto; line-height: 1.8; min-height: 400px; }
+        
+        /* 💡 이미지 크기 자유 조절 및 반응형 점선 스타일 상자 */
+        .resizable-img-box {
+            border: 1px dashed #ccc;
+            padding: 5px;
+            min-width: 50px;
+            min-height: 50px;
+        }
         .editable-content img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -360,7 +368,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, setDoc, query, where, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -373,7 +380,8 @@
         
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app); 
-        const storage = getStorage(app);
+
+        const IMGBB_API_KEY = "Ffc86d1890f11e1bb04886dd9c10ecbc";
 
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
@@ -442,18 +450,32 @@
             } catch(e){}
         }
 
+        // 💡 팀원 프로필 이미지 업로드 기능 (ImgBB 전환 및 CORS 우회 적용)
         window.uploadProfileImage = async (input, fieldName) => {
             if(!input.files || !input.files[0]) return;
             if(!currentUserId) { alert("로그인이 필요합니다."); return; }
             try {
-                alert("사진을 저장소에 올리는 중...");
-                const storageRef = ref(storage, `profiles/${currentUserId}_${fieldName}_${Date.now()}`);
-                await uploadBytes(storageRef, input.files[0]);
-                const downloadUrl = await getDownloadURL(storageRef);
-                let updateData = {}; updateData[fieldName] = downloadUrl;
-                await updateDoc(doc(db, "users", currentUserId), updateData);
-                alert("변경되었습니다!"); loadMembers();
-            } catch(error) { alert("오류 발생"); }
+                alert("프로필 사진을 업로드하는 중입니다...");
+                const formData = new FormData();
+                formData.append("key", IMGBB_API_KEY);
+                formData.append("image", input.files[0]);
+
+                const response = await fetch("https://api.imgbb.com/1/upload", {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    let updateData = {}; 
+                    updateData[fieldName] = data.data.url;
+                    await updateDoc(doc(db, "users", currentUserId), updateData);
+                    alert("프로필 사진이 성공적으로 변경되었습니다!"); 
+                    loadMembers();
+                } else {
+                    alert("업로드 실패: " + data.error.message);
+                }
+            } catch(error) { alert("오류 발생: " + error.message); }
         };
 
         window.uploadActivity = async () => {
@@ -467,6 +489,7 @@
             } catch(e){}
         };
 
+        // 💡 PR 갤러리 이미지 업로드 기능 (ImgBB 전환 및 CORS 우회 적용)
         window.uploadGalleryImage = async () => {
             if(!currentUserData) return;
             const fileInput = document.getElementById('new-gal-file');
@@ -474,73 +497,95 @@
             const finalCategory = categorySelect === "종합" ? "종합" : categorySelect; 
             if(!fileInput.files || !fileInput.files[0]) return;
             try {
-                alert("업로드 중...");
-                const storageRef = ref(storage, `gallery/${Date.now()}_${fileInput.files[0].name}`);
-                await uploadBytes(storageRef, fileInput.files[0]);
-                const url = await getDownloadURL(storageRef);
-                await addDoc(collection(db, "gallery"), { url, category: finalCategory, uploader: currentUserData.name, createdAt: Date.now() });
-                alert("추가 완료!"); loadGallery();
-            } catch(e){}
+                alert("갤러리 사진을 업로드하는 중입니다...");
+                const formData = new FormData();
+                formData.append("key", IMGBB_API_KEY);
+                formData.append("image", fileInput.files[0]);
+
+                const response = await fetch("https://api.imgbb.com/1/upload", {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    await addDoc(collection(db, "gallery"), { 
+                        url: data.data.url, 
+                        category: finalCategory, 
+                        uploader: currentUserData.name, 
+                        createdAt: Date.now() 
+                    });
+                    alert("갤러리 사진 추가 완료!"); 
+                    loadGallery();
+                } else {
+                    alert("업로드 실패: " + data.error.message);
+                }
+            } catch(e){ alert("오류 발생: " + e.message); }
         };
 
-      const IMGBB_API_KEY = "Ffc86d1890f11e1bb04886dd9c10ecbc";
-
-// 1. 에디터 사진 업로드 기능 (CORS 우회 버전)
-window.insertEditorImage = async (input) => {
-    if(!input.files || !input.files[0]) return;
-    try {
-        const formData = new FormData();
-        formData.append("key", IMGBB_API_KEY); // 키를 여기에 주입!
-        formData.append("image", input.files[0]);
-        
-        const response = await fetch("https://api.imgbb.com/1/upload", {
-            method: 'POST',
-            body: formData // 주소창 대신 상자 안에 담아서 전송
-        });
-        const data = await response.json();
-        
-        if(data.success) {
-            document.execCommand('insertImage', false, data.data.url);
-            input.value = ''; 
-            alert("이미지 삽입 완료!");
-        } else {
-            alert("업로드 실패: " + data.error.message);
-        }
-    } catch(e) { 
-        alert("업로드 에러: " + e.message); 
-    }
-};
-
-// 2. 슬라이더 배경 사진 업로드 기능 (CORS 우회 버전)
-window.uploadSliderImg = async (input, idx) => {
-    if(!input.files || !input.files[0]) return;
-    try {
-        const formData = new FormData();
-        formData.append("key", IMGBB_API_KEY); // 키를 여기에 주입!
-        formData.append("image", input.files[0]);
-        
-        const response = await fetch("https://api.imgbb.com/1/upload", {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-        
-        if(data.success) {
-            const targetInput = document.getElementById(`s-img-${idx}`);
-            if(targetInput) {
-                targetInput.value = data.data.url;
-                alert("배경 사진 변경 완료! 아래 등록/수정 버튼을 눌러주세요.");
-            } else {
-                alert("입력창을 찾을 수 없습니다.");
+        // 💡 1. 에디터 사진 업로드 기능 (CORS 우회 및 크기 조절 기능 내장 박스 적용)
+        window.insertEditorImage = async (input) => {
+            if(!input.files || !input.files[0]) return;
+            try {
+                const formData = new FormData();
+                formData.append("key", IMGBB_API_KEY);
+                formData.append("image", input.files[0]);
+                
+                const response = await fetch("https://api.imgbb.com/1/upload", {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                if(data.success) {
+                    // 💡 사진 구석을 잡아 크기 조절이 가능한 크기 조절 박스 형태로 본문 삽입
+                    const imageHtml = `
+                        <div class="resizable-img-box" style="display:inline-block; position:relative; resize:both; overflow:hidden; width:200px; max-width:100%;">
+                            <img src="${data.data.url}" style="width:100%; height:100%; object-fit:contain; pointer-events:none;" />
+                        </div>
+                        <p>&nbsp;</p>
+                    `;
+                    
+                    document.execCommand('insertHTML', false, imageHtml);
+                    input.value = ''; 
+                    alert("이미지 삽입 완료! 사진 우측 하단 모서리를 마우스나 손가락으로 끌어 크기를 조절하세요.");
+                } else {
+                    alert("업로드 실패: " + data.error.message);
+                }
+            } catch(e) { 
+                alert("업로드 에러: " + e.message); 
             }
-        } else {
-            alert("업로드 실패: " + data.error.message);
-        }
-    } catch(e){ 
-        alert("업로드 에러: " + e.message); 
-    }
-};
+        };
 
+        // 💡 2. 슬라이더 배경 사진 업로드 기능 (CORS 우회 버전 유지)
+        window.uploadSliderImg = async (input, idx) => {
+            if(!input.files || !input.files[0]) return;
+            try {
+                const formData = new FormData();
+                formData.append("key", IMGBB_API_KEY);
+                formData.append("image", input.files[0]);
+                
+                const response = await fetch("https://api.imgbb.com/1/upload", {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                if(data.success) {
+                    const targetInput = document.getElementById(`s-img-${idx}`);
+                    if(targetInput) {
+                        targetInput.value = data.data.url;
+                        alert("배경 사진 변경 완료! 아래 등록/수정 버튼을 눌러주세요.");
+                    } else {
+                        alert("입력창을 찾을 수 없습니다.");
+                    }
+                } else {
+                    alert("업로드 실패: " + data.error.message);
+                }
+            } catch(e){ 
+                alert("업로드 에러: " + e.message); 
+            }
+        };
 
         function loadYoutubeFallback() {
             const ytList = document.getElementById('youtube-auto-list');
@@ -558,7 +603,6 @@ window.uploadSliderImg = async (input, idx) => {
                             let item = data.items[i];
                             let title = item.title;
                             let link = item.link;
-                            
                             let thumb = item.thumbnail;
                             
                             if (!thumb) {
@@ -610,7 +654,6 @@ window.uploadSliderImg = async (input, idx) => {
                     const now = Date.now(); 
                     items.forEach(i => { 
                         const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteActivity('${i.id}')">🗑️ 삭제</button>` : '';
-                        
                         const isNew = (now - (i.createdAt || 0)) <= 86400000;
                         const newBadge = isNew ? `<span style="background:var(--dan-red); color:white; font-size:11px; padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; font-weight:900;">최신</span>` : '';
                         
@@ -657,11 +700,9 @@ window.uploadSliderImg = async (input, idx) => {
             
             let ph = '<div class="gallery-grid">'; 
             filtered.forEach(g => { 
-                const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteGallery('${g.id}', '${g.url}')">🗑️ 삭제</button>` : '';
-                
+                const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteGallery('${g.id}')">🗑️ 삭제</button>` : '';
                 const isNew = (now - (g.createdAt || 0)) <= 86400000;
                 const newBadge = isNew ? `<span style="position:absolute; top:10px; left:10px; background:var(--dan-red); color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">최신</span>` : '';
-                
                 const dateStr = g.createdAt ? new Date(g.createdAt).toLocaleDateString() : '';
                 
                 ph += `<div class="gallery-grid-item" style="position:relative;">
@@ -675,9 +716,9 @@ window.uploadSliderImg = async (input, idx) => {
             galleryPage.innerHTML = ph === '<div class="gallery-grid"></div>' ? '<p>이 카테고리에 등록된 이미지가 없습니다.</p>' : ph;
         };
 
-        window.deleteGallery = async (id, url) => {
+        window.deleteGallery = async (id) => {
             if(!confirm("정말 이 사진을 삭제하시겠습니까?")) return;
-            try { await deleteDoc(doc(db, "gallery", id)); try { await deleteObject(ref(storage, url)); } catch(err) {} alert("삭제되었습니다."); loadGallery(); } catch(e) {}
+            try { await deleteDoc(doc(db, "gallery", id)); alert("삭제되었습니다."); loadGallery(); } catch(e) {}
         };
 
         window.firebaseLogin = async () => {
@@ -732,15 +773,12 @@ window.uploadSliderImg = async (input, idx) => {
             }
             
             let sliderHtml = ''; let dotsHtml = '';
-            
             sliderData.forEach((s, i) => {
                 const isColor = s.img.startsWith('#') || s.img.startsWith('rgb');
                 const bgStyle = isColor ? `background-color: ${s.img};` : `background-image: url('${s.img}');`;
-                
                 sliderHtml += `<div class="slide ${i===0?'active':''}" style="${bgStyle}"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
                 dotsHtml += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
             });
-            
             c.innerHTML = sliderHtml; d.innerHTML = dotsHtml;
             startS();
         }
