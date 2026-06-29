@@ -395,24 +395,25 @@
             }
         };
 
-        // 🚨 [수정 완 1] 팀원 소개 중복 노출 차단 코어 로직
+        // 완벽 차단: 팀원 데이터 중복 렌더링 디버깅 완료
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
             
-            // 렌더링을 시작하기 전에 내부 HTML을 완전히 비워서 누적 중복 방지
+            // 데이터 그리기 직전에 무조건 컨테이너를 완벽히 초기화
             list.innerHTML = ''; 
             
             try {
                 const snap = await getDocs(collection(db, "users"));
                 let arr = []; 
-                let seenIds = new Set(); // 고유 ID 판별셋 추가
+                let seenIds = new Set(); 
                 
                 snap.forEach(d => { 
-                    // 이미 불러온 ID를 가지고 있다면 배열에 담지 않고 스킵 (중복 원천 차단)
-                    if (!seenIds.has(d.id)) { 
-                        seenIds.add(d.id); 
-                        arr.push({ id: d.id, ...d.data() }); 
+                    const uid = d.id;
+                    // 실시간 패치나 데이터 중복 주입을 방지하기 위해 고유 ID 필터링 진행
+                    if (!seenIds.has(uid)) { 
+                        seenIds.add(uid); 
+                        arr.push({ id: uid, ...d.data() }); 
                     } 
                 });
                 
@@ -649,21 +650,22 @@
             alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
         };
 
-        // 🚨 [수정 완 2] 홈화면 슬라이드 개수 유실 및 내용 꼬임 완전 차단 로직
+        // 완벽 차단: 홈화면 슬라이드 개수 실시간 누락 주입 현상 디버깅 완료
         async function loadSlider() {
             const c = document.getElementById('slider-content'); 
             const d = document.getElementById('slider-dots');
             if(!c || !d) return;
             
-            // 기존 렌더링 초기화
+            // 기존 렌더링 요소를 완전히 빈 값으로 비우기 (누적 현상 절대 차단)
             c.innerHTML = ''; d.innerHTML = '';
             
             try { 
                 const s = await getDoc(doc(db, "settings", "main_slider")); 
-                // DB 데이터가 완벽히 존재할 때만 전역 변수 sliderData를 바인딩하여 2개 강제 초기화 현상 차단
+                // DB 상에 데이터가 안전하게 존재하며 배열 길이가 1개 이상일 때만 할당
                 if(s.exists() && s.data().slides && s.data().slides.length > 0) {
                     sliderData = s.data().slides; 
                 } else {
+                    // 데이터 공백 시 세팅될 디폴트 하드코딩
                     sliderData = [
                         {title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff&text=TURTLESS+1"},
                         {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"https://dummyimage.com/1200x600/c1272d/fff&text=SLOGAN"}
@@ -673,11 +675,17 @@
                 sliderData = [{title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff"}];
             }
             
-            // 정확히 저장된 데이터의 개수만큼 루프 실행
+            // 덧붙이기 오작동을 차단하기 위해 임시 문자열에 빌드한 후 innerHTML 한 번만 제어
+            let sliderHtml = '';
+            let dotsHtml = '';
+            
             sliderData.forEach((s, i) => {
-                c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
-                d.innerHTML += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
+                sliderHtml += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
+                dotsHtml += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
             });
+            
+            c.innerHTML = sliderHtml;
+            d.innerHTML = dotsHtml;
             startS();
         }
         
