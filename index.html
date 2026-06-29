@@ -217,8 +217,10 @@
     <div id="slider-edit-modal" class="modal-overlay">
         <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
             <button style="float:right; border:none; background:none; font-size:20px; cursor:pointer;" onclick="closeSliderEditModal()">×</button>
-            <h2 style="margin-bottom:20px; font-weight:900;">슬라이더 통합 관리</h2>
+            <h2 style="margin-bottom:10px; font-weight:900;">슬라이더 통합 관리</h2>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">원하는 만큼 슬라이드를 추가하거나 편집할 수 있습니다.</p>
             <div id="slider-inputs-container"></div>
+            <button class="dash-btn-sm" onclick="window.addSliderInputRow()" style="background:#111; width:100%; padding:10px; margin-bottom:15px; border-radius:8px;">➕ 슬라이드 항목 추가</button>
             <button class="action-btn" onclick="saveSliderData()">변경사항 최종 저장</button>
         </div>
     </div>
@@ -373,6 +375,7 @@
 
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
+        let sliderData = []; // 전역 동적 배열로 전환
 
         window.applyCustomFontSize = (size) => {
             if (!size) return;
@@ -392,9 +395,11 @@
             }
         };
 
+        // 중복 방지 타겟팅 .innerHTML 초기화 전면 도입
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
+            list.innerHTML = ''; // 렌더링 전 DOM 초기화로 중복 버그 원천 해결
             try {
                 const snap = await getDocs(collection(db, "users"));
                 let arr = []; let seenIds = new Set();
@@ -476,17 +481,15 @@
                 await uploadBytes(storageRef, input.files[0]);
                 const url = await getDownloadURL(storageRef);
                 document.getElementById(`s-img-${idx}`).value = url;
-                alert("사진이 준비되었습니다. '저장' 버튼을 눌러 확정하세요.");
+                alert("사진 변경 완료!");
             } catch(e){ alert("업로드 실패"); }
         };
 
-        // 🔗 외부 CORS 차단 및 캐싱 우회를 우회하여 무조건 유튜브 데이터를 파싱하는 함수
         function loadYoutubeFallback() {
             const ytList = document.getElementById('youtube-auto-list');
             if(!ytList) return;
             
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`;
-            // 대안용 공공 프록시 서버들을 순차적으로 타겟팅하여 네트워크 실패 원천 차단
             const proxyUrls = [
                 `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}&_cb=${Date.now()}`,
                 `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`
@@ -512,7 +515,6 @@
                     }
                 }
             }).catch(() => {
-                // 첫 번째 프록시 실패 시 두 번째 백업 서버 가동
                 fetch(proxyUrls[1]).then(res => res.json()).then(obj => {
                     if(obj && obj.items) {
                         ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
@@ -524,7 +526,6 @@
                         });
                     }
                 }).catch(e => {
-                    // 고정형 안전 비디오 카드 노출 (오류 화면 방지용)
                     ytList.innerHTML = `<h2 class="section-subtitle">Youtube Media</h2>
                         <a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" class="unified-card"><div class="card-top"><img src="https://dummyimage.com/600x400/000/fff&text=TURTLESS+YOUTUBE" alt="youtube thumbnail"></div><div class="card-bottom"><h4>TURTLESS 유튜브 채널 공식 미디어 센터</h4></div></a>`;
                 });
@@ -617,7 +618,7 @@
                 document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원`;
                 document.getElementById('member-actions').style.display = 'block';
                 if(currentUserData?.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
-                loadActivities(); loadGallery();
+                loadActivities(); loadGallery(); loadMembers();
             } else { alert("인증 실패"); }
         };
 
@@ -635,27 +636,49 @@
             alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
         };
 
-        let sliderData = [
-            {title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff&text=TURTLESS+1"},
-            {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"https://dummyimage.com/1200x600/c1272d/fff&text=SLOGAN"}
-        ];
+        // 🔗 동적 슬라이드 무제한 로드 및 갯수 유실 차단 코어 엔진
         async function loadSlider() {
-            try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists() && s.data().slides) sliderData = s.data().slides; } catch(e){}
-            const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
-            if(!c || !d) return; c.innerHTML = ''; d.innerHTML = '';
+            const c = document.getElementById('slider-content'); 
+            const d = document.getElementById('slider-dots');
+            if(!c || !d) return;
+            c.innerHTML = ''; d.innerHTML = '';
+            
+            try { 
+                const s = await getDoc(doc(db, "settings", "main_slider")); 
+                if(s.exists() && s.data().slides && s.data().slides.length > 0) {
+                    sliderData = s.data().slides; // 기존 기본값 배열 덮어쓰기 완전 차단
+                } else {
+                    // DB가 비어있을 때만 노출할 기본값 디폴트 세팅
+                    sliderData = [
+                        {title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff&text=TURTLESS+1"},
+                        {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"https://dummyimage.com/1200x600/c1272d/fff&text=SLOGAN"}
+                    ];
+                }
+            } catch(e){
+                sliderData = [{title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff"}];
+            }
+            
             sliderData.forEach((s, i) => {
                 c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
                 d.innerHTML += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
             });
             startS();
         }
+        
         window.showS = (n) => { const sls = document.querySelectorAll('.slide'); const dots = document.querySelectorAll('.slider-dot'); if(!sls.length) return; sls.forEach((s,i) => s.classList.toggle('active', i===n)); dots.forEach((s,i) => dots[i].classList.toggle('active', i===n)); };
         function startS() { if(window.slideInt) clearInterval(window.slideInt); window.slideInt = setInterval(() => { const sls = document.querySelectorAll('.slide'); if(!sls.length) return; let curr = Array.from(sls).findIndex(s => s.classList.contains('active')); showS((curr + 1) % sls.length); }, 5000); }
 
         window.openSliderEditModal = () => {
-            let h = ''; sliderData.forEach((s,i) => { 
-                h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
-                    <strong>슬라이드 ${i+1}</strong><br>
+            renderSliderInputs();
+            document.getElementById('slider-edit-modal').style.display = 'flex';
+        };
+
+        function renderSliderInputs() {
+            let h = ''; 
+            sliderData.forEach((s,i) => { 
+                h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px; position:relative;">
+                    <strong>슬라이드 항목 ${i+1}</strong>
+                    <button type="button" onclick="window.removeSliderRow(${i})" style="position:absolute; top:12px; right:15px; background:none; border:none; color:#dc3545; font-weight:bold; cursor:pointer; font-size:12px;">❌ 삭제</button>
                     <div style="display:flex; gap:10px; margin: 8px 0;">
                         <input id="s-img-${i}" value="${s.img}" placeholder="이미지 주소">
                         <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 찾기</button>
@@ -665,11 +688,32 @@
                     <input id="s-s-${i}" value="${s.sub}" placeholder="부제">
                 </div>`; 
             });
-            document.getElementById('slider-inputs-container').innerHTML = h; document.getElementById('slider-edit-modal').style.display = 'flex';
+            document.getElementById('slider-inputs-container').innerHTML = h;
+        }
+
+        window.addSliderInputRow = () => {
+            sliderData.push({ title: "", sub: "", img: "https://dummyimage.com/1200x600/111/fff&text=New+Slide" });
+            renderSliderInputs();
         };
+
+        window.removeSliderRow = (idx) => {
+            if(sliderData.length <= 1) { alert("최소 1개 이상의 슬라이드가 존재해야 합니다."); return; }
+            sliderData.splice(idx, 1);
+            renderSliderInputs();
+        };
+
         window.saveSliderData = async () => { 
-            let news = []; for(let i=0; i<sliderData.length; i++) { news.push({ img:document.getElementById(`s-img-${i}`).value, title:document.getElementById(`s-t-${i}`).value, sub:document.getElementById(`s-s-${i}`).value }); }
-            await setDoc(doc(db, "settings", "main_slider"), { slides:news }); location.reload(); 
+            let news = []; 
+            for(let i=0; i<sliderData.length; i++) { 
+                news.push({ 
+                    img: document.getElementById(`s-img-${i}`).value, 
+                    title: document.getElementById(`s-t-${i}`).value, 
+                    sub: document.getElementById(`s-s-${i}`).value 
+                }); 
+            }
+            await setDoc(doc(db, "settings", "main_slider"), { slides:news }); 
+            alert("슬라이더가 업데이트 되었습니다!");
+            location.reload(); 
         };
 
         window.toggleDrop = (id) => { document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('show'); }); document.getElementById(id).classList.toggle('show'); };
@@ -687,12 +731,14 @@
         };
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadMembers(); loadSlider(); loadActivities(); loadGallery();
-            getDoc(doc(db, "settings", "page_content")).then(s => { 
-                if(s.exists()){ 
-                    let d = s.data(); 
-                    document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.innerHTML = d[el.id]; }); 
-                } 
+            loadSlider().then(() => {
+                loadMembers(); loadActivities(); loadGallery();
+                getDoc(doc(db, "settings", "page_content")).then(s => { 
+                    if(s.exists()){ 
+                        let d = s.data(); 
+                        document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.innerHTML = d[el.id]; }); 
+                    } 
+                });
             });
         });
     </script>
