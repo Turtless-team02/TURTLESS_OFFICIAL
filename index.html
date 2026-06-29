@@ -484,26 +484,32 @@
         };
 
         window.insertEditorImage = async (input) => {
-            if(!input.files || !input.files[0]) return;
-            try {
-                alert("문서에 이미지 삽입 중...");
-                const storageRef = ref(storage, `editor/${Date.now()}_${input.files[0].name}`);
-                await uploadBytes(storageRef, input.files[0]);
-                const url = await getDownloadURL(storageRef);
-                
-                const sel = window.getSelection();
-                if (savedEditorRange) {
-                    sel.removeAllRanges();
-                    sel.addRange(savedEditorRange);
-                }
-                
-                document.execCommand('insertImage', false, url);
-                input.value = '';
-            } catch(e) { 
-                console.error(e);
-                alert("이미지 업로드 실패"); 
-            }
-        };
+    if(!input.files || !input.files[0]) return;
+    try {
+        alert("문서에 이미지 삽입 중... (확인을 누르면 업로드가 시작됩니다)");
+        
+        const storageRef = ref(storage, `editor/${Date.now()}_${input.files[0].name}`);
+        await uploadBytes(storageRef, input.files[0]);
+        const url = await getDownloadURL(storageRef);
+        
+        const sel = window.getSelection();
+        if (savedEditorRange) {
+            sel.removeAllRanges();
+            sel.addRange(savedEditorRange);
+            
+            let container = savedEditorRange.commonAncestorContainer;
+            if(container.nodeType === 3) container = container.parentNode; 
+            if(container && container.focus) container.focus();
+        }
+        
+        document.execCommand('insertImage', false, url);
+        input.value = ''; 
+        
+    } catch(e) { 
+        alert("업로드 실패 원인: " + e.message); 
+    }
+};
+
 
         window.uploadSliderImg = async (input, idx) => {
             if(!input.files || !input.files[0]) return;
