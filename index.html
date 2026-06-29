@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TURTLESS | Youth Engineering Union</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --dan-red: #c1272d; --dan-red-dark: #a31f24; --bg-gray: #f8f9fa;
@@ -62,7 +63,7 @@
         .feature-cards-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .feature-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 20px; text-align: center; text-decoration: none; color: var(--text-main); box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .feature-card:hover { transform: translateY(-5px); border-color: var(--dan-red); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
-        .feature-icon { font-size: 42px; margin-bottom: 15px; }
+        .feature-icon { font-size: 46px; margin-bottom: 15px; } /* 아이콘 크기 조금 키움 */
         .feature-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 12px; }
         .feature-desc { font-size: 0.95rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
         
@@ -213,17 +214,17 @@
 
         <div class="feature-cards-container">
             <div class="feature-card" onclick="navigate('activity')" style="cursor:pointer;">
-                <div class="feature-icon">📢</div>
+                <div class="feature-icon"><i class="fa-solid fa-bullhorn" style="color: var(--dan-red);"></i></div>
                 <div class="feature-title">최근 활동</div>
                 <div class="feature-desc" id="latest-ticker">소식을 불러오는 중입니다...</div>
             </div>
             <a href="https://www.instagram.com/turtless_2024/" target="_blank" class="feature-card">
-                <div class="feature-icon">📸</div>
+                <div class="feature-icon"><i class="fa-brands fa-instagram" style="background: -webkit-linear-gradient(#f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i></div>
                 <div class="feature-title">Instagram</div>
                 <div class="feature-desc">TURTLESS의 생생한 일상과<br>소식들을 만나보세요!</div>
             </a>
             <a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" class="feature-card">
-                <div class="feature-icon">▶️</div>
+                <div class="feature-icon"><i class="fa-brands fa-youtube" style="color: #ff0000;"></i></div>
                 <div class="feature-title">YouTube</div>
                 <div class="feature-desc">우리가 만들어가는<br>다양한 영상 콘텐츠!</div>
             </a>
@@ -327,7 +328,6 @@
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
 
-        // 🛠️ 임시(더미) 이미지 세팅: 기본은 검정색, 호버는 하얀색으로 무조건 스왑 작동하게 변경
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
@@ -339,11 +339,9 @@
                 arr.sort((a,b) => a.school === b.school ? a.name.localeCompare(b.name) : a.school.localeCompare(b.school));
                 let h = '';
                 arr.forEach(m => {
-                    // 유저가 올린 사진이 없으면, 400x400 사이즈의 임시 검정/하양 사진을 할당
                     const imgDefault = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Default+(Black)";
                     const imgHover = m.profileHoverImage || "https://dummyimage.com/400x400/ffffff/000000&text=Hover+(White)";
                     
-                    // 이제 이미지가 무조건 존재하므로 스왑 HTML을 무조건 생성합니다.
                     h += `<div class="member-card">
                         <div class="photo-area">
                             <img src="${imgDefault}" class="img-default">
@@ -417,6 +415,8 @@
                     let ah = ''; items.forEach(i => { ah += `<div class="act-list-item" id="act-${i.id}"><h3>${i.title} <span class="date">${new Date(i.createdAt).toLocaleDateString()}</span></h3><p>${i.content}</p></div>`; });
                     actPageContent.innerHTML = ah || '<p>등록된 활동이 없습니다.</p>';
                 }
+                
+                // 🛠️ 썸네일 에러 픽스: rss가 던져주는 썸네일을 바로 쓰고, 없으면 안전하게 파싱하도록 수정
                 if(ytList) {
                     ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
                     const channelId = "UC8QwTy46OaCGdTauiPYkeow";
@@ -424,8 +424,16 @@
                     fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&_cacheBuster=${Date.now()}`).then(r => r.json()).then(data => {
                         if(data.items) {
                             data.items.slice(0,3).forEach(item => {
-                                const vId = item.link.split('v=')[1];
-                                ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
+                                let thumb = item.thumbnail; // rss2json이 자체적으로 뽑아준 썸네일 우선 사용
+                                if(!thumb) {
+                                    try { 
+                                        const vId = item.link.split('v=')[1].split('&')[0];
+                                        thumb = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`; 
+                                    } catch(e) { 
+                                        thumb = "https://dummyimage.com/600x400/cccccc/ffffff&text=No+Thumbnail"; 
+                                    }
+                                }
+                                ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="${thumb}"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
                             });
                         }
                     });
