@@ -46,7 +46,7 @@
         .subpage.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 💡 최상단 슬라이더 배경색 단청레드로 고정 */
+        /* 슬라이더 배경색 단청레드 지정 */
         .hero-slider { position: relative; width: 100%; height: 60vh; min-height: 450px; background-color: var(--dan-red); overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; background-size: cover; background-position: center; }
         .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); z-index: -1; }
@@ -71,34 +71,32 @@
         .card-content h3 { font-size: 1.3rem; margin-bottom: 12px; font-weight: 800; }
         .card-content p { color: var(--text-sub); font-size: 0.95rem; margin-bottom: 20px; }
 
-        /* 💡 유튜브 리스트 3개 정렬 및 카드 사이 공간 조정 */
+        /* 미디어 레이아웃 여백 유지 */
         .media-split { display: flex; gap: 40px; flex-wrap: wrap; }
-        .media-youtube { flex: 1.3; min-width: 320px; display: flex; flex-direction: column; gap: 24px; } /* 영상 카드 사이 여백 추가 */
-        .media-info-block { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 24px; }
+        .media-youtube { flex: 1.3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
+        .media-info-block { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
 
-        .youtube-main-card { display: flex; flex-direction: column; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.04); }
+        .youtube-main-card { display: flex; flex-direction: column; text-decoration: none; color: var(--text-main); background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .youtube-main-card:hover { transform: translateY(-5px); border-color: var(--dan-red); }
         .youtube-thumb-wrap { width: 100%; aspect-ratio: 16/9; background-color: #000; overflow: hidden; }
         .youtube-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .youtube-info-large { padding: 15px 20px; background: white; }
-        .youtube-info-large h4 { font-size: 0.98rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .youtube-info-large { padding: 15px 20px; }
+        .youtube-info-large h4 { font-size: 1rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* 💡 우측 컴포넌트들의 높이 규격 통일화 */
-        .right-content-box { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: center; min-height: 220px; overflow: hidden; }
+        .right-content-box { background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; min-height: 200px; overflow: hidden; }
 
         .home-photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; height: 100%; }
         .home-photo-item { border-radius: 8px; overflow: hidden; border: 1px solid #eee; background-color: #f7f7f7; cursor: pointer; aspect-ratio: 1/1; }
-        .home-photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .home-photo-item:hover img { transform: scale(1.08); }
+        .home-photo-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        .notice-board { justify-content: flex-start; padding: 15px; }
-        .notice-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9f9f9; cursor: pointer; }
+        .notice-board { justify-content: flex-start; padding: 10px 15px; }
+        .notice-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f9f9f9; cursor: pointer; transition: background 0.2s; }
         .notice-item:hover { background-color: var(--bg-gray); }
         .notice-item:last-child { border-bottom: none; }
         .notice-badge { background: var(--dan-red); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; margin-right: 12px; font-weight: 800; min-width: 40px; text-align: center; }
         
         .mini-banner { background: linear-gradient(135deg, var(--dan-red), var(--dan-red-dark)); color: white; text-align: center; }
-        .mini-banner h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.4; }
+        .mini-banner h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.3; }
         .mini-banner a { display: inline-block; background: white; color: var(--dan-red); text-decoration: none; padding: 10px 25px; border-radius: 30px; font-weight: 800; font-size: 14px; transition: 0.3s; cursor: pointer; }
 
         .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
@@ -126,6 +124,12 @@
         .subpage-title { font-size: 2.5rem; font-weight: 900; color: var(--dan-red); margin-bottom: 10px; }
         
         .content-card { background: white; border-radius: 20px; padding: 40px; border: 1px solid var(--border-color); box-shadow: 0 5px 20px rgba(0,0,0,0.02); margin-top: 20px; line-height: 1.8; }
+        
+        /* 모달 스타일 유지 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; }
+        .modal-content select, .modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; }
+        .action-btn { width: 100%; padding: 14px; background: var(--dan-red); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -246,8 +250,7 @@
         <section class="section gray">
             <div class="inner">
                 <div class="media-split">
-                    <div class="media-youtube" id="youtube-auto-list">
-                    </div>
+                    <div class="media-youtube" id="youtube-auto-list"></div>
                     
                     <div class="media-info-block">
                         <div class="right-content-box" style="padding:10px;">
@@ -321,7 +324,7 @@
             } catch(e){}
         }
 
-        // 💡 2. 원본 채널코드(UC-lrgCx4jl212yguEtB_mY_n3z1_M) 기반 최신 유튜브 영상 3개 로드
+        // 원본 채널코드 기반 최신 영상 3개 로드 연동
         async function loadActivities() {
             const list = document.getElementById('activity-dynamic-list');
             const notice = document.getElementById('home-notice-board');
@@ -351,7 +354,6 @@
                     notice.innerHTML = nh || '<p style="text-align:center; font-size:13px; color:#999;">최신 소식 없음</p>';
                 }
 
-                // 💡 최신영상 3개 크롤링 피드 매핑 (원래 데이터 연동용 구조 보장)
                 if(ytList) {
                     ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2><p style="text-align:center; padding:20px; color:#999;">Loading...</p>';
                     const channelId = "UC-lrgCx4jl212yguEtB_mY_n3z1_M"; 
@@ -487,7 +489,7 @@
             alert("영구 변경 및 동기화 완료."); window.toggleEditMode();
         };
 
-        // 💡 5. 임의의 텍스트가 모두 제거된 깨끗한 슬라이더 데이터 구조
+        // 임의 텍스트가 모두 배제된 깨끗한 슬라이더 초기 데이터
         let sliderData = [
             {title:"", sub:"", img:""},
             {title:"", sub:"", img:""},
