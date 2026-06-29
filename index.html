@@ -396,18 +396,17 @@
             }
         };
 
-        // 🌟 [수정 1] 팀원 중복 완벽 제거 (Set 객체 및 Map 활용)
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
             
             try {
                 const snap = await getDocs(collection(db, "users"));
-                const uniqueMembersMap = new Map(); // 학번/이름 등 겹침 완벽 차단용 Map
+                const uniqueMembersMap = new Map(); 
                 
                 snap.forEach(d => { 
                     const data = d.data();
-                    const uniqueKey = `${data.school}_${data.grade}_${data.name}`; // 학교+학년+이름을 고유키로 지정
+                    const uniqueKey = `${data.school}_${data.grade}_${data.name}`; 
                     
                     if (!uniqueMembersMap.has(uniqueKey)) {
                         uniqueMembersMap.set(uniqueKey, { id: d.id, ...data });
@@ -430,7 +429,7 @@
                     </div>`;
                 });
                 
-                list.innerHTML = h; // innerHTML을 마지막에 한 번에 주입하여 브라우저 중복 버그 방지
+                list.innerHTML = h; 
             } catch(e){}
         }
 
@@ -501,27 +500,39 @@
         function loadYoutubeFallback() {
             const ytList = document.getElementById('youtube-auto-list');
             if(!ytList) return;
-            const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`;
-            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}&_cb=${Date.now()}`).then(r => r.json()).then(data => {
-                let xmlString = data.contents;
-                let parser = new DOMParser();
-                let xmlDoc = parser.parseFromString(xmlString, "text/xml");
-                let entries = xmlDoc.getElementsByTagName("entry");
-                if(entries.length > 0) {
-                    ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
-                    for(let i=0; i<Math.min(entries.length, 3); i++) {
-                        let entry = entries[i];
-                        let title = entry.getElementsByTagName("title")[0].textContent;
-                        let link = entry.getElementsByTagName("link")[0].getAttribute("href");
-                        let vId = entry.getElementsByTagName("yt:videoId")[0]?.textContent || link.split('v=')[1]?.split('&')[0];
-                        if(vId) {
-                            ytList.innerHTML += `<a href="${link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg" alt="youtube thumbnail"></div><div class="card-bottom"><h4>${title}</h4></div></a>`;
+            
+            const rssUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow';
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+            
+            fetch(apiUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'ok' && data.items.length > 0) {
+                        ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
+                        for(let i=0; i<Math.min(data.items.length, 3); i++) {
+                            let item = data.items[i];
+                            let title = item.title;
+                            let link = item.link;
+                            let vId = link.split('v=')[1]?.split('&')[0];
+                            let thumb = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
+                            
+                            ytList.innerHTML += `
+                                <a href="${link}" target="_blank" class="unified-card">
+                                    <div class="card-top">
+                                        <img src="${thumb}" alt="youtube thumbnail">
+                                    </div>
+                                    <div class="card-bottom">
+                                        <h4>${title}</h4>
+                                    </div>
+                                </a>`;
                         }
+                    } else {
+                        throw new Error("No items");
                     }
-                }
-            }).catch(() => {
-                ytList.innerHTML = `<h2 class="section-subtitle">Youtube Media</h2><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" class="unified-card"><div class="card-top"><img src="https://dummyimage.com/600x400/000/fff&text=TURTLESS+YOUTUBE"></div><div class="card-bottom"><h4>TURTLESS 유튜브 채널 공식 미디어 센터</h4></div></a>`;
-            });
+                })
+                .catch(() => {
+                    ytList.innerHTML = `<h2 class="section-subtitle">Youtube Media</h2><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" class="unified-card"><div class="card-top"><img src="https://dummyimage.com/600x400/000/fff&text=TURTLESS+YOUTUBE"></div><div class="card-bottom"><h4>TURTLESS 유튜브 채널 공식 미디어 센터</h4></div></a>`;
+                });
         }
 
         async function loadActivities() {
@@ -539,9 +550,14 @@
                 }
                 if(actPageContent) {
                     let ah = ''; const isAdmin = currentUserData && currentUserData.role === 'admin';
+                    const now = Date.now(); 
                     items.forEach(i => { 
                         const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteActivity('${i.id}')">🗑️ 삭제</button>` : '';
-                        ah += `<div class="act-list-item" id="act-${i.id}">${delBtn}<h3>${i.title} <span class="date">${new Date(i.createdAt).toLocaleDateString()}</span></h3><p>${i.content}</p></div>`; 
+                        
+                        const isNew = (now - (i.createdAt || 0)) <= 86400000;
+                        const newBadge = isNew ? `<span style="background:var(--dan-red); color:white; font-size:11px; padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; font-weight:900;">최신</span>` : '';
+                        
+                        ah += `<div class="act-list-item" id="act-${i.id}">${delBtn}<h3>${i.title} <span class="date" style="font-size:13px; color:#777; margin-left:10px; font-weight:500;">${new Date(i.createdAt).toLocaleDateString()}</span>${newBadge}</h3><p>${i.content}</p></div>`; 
                     });
                     actPageContent.innerHTML = ah || '<p>등록된 활동 없음</p>';
                 }
@@ -580,10 +596,23 @@
             if(!galleryPage) return;
             let filtered = category !== '종합' ? cachedGallery.filter(g => g.category === category) : cachedGallery;
             const isAdmin = currentUserData && currentUserData.role === 'admin';
+            const now = Date.now();
+            
             let ph = '<div class="gallery-grid">'; 
             filtered.forEach(g => { 
                 const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteGallery('${g.id}', '${g.url}')">🗑️ 삭제</button>` : '';
-                ph += `<div class="gallery-grid-item">${delBtn}<img src="${g.url}"></div>`; 
+                
+                const isNew = (now - (g.createdAt || 0)) <= 86400000;
+                const newBadge = isNew ? `<span style="position:absolute; top:10px; left:10px; background:var(--dan-red); color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">최신</span>` : '';
+                
+                const dateStr = g.createdAt ? new Date(g.createdAt).toLocaleDateString() : '';
+                
+                ph += `<div class="gallery-grid-item" style="position:relative;">
+                        ${newBadge}
+                        ${delBtn}
+                        <img src="${g.url}">
+                        <div style="text-align:center; font-size:12.5px; color:#777; margin-top:8px; font-weight:500;">${dateStr}</div>
+                       </div>`; 
             }); 
             ph += '</div>';
             galleryPage.innerHTML = ph === '<div class="gallery-grid"></div>' ? '<p>이 카테고리에 등록된 이미지가 없습니다.</p>' : ph;
@@ -622,7 +651,6 @@
             alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
         };
 
-        // 🌟 [수정 2] 무조건 5개 아이템 채우는 슬라이더 시스템 (단색 컬러 및 이미지 지원)
         async function loadSlider() {
             const c = document.getElementById('slider-content'); 
             const d = document.getElementById('slider-dots');
@@ -633,7 +661,6 @@
                 if(s.exists() && s.data().slides && s.data().slides.length === 5) {
                     sliderData = s.data().slides; 
                 } else {
-                    // 데이터가 깨졌거나 부족하면 무조건 디폴트 5개로 강제 리셋 및 동기화
                     sliderData = [
                         {title:"TURTLESS", sub:"Youth Engineering Union", img:"#c1272d"},
                         {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"#111111"},
@@ -650,7 +677,6 @@
             let sliderHtml = ''; let dotsHtml = '';
             
             sliderData.forEach((s, i) => {
-                // 컬러코드인지 이미지 URL인지 구분하여 스타일 동적 대입
                 const isColor = s.img.startsWith('#') || s.img.startsWith('rgb');
                 const bgStyle = isColor ? `background-color: ${s.img};` : `background-image: url('${s.img}');`;
                 
@@ -672,7 +698,6 @@
 
         function renderSliderInputs() {
             let h = ''; 
-            // 5개 고정이므로 불필요한 삭제/추가 버튼 제거
             for(let i=0; i<5; i++) {
                 const s = sliderData[i] || {title:"", sub:"", img:"#111111"};
                 h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
