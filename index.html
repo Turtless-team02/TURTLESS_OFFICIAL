@@ -315,7 +315,7 @@
                 <h2 class="section-subtitle">Our Sponsors</h2>
                 <div class="content-card" style="min-height: auto; padding: 30px; text-align: center;">
                     <div id="b-home-sponsors" class="editable-content">
-                        여기에 후원사 로고 이미지나 설명을 추가하세요. (관리자 모드에서 이미지 삽입 가능)
+                        여기에 후원사 로고 이미지나 설명을 추가하세요.
                     </div>
                 </div>
             </div>
@@ -378,27 +378,17 @@
             if (!size) return;
             const selection = window.getSelection();
             if (!selection.rangeCount) return;
-            
             const range = selection.getRangeAt(0);
             if (range.collapsed) return;
-
             const span = document.createElement('span');
             span.style.fontSize = size;
             span.style.display = 'inline-block';
             span.style.lineHeight = '1.4';
-            
-            try {
-                range.surroundContents(span);
-            } catch(e) {
+            try { range.surroundContents(span); } catch(e) {
                 document.execCommand('styleWithCSS', false, true);
                 document.execCommand('fontSize', false, '3');
                 const fontElements = range.commonAncestorContainer.parentElement.querySelectorAll('font');
-                fontElements.forEach(el => {
-                    if (el.getAttribute('size') === '3') {
-                        el.removeAttribute('size');
-                        el.style.fontSize = size;
-                    }
-                });
+                fontElements.forEach(el => { if (el.getAttribute('size') === '3') { el.removeAttribute('size'); el.style.fontSize = size; } });
             }
         };
 
@@ -456,7 +446,6 @@
             const fileInput = document.getElementById('new-gal-file');
             const categorySelect = document.getElementById('new-gal-category').value;
             const finalCategory = categorySelect === "종합" ? "종합" : categorySelect; 
-
             if(!fileInput.files || !fileInput.files[0]) return;
             try {
                 alert("업로드 중...");
@@ -491,24 +480,59 @@
             } catch(e){ alert("업로드 실패"); }
         };
 
-        // 🛠️ 어떠한 형태의 유튜브 링크(유튜브 RSS 포함)에서도 비디오 ID를 확실하게 뽑아내는 방어 함수
-        function extractYoutubeId(url) {
-            if (!url) return null;
-            // 1. RSS 피드용 파라미터 매칭 (v=ID 형태 또는 v/ID 형태)
-            let match = url.match(/[?&]v=([^&#]+)/);
-            if (match && match[1]) return match[1].trim();
+        // 🔗 외부 CORS 차단 및 캐싱 우회를 우회하여 무조건 유튜브 데이터를 파싱하는 함수
+        function loadYoutubeFallback() {
+            const ytList = document.getElementById('youtube-auto-list');
+            if(!ytList) return;
             
-            // 2. 표준 및 공유 링크 매칭 (watch, embed, youtu.be 등)
-            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            match = url.match(regExp);
-            if (match && match[7] && match[7].length === 11) return match[7].trim();
-            
-            return null;
+            const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`;
+            // 대안용 공공 프록시 서버들을 순차적으로 타겟팅하여 네트워크 실패 원천 차단
+            const proxyUrls = [
+                `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}&_cb=${Date.now()}`,
+                `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`
+            ];
+
+            fetch(proxyUrls[0]).then(r => r.json()).then(data => {
+                let xmlString = data.contents;
+                let parser = new DOMParser();
+                let xmlDoc = parser.parseFromString(xmlString, "text/xml");
+                let entries = xmlDoc.getElementsByTagName("entry");
+                
+                if(entries.length > 0) {
+                    ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
+                    for(let i=0; i<Math.min(entries.length, 3); i++) {
+                        let entry = entries[i];
+                        let title = entry.getElementsByTagName("title")[0].textContent;
+                        let link = entry.getElementsByTagName("link")[0].getAttribute("href");
+                        let vId = entry.getElementsByTagName("yt:videoId")[0]?.textContent || link.split('v=')[1]?.split('&')[0];
+                        
+                        if(vId) {
+                            ytList.innerHTML += `<a href="${link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg" alt="youtube thumbnail"></div><div class="card-bottom"><h4>${title}</h4></div></a>`;
+                        }
+                    }
+                }
+            }).catch(() => {
+                // 첫 번째 프록시 실패 시 두 번째 백업 서버 가동
+                fetch(proxyUrls[1]).then(res => res.json()).then(obj => {
+                    if(obj && obj.items) {
+                        ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
+                        obj.items.slice(0,3).forEach(item => {
+                            let vId = item.link.split('v=')[1]?.split('&')[0] || item.guid?.split('video:')[1];
+                            if(vId) {
+                                ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg" alt="youtube thumbnail"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
+                            }
+                        });
+                    }
+                }).catch(e => {
+                    // 고정형 안전 비디오 카드 노출 (오류 화면 방지용)
+                    ytList.innerHTML = `<h2 class="section-subtitle">Youtube Media</h2>
+                        <a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" class="unified-card"><div class="card-top"><img src="https://dummyimage.com/600x400/000/fff&text=TURTLESS+YOUTUBE" alt="youtube thumbnail"></div><div class="card-bottom"><h4>TURTLESS 유튜브 채널 공식 미디어 센터</h4></div></a>`;
+                });
+            });
         }
 
         async function loadActivities() {
             const notice = document.getElementById('home-notice-board');
-            const ytList = document.getElementById('youtube-auto-list');
             const ticker = document.getElementById('latest-ticker');
             const actPageContent = document.getElementById('activity-page-content');
             try {
@@ -534,29 +558,13 @@
                     });
                     actPageContent.innerHTML = ah || '<p>등록된 활동 없음</p>';
                 }
-                
-                if(ytList) {
-                    ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
-                    const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`);
-                    const cacheBuster = Date.now();
-                    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&_cb=${cacheBuster}`).then(r => r.json()).then(data => {
-                        if(data && data.items) {
-                            data.items.slice(0,3).forEach(item => {
-                                const vId = extractYoutubeId(item.link);
-                                if (vId) {
-                                    ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="https://img.youtube.com/vi/${vId}/mqdefault.jpg" alt="youtube thumbnail"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
-                                }
-                            });
-                        }
-                    }).catch(e => {});
-                }
-            } catch(e){}
+                loadYoutubeFallback();
+            } catch(e){ loadYoutubeFallback(); }
         }
 
         window.deleteActivity = async (id) => {
             if(!confirm("정말 이 활동 게시물을 삭제하시겠습니까?")) return;
-            try { await deleteDoc(doc(db, "activities", id)); alert("삭제되었습니다."); loadActivities(); } 
-            catch(e) { alert("삭제 실패"); }
+            try { await deleteDoc(doc(db, "activities", id)); alert("삭제되었습니다."); loadActivities(); } catch(e) {}
         };
 
         window.goAct = (id) => { navigate('activity'); setTimeout(() => { const el = document.getElementById('act-'+id); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 300); };
@@ -566,7 +574,6 @@
                 const snap = await getDocs(collection(db, "gallery"));
                 cachedGallery = []; snap.forEach(d => cachedGallery.push({ id: d.id, ...d.data() }));
                 cachedGallery.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-                
                 const homeGrid = document.getElementById('home-gallery-4grid');
                 if(homeGrid) {
                     let gh = ''; 
@@ -581,26 +588,15 @@
         }
 
         window.filterGallery = (category) => {
-            document.querySelectorAll('#gallery-filters .filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === category);
-            });
-
+            document.querySelectorAll('#gallery-filters .filter-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === category); });
             const galleryPage = document.getElementById('gallery-page-content');
             if(!galleryPage) return;
-
-            let filtered = cachedGallery;
-            if(category !== '종합') {
-                filtered = cachedGallery.filter(g => g.category === category);
-            }
-
+            let filtered = category !== '종합' ? cachedGallery.filter(g => g.category === category) : cachedGallery;
             const isAdmin = currentUserData && currentUserData.role === 'admin';
             let ph = '<div class="gallery-grid">'; 
             filtered.forEach(g => { 
                 const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteGallery('${g.id}', '${g.url}')">🗑️ 삭제</button>` : '';
-                ph += `<div class="gallery-grid-item">
-                    ${delBtn}
-                    <img src="${g.url}">
-                </div>`; 
+                ph += `<div class="gallery-grid-item">${delBtn}<img src="${g.url}"></div>`; 
             }); 
             ph += '</div>';
             galleryPage.innerHTML = ph === '<div class="gallery-grid"></div>' ? '<p>이 카테고리에 등록된 이미지가 없습니다.</p>' : ph;
@@ -608,11 +604,7 @@
 
         window.deleteGallery = async (id, url) => {
             if(!confirm("정말 이 사진을 삭제하시겠습니까?")) return;
-            try { 
-                await deleteDoc(doc(db, "gallery", id)); 
-                try { await deleteObject(ref(storage, url)); } catch(err) {} 
-                alert("삭제되었습니다."); loadGallery(); 
-            } catch(e) { alert("삭제 실패"); }
+            try { await deleteDoc(doc(db, "gallery", id)); try { await deleteObject(ref(storage, url)); } catch(err) {} alert("삭제되었습니다."); loadGallery(); } catch(e) {}
         };
 
         window.firebaseLogin = async () => {
@@ -643,12 +635,14 @@
             alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
         };
 
-        let sliderData = [{title:"", sub:"", img:""}, {title:"", sub:"", img:""}, {title:"", sub:"", img:""}, {title:"", sub:"", img:""}, {title:"", sub:"", img:""}];
+        let sliderData = [
+            {title:"TURTLESS", sub:"Youth Engineering Union", img:"https://dummyimage.com/1200x600/111/fff&text=TURTLESS+1"},
+            {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"https://dummyimage.com/1200x600/c1272d/fff&text=SLOGAN"}
+        ];
         async function loadSlider() {
-            try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists()) sliderData = s.data().slides; } catch(e){}
+            try { const s = await getDoc(doc(db, "settings", "main_slider")); if(s.exists() && s.data().slides) sliderData = s.data().slides; } catch(e){}
             const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
-            if(!c || !d) return;
-            c.innerHTML = ''; d.innerHTML = '';
+            if(!c || !d) return; c.innerHTML = ''; d.innerHTML = '';
             sliderData.forEach((s, i) => {
                 c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${s.img}')"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
                 d.innerHTML += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
@@ -674,7 +668,7 @@
             document.getElementById('slider-inputs-container').innerHTML = h; document.getElementById('slider-edit-modal').style.display = 'flex';
         };
         window.saveSliderData = async () => { 
-            let news = []; for(let i=0; i<5; i++) news.push({ img:document.getElementById(`s-img-${i}`).value, title:document.getElementById(`s-t-${i}`).value, sub:document.getElementById(`s-s-${i}`).value }); 
+            let news = []; for(let i=0; i<sliderData.length; i++) { news.push({ img:document.getElementById(`s-img-${i}`).value, title:document.getElementById(`s-t-${i}`).value, sub:document.getElementById(`s-s-${i}`).value }); }
             await setDoc(doc(db, "settings", "main_slider"), { slides:news }); location.reload(); 
         };
 
@@ -694,7 +688,12 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             loadMembers(); loadSlider(); loadActivities(); loadGallery();
-            getDoc(doc(db, "settings", "page_content")).then(s => { if(s.exists()){ let d = s.data(); document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.innerHTML = d[el.id]; }); } });
+            getDoc(doc(db, "settings", "page_content")).then(s => { 
+                if(s.exists()){ 
+                    let d = s.data(); 
+                    document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.innerHTML = d[el.id]; }); 
+                } 
+            });
         });
     </script>
 </body>
