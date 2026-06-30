@@ -1113,6 +1113,67 @@
                 });
             });
         });
+            // ==========================================
+        // [팀원 정보 수정 기능 덮어쓰기 (Overriding)]
+        // 원본 코드를 보존하고 수정 권한(관리자+본인)만 강화
+        // ==========================================
+        
+        window.editingMemberId = null; 
+
+        window.openMemberModal = (id) => {
+            window.editingMemberId = id; 
+            const m = allMembers.find(x => x.id === id);
+            if(!m) return;
+            
+            const img = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Profile";
+            const bio = m.bio || "아직 등록된 소개가 없습니다.";
+            const contact = m.contact || "없음";
+            
+            let html = `
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="${img}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:15px; border:3px solid var(--border-color);">
+                    <h2 style="font-weight:900;">${m.name} <span style="font-size:14px; color:var(--text-sub);">${m.school} ${m.grade}</span></h2>
+                </div>
+                <div style="background:var(--bg-gray); padding:15px; border-radius:10px; font-size:14px; line-height:1.6;">
+                    <p style="margin-bottom:10px;"><strong>소개글:</strong><br>${bio.replace(/\n/g, '<br>')}</p>
+                    <p><strong>연락처/SNS:</strong><br>${contact}</p>
+                </div>
+            `;
+            document.getElementById('member-detail-view').innerHTML = html;
+            
+            const editSection = document.getElementById('member-detail-edit');
+            
+            if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
+                editSection.style.display = 'block';
+                document.getElementById('edit-bio').value = m.bio || '';
+                document.getElementById('edit-contact').value = m.contact || '';
+                document.getElementById('edit-isnew').checked = !!m.isNew;
+            } else { 
+                editSection.style.display = 'none'; 
+            }
+            
+            document.getElementById('member-detail-modal').style.display = 'flex';
+        };
+
+        window.saveMemberDetails = async () => {
+            const targetId = window.editingMemberId || currentUserId;
+            if(!targetId) return;
+            
+            const bio = document.getElementById('edit-bio').value;
+            const contact = document.getElementById('edit-contact').value;
+            const isNew = document.getElementById('edit-isnew').checked;
+            
+            try {
+                await updateDoc(doc(db, "users", targetId), { bio, contact, isNew });
+                alert("정보가 저장되었습니다!"); 
+                loadMembers(); 
+                window.closeMemberModal();
+            } catch(e) { 
+                alert("저장 실패: " + e.message); 
+            }
+        };
+        // ==========================================
+
     </script>
 </body>
 </html>
