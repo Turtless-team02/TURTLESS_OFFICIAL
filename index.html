@@ -1235,6 +1235,98 @@
             document.getElementById('slider-edit-modal').style.display = 'flex';
         };
         // ==========================================
+/* ==========================================
+   📱 모바일(휴대폰) 버전 화면 최적화 및 버그 수정
+   ========================================== */
+
+/* 1. 전체 화면 가로 스크롤 및 흰 여백 방지 */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    /* 2. 본문 카드 패딩 조절 (여백이 화면을 뚫고 나가는 현상 방지) */
+    .content-card {
+        padding: 20px !important;
+    }
+
+    /* 3. 후원사 슬라이더 모바일 최적화 (흰 여백 유발 원인 차단) */
+    .sp-slide {
+        flex-direction: column !important;
+    }
+    .sp-left, .sp-right {
+        min-width: 100% !important;
+        box-sizing: border-box;
+    }
+    .sp-right {
+        padding: 20px !important;
+    }
+    .sp-right h3 {
+        font-size: 1.4rem !important;
+    }
+    .sponsor-slider {
+        min-height: auto !important;
+    }
+    .sp-nav {
+        position: relative !important;
+        margin-top: 10px;
+    }
+
+    /* 4. 팀원 소개 카드 모바일 크기 최적화 (2열 배치로 보기 좋게 변경) */
+    .member-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* 무조건 2줄로 이쁘게 정렬 */
+        gap: 12px !important;
+    }
+    .info-area {
+        padding: 10px !important;
+    }
+    .info-area .name {
+        font-size: 0.95rem !important;
+    }
+    .info-area .school {
+        font-size: 0.7rem !important;
+    }
+    .member-badge-new {
+        font-size: 8px !important;
+        padding: 2px 6px !important;
+    }
+
+    /* 5. 팀원 상세 팝업(모달) 위치 및 크기 정상화 */
+    .modal-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+    .modal-content {
+        width: 100% !important;
+        max-width: 95% !important;
+        padding: 20px !important;
+        border-radius: 16px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box;
+    }
+    
+    /* 관리자 툴바 모바일 대응 */
+    #edit-toolbar {
+        padding: 8px 12px !important;
+        gap: 6px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* 아주 작은 스마트폰 대응 */
+    .subpage-title {
+        font-size: 1.8rem !important;
+    }
+}
 
     </script>
 </body>
