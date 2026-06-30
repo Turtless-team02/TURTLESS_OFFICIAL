@@ -58,7 +58,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* HERO SLIDER */
-           /* HERO SLIDER */
         .hero-slider { position: relative; width: 100%; height: 55vh; min-height: 400px; background-color: #111; overflow: hidden; }
         @media (max-width: 768px) { .hero-slider { height: auto !important; min-height: auto !important; aspect-ratio: 4 / 3; } }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; background-size: cover; background-position: center; }
@@ -82,7 +81,7 @@
         .slider-dot.active { background-color: white; width: 24px; border-radius: 10px; }
         .sp-nav { position: relative; bottom: auto; left: auto; transform: none; display: flex; gap: 10px; justify-content: center; padding: 20px; background: #fafafa; border-top: 1px solid var(--border-color); }
         .sp-nav .slider-dot { background-color: #ccc; }
-        .sp-nav .slider-dot.active { background-color: var(--dan-red); }
+        .sp-nav .slider-dot.active { background-color: var(--dan-red); width: 24px; border-radius: 10px; }
         
         .slider-control-btn { background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; margin: 0 5px; transition: 0.2s;}
         .slider-control-btn:hover { background: var(--dan-red); }
@@ -171,6 +170,87 @@
         /* 언어 선택기 디자인 */
         .lang-selector-container { margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .lang-select { padding: 8px 15px; border-radius: 30px; background: #333; color: white; border: 1px solid #555; outline: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: bold; }
+
+        /* ==========================================
+           📱 모바일(휴대폰) 버전 화면 최적화 및 버그 수정 CSS 영역 (정상 위치로 이동 완료)
+           ========================================== */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .content-card {
+                padding: 20px !important;
+            }
+            .sp-slide {
+                flex-direction: column !important;
+            }
+            .sp-left, .sp-right {
+                min-width: 100% !important;
+                box-sizing: border-box;
+            }
+            .sp-right {
+                padding: 20px !important;
+            }
+            .sp-right h3 {
+                font-size: 1.4rem !important;
+            }
+            .sponsor-slider {
+                min-height: auto !important;
+            }
+            .sp-nav {
+                position: relative !important;
+                margin-top: 10px;
+            }
+            .member-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .info-area {
+                padding: 10px !important;
+            }
+            .info-area .name {
+                font-size: 0.95rem !important;
+            }
+            .info-area .school {
+                font-size: 0.7rem !important;
+            }
+            .member-badge-new {
+                font-size: 8px !important;
+                padding: 2px 6px !important;
+            }
+            .modal-overlay {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 15px;
+                box-sizing: border-box;
+            }
+            .modal-content {
+                width: 100% !important;
+                max-width: 95% !important;
+                padding: 20px !important;
+                border-radius: 16px !important;
+                margin: 0 auto !important;
+                box-sizing: border-box;
+            }
+            #edit-toolbar {
+                padding: 8px 12px !important;
+                gap: 6px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subpage-title {
+                font-size: 1.8rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -608,6 +688,7 @@
         }
 
         window.openMemberModal = (id) => {
+            window.editingMemberId = id; 
             const m = allMembers.find(x => x.id === id);
             if(!m) return;
             
@@ -628,12 +709,15 @@
             document.getElementById('member-detail-view').innerHTML = html;
             
             const editSection = document.getElementById('member-detail-edit');
-            if(currentUserId === id) {
+            
+            if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
                 editSection.style.display = 'block';
                 document.getElementById('edit-bio').value = m.bio || '';
                 document.getElementById('edit-contact').value = m.contact || '';
                 document.getElementById('edit-isnew').checked = !!m.isNew;
-            } else { editSection.style.display = 'none'; }
+            } else { 
+                editSection.style.display = 'none'; 
+            }
             
             document.getElementById('member-detail-modal').style.display = 'flex';
         };
@@ -641,14 +725,21 @@
         window.closeMemberModal = () => document.getElementById('member-detail-modal').style.display = 'none';
 
         window.saveMemberDetails = async () => {
-            if(!currentUserId) return;
+            const targetId = window.editingMemberId || currentUserId;
+            if(!targetId) return;
+            
             const bio = document.getElementById('edit-bio').value;
             const contact = document.getElementById('edit-contact').value;
             const isNew = document.getElementById('edit-isnew').checked;
+            
             try {
-                await updateDoc(doc(db, "users", currentUserId), { bio, contact, isNew });
-                alert("정보가 저장되었습니다!"); loadMembers(); closeMemberModal();
-            } catch(e) { alert("저장 실패: " + e.message); }
+                await updateDoc(doc(db, "users", targetId), { bio, contact, isNew });
+                alert("정보가 저장되었습니다!"); 
+                loadMembers(); 
+                window.closeMemberModal();
+            } catch(e) { 
+                alert("저장 실패: " + e.message); 
+            }
         };
 
         window.uploadProfileImage = async (input, fieldName) => {
@@ -802,7 +893,6 @@
                 const displayDate = g.selectedDate ? g.selectedDate : g.createdAt;
                 const dateStr = displayDate ? new Date(displayDate).toLocaleDateString() : '';
                 
-                // 기존 '삭제' 버튼 옆에 '수정' 버튼 추가
                 const delBtn = isAdmin ? `<button class="delete-btn" style="display:block; position:absolute; top:10px; right:10px; background:rgba(220, 53, 69, 0.9); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; z-index:10;" onclick="window.deleteGallery('${g.id}')">🗑️ 삭제</button>` : '';
                 const editBtn = isAdmin ? `<button class="edit-btn" style="display:block; position:absolute; top:10px; right:70px; background:rgba(0, 123, 255, 0.9); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; z-index:10;" onclick="window.updateGalleryDate('${g.id}', ${displayDate})">📅 수정</button>` : '';
                 
@@ -819,7 +909,6 @@
         
         window.deleteGallery = async (id) => { if(confirm("삭제하시겠습니까?")) { await deleteDoc(doc(db, "gallery", id)); loadGallery(); } };
 
-        // --- 갤러리 날짜 수정 함수 새로 추가 ---
         window.updateGalleryDate = async (id, currentTimestamp) => {
             const currentStr = currentTimestamp ? new Date(currentTimestamp).toISOString().split('T')[0] : '';
             const newDate = prompt("수정할 날짜를 입력하세요 (형식: YYYY-MM-DD)", currentStr);
@@ -833,7 +922,7 @@
                 try {
                     await updateDoc(doc(db, "gallery", id), { selectedDate: selectedTimestamp });
                     alert("사진 날짜가 성공적으로 수정되었습니다!");
-                    loadGallery(); // 데이터 다시 불러오기 및 재정렬
+                    loadGallery(); 
                 } catch(e) {
                     alert("날짜 수정 실패: " + e.message);
                 }
@@ -960,20 +1049,58 @@
         };
         function startS() { if(slideInt) clearInterval(slideInt); slideInt = setInterval(() => { if(!isMainSliderPaused) window.nextS(); }, 5000); }
 
+        window.uploadSliderImg = async (input, idx) => {
+            if(!input.files || !input.files[0]) return;
+            try {
+                alert("배경 이미지를 업로드하는 중입니다...");
+                const formData = new FormData();
+                formData.append("key", IMGBB_API_KEY);
+                formData.append("image", input.files[0]);
+                
+                const response = await fetch("https://api.imgbb.com/1/upload", {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                if(data.success) {
+                    const targetInput = document.getElementById(`s-img-${idx}`);
+                    if(targetInput) {
+                        targetInput.value = data.data.url;
+                        alert("배경 사진 업로드 완료! 아래 '변경사항 최종 저장' 버튼을 눌러주세요.");
+                    } else {
+                        alert("입력창을 찾을 수 없습니다.");
+                    }
+                } else {
+                    alert("업로드 실패: " + data.error.message);
+                }
+            } catch(e){ 
+                alert("업로드 에러: " + e.message); 
+            }
+        };
+
         window.openSliderEditModal = () => {
             let h = ''; 
             for(let i=0; i<5; i++) {
                 const s = sliderData[i] || {title:"", sub:"", img:"#111111"};
                 h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
                     <strong>📍 슬라이드 ${i+1}</strong>
-                    <input id="s-img-${i}" value="${s.img}" placeholder="배경(색상코드 또는 이미지주소)" style="width:100%; padding:5px; margin:5px 0;">
-                    <input id="s-t-${i}" value="${s.title}" placeholder="대제목" style="width:100%; padding:5px; margin-bottom:5px;">
-                    <input id="s-s-${i}" value="${s.sub}" placeholder="소제목" style="width:100%; padding:5px;">
+                    <div style="margin: 8px 0;">
+                        <label style="font-size:11px; color:#555; display:block; margin-bottom:4px;">배경 (헥사코드 #000000 혹은 이미지 링크 주소 입력)</label>
+                        <div style="display:flex; gap:10px;">
+                            <input id="s-img-${i}" value="${s.img}" placeholder="예: #c1272d 또는 https://주소" style="width:100%; padding:5px; background:white;">
+                            <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 업로드</button>
+                            <input type="file" id="s-file-${i}" style="display:none" accept="image/*" onchange="window.uploadSliderImg(this, ${i})">
+                        </div>
+                    </div>
+                    <input id="s-t-${i}" value="${s.title}" placeholder="메인 대제목" style="width:100%; padding:5px; margin-bottom:5px; background:white;">
+                    <input id="s-s-${i}" value="${s.sub}" placeholder="서브 소제목" style="width:100%; padding:5px; background:white;">
                 </div>`; 
             }
             document.getElementById('slider-inputs-container').innerHTML = h;
             document.getElementById('slider-edit-modal').style.display = 'flex';
         };
+
         window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display='none';
         window.saveSliderData = async () => { 
             let news = []; 
@@ -1035,8 +1162,8 @@
             });
             if(!isSpPaused) startSp();
         };
-        window.nextSp = () => { if(sponsorData.length===0) return; let curr = parseInt(document.querySelector('.sp-slide.active')?.getAttribute('data-index') || 0); showSp((curr + 1) % sponsorData.length); };
-        window.prevSp = () => { if(sponsorData.length===0) return; let curr = parseInt(document.querySelector('.sp-slide.active')?.getAttribute('data-index') || 0); showSp((curr - 1 + sponsorData.length) % sponsorData.length); };
+        window.nextSp = () => { if(sponsorData.length===0) return; let curr = parseInt(document.querySelector('.sp-slide.active')?.getAttribute('data-index'] || 0); showSp((curr + 1) % sponsorData.length); };
+        window.prevSp = () => { if(sponsorData.length===0) return; let curr = parseInt(document.querySelector('.sp-slide.active')?.getAttribute('data-index'] || 0); showSp((curr - 1 + sponsorData.length) % sponsorData.length); };
         window.togglePauseSp = () => {
             isSpPaused = !isSpPaused;
             document.querySelectorAll('.sp-pause-btn').forEach(btn => {
@@ -1104,6 +1231,8 @@
             window.scrollTo(0,0);
         };
 
+        window.editingMemberId = null; 
+
         window.addEventListener('DOMContentLoaded', () => {
             loadSlider().then(() => {
                 loadMembers(); loadActivities(); loadGallery(); loadSponsors();
@@ -1115,219 +1244,6 @@
                 });
             });
         });
-            // ==========================================
-        // [팀원 정보 수정 기능 덮어쓰기 (Overriding)]
-        // 원본 코드를 보존하고 수정 권한(관리자+본인)만 강화
-        // ==========================================
-        
-        window.editingMemberId = null; 
-
-        window.openMemberModal = (id) => {
-            window.editingMemberId = id; 
-            const m = allMembers.find(x => x.id === id);
-            if(!m) return;
-            
-            const img = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Profile";
-            const bio = m.bio || "아직 등록된 소개가 없습니다.";
-            const contact = m.contact || "없음";
-            
-            let html = `
-                <div style="text-align:center; margin-bottom:20px;">
-                    <img src="${img}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:15px; border:3px solid var(--border-color);">
-                    <h2 style="font-weight:900;">${m.name} <span style="font-size:14px; color:var(--text-sub);">${m.school} ${m.grade}</span></h2>
-                </div>
-                <div style="background:var(--bg-gray); padding:15px; border-radius:10px; font-size:14px; line-height:1.6;">
-                    <p style="margin-bottom:10px;"><strong>소개글:</strong><br>${bio.replace(/\n/g, '<br>')}</p>
-                    <p><strong>연락처/SNS:</strong><br>${contact}</p>
-                </div>
-            `;
-            document.getElementById('member-detail-view').innerHTML = html;
-            
-            const editSection = document.getElementById('member-detail-edit');
-            
-            if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
-                editSection.style.display = 'block';
-                document.getElementById('edit-bio').value = m.bio || '';
-                document.getElementById('edit-contact').value = m.contact || '';
-                document.getElementById('edit-isnew').checked = !!m.isNew;
-            } else { 
-                editSection.style.display = 'none'; 
-            }
-            
-            document.getElementById('member-detail-modal').style.display = 'flex';
-        };
-
-        window.saveMemberDetails = async () => {
-            const targetId = window.editingMemberId || currentUserId;
-            if(!targetId) return;
-            
-            const bio = document.getElementById('edit-bio').value;
-            const contact = document.getElementById('edit-contact').value;
-            const isNew = document.getElementById('edit-isnew').checked;
-            
-            try {
-                await updateDoc(doc(db, "users", targetId), { bio, contact, isNew });
-                alert("정보가 저장되었습니다!"); 
-                loadMembers(); 
-                window.closeMemberModal();
-            } catch(e) { 
-                alert("저장 실패: " + e.message); 
-            }
-        };
-        // ==========================================
-
-            // ==========================================
-        // [메인 슬라이더 이미지 업로드 기능 복구 (Overriding)]
-        // 원본에 있던 uploadSliderImg 기능과 파일 업로드 버튼을 다시 살려냅니다.
-        // ==========================================
-        
-        // 1. 사라졌던 이미지 업로드 함수 복구
-        window.uploadSliderImg = async (input, idx) => {
-            if(!input.files || !input.files[0]) return;
-            try {
-                alert("배경 이미지를 업로드하는 중입니다...");
-                const formData = new FormData();
-                formData.append("key", IMGBB_API_KEY);
-                formData.append("image", input.files[0]);
-                
-                const response = await fetch("https://api.imgbb.com/1/upload", {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                
-                if(data.success) {
-                    const targetInput = document.getElementById(`s-img-${idx}`);
-                    if(targetInput) {
-                        targetInput.value = data.data.url;
-                        alert("배경 사진 업로드 완료! 아래 '변경사항 최종 저장' 버튼을 눌러주세요.");
-                    } else {
-                        alert("입력창을 찾을 수 없습니다.");
-                    }
-                } else {
-                    alert("업로드 실패: " + data.error.message);
-                }
-            } catch(e){ 
-                alert("업로드 에러: " + e.message); 
-            }
-        };
-
-        // 2. 업로드 버튼이 포함된 슬라이더 편집창으로 덮어쓰기
-        window.openSliderEditModal = () => {
-            let h = ''; 
-            for(let i=0; i<5; i++) {
-                const s = sliderData[i] || {title:"", sub:"", img:"#111111"};
-                h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
-                    <strong>📍 슬라이드 ${i+1}</strong>
-                    <div style="margin: 8px 0;">
-                        <label style="font-size:11px; color:#555; display:block; margin-bottom:4px;">배경 (헥사코드 #000000 혹은 이미지 링크 주소 입력)</label>
-                        <div style="display:flex; gap:10px;">
-                            <input id="s-img-${i}" value="${s.img}" placeholder="예: #c1272d 또는 https://주소" style="width:100%; padding:5px; background:white;">
-                            <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 업로드</button>
-                            <input type="file" id="s-file-${i}" style="display:none" accept="image/*" onchange="window.uploadSliderImg(this, ${i})">
-                        </div>
-                    </div>
-                    <input id="s-t-${i}" value="${s.title}" placeholder="메인 대제목" style="width:100%; padding:5px; margin-bottom:5px; background:white;">
-                    <input id="s-s-${i}" value="${s.sub}" placeholder="서브 소제목" style="width:100%; padding:5px; background:white;">
-                </div>`; 
-            }
-            document.getElementById('slider-inputs-container').innerHTML = h;
-            document.getElementById('slider-edit-modal').style.display = 'flex';
-        };
-        // ==========================================
-/* ==========================================
-   📱 모바일(휴대폰) 버전 화면 최적화 및 버그 수정
-   ========================================== */
-
-/* 1. 전체 화면 가로 스크롤 및 흰 여백 방지 */
-html, body {
-    overflow-x: hidden;
-    width: 100%;
-    position: relative;
-}
-
-@media (max-width: 768px) {
-    /* 2. 본문 카드 패딩 조절 (여백이 화면을 뚫고 나가는 현상 방지) */
-    .content-card {
-        padding: 20px !important;
-    }
-
-    /* 3. 후원사 슬라이더 모바일 최적화 (흰 여백 유발 원인 차단) */
-    .sp-slide {
-        flex-direction: column !important;
-    }
-    .sp-left, .sp-right {
-        min-width: 100% !important;
-        box-sizing: border-box;
-    }
-    .sp-right {
-        padding: 20px !important;
-    }
-    .sp-right h3 {
-        font-size: 1.4rem !important;
-    }
-    .sponsor-slider {
-        min-height: auto !important;
-    }
-    .sp-nav {
-        position: relative !important;
-        margin-top: 10px;
-    }
-
-    /* 4. 팀원 소개 카드 모바일 크기 최적화 (2열 배치로 보기 좋게 변경) */
-    .member-grid {
-        grid-template-columns: repeat(2, 1fr) !important; /* 무조건 2줄로 이쁘게 정렬 */
-        gap: 12px !important;
-    }
-    .info-area {
-        padding: 10px !important;
-    }
-    .info-area .name {
-        font-size: 0.95rem !important;
-    }
-    .info-area .school {
-        font-size: 0.7rem !important;
-    }
-    .member-badge-new {
-        font-size: 8px !important;
-        padding: 2px 6px !important;
-    }
-
-    /* 5. 팀원 상세 팝업(모달) 위치 및 크기 정상화 */
-    .modal-overlay {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 15px;
-        box-sizing: border-box;
-    }
-    .modal-content {
-        width: 100% !important;
-        max-width: 95% !important;
-        padding: 20px !important;
-        border-radius: 16px !important;
-        margin: 0 auto !important;
-        box-sizing: border-box;
-    }
-    
-    /* 관리자 툴바 모바일 대응 */
-    #edit-toolbar {
-        padding: 8px 12px !important;
-        gap: 6px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    /* 아주 작은 스마트폰 대응 */
-    .subpage-title {
-        font-size: 1.8rem !important;
-    }
-}
-
     </script>
 </body>
 </html>
