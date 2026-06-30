@@ -12,7 +12,15 @@
             --text-main: #111111; --text-sub: #666666; --border-color: #eaeaea;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
+
+        /* 구글 번역기 상단 바, 팝업, 호버 효과 등 모든 UI 완벽 숨김 처리 */
+        .skiptranslate { display: none !important; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; position: static !important; }
+        #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+        .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; border: none !important; }
+        font { background-color: transparent !important; }
 
         header { position: sticky; top: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 18px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); z-index: 1000; }
         .logo { font-size: 26px; font-weight: 900; color: var(--dan-red); letter-spacing: -1.5px; cursor: pointer; }
@@ -30,28 +38,22 @@
         .hamburger { display: none; }
         @media (max-width: 992px) {
             .hamburger { display: block; font-size: 28px; cursor: pointer; }
-            .nav-links { position: fixed; top: 0; right: -100%; width: 260px; height: 100vh; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px; transition: right 0.3s ease; z-index: 1001; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 260px; height: 100vh; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px; transition: right 0.3s ease; z-index: 1001; box-shadow: -5px 0 15px rgba(0,0,0,0.1); overflow-y: auto;}
             .nav-links.active { right: 0; }
             .close-menu { display: block; position: absolute; top: 20px; right: 25px; font-size: 30px; background: none; border: none; cursor: pointer; }
         }
 
-        #edit-toolbar { display: none; position: fixed; top: 90px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid var(--dan-red); padding: 10px 20px; border-radius: 50px; z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; width: 90%; max-width: 650px; }
+        #edit-toolbar { display: none; position: fixed; top: 90px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid var(--dan-red); padding: 10px 20px; border-radius: 50px; z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; width: 95%; max-width: 650px; }
         #edit-toolbar.active { display: flex; }
-        #edit-toolbar select, #edit-toolbar input { padding: 5px 10px; border-radius: 8px; border: 1px solid #ddd; outline: none; font-size: 13px; }
-        #edit-toolbar label { font-size: 12px; font-weight: 800; color: var(--dan-red); }
+        #edit-toolbar select, #edit-toolbar input { padding: 5px 8px; border-radius: 8px; border: 1px solid #ddd; outline: none; font-size: 12px; }
+        #edit-toolbar label { font-size: 11px; font-weight: 800; color: var(--dan-red); }
 
         .subpage { display: none; padding: 80px 5%; min-height: 80vh; animation: fadeIn 0.4s ease-in-out; background-color: var(--bg-gray); }
         .subpage.active { display: block; }
         .subpage-title { font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; color: var(--text-main); text-align: center; letter-spacing: -1px; }
-        .content-card { background: white; padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 5px 25px rgba(0,0,0,0.03); max-width: 1000px; margin: 0 auto; line-height: 1.8; min-height: 400px; }
+        .content-card { background: white; padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 5px 25px rgba(0,0,0,0.03); max-width: 1000px; margin: 0 auto; line-height: 1.8; min-height: 400px; overflow-x: hidden; }
         
-        /* 💡 이미지 크기 자유 조절 및 반응형 점선 스타일 상자 */
-        .resizable-img-box {
-            border: 1px dashed #ccc;
-            padding: 5px;
-            min-width: 50px;
-            min-height: 50px;
-        }
+        .resizable-img-box { border: 1px dashed #ccc; padding: 5px; min-width: 50px; min-height: 50px; display: inline-block; position: relative; resize: both; overflow: hidden; max-width: 100%; background: #fff;}
         .editable-content img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -61,10 +63,29 @@
         .slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.35); z-index: -1; }
         .slide.active { opacity: 1; z-index: 2; }
         .slide h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 15px; }
+        
+        /* 스폰서 슬라이더용 */
+        .sponsor-slider { position: relative; width: 100%; min-height: 400px; background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .sp-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; opacity: 0; transition: opacity 0.8s ease-in-out; z-index: 1; background: white; flex-wrap: wrap;}
+        .sp-slide.active { opacity: 1; z-index: 2; position: relative; }
+        .sp-left { flex: 1; min-width: 250px; display: flex; align-items: center; justify-content: center; padding: 30px; border-right: 1px solid var(--border-color); }
+        .sp-left img { max-width: 100%; max-height: 200px; object-fit: contain; }
+        .sp-right { flex: 1; min-width: 250px; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: left; }
+        .sp-right h3 { font-size: 2rem; font-weight: 900; color: var(--dan-red); margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;}
+        .sp-right p { font-size: 1rem; color: var(--text-sub); line-height: 1.7; }
+        @media (max-width: 768px) { .sp-slide { flex-direction: column; } .sp-left { border-right: none; border-bottom: 1px solid var(--border-color); } }
 
-        .slider-nav { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+        .slider-nav { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; align-items: center;}
         .slider-dot { width: 8px; height: 8px; background-color: rgba(255, 255, 255, 0.4); border-radius: 50%; cursor: pointer; transition: 0.3s; }
         .slider-dot.active { background-color: white; width: 24px; border-radius: 10px; }
+        .sp-nav { position: relative; bottom: auto; left: auto; transform: none; display: flex; gap: 10px; justify-content: center; padding: 20px; background: #fafafa; border-top: 1px solid var(--border-color); }
+        .sp-nav .slider-dot { background-color: #ccc; }
+        .sp-nav .slider-dot.active { background-color: var(--dan-red); }
+        
+        .slider-control-btn { background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; margin: 0 5px; transition: 0.2s;}
+        .slider-control-btn:hover { background: var(--dan-red); }
+        .sp-nav .slider-control-btn { background: #ddd; color: #333; }
+        .sp-nav .slider-control-btn:hover { background: var(--dan-red); color: white; }
 
         .feature-cards-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .feature-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 20px; text-align: center; text-decoration: none; color: var(--text-main); box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -110,15 +131,17 @@
 
         /* MEMBER GRID */
         .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
-        .member-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .member-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.02); cursor: pointer; transition: 0.3s; position: relative;}
+        .member-card:hover { transform: translateY(-5px); border-color: var(--dan-red); box-shadow: 0 8px 20px rgba(0,0,0,0.1);}
         .photo-area { aspect-ratio: 1/1; background: #f5f5f5; overflow: hidden; position: relative; }
         .photo-area img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; transition: opacity 0.4s ease, transform 0.4s ease; }
         .photo-area .img-hover { opacity: 0; }
         .member-card:hover .photo-area .img-default { opacity: 0; transform: scale(1.03); }
         .member-card:hover .photo-area .img-hover { opacity: 1; transform: scale(1.03); }
-        .info-area { padding: 15px; background: white; }
+        .info-area { padding: 15px; background: white; position: relative;}
         .info-area .school { font-size: 0.75rem; color: var(--dan-red); font-weight: 800; margin-bottom: 3px; }
         .info-area .name { font-size: 1.1rem; font-weight: 900; }
+        .member-badge-new { position: absolute; top: -12px; right: 10px; background: #28a745; color: white; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         #admin-panel, #member-actions { display: none; margin-top: 30px; padding: 25px; border-radius: 16px; border-left: 6px solid var(--dan-red); background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .editable-content { transition: 0.2s; border-radius: 4px; }
@@ -126,8 +149,8 @@
         #save-float-btn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999; padding: 15px 30px; background: var(--dan-red); color: white; font-weight: 900; border-radius: 50px; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; }
-        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border-color); border-radius: 8px; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit;}
         .action-btn { width: 100%; padding: 14px; background: var(--dan-red); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .dash-input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 10px; font-family: inherit; }
         .dash-btn-sm { padding: 6px 12px; background: #333; color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; }
@@ -135,17 +158,23 @@
         .act-list-item { border-bottom: 1px solid var(--border-color); padding: 25px 0; position: relative; }
         .act-list-item .delete-btn { display: none; position: absolute; right: 0; top: 25px; background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         
-        .filter-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .filter-btn { padding: 8px 20px; border-radius: 30px; border: 1px solid var(--border-color); background: white; font-weight: 700; cursor: pointer; transition: 0.2s; color: var(--text-sub); }
+        .filter-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 16px; border-radius: 30px; border: 1px solid var(--border-color); background: white; font-weight: 700; cursor: pointer; transition: 0.2s; color: var(--text-sub); font-size: 14px;}
         .filter-btn.active { background: var(--dan-red); color: white; border-color: var(--dan-red); }
 
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .gallery-grid-item { position: relative; }
-        .gallery-grid-item img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-color); }
-        .gallery-grid-item .delete-btn { display: none; position: absolute; top: 10px; right: 10px; background: rgba(220, 53, 69, 0.9); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .gallery-grid-item { position: relative; background: #fff; border-radius: 12px; border: 1px solid var(--border-color); padding: 5px; resize: both; overflow: hidden; min-height: 200px; display: flex; flex-direction: column;}
+        .gallery-grid-item img { width: 100%; flex-grow: 1; object-fit: cover; border-radius: 8px; }
+        .gallery-grid-item .delete-btn { display: none; position: absolute; top: 10px; right: 10px; background: rgba(220, 53, 69, 0.9); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; z-index: 10;}
+
+        /* 언어 선택기 디자인 */
+        .lang-selector-container { margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .lang-select { padding: 8px 15px; border-radius: 30px; background: #333; color: white; border: 1px solid #555; outline: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
+    <div id="google_translate_element" style="display:none;"></div>
+
     <div id="edit-toolbar">
         <label>서체</label>
         <select onchange="document.execCommand('fontName', false, this.value)">
@@ -157,22 +186,19 @@
         
         <label>크기</label>
         <select onchange="window.applyCustomFontSize(this.value)">
-            <option value="">크기 선택</option>
-            <option value="12px">12px (매우작게)</option>
-            <option value="14px">14px (본문 작게)</option>
-            <option value="16px">16px (기본 본문)</option>
-            <option value="18px">18px (본문 크게)</option>
-            <option value="20px">20px (소제목)</option>
-            <option value="24px">24px (중제목)</option>
-            <option value="32px">32px (대제목)</option>
-            <option value="42px">42px (초대형)</option>
+            <option value="">선택</option>
+            <option value="12px">12px</option>
+            <option value="16px">16px</option>
+            <option value="20px">20px</option>
+            <option value="24px">24px</option>
+            <option value="32px">32px</option>
         </select>
         
         <button class="dash-btn-sm" onclick="document.execCommand('bold', false, null)"><b>B</b></button>
         <button class="dash-btn-sm" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
         
         <input type="file" id="editor-img-upload" style="display:none" accept="image/*" onchange="window.insertEditorImage(this)">
-        <button class="dash-btn-sm" style="background:var(--dan-red);" onmousedown="window.saveEditorSelection()" onclick="document.getElementById('editor-img-upload').click()">🖼️ 이미지 삽입</button>
+        <button class="dash-btn-sm" style="background:var(--dan-red);" onmousedown="window.saveEditorSelection()" onclick="document.getElementById('editor-img-upload').click()">🖼️ 삽입</button>
     </div>
 
     <button id="save-float-btn" onclick="window.savePageContent()">💾 전체 변경사항 저장</button>
@@ -217,11 +243,48 @@
                 <option value="경기기계공업고">경기기계공업고</option><option value="경복비즈니스고">경복비즈니스고</option>
                 <option value="서울공업고">서울공업고</option><option value="서울매그넷고">서울매그넷고</option>
                 <option value="선린인터넷고">선린인터넷고</option><option value="용산고">용산고</option><option value="용산철도고">용산철도고</option>
+                <option value="서울로봇고">서울로봇고</option>
             </select>
-            <select id="grade"><option value="1학년">1학년</option><option value="2학년">2학년</option><option value="3학년">3학년</option></select>
+            <select id="grade">
+                <option value="1학년">1학년</option><option value="2학년">2학년</option><option value="3학년">3학년</option>
+                <option value="지도교사">지도교사</option>
+            </select>
             <input type="text" id="username" placeholder="이름 (예: 권우진)">
             <input type="password" id="password" placeholder="비밀번호">
             <button class="action-btn" onclick="firebaseLogin()">인증하기</button>
+        </div>
+    </div>
+
+    <div id="member-detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer; z-index:10;" onclick="closeMemberModal()">×</button>
+            <div id="member-detail-view"></div>
+            <div id="member-detail-edit" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
+                <h4 style="margin-bottom:10px; color:var(--dan-red);">✏️ 내 정보 수정</h4>
+                <label style="font-size:12px; font-weight:bold;">소개글</label>
+                <textarea id="edit-bio" rows="3" placeholder="간단한 자기소개를 입력하세요"></textarea>
+                <label style="font-size:12px; font-weight:bold;">연락처/SNS 링크</label>
+                <input type="text" id="edit-contact" placeholder="이메일 또는 인스타그램 ID">
+                <label style="font-size:12px; font-weight:bold; display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="edit-isnew" style="width:auto; margin:0;"> 🆕 신규 멤버 뱃지 표시하기
+                </label>
+                <button class="action-btn" onclick="saveMemberDetails()">정보 저장</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sponsor-admin-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;" onclick="closeSponsorAdminModal()">×</button>
+            <h2 style="margin-bottom:15px; font-weight:900;">후원사 슬라이드 관리</h2>
+            <div id="sponsor-admin-list" style="margin-bottom:20px;"></div>
+            <hr style="margin:15px 0;">
+            <h4>새 후원사 추가</h4>
+            <input type="text" id="sp-new-name" placeholder="후원사 이름">
+            <textarea id="sp-new-desc" rows="3" placeholder="후원사 설명 및 내용"></textarea>
+            <label style="font-size:12px;">로고 이미지 (파일 업로드)</label>
+            <input type="file" id="sp-new-logo" accept="image/*">
+            <button class="action-btn" onclick="addSponsor()">추가하기</button>
         </div>
     </div>
 
@@ -282,11 +345,11 @@
                     <h3 style="color: var(--dan-red); margin-bottom: 10px;">📋 팀원 대시보드</h3>
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
                         <p id="welcome-msg" style="font-weight:700; margin: 0;"></p>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 8px; flex-wrap:wrap;">
                             <input type="file" id="profile-file-input" accept="image/*" style="display: none;" onchange="window.uploadProfileImage(this, 'profileImage')">
                             <button class="dash-btn-sm" onclick="document.getElementById('profile-file-input').click()">📸 기본 프로필 변경</button>
                             <input type="file" id="hover-file-input" accept="image/*" style="display: none;" onchange="window.uploadProfileImage(this, 'profileHoverImage')">
-                            <button class="dash-btn-sm" onclick="document.getElementById('hover-file-input').click()" style="background:#555;">✨ 마우스 호버용 사진 변경</button>
+                            <button class="dash-btn-sm" onclick="document.getElementById('hover-file-input').click()" style="background:#555;">✨ 호버용 사진 변경</button>
                         </div>
                     </div>
                     <hr style="border:0; border-top:1px solid #eaeaea; margin: 20px 0;">
@@ -295,16 +358,20 @@
                             <h4 style="margin-bottom: 15px; font-size: 15px;">✍️ 새로운 [주요 활동] 남기기</h4>
                             <input type="text" id="new-act-title" class="dash-input" placeholder="활동 제목">
                             <textarea id="new-act-content" class="dash-input" style="height: 80px; resize: none;" placeholder="활동 내용"></textarea>
+                            <label style="font-size:12px; color:#555;">활동 사진 첨부 (선택)</label>
+                            <input type="file" id="new-act-file" accept="image/*" class="dash-input" style="background: white;">
                             <button onclick="window.uploadActivity()" class="action-btn" style="padding: 10px;">활동 게시물 등록</button>
                         </div>
                         <div style="background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
                             <h4 style="margin-bottom: 15px; font-size: 15px;">🖼️ [PR 갤러리] 사진 올리기</h4>
                             <select id="new-gal-category" class="dash-input">
-                                <option value="종합">카테고리 선택 (기본: 종합)</option>
+                                <option value="종합">카테고리 (기본: 종합)</option>
+                                <option value="팀">팀</option>
                                 <option value="엔지니어">엔지니어</option>
                                 <option value="마케팅">마케팅</option>
                                 <option value="회계">회계</option>
                                 <option value="전략">전략</option>
+                                <option value="홍보자료">홍보자료</option>
                             </select>
                             <input type="file" id="new-gal-file" accept="image/*" class="dash-input" style="background: white;">
                             <button onclick="window.uploadGalleryImage()" class="action-btn" style="padding: 10px; background: #111;">사진 업로드</button>
@@ -314,8 +381,9 @@
 
                 <div id="admin-panel">
                     <h3 style="margin-bottom:12px; font-weight:900;">👑 관리자 패널</h3>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">슬라이더/배경 편집</button>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">메인 슬라이더 편집</button>
+                        <button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
                         <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
                     </div>
                 </div>
@@ -325,21 +393,29 @@
         <section class="section" style="padding-top: 20px;">
             <div class="inner">
                 <h2 class="section-subtitle">Our Sponsors</h2>
-                <div class="content-card" style="min-height: auto; padding: 30px; text-align: center;">
-                    <div id="b-home-sponsors" class="editable-content">
-                        여기에 후원사 로고 이미지나 설명을 추가하세요.
-                    </div>
-                </div>
+                <div class="sponsor-slider" id="home-sponsor-slider"></div>
             </div>
         </section>
     </div>
 
     <section id="page-intro_team" class="subpage"><div class="inner"><h2 class="subpage-title">팀 소개</h2><div class="content-card"><div id="b-intro_team" class="editable-content">여기에 팀 소개 내용을 입력하세요.</div></div></div></section>
-    <section id="page-intro_member" class="subpage"><div class="inner"><h2 class="subpage-title">Team Members</h2><div id="member-list" class="member-grid"></div></div></section>
+    
+    <section id="page-intro_member" class="subpage">
+        <div class="inner">
+            <h2 class="subpage-title">Team Members</h2>
+            <div id="member-list"></div> </div>
+    </section>
+    
     <section id="page-intro_career" class="subpage"><div class="inner"><h2 class="subpage-title">경력</h2><div class="content-card"><div id="b-career" class="editable-content">여기에 경력 사항을 입력하세요.</div></div></div></section>
     <section id="page-intro_slogan" class="subpage"><div class="inner"><h2 class="subpage-title">슬로건</h2><div class="content-card"><div id="b-slogan" class="editable-content">여기에 슬로건을 입력하세요.</div></div></div></section>
     <section id="page-intro_logo" class="subpage"><div class="inner"><h2 class="subpage-title">로고</h2><div class="content-card"><div id="b-logo" class="editable-content">여기에 로고 설명 및 이미지를 입력하세요.</div></div></div></section>
-    <section id="page-intro_sponsor" class="subpage"><div class="inner"><h2 class="subpage-title">후원사 소개</h2><div class="content-card"><div id="b-intro_sponsor" class="editable-content">함께하는 든든한 후원사들을 소개합니다.</div></div></div></section>
+    
+    <section id="page-intro_sponsor" class="subpage">
+        <div class="inner">
+            <h2 class="subpage-title">후원사 소개</h2>
+            <div class="sponsor-slider" id="page-sponsor-slider"></div>
+        </div>
+    </section>
     
     <section id="page-value_core" class="subpage"><div class="inner"><h2 class="subpage-title">핵심가치</h2><div class="content-card"><div id="b-value-core" class="editable-content">핵심가치 내용을 입력하세요.</div></div></div></section>
     <section id="page-value_social" class="subpage"><div class="inner"><h2 class="subpage-title">사회공헌</h2><div class="content-card"><div id="b-value-soc" class="editable-content">사회공헌 활동을 입력하세요.</div></div></div></section>
@@ -352,10 +428,12 @@
             <h2 class="subpage-title">PR 갤러리</h2>
             <div class="filter-tabs" id="gallery-filters">
                 <button class="filter-btn active" onclick="window.filterGallery('종합')">종합</button>
+                <button class="filter-btn" onclick="window.filterGallery('팀')">팀</button>
                 <button class="filter-btn" onclick="window.filterGallery('엔지니어')">엔지니어</button>
                 <button class="filter-btn" onclick="window.filterGallery('마케팅')">마케팅</button>
                 <button class="filter-btn" onclick="window.filterGallery('회계')">회계</button>
                 <button class="filter-btn" onclick="window.filterGallery('전략')">전략</button>
+                <button class="filter-btn" onclick="window.filterGallery('홍보자료')">홍보자료</button>
             </div>
             <div class="content-card" id="gallery-page-content"></div>
         </div>
@@ -363,7 +441,29 @@
 
     <section id="page-sponsorship" class="subpage"><div class="inner"><h2 class="subpage-title">후원문의</h2><div class="content-card"><div id="b-spon" class="editable-content">후원 안내 및 문의처를 입력하세요.</div></div></div></section>
 
-    <footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;"><p>© 2026 TURTLESS TEAM. All rights reserved.</p></footer>
+    <footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;">
+        <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
+        
+        <div class="lang-selector-container">
+            <i class="fa-solid fa-globe" style="color: #aaa; font-size: 18px;"></i>
+            <select class="lang-select" onchange="changeLanguage(this.value)">
+                <option value="ko">한국어 (Korean)</option>
+                <option value="en">English</option>
+                <option value="zh-CN">中文 (Chinese)</option>
+            </select>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ko',
+                includedLanguages: 'ko,en,zh-CN',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -385,14 +485,24 @@
 
         let currentUserId = null; let currentUserData = null;
         let isEditMode = false; let cachedGallery = [];
-        let sliderData = []; 
+        let sliderData = []; let sponsorData = []; let allMembers = [];
         let savedEditorRange = null;
 
+        // --- 번역 제어 (글로벌 윈도우 함수) ---
+        window.changeLanguage = function(val) {
+            var gtCombo = document.querySelector('.goog-te-combo');
+            if (gtCombo == null) {
+                alert("번역기를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+                return false;
+            }
+            gtCombo.value = val;
+            gtCombo.dispatchEvent(new Event('change'));
+        };
+
+        // --- 에디터 서식 ---
         window.saveEditorSelection = () => {
             const sel = window.getSelection();
-            if (sel.getRangeAt && sel.rangeCount) {
-                savedEditorRange = sel.getRangeAt(0);
-            }
+            if (sel.getRangeAt && sel.rangeCount) { savedEditorRange = sel.getRangeAt(0); }
         };
 
         window.applyCustomFontSize = (size) => {
@@ -402,9 +512,7 @@
             const range = selection.getRangeAt(0);
             if (range.collapsed) return;
             const span = document.createElement('span');
-            span.style.fontSize = size;
-            span.style.display = 'inline-block';
-            span.style.lineHeight = '1.4';
+            span.style.fontSize = size; span.style.display = 'inline-block'; span.style.lineHeight = '1.4';
             try { range.surroundContents(span); } catch(e) {
                 document.execCommand('styleWithCSS', false, true);
                 document.execCommand('fontSize', false, '3');
@@ -413,10 +521,30 @@
             }
         };
 
+        window.insertEditorImage = async (input) => {
+            if(!input.files || !input.files[0]) return;
+            try {
+                const formData = new FormData(); formData.append("key", IMGBB_API_KEY); formData.append("image", input.files[0]);
+                const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+                const data = await response.json();
+                
+                if(data.success) {
+                    const imageHtml = `
+                        <div class="resizable-img-box" style="display:inline-block; position:relative; resize:both; overflow:hidden; width:200px; max-width:100%;">
+                            <img src="${data.data.url}" style="width:100%; height:100%; object-fit:contain; pointer-events:none;" />
+                        </div><p>&nbsp;</p>
+                    `;
+                    document.execCommand('insertHTML', false, imageHtml);
+                    input.value = ''; 
+                    alert("이미지 삽입 완료! 사진 우측 하단 모서리를 마우스로 끌어 크기를 조절하세요.");
+                } else { alert("업로드 실패: " + data.error.message); }
+            } catch(e) { alert("업로드 에러: " + e.message); }
+        };
+
+        // --- 팀원 기능 (멘토 배너 추가) ---
         async function loadMembers() {
             const list = document.getElementById('member-list');
             if(!list) return;
-            
             try {
                 const snap = await getDocs(collection(db, "users"));
                 const uniqueMembersMap = new Map(); 
@@ -424,217 +552,140 @@
                 snap.forEach(d => { 
                     const data = d.data();
                     const uniqueKey = `${data.school}_${data.grade}_${data.name}`; 
-                    
-                    if (!uniqueMembersMap.has(uniqueKey)) {
-                        uniqueMembersMap.set(uniqueKey, { id: d.id, ...data });
-                    }
+                    if (!uniqueMembersMap.has(uniqueKey)) { uniqueMembersMap.set(uniqueKey, { id: d.id, ...data }); }
                 });
                 
-                let arr = Array.from(uniqueMembersMap.values());
-                arr.sort((a,b) => a.school === b.school ? a.name.localeCompare(b.name) : a.school.localeCompare(b.school));
+                allMembers = Array.from(uniqueMembersMap.values());
+                allMembers.sort((a,b) => a.school === b.school ? a.name.localeCompare(b.name) : a.school.localeCompare(b.school));
                 
-                let h = '';
-                arr.forEach(m => {
+                let mentorHtml = '';
+                let memberHtml = '';
+                
+                // 멘토로 지정할 3명 이름 설정
+                const mentorNames = ["김정한", "천강숙", "김도윤"];
+
+                allMembers.forEach(m => {
                     const imgDefault = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Default";
                     const imgHover = m.profileHoverImage || "https://dummyimage.com/400x400/ffffff/000000&text=Hover";
-                    h += `<div class="member-card">
+                    const newBadge = m.isNew ? '<span class="member-badge-new">NEW</span>' : '';
+                    
+                    const isMentor = mentorNames.includes(m.name);
+                    const roleBadge = isMentor 
+                        ? `<span style="position:absolute; top:10px; left:10px; background:#007bff; color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">멘토</span>` 
+                        : `<span style="position:absolute; top:10px; left:10px; background:#6c757d; color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">팀원</span>`;
+
+                    const cardHtml = `<div class="member-card" onclick="window.openMemberModal('${m.id}')">
+                        ${newBadge}
+                        ${roleBadge}
                         <div class="photo-area">
                             <img src="${imgDefault}" class="img-default">
                             <img src="${imgHover}" class="img-hover">
                         </div>
                         <div class="info-area"><div class="school">${m.school}</div><div class="name">${m.name}</div></div>
                     </div>`;
+
+                    if(isMentor) { mentorHtml += cardHtml; } 
+                    else { memberHtml += cardHtml; }
                 });
-                
-                list.innerHTML = h; 
+
+                // 멘토와 팀원 그룹으로 나누어 렌더링
+                list.innerHTML = `
+                    <h3 style="margin-bottom:15px; color:var(--text-main); font-weight:900; border-left:4px solid #007bff; padding-left:10px;">Mentors (멘토)</h3>
+                    <div class="member-grid" style="margin-top:0; margin-bottom:40px;">
+                        ${mentorHtml || '<p style="color:#777; font-size:14px; grid-column:1/-1;">등록된 멘토가 없습니다.</p>'}
+                    </div>
+                    
+                    <h3 style="margin-bottom:15px; color:var(--text-main); font-weight:900; border-left:4px solid var(--dan-red); padding-left:10px;">Members (팀원)</h3>
+                    <div class="member-grid" style="margin-top:0;">
+                        ${memberHtml || '<p style="color:#777; font-size:14px; grid-column:1/-1;">등록된 팀원이 없습니다.</p>'}
+                    </div>
+                `;
             } catch(e){}
         }
 
-        // 💡 팀원 프로필 이미지 업로드 기능 (ImgBB 전환 및 CORS 우회 적용)
-        window.uploadProfileImage = async (input, fieldName) => {
-            if(!input.files || !input.files[0]) return;
-            if(!currentUserId) { alert("로그인이 필요합니다."); return; }
-            try {
-                alert("프로필 사진을 업로드하는 중입니다...");
-                const formData = new FormData();
-                formData.append("key", IMGBB_API_KEY);
-                formData.append("image", input.files[0]);
-
-                const response = await fetch("https://api.imgbb.com/1/upload", {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    let updateData = {}; 
-                    updateData[fieldName] = data.data.url;
-                    await updateDoc(doc(db, "users", currentUserId), updateData);
-                    alert("프로필 사진이 성공적으로 변경되었습니다!"); 
-                    loadMembers();
-                } else {
-                    alert("업로드 실패: " + data.error.message);
-                }
-            } catch(error) { alert("오류 발생: " + error.message); }
+        window.openMemberModal = (id) => {
+            const m = allMembers.find(x => x.id === id);
+            if(!m) return;
+            
+            const img = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Profile";
+            const bio = m.bio || "아직 등록된 소개가 없습니다.";
+            const contact = m.contact || "없음";
+            
+            let html = `
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="${img}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:15px; border:3px solid var(--border-color);">
+                    <h2 style="font-weight:900;">${m.name} <span style="font-size:14px; color:var(--text-sub);">${m.school} ${m.grade}</span></h2>
+                </div>
+                <div style="background:var(--bg-gray); padding:15px; border-radius:10px; font-size:14px; line-height:1.6;">
+                    <p style="margin-bottom:10px;"><strong>소개글:</strong><br>${bio.replace(/\n/g, '<br>')}</p>
+                    <p><strong>연락처/SNS:</strong><br>${contact}</p>
+                </div>
+            `;
+            document.getElementById('member-detail-view').innerHTML = html;
+            
+            const editSection = document.getElementById('member-detail-edit');
+            if(currentUserId === id) {
+                editSection.style.display = 'block';
+                document.getElementById('edit-bio').value = m.bio || '';
+                document.getElementById('edit-contact').value = m.contact || '';
+                document.getElementById('edit-isnew').checked = !!m.isNew;
+            } else { editSection.style.display = 'none'; }
+            
+            document.getElementById('member-detail-modal').style.display = 'flex';
         };
 
+        window.closeMemberModal = () => document.getElementById('member-detail-modal').style.display = 'none';
+
+        window.saveMemberDetails = async () => {
+            if(!currentUserId) return;
+            const bio = document.getElementById('edit-bio').value;
+            const contact = document.getElementById('edit-contact').value;
+            const isNew = document.getElementById('edit-isnew').checked;
+            try {
+                await updateDoc(doc(db, "users", currentUserId), { bio, contact, isNew });
+                alert("정보가 저장되었습니다!"); loadMembers(); closeMemberModal();
+            } catch(e) { alert("저장 실패: " + e.message); }
+        };
+
+        window.uploadProfileImage = async (input, fieldName) => {
+            if(!input.files || !input.files[0] || !currentUserId) return;
+            try {
+                alert("업로드 중...");
+                const formData = new FormData(); formData.append("key", IMGBB_API_KEY); formData.append("image", input.files[0]);
+                const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.success) {
+                    let updateData = {}; updateData[fieldName] = data.data.url;
+                    await updateDoc(doc(db, "users", currentUserId), updateData);
+                    alert("성공적으로 변경되었습니다!"); loadMembers();
+                } else { alert("업로드 실패"); }
+            } catch(e) { alert("오류: " + e.message); }
+        };
+
+        // --- 주요 활동 ---
         window.uploadActivity = async () => {
             if(!currentUserData) return;
             const title = document.getElementById('new-act-title').value.trim();
             const content = document.getElementById('new-act-content').value.trim();
-            if(!title || !content) return;
+            const fileInput = document.getElementById('new-act-file');
+            if(!title || !content) { alert("제목과 내용을 입력하세요."); return; }
+            
+            let imageUrl = null;
+            if(fileInput.files && fileInput.files[0]) {
+                alert("사진을 업로드하는 중입니다...");
+                const formData = new FormData(); formData.append("key", IMGBB_API_KEY); formData.append("image", fileInput.files[0]);
+                const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+                const data = await response.json();
+                if(data.success) { imageUrl = data.data.url; } 
+                else { alert("사진 업로드 실패. 텍스트만 등록됩니다."); }
+            }
             try {
-                await addDoc(collection(db, "activities"), { title, content, author: currentUserData.name, createdAt: Date.now() });
-                alert("등록 완료!"); loadActivities();
+                await addDoc(collection(db, "activities"), { title, content, imageUrl, author: currentUserData.name, createdAt: Date.now() });
+                alert("등록 완료!"); 
+                document.getElementById('new-act-title').value=''; document.getElementById('new-act-content').value=''; fileInput.value='';
+                loadActivities();
             } catch(e){}
         };
-
-        // 💡 PR 갤러리 이미지 업로드 기능 (ImgBB 전환 및 CORS 우회 적용)
-        window.uploadGalleryImage = async () => {
-            if(!currentUserData) return;
-            const fileInput = document.getElementById('new-gal-file');
-            const categorySelect = document.getElementById('new-gal-category').value;
-            const finalCategory = categorySelect === "종합" ? "종합" : categorySelect; 
-            if(!fileInput.files || !fileInput.files[0]) return;
-            try {
-                alert("갤러리 사진을 업로드하는 중입니다...");
-                const formData = new FormData();
-                formData.append("key", IMGBB_API_KEY);
-                formData.append("image", fileInput.files[0]);
-
-                const response = await fetch("https://api.imgbb.com/1/upload", {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    await addDoc(collection(db, "gallery"), { 
-                        url: data.data.url, 
-                        category: finalCategory, 
-                        uploader: currentUserData.name, 
-                        createdAt: Date.now() 
-                    });
-                    alert("갤러리 사진 추가 완료!"); 
-                    loadGallery();
-                } else {
-                    alert("업로드 실패: " + data.error.message);
-                }
-            } catch(e){ alert("오류 발생: " + e.message); }
-        };
-
-        // 💡 1. 에디터 사진 업로드 기능 (CORS 우회 및 크기 조절 기능 내장 박스 적용)
-        window.insertEditorImage = async (input) => {
-            if(!input.files || !input.files[0]) return;
-            try {
-                const formData = new FormData();
-                formData.append("key", IMGBB_API_KEY);
-                formData.append("image", input.files[0]);
-                
-                const response = await fetch("https://api.imgbb.com/1/upload", {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                
-                if(data.success) {
-                    // 💡 사진 구석을 잡아 크기 조절이 가능한 크기 조절 박스 형태로 본문 삽입
-                    const imageHtml = `
-                        <div class="resizable-img-box" style="display:inline-block; position:relative; resize:both; overflow:hidden; width:200px; max-width:100%;">
-                            <img src="${data.data.url}" style="width:100%; height:100%; object-fit:contain; pointer-events:none;" />
-                        </div>
-                        <p>&nbsp;</p>
-                    `;
-                    
-                    document.execCommand('insertHTML', false, imageHtml);
-                    input.value = ''; 
-                    alert("이미지 삽입 완료! 사진 우측 하단 모서리를 마우스나 손가락으로 끌어 크기를 조절하세요.");
-                } else {
-                    alert("업로드 실패: " + data.error.message);
-                }
-            } catch(e) { 
-                alert("업로드 에러: " + e.message); 
-            }
-        };
-
-        // 💡 2. 슬라이더 배경 사진 업로드 기능 (CORS 우회 버전 유지)
-        window.uploadSliderImg = async (input, idx) => {
-            if(!input.files || !input.files[0]) return;
-            try {
-                const formData = new FormData();
-                formData.append("key", IMGBB_API_KEY);
-                formData.append("image", input.files[0]);
-                
-                const response = await fetch("https://api.imgbb.com/1/upload", {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                
-                if(data.success) {
-                    const targetInput = document.getElementById(`s-img-${idx}`);
-                    if(targetInput) {
-                        targetInput.value = data.data.url;
-                        alert("배경 사진 변경 완료! 아래 등록/수정 버튼을 눌러주세요.");
-                    } else {
-                        alert("입력창을 찾을 수 없습니다.");
-                    }
-                } else {
-                    alert("업로드 실패: " + data.error.message);
-                }
-            } catch(e){ 
-                alert("업로드 에러: " + e.message); 
-            }
-        };
-
-        function loadYoutubeFallback() {
-            const ytList = document.getElementById('youtube-auto-list');
-            if(!ytList) return;
-            
-            const rssUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow';
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-            
-            fetch(apiUrl)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'ok' && data.items.length > 0) {
-                        ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
-                        for(let i=0; i<Math.min(data.items.length, 3); i++) {
-                            let item = data.items[i];
-                            let title = item.title;
-                            let link = item.link;
-                            let thumb = item.thumbnail;
-                            
-                            if (!thumb) {
-                                let vId = "";
-                                if (link.includes("v=")) {
-                                    vId = link.split("v=")[1].substring(0, 11);
-                                } else if (link.includes("youtu.be/")) {
-                                    vId = link.split("youtu.be/")[1].substring(0, 11);
-                                } else if (link.includes("shorts/")) {
-                                    vId = link.split("shorts/")[1].substring(0, 11);
-                                }
-                                thumb = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
-                            }
-                            
-                            ytList.innerHTML += `
-                                <a href="${link}" target="_blank" class="unified-card">
-                                    <div class="card-top">
-                                        <img src="${thumb}" alt="youtube thumbnail" onerror="this.src='https://dummyimage.com/600x400/000/fff&text=No+Thumbnail'">
-                                    </div>
-                                    <div class="card-bottom">
-                                        <h4>${title}</h4>
-                                    </div>
-                                </a>`;
-                        }
-                    } else {
-                        throw new Error("No items");
-                    }
-                })
-                .catch(() => {
-                    ytList.innerHTML = `<h2 class="section-subtitle">Youtube Media</h2><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" class="unified-card"><div class="card-top"><img src="https://dummyimage.com/600x400/000/fff&text=TURTLESS+YOUTUBE"></div><div class="card-bottom"><h4>TURTLESS 유튜브 채널 공식 미디어 센터</h4></div></a>`;
-                });
-        }
 
         async function loadActivities() {
             const notice = document.getElementById('home-notice-board');
@@ -644,39 +695,60 @@
                 const snap = await getDocs(collection(db, "activities"));
                 let items = []; snap.forEach(d => items.push({id:d.id, ...d.data()}));
                 items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+                
                 if(items.length > 0 && ticker) ticker.innerText = items[0].title;
                 if(notice) {
                     let nh = ''; items.slice(0,4).forEach(i => { nh += `<div class="notice-item" onclick="window.goAct('${i.id}')"><span class="notice-badge">소식</span><p>${i.title}</p></div>`; });
                     notice.innerHTML = nh || '<p>최신 소식 없음</p>';
                 }
                 if(actPageContent) {
-                    let ah = ''; const isAdmin = currentUserData && currentUserData.role === 'admin';
+                    let ah = ''; const isAdmin = currentUserData?.role === 'admin';
                     const now = Date.now(); 
                     items.forEach(i => { 
                         const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteActivity('${i.id}')">🗑️ 삭제</button>` : '';
                         const isNew = (now - (i.createdAt || 0)) <= 86400000;
                         const newBadge = isNew ? `<span style="background:var(--dan-red); color:white; font-size:11px; padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; font-weight:900;">최신</span>` : '';
+                        const imgTag = i.imageUrl ? `<div class="resizable-img-box" style="margin-top:15px; width:100%; max-width:400px;"><img src="${i.imageUrl}" style="width:100%; display:block; pointer-events:none;"></div>` : '';
                         
-                        ah += `<div class="act-list-item" id="act-${i.id}">${delBtn}<h3>${i.title} <span class="date" style="font-size:13px; color:#777; margin-left:10px; font-weight:500;">${new Date(i.createdAt).toLocaleDateString()}</span>${newBadge}</h3><p>${i.content}</p></div>`; 
+                        ah += `<div class="act-list-item" id="act-${i.id}">
+                            ${delBtn}
+                            <h3>${i.title} <span class="date" style="font-size:13px; color:#777; margin-left:10px; font-weight:500;">${new Date(i.createdAt).toLocaleDateString()}</span>${newBadge}</h3>
+                            <p style="white-space:pre-wrap;">${i.content}</p>
+                            ${imgTag}
+                        </div>`; 
                     });
                     actPageContent.innerHTML = ah || '<p>등록된 활동 없음</p>';
                 }
                 loadYoutubeFallback();
             } catch(e){ loadYoutubeFallback(); }
         }
-
-        window.deleteActivity = async (id) => {
-            if(!confirm("정말 이 활동 게시물을 삭제하시겠습니까?")) return;
-            try { await deleteDoc(doc(db, "activities", id)); alert("삭제되었습니다."); loadActivities(); } catch(e) {}
-        };
-
+        window.deleteActivity = async (id) => { if(confirm("삭제하시겠습니까?")) { await deleteDoc(doc(db, "activities", id)); loadActivities(); } };
         window.goAct = (id) => { navigate('activity'); setTimeout(() => { const el = document.getElementById('act-'+id); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 300); };
+
+        // --- 갤러리 ---
+        window.uploadGalleryImage = async () => {
+            if(!currentUserData) return;
+            const fileInput = document.getElementById('new-gal-file');
+            const categorySelect = document.getElementById('new-gal-category').value;
+            if(!fileInput.files || !fileInput.files[0]) return;
+            try {
+                alert("업로드 중...");
+                const formData = new FormData(); formData.append("key", IMGBB_API_KEY); formData.append("image", fileInput.files[0]);
+                const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.success) {
+                    await addDoc(collection(db, "gallery"), { url: data.data.url, category: categorySelect, uploader: currentUserData.name, createdAt: Date.now() });
+                    alert("사진 추가 완료!"); fileInput.value=''; loadGallery();
+                } else { alert("업로드 실패: " + data.error.message); }
+            } catch(e){ alert("오류: " + e.message); }
+        };
 
         async function loadGallery() {
             try {
                 const snap = await getDocs(collection(db, "gallery"));
                 cachedGallery = []; snap.forEach(d => cachedGallery.push({ id: d.id, ...d.data() }));
                 cachedGallery.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+                
                 const homeGrid = document.getElementById('home-gallery-4grid');
                 if(homeGrid) {
                     let gh = ''; 
@@ -694,33 +766,53 @@
             document.querySelectorAll('#gallery-filters .filter-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === category); });
             const galleryPage = document.getElementById('gallery-page-content');
             if(!galleryPage) return;
+            
             let filtered = category !== '종합' ? cachedGallery.filter(g => g.category === category) : cachedGallery;
-            const isAdmin = currentUserData && currentUserData.role === 'admin';
+            const isAdmin = currentUserData?.role === 'admin';
             const now = Date.now();
             
             let ph = '<div class="gallery-grid">'; 
             filtered.forEach(g => { 
                 const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteGallery('${g.id}')">🗑️ 삭제</button>` : '';
                 const isNew = (now - (g.createdAt || 0)) <= 86400000;
-                const newBadge = isNew ? `<span style="position:absolute; top:10px; left:10px; background:var(--dan-red); color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">최신</span>` : '';
+                const newBadge = isNew ? `<span style="position:absolute; top:10px; left:10px; background:var(--dan-red); color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10;">최신</span>` : '';
                 const dateStr = g.createdAt ? new Date(g.createdAt).toLocaleDateString() : '';
                 
-                ph += `<div class="gallery-grid-item" style="position:relative;">
-                        ${newBadge}
-                        ${delBtn}
-                        <img src="${g.url}">
+                ph += `<div class="gallery-grid-item">
+                        ${newBadge}${delBtn}
+                        <img src="${g.url}" style="pointer-events:none;">
                         <div style="text-align:center; font-size:12.5px; color:#777; margin-top:8px; font-weight:500;">${dateStr}</div>
                        </div>`; 
             }); 
             ph += '</div>';
-            galleryPage.innerHTML = ph === '<div class="gallery-grid"></div>' ? '<p>이 카테고리에 등록된 이미지가 없습니다.</p>' : ph;
+            galleryPage.innerHTML = ph === '<div class="gallery-grid"></div>' ? '<p>등록된 이미지가 없습니다.</p>' : ph;
         };
+        window.deleteGallery = async (id) => { if(confirm("삭제하시겠습니까?")) { await deleteDoc(doc(db, "gallery", id)); loadGallery(); } };
 
-        window.deleteGallery = async (id) => {
-            if(!confirm("정말 이 사진을 삭제하시겠습니까?")) return;
-            try { await deleteDoc(doc(db, "gallery", id)); alert("삭제되었습니다."); loadGallery(); } catch(e) {}
-        };
+        // --- 유튜브 ---
+        function loadYoutubeFallback() {
+            const ytList = document.getElementById('youtube-auto-list');
+            if(!ytList) return;
+            fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'ok' && data.items.length > 0) {
+                        ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
+                        for(let i=0; i<Math.min(data.items.length, 3); i++) {
+                            let item = data.items[i]; let thumb = item.thumbnail;
+                            if (!thumb) {
+                                let vId = "";
+                                if (item.link.includes("v=")) vId = item.link.split("v=")[1].substring(0, 11);
+                                else if (item.link.includes("youtu.be/")) vId = item.link.split("youtu.be/")[1].substring(0, 11);
+                                thumb = vId ? `https://img.youtube.com/vi/${vId}/mqdefault.jpg` : 'https://dummyimage.com/600x400/000/fff&text=Video';
+                            }
+                            ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="${thumb}"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
+                        }
+                    }
+                }).catch(()=>{});
+        }
 
+        // --- 로그인 및 기타 권한 ---
         window.firebaseLogin = async () => {
             const s = document.getElementById('school').value; const g = document.getElementById('grade').value;
             const n = document.getElementById('username').value.trim(); const p = document.getElementById('password').value.trim();
@@ -728,7 +820,7 @@
             if(!snap.empty) {
                 currentUserId = snap.docs[0].id; currentUserData = snap.docs[0].data();
                 alert(n + "님 인증 성공"); closeLoginModal();
-                document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}] 팀원`;
+                document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}]`;
                 document.getElementById('member-actions').style.display = 'block';
                 if(currentUserData?.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
                 loadActivities(); loadGallery(); loadMembers();
@@ -736,8 +828,7 @@
         };
 
         window.toggleEditMode = () => { 
-            isEditMode = !isEditMode; 
-            document.body.classList.toggle('edit-mode', isEditMode); 
+            isEditMode = !isEditMode; document.body.classList.toggle('edit-mode', isEditMode); 
             document.getElementById('edit-toolbar').classList.toggle('active', isEditMode);
             document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = isEditMode); 
             document.getElementById('save-float-btn').style.display = isEditMode ? 'block' : 'none'; 
@@ -749,88 +840,178 @@
             alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
         };
 
+        // --- 메인 슬라이더 ---
+        let slideInt = null; let isMainSliderPaused = false;
         async function loadSlider() {
-            const c = document.getElementById('slider-content'); 
-            const d = document.getElementById('slider-dots');
-            if(!c || !d) return;
-            
             try { 
                 const s = await getDoc(doc(db, "settings", "main_slider")); 
-                if(s.exists() && s.data().slides && s.data().slides.length === 5) {
-                    sliderData = s.data().slides; 
-                } else {
-                    sliderData = [
-                        {title:"TURTLESS", sub:"Youth Engineering Union", img:"#c1272d"},
-                        {title:"BACK TO THE BEGINNING", sub:"BEYOND THE OCEAN", img:"#111111"},
-                        {title:"INNOVATION", sub:"Future Engineering Team", img:"#1a1a1a"},
-                        {title:"CREATIVE MIND", sub:"Make a Strategy", img:"#222222"},
-                        {title:"PARTNERSHIP", sub:"Join Us Today", img:"#333333"}
-                    ];
+                if(s.exists() && s.data().slides && s.data().slides.length === 5) { sliderData = s.data().slides; } 
+                else {
+                    sliderData = Array(5).fill({title:"TURTLESS", sub:"Future Engineering", img:"#111111"});
                     await setDoc(doc(db, "settings", "main_slider"), { slides: sliderData });
                 }
-            } catch(e){
-                sliderData = Array(5).fill({title:"TURTLESS", sub:"Union Center", img:"#c1272d"});
-            }
+            } catch(e){ sliderData = Array(5).fill({title:"TURTLESS", sub:"", img:"#c1272d"}); }
             
-            let sliderHtml = ''; let dotsHtml = '';
+            const c = document.getElementById('slider-content'); const d = document.getElementById('slider-dots');
+            if(!c || !d) return;
+            
+            let sliderHtml = ''; let dotsHtml = `<button class="slider-control-btn" onclick="prevS()">◀</button>`;
             sliderData.forEach((s, i) => {
-                const isColor = s.img.startsWith('#') || s.img.startsWith('rgb');
-                const bgStyle = isColor ? `background-color: ${s.img};` : `background-image: url('${s.img}');`;
+                const bgStyle = s.img.startsWith('#') || s.img.startsWith('rgb') ? `background-color: ${s.img};` : `background-image: url('${s.img}');`;
                 sliderHtml += `<div class="slide ${i===0?'active':''}" style="${bgStyle}"><h1>${s.title}</h1><p>${s.sub}</p></div>`;
                 dotsHtml += `<div class="slider-dot ${i===0?'active':''}" onclick="showS(${i})"></div>`;
             });
+            dotsHtml += `<button class="slider-control-btn" onclick="togglePauseS()" id="main-pause-btn">⏸</button><button class="slider-control-btn" onclick="nextS()">▶</button>`;
             c.innerHTML = sliderHtml; d.innerHTML = dotsHtml;
             startS();
         }
         
-        window.showS = (n) => { const sls = document.querySelectorAll('.slide'); const dots = document.querySelectorAll('.slider-dot'); if(!sls.length) return; sls.forEach((s,i) => s.classList.toggle('active', i===n)); dots.forEach((s,i) => dots[i].classList.toggle('active', i===n)); };
-        function startS() { if(window.slideInt) clearInterval(window.slideInt); window.slideInt = setInterval(() => { const sls = document.querySelectorAll('.slide'); if(!sls.length) return; let curr = Array.from(sls).findIndex(s => s.classList.contains('active')); showS((curr + 1) % sls.length); }, 5000); }
+        window.showS = (n) => { 
+            const sls = document.querySelectorAll('.slide'); const dots = document.querySelectorAll('#slider-dots .slider-dot'); 
+            if(!sls.length) return; 
+            sls.forEach((s,i) => s.classList.toggle('active', i===n)); 
+            dots.forEach((s,i) => dots[i].classList.toggle('active', i===n)); 
+            if(!isMainSliderPaused) startS();
+        };
+        window.nextS = () => { const sls = document.querySelectorAll('.slide'); let curr = Array.from(sls).findIndex(s => s.classList.contains('active')); showS((curr + 1) % sls.length); };
+        window.prevS = () => { const sls = document.querySelectorAll('.slide'); let curr = Array.from(sls).findIndex(s => s.classList.contains('active')); showS((curr - 1 + sls.length) % sls.length); };
+        window.togglePauseS = () => {
+            isMainSliderPaused = !isMainSliderPaused;
+            document.getElementById('main-pause-btn').innerText = isMainSliderPaused ? '▶' : '⏸';
+            if(isMainSliderPaused) clearInterval(slideInt); else startS();
+        };
+        function startS() { if(slideInt) clearInterval(slideInt); slideInt = setInterval(() => { if(!isMainSliderPaused) window.nextS(); }, 5000); }
 
         window.openSliderEditModal = () => {
-            renderSliderInputs();
-            document.getElementById('slider-edit-modal').style.display = 'flex';
-        };
-
-        function renderSliderInputs() {
             let h = ''; 
             for(let i=0; i<5; i++) {
                 const s = sliderData[i] || {title:"", sub:"", img:"#111111"};
                 h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
-                    <strong>📍 슬라이드 항목 ${i+1}</strong>
-                    <div style="margin: 8px 0;">
-                        <label style="font-size:11px; color:#555; display:block; margin-bottom:4px;">배경 (헥사코드 #000000 혹은 이미지 링크 주소 입력)</label>
-                        <div style="display:flex; gap:10px;">
-                            <input id="s-img-${i}" value="${s.img}" placeholder="예: #c1272d 또는 https://주소" style="width:100%; padding:5px; background:white;">
-                            <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 업로드</button>
-                            <input type="file" id="s-file-${i}" style="display:none" onchange="window.uploadSliderImg(this, ${i})">
-                        </div>
-                    </div>
-                    <input id="s-t-${i}" value="${s.title}" placeholder="메인 대제목" style="width:100%; padding:5px; margin-bottom:5px; background:white;">
-                    <input id="s-s-${i}" value="${s.sub}" placeholder="서브 소제목" style="width:100%; padding:5px; background:white;">
+                    <strong>📍 슬라이드 ${i+1}</strong>
+                    <input id="s-img-${i}" value="${s.img}" placeholder="배경(색상코드 또는 이미지주소)" style="width:100%; padding:5px; margin:5px 0;">
+                    <input id="s-t-${i}" value="${s.title}" placeholder="대제목" style="width:100%; padding:5px; margin-bottom:5px;">
+                    <input id="s-s-${i}" value="${s.sub}" placeholder="소제목" style="width:100%; padding:5px;">
                 </div>`; 
             }
             document.getElementById('slider-inputs-container').innerHTML = h;
-        }
-
+            document.getElementById('slider-edit-modal').style.display = 'flex';
+        };
+        window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display='none';
         window.saveSliderData = async () => { 
             let news = []; 
-            for(let i=0; i<5; i++) { 
-                news.push({ 
-                    img: document.getElementById(`s-img-${i}`).value.trim(), 
-                    title: document.getElementById(`s-t-${i}`).value.trim(), 
-                    sub: document.getElementById(`s-s-${i}`).value.trim() 
-                }); 
-            }
-            await setDoc(doc(db, "settings", "main_slider"), { slides:news }); 
-            alert("슬라이더 정보가 업데이트되었습니다!");
-            location.reload(); 
+            for(let i=0; i<5; i++) { news.push({ img: document.getElementById(`s-img-${i}`).value.trim(), title: document.getElementById(`s-t-${i}`).value.trim(), sub: document.getElementById(`s-s-${i}`).value.trim() }); }
+            await setDoc(doc(db, "settings", "main_slider"), { slides:news }); alert("업데이트됨!"); location.reload(); 
         };
 
+        // --- 후원사 슬라이더 ---
+        let spInt = null; let isSpPaused = false;
+        async function loadSponsors() {
+            try {
+                const s = await getDoc(doc(db, "settings", "sponsors"));
+                if(s.exists() && s.data().list) { sponsorData = s.data().list; } else { sponsorData = []; }
+            } catch(e) { sponsorData = []; }
+            renderSponsorSliders();
+        }
+
+        function renderSponsorSliders() {
+            const html = sponsorData.length > 0 ? buildSpHtml() : '<div style="padding:40px; text-align:center; color:#777;">등록된 후원사가 없습니다.</div>';
+            const homeSp = document.getElementById('home-sponsor-slider');
+            const pageSp = document.getElementById('page-sponsor-slider');
+            if(homeSp) homeSp.innerHTML = html;
+            if(pageSp) pageSp.innerHTML = html;
+            
+            if(sponsorData.length > 0) {
+                document.querySelectorAll('.sp-slide').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.sp-nav .slider-dot').forEach(el => el.classList.remove('active'));
+                showSp(0);
+                startSp();
+            }
+        }
+
+        function buildSpHtml() {
+            let slides = ''; let dots = `<button class="slider-control-btn" onclick="prevSp()">◀</button>`;
+            sponsorData.forEach((sp, i) => {
+                const logo = sp.logo || 'https://dummyimage.com/300x200/fff/000&text=LOGO';
+                slides += `
+                <div class="sp-slide ${i===0?'active':''}" data-index="${i}">
+                    <div class="sp-left"><img src="${logo}" alt="${sp.name}"></div>
+                    <div class="sp-right"><h3>${sp.name}</h3><p>${sp.desc.replace(/\n/g, '<br>')}</p></div>
+                </div>`;
+                dots += `<div class="slider-dot ${i===0?'active':''}" onclick="showSp(${i})"></div>`;
+            });
+            dots += `<button class="slider-control-btn" onclick="togglePauseSp()" id="sp-pause-btn">⏸</button><button class="slider-control-btn" onclick="nextSp()">▶</button>`;
+            return slides + `<div class="sp-nav" style="width:100%; position:absolute; bottom:0;">${dots}</div>`;
+        }
+
+        window.showSp = (n) => {
+            document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.sp-nav .slider-dot').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll(`.sp-slide[data-index="${n}"]`).forEach(s => s.classList.add('active'));
+            const dotContainers = document.querySelectorAll('.sp-nav');
+            dotContainers.forEach(container => {
+                const dots = container.querySelectorAll('.slider-dot');
+                if(dots[n]) dots[n].classList.add('active');
+            });
+            if(!isSpPaused) startSp();
+        };
+        window.nextSp = () => { if(sponsorData.length===0) return; let curr = parseInt(document.querySelector('.sp-slide.active')?.getAttribute('data-index') || 0); showSp((curr + 1) % sponsorData.length); };
+        window.prevSp = () => { if(sponsorData.length===0) return; let curr = parseInt(document.querySelector('.sp-slide.active')?.getAttribute('data-index') || 0); showSp((curr - 1 + sponsorData.length) % sponsorData.length); };
+        window.togglePauseSp = () => {
+            isSpPaused = !isSpPaused;
+            document.querySelectorAll('#sp-pause-btn').forEach(btn => btn.innerText = isSpPaused ? '▶' : '⏸');
+            if(isSpPaused) clearInterval(spInt); else startSp();
+        };
+        function startSp() { if(spInt) clearInterval(spInt); spInt = setInterval(() => { if(!isSpPaused) window.nextSp(); }, 6000); }
+
+        window.openSponsorAdminModal = () => {
+            let h = '';
+            sponsorData.forEach((sp, i) => {
+                h += `<div style="background:#f9f9f9; padding:10px; border:1px solid #ddd; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div><strong>${sp.name}</strong></div>
+                    <button class="dash-btn-sm" style="background:#dc3545;" onclick="deleteSponsor(${i})">삭제</button>
+                </div>`;
+            });
+            document.getElementById('sponsor-admin-list').innerHTML = h;
+            document.getElementById('sponsor-admin-modal').style.display = 'flex';
+        };
+        window.closeSponsorAdminModal = () => document.getElementById('sponsor-admin-modal').style.display = 'none';
+
+        window.addSponsor = async () => {
+            const name = document.getElementById('sp-new-name').value.trim();
+            const desc = document.getElementById('sp-new-desc').value.trim();
+            const fileInput = document.getElementById('sp-new-logo');
+            if(!name) return alert("이름을 입력하세요.");
+            
+            let logoUrl = '';
+            if(fileInput.files && fileInput.files[0]) {
+                alert("로고 업로드 중...");
+                const formData = new FormData(); formData.append("key", IMGBB_API_KEY); formData.append("image", fileInput.files[0]);
+                const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+                const data = await response.json();
+                if(data.success) { logoUrl = data.data.url; } else { return alert("업로드 실패"); }
+            }
+            
+            sponsorData.push({ name, desc, logo: logoUrl });
+            await setDoc(doc(db, "settings", "sponsors"), { list: sponsorData });
+            alert("후원사 추가 완료!");
+            document.getElementById('sp-new-name').value=''; document.getElementById('sp-new-desc').value=''; fileInput.value='';
+            renderSponsorSliders();
+            openSponsorAdminModal(); 
+        };
+        
+        window.deleteSponsor = async (index) => {
+            if(!confirm("삭제하시겠습니까?")) return;
+            sponsorData.splice(index, 1);
+            await setDoc(doc(db, "settings", "sponsors"), { list: sponsorData });
+            renderSponsorSliders();
+            openSponsorAdminModal();
+        };
+
+        // --- 기타 네비게이션 ---
         window.toggleDrop = (id) => { document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('show'); }); document.getElementById(id).classList.toggle('show'); };
         window.openLoginModal = () => document.getElementById('login-modal').style.display='flex';
         window.closeLoginModal = () => document.getElementById('login-modal').style.display='none';
-        window.closeSliderEditModal = () => document.getElementById('slider-edit-modal').style.display='none';
-
+        
         window.navigate = function(id) {
             document.getElementById('page-home').style.display = id === 'home' ? 'block' : 'none';
             document.querySelectorAll('.subpage').forEach(p => p.classList.remove('active'));
@@ -842,7 +1023,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSlider().then(() => {
-                loadMembers(); loadActivities(); loadGallery();
+                loadMembers(); loadActivities(); loadGallery(); loadSponsors();
                 getDoc(doc(db, "settings", "page_content")).then(s => { 
                     if(s.exists()){ 
                         let d = s.data(); 
