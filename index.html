@@ -450,13 +450,19 @@ body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important;
 <footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;">
 <p>© 2026 TURTLESS TEAM. All rights reserved.</p>
 
-<div class="lang-selector-container">
+<div class="lang-selector-container" style="margin-top: 20px; display: inline-flex; align-items: center; gap: 8px;">
 <i class="fa-solid fa-globe" style="color: #aaa; font-size: 18px;"></i>
-<select class="lang-select" onchange="changeLanguage(this.value)">
+<select class="lang-select" onchange="changeLanguage(this.value)" style="background:#222; color:#fff; border:1px solid #444; padding:6px 12px; border-radius:4px; font-size:13px; cursor:pointer;">
 <option value="ko">한국어 (Korean)</option>
 <option value="en">English</option>
 <option value="zh-CN">中文 (Chinese)</option>
 </select>
+</div>
+
+<div style="margin-top: 15px; line-height: 1.6; letter-spacing: -0.3px;">
+<p style="color: #444; font-size: 11px; margin: 2px 0;">* 구글 번역기를 사용한 자동 번역으로, 일부 오역이 발생할 수 있습니다.</p>
+<p style="color: #444; font-size: 11px; margin: 2px 0; font-family: sans-serif;">* Automated translation via Google Translate may contain errors or inaccuracies.</p>
+<p style="color: #444; font-size: 11px; margin: 2px 0;">* 使用谷歌翻译的自动翻译，可能会出现翻译不准确的情况。</p>
 </div>
 </footer>
 
