@@ -170,50 +170,38 @@ body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important;
 /* 언어 선택기 디자인 */
 .lang-selector-container { margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 10px; }
 .lang-select { padding: 8px 15px; border-radius: 30px; background: #333; color: white; border: 1px solid #555; outline: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: bold; }
+
 /* =========================================
    📱 모바일 UI 최적화 패치 (여백, 팝업, 멤버 카드 크기)
    ========================================= */
-
-/* 1. 오른쪽 흰색 여백(가로 스크롤) 강제 차단 */
-html {
-    overflow-x: hidden;
-    max-width: 100vw;
-}
-body {
-    overflow-x: hidden;
-    max-width: 100vw;
-}
-
-/* 2. 팝업(모달) 창 화면 정중앙 고정 */
-.modal-overlay {
-    width: 100vw !important;
-    height: 100vh !important;
-    top: 0 !important;
-    left: 0 !important;
-}
-
-/* 3. 모바일 화면에서 팀원 카드 2열 배치 및 크기 축소 */
+html, body { overflow-x: hidden; max-width: 100vw; }
+.modal-overlay { width: 100vw !important; height: 100vh !important; top: 0 !important; left: 0 !important; }
 @media (max-width: 768px) {
-    .member-grid {
-        /* 모바일에서는 무조건 1줄에 2개씩 들어가도록 고정 */
-        grid-template-columns: repeat(2, 1fr) !important; 
-        gap: 12px;
-    }
-    .info-area {
-        padding: 10px; /* 여백 줄이기 */
-    }
-    .info-area .name {
-        font-size: 0.95rem; /* 이름 폰트 크기 축소 */
-    }
-    .info-area .school {
-        font-size: 0.65rem; /* 학교 폰트 크기 축소 */
-    }
-    /* 모바일에서는 사진 클릭이 잦으므로 호버 액션 살짝 줄이기 */
-    .member-card:hover {
-        transform: translateY(-2px); 
-    }
+    .member-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+    .info-area { padding: 10px; }
+    .info-area .name { font-size: 0.95rem; }
+    .info-area .school { font-size: 0.65rem; }
+    .member-card:hover { transform: translateY(-2px); }
 }
 
+/* =========================================
+   💼 경력 사항 지그재그 레이아웃 CSS 추가
+   ========================================= */
+.career-container { max-width: 1000px; margin: 0 auto; min-height: 200px; }
+.career-item { display: flex; align-items: center; background: #ffffff; margin-bottom: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden; transition: transform 0.3s; }
+.career-item:hover { transform: translateY(-3px); border-color: var(--dan-red); }
+.career-item img { width: 50%; height: 350px; object-fit: cover; }
+.career-info { width: 50%; padding: 50px; box-sizing: border-box; }
+.career-info h3 { margin-top: 0; color: var(--text-main); font-size: 1.5rem; font-weight: 900; margin-bottom: 15px; }
+.career-info p { color: var(--text-sub); line-height: 1.7; word-break: keep-all; margin: 0; }
+.row-normal { flex-direction: row; }
+.row-reverse { flex-direction: row-reverse; }
+.career-loading { text-align: center; color: var(--text-sub); padding: 50px 0; font-weight: bold; }
+@media (max-width: 768px) {
+    .career-item, .row-normal, .row-reverse { flex-direction: column; }
+    .career-item img, .career-info { width: 100%; height: auto; min-height: 200px; }
+    .career-info { padding: 30px; }
+}
 </style>
 </head>
 <body>
@@ -455,7 +443,15 @@ body {
 </div>
 </section>
 
-<section id="page-intro_career" class="subpage"><div class="inner"><h2 class="subpage-title">경력</h2><div class="content-card"><div id="b-career" class="editable-content">여기에 경력 사항을 입력하세요.</div></div></div></section>
+<section id="page-intro_career" class="subpage">
+<div class="inner">
+<h2 class="subpage-title">경력 사항</h2>
+<div class="career-container" id="career-container">
+<div id="career-loading" class="career-loading">데이터를 불러오는 중입니다...</div>
+</div>
+</div>
+</section>
+
 <section id="page-intro_slogan" class="subpage"><div class="inner"><h2 class="subpage-title">슬로건</h2><div class="content-card"><div id="b-slogan" class="editable-content">여기에 슬로건을 입력하세요.</div></div></div></section>
 <section id="page-intro_logo" class="subpage"><div class="inner"><h2 class="subpage-title">로고</h2><div class="content-card"><div id="b-logo" class="editable-content">여기에 로고 설명 및 이미지를 입력하세요.</div></div></div></section>
 
@@ -1180,6 +1176,47 @@ renderSponsorSliders();
 openSponsorAdminModal();
 };
 
+// ==========================================
+// 💼 지그재그 경력 사항 로드 함수 추가
+// ==========================================
+async function loadCareers() {
+  const container = document.getElementById("career-container");
+  const loadingText = document.getElementById("career-loading");
+  if (!container) return;
+  
+  try {
+    const querySnapshot = await getDocs(collection(db, "careers"));
+    let index = 0;
+    
+    if (querySnapshot.empty) {
+       container.innerHTML = '<div style="text-align:center; padding:40px; color:#777;">등록된 경력 사항이 없습니다.</div>';
+       return;
+    }
+
+    let html = '';
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const layoutClass = index % 2 === 0 ? "row-normal" : "row-reverse";
+      const imgUrl = data.imageUrl || "https://dummyimage.com/600x400/f0f0f0/999999&text=No+Image";
+      
+      html += `
+        <div class="career-item ${layoutClass}">
+          <img src="${imgUrl}" alt="경력 사진">
+          <div class="career-info">
+            <h3>${data.title || '제목 없음'}</h3>
+            <p>${(data.desc || '').replace(/\n/g, '<br>')}</p>
+          </div>
+        </div>
+      `;
+      index++;
+    });
+    container.innerHTML = html;
+  } catch (error) {
+    console.error("경력 데이터 로드 에러:", error);
+    if(loadingText) loadingText.innerText = "데이터를 불러오는 데 실패했습니다.";
+  }
+}
+
 // --- 기타 네비게이션 ---
 window.toggleDrop = (id) => { document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('show'); }); document.getElementById(id).classList.toggle('show'); };
 window.openLoginModal = () => document.getElementById('login-modal').style.display='flex';
@@ -1196,7 +1233,7 @@ window.scrollTo(0,0);
 
 window.addEventListener('DOMContentLoaded', () => {
 loadSlider().then(() => {
-loadMembers(); loadActivities(); loadGallery(); loadSponsors();
+loadMembers(); loadActivities(); loadGallery(); loadSponsors(); loadCareers(); // <-- 경력 데이터 로드 추가
 getDoc(doc(db, "settings", "page_content")).then(s => { 
 if(s.exists()){ 
 let d = s.data(); 
