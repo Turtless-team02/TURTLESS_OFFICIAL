@@ -171,9 +171,7 @@ body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important;
 .lang-selector-container { margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 10px; }
 .lang-select { padding: 8px 15px; border-radius: 30px; background: #333; color: white; border: 1px solid #555; outline: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: bold; }
 
-/* =========================================
-   📱 모바일 UI 최적화 패치 (여백, 팝업, 멤버 카드 크기)
-   ========================================= */
+/* 모바일 UI 최적화 */
 html, body { overflow-x: hidden; max-width: 100vw; }
 .modal-overlay { width: 100vw !important; height: 100vh !important; top: 0 !important; left: 0 !important; }
 @media (max-width: 768px) {
@@ -184,9 +182,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
     .member-card:hover { transform: translateY(-2px); }
 }
 
-/* =========================================
-   💼 경력 사항 지그재그 레이아웃 CSS 추가
-   ========================================= */
+/* 경력 사항 지그재그 레이아웃 CSS */
 .career-container { max-width: 1000px; margin: 0 auto; min-height: 200px; }
 .career-item { display: flex; align-items: center; background: #ffffff; margin-bottom: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden; transition: transform 0.3s; }
 .career-item:hover { transform: translateY(-3px); border-color: var(--dan-red); }
@@ -330,6 +326,21 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 </div>
 </div>
 
+<div id="career-admin-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;" onclick="closeCareerAdminModal()">×</button>
+        <h2 style="margin-bottom:15px; font-weight:900;">경력 사항 관리</h2>
+        <div id="career-admin-list" style="margin-bottom:20px; max-height:250px; overflow-y:auto;"></div>
+        <hr style="margin:15px 0;">
+        <h4>새 경력 추가</h4>
+        <input type="text" id="c-new-title" placeholder="경력 제목 (예: 2025 서울 로봇 대회 대상)">
+        <textarea id="c-new-desc" rows="3" placeholder="경력 상세 내용"></textarea>
+        <label style="font-size:12px;">관련 사진 (파일 업로드)</label>
+        <input type="file" id="c-new-img" accept="image/*">
+        <button class="action-btn" onclick="addCareer()">경력 추가하기</button>
+    </div>
+</div>
+
 <div id="page-home">
 <section class="hero-slider" id="hero-slider">
 <div id="slider-content"></div>
@@ -420,6 +431,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 <div style="display:flex; gap:10px; flex-wrap:wrap;">
 <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">메인 슬라이더 편집</button>
 <button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
+<button onclick="openCareerAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">💼 경력 사항 관리</button>
 <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
 </div>
 </div>
@@ -539,7 +551,7 @@ let isEditMode = false; let cachedGallery = [];
 let sliderData = []; let sponsorData = []; let allMembers = [];
 let savedEditorRange = null;
 
-// --- 번역 제어 (글로벌 윈도우 함수) ---
+// --- 번역 제어 ---
 window.changeLanguage = function(val) {
 var gtCombo = document.querySelector('.goog-te-combo');
 if (gtCombo == null) {
@@ -592,7 +604,7 @@ alert("이미지 삽입 완료! 사진 우측 하단 모서리를 마우스로 �
 } catch(e) { alert("업로드 에러: " + e.message); }
 };
 
-// --- 팀원 기능 (팀장 전용 순서 및 컬러 #AE1932 지정) ---
+// --- 팀원 기능 ---
 async function loadMembers() {
 const list = document.getElementById('member-list');
 if(!list) return;
@@ -614,8 +626,6 @@ let leaderHtml = '';
 let memberHtml = '';
 
 const mentorNames = ["김정한", "천강숙", "김도윤"];
-
-// 팀장 스펙 및 노출 순서 하드코딩 배열
 const leaderSpecs = [
     { name: "정지우", school: "용산철도고", grade: "2학년", title: "팀 리더" },
     { name: "송주원", school: "용산철도고", grade: "2학년", title: "빌드 팀장" },
@@ -624,15 +634,12 @@ const leaderSpecs = [
     { name: "김윤상", school: "선린인터넷고", grade: "1학년", title: "전략 팀장" }
 ];
 
-// 1. 지정된 조건에 맞춰 팀장 섹션을 명시된 순서대로 렌더링
 leaderSpecs.forEach(spec => {
     const found = allMembers.find(m => m.name === spec.name && m.school === spec.school && m.grade === spec.grade);
     if (found) {
         const imgDefault = found.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Default";
         const imgHover = found.profileHoverImage || "https://dummyimage.com/400x400/ffffff/000000&text=Hover";
         const newBadge = found.isNew ? '<span class="member-badge-new">NEW</span>' : '';
-        
-        // 뱃지 배경색을 요청된 메인 컬러인 #AE1932로 주입
         const roleBadge = `<span style="position:absolute; top:10px; left:10px; background:#AE1932; color:#ffffff; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">${spec.title}</span>`;
 
         leaderHtml += `<div class="member-card" onclick="window.openMemberModal('${found.id}')">
@@ -647,7 +654,6 @@ leaderSpecs.forEach(spec => {
     }
 });
 
-// 2. 멘토 및 나머지 일반 팀원 순회 분류 (중복 노출 스킵)
 allMembers.forEach(m => {
     const isLeader = leaderSpecs.some(spec => m.name === spec.name && m.school === spec.school && m.grade === spec.grade);
     if (isLeader) return; 
@@ -675,7 +681,6 @@ allMembers.forEach(m => {
     else { memberHtml += cardHtml; }
 });
 
-// 3. 레이아웃에 맞춰 순서대로 렌더링
 list.innerHTML = `
                    <h3 style="margin-bottom:15px; color:var(--text-main); font-weight:900; border-left:4px solid #007bff; padding-left:10px;">Mentors (멘토)</h3>
                    <div class="member-grid" style="margin-top:0; margin-bottom:40px;">
@@ -695,7 +700,10 @@ list.innerHTML = `
 } catch(e){}
 }
 
+window.editingMemberId = null; 
+
 window.openMemberModal = (id) => {
+window.editingMemberId = id; 
 const m = allMembers.find(x => x.id === id);
 if(!m) return;
 
@@ -716,7 +724,7 @@ let html = `
 document.getElementById('member-detail-view').innerHTML = html;
 
 const editSection = document.getElementById('member-detail-edit');
-if(currentUserId === id) {
+if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
 editSection.style.display = 'block';
 document.getElementById('edit-bio').value = m.bio || '';
 document.getElementById('edit-contact').value = m.contact || '';
@@ -729,13 +737,18 @@ document.getElementById('member-detail-modal').style.display = 'flex';
 window.closeMemberModal = () => document.getElementById('member-detail-modal').style.display = 'none';
 
 window.saveMemberDetails = async () => {
-if(!currentUserId) return;
+const targetId = window.editingMemberId || currentUserId;
+if(!targetId) return;
+
 const bio = document.getElementById('edit-bio').value;
 const contact = document.getElementById('edit-contact').value;
 const isNew = document.getElementById('edit-isnew').checked;
+
 try {
-await updateDoc(doc(db, "users", currentUserId), { bio, contact, isNew });
-alert("정보가 저장되었습니다!"); loadMembers(); closeMemberModal();
+await updateDoc(doc(db, "users", targetId), { bio, contact, isNew });
+alert("정보가 저장되었습니다!"); 
+loadMembers(); 
+window.closeMemberModal();
 } catch(e) { alert("저장 실패: " + e.message); }
 };
 
@@ -836,7 +849,6 @@ const categorySelect = document.getElementById('new-gal-category').value;
 const dateInput = document.getElementById('new-gal-date').value;
 
 if(!fileInput.files || !fileInput.files[0]) return;
-
 const selectedTimestamp = dateInput ? new Date(dateInput).getTime() : Date.now();
 
 try {
@@ -861,7 +873,6 @@ async function loadGallery() {
 try {
 const snap = await getDocs(collection(db, "gallery"));
 cachedGallery = []; snap.forEach(d => cachedGallery.push({ id: d.id, ...d.data() }));
-
 cachedGallery.sort((a,b) => (b.selectedDate || b.createdAt || 0) - (a.selectedDate || a.createdAt || 0));
 
 const homeGrid = document.getElementById('home-gallery-4grid');
@@ -909,20 +920,14 @@ window.deleteGallery = async (id) => { if(confirm("삭제하시겠습니까?")) 
 window.updateGalleryDate = async (id, currentTimestamp) => {
 const currentStr = currentTimestamp ? new Date(currentTimestamp).toISOString().split('T')[0] : '';
 const newDate = prompt("수정할 날짜를 입력하세요 (형식: YYYY-MM-DD)", currentStr);
-
 if (newDate) {
 const selectedTimestamp = new Date(newDate).getTime();
-if (isNaN(selectedTimestamp)) {
-alert("올바른 날짜 형식이 아닙니다. (예: 2026-07-01)");
-return;
-}
+if (isNaN(selectedTimestamp)) { alert("올바른 날짜 형식이 아닙니다. (예: 2026-07-01)"); return; }
 try {
 await updateDoc(doc(db, "gallery", id), { selectedDate: selectedTimestamp });
 alert("사진 날짜가 성공적으로 수정되었습니다!");
 loadGallery(); 
-} catch(e) {
-alert("날짜 수정 실패: " + e.message);
-}
+} catch(e) { alert("날짜 수정 실패: " + e.message); }
 }
 };
 
@@ -949,7 +954,7 @@ ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"
 }).catch(()=>{});
 }
 
-// --- 로그인/로그아웃 및 기타 권한 ---
+// --- 로그인/로그아웃 ---
 window.firebaseLogin = async () => {
 const s = document.getElementById('school').value; const g = document.getElementById('grade').value;
 const n = document.getElementById('username').value.trim(); const p = document.getElementById('password').value.trim();
@@ -964,7 +969,6 @@ if(currentUserData?.role === 'admin') document.getElementById('admin-panel').sty
 const loginBtn = document.getElementById('main-login-btn');
 loginBtn.innerText = '로그아웃';
 loginBtn.onclick = window.firebaseLogout;
-
 document.getElementById('new-gal-date').valueAsDate = new Date();
 
 loadActivities(); loadGallery(); loadMembers();
@@ -982,7 +986,6 @@ loginBtn.innerText = '팀원 로그인';
 loginBtn.onclick = openLoginModal;
 
 if(isEditMode) window.toggleEditMode();
-
 alert("로그아웃 되었습니다.");
 loadActivities(); loadGallery(); loadMembers();
 }
@@ -1046,15 +1049,36 @@ if(isMainSliderPaused) clearInterval(slideInt); else startS();
 };
 function startS() { if(slideInt) clearInterval(slideInt); slideInt = setInterval(() => { if(!isMainSliderPaused) window.nextS(); }, 5000); }
 
+window.uploadSliderImg = async (input, idx) => {
+if(!input.files || !input.files[0]) return;
+try {
+alert("배경 이미지를 업로드하는 중입니다...");
+const formData = new FormData(); formData.append("key", IMGBB_API_KEY); formData.append("image", input.files[0]);
+const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+const data = await response.json();
+if(data.success) {
+const targetInput = document.getElementById(`s-img-${idx}`);
+if(targetInput) { targetInput.value = data.data.url; alert("배경 사진 업로드 완료! 아래 '변경사항 최종 저장' 버튼을 눌러주세요."); } 
+} else { alert("업로드 실패: " + data.error.message); }
+} catch(e){ alert("업로드 에러: " + e.message); }
+};
+
 window.openSliderEditModal = () => {
 let h = ''; 
 for(let i=0; i<5; i++) {
 const s = sliderData[i] || {title:"", sub:"", img:"#111111"};
 h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
                    <strong>📍 슬라이드 ${i+1}</strong>
-                   <input id="s-img-${i}" value="${s.img}" placeholder="배경(색상코드 또는 이미지주소)" style="width:100%; padding:5px; margin:5px 0;">
-                   <input id="s-t-${i}" value="${s.title}" placeholder="대제목" style="width:100%; padding:5px; margin-bottom:5px;">
-                   <input id="s-s-${i}" value="${s.sub}" placeholder="소제목" style="width:100%; padding:5px;">
+                   <div style="margin: 8px 0;">
+                       <label style="font-size:11px; color:#555; display:block; margin-bottom:4px;">배경 (헥사코드 #000000 혹은 이미지 링크 주소 입력)</label>
+                       <div style="display:flex; gap:10px;">
+                           <input id="s-img-${i}" value="${s.img}" placeholder="예: #AE1932 또는 https://주소" style="width:100%; padding:5px; background:white;">
+                           <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 업로드</button>
+                           <input type="file" id="s-file-${i}" style="display:none" accept="image/*" onchange="window.uploadSliderImg(this, ${i})">
+                       </div>
+                   </div>
+                   <input id="s-t-${i}" value="${s.title}" placeholder="메인 대제목" style="width:100%; padding:5px; margin-bottom:5px; background:white;">
+                   <input id="s-s-${i}" value="${s.sub}" placeholder="서브 소제목" style="width:100%; padding:5px; background:white;">
                </div>`; 
 }
 document.getElementById('slider-inputs-container').innerHTML = h;
@@ -1087,15 +1111,13 @@ if(pageSp) pageSp.innerHTML = html;
 if(sponsorData.length > 0) {
 document.querySelectorAll('.sp-slide').forEach(el => el.classList.remove('active'));
 document.querySelectorAll('.sp-nav .slider-dot').forEach(el => el.classList.remove('active'));
-showSp(0);
-startSp();
+showSp(0); startSp();
 }
 }
 
 function buildSpHtml() {
 let slides = ''; 
 let dots = `<button class="slider-control-btn" onclick="prevSp()"><i class="fa-solid fa-chevron-left"></i></button>`;
-
 sponsorData.forEach((sp, i) => {
 const logo = sp.logo || 'https://dummyimage.com/300x200/fff/000&text=LOGO';
 slides += `
@@ -1159,63 +1181,139 @@ const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST',
 const data = await response.json();
 if(data.success) { logoUrl = data.data.url; } else { return alert("업로드 실패"); }
 }
-
 sponsorData.push({ name, desc, logo: logoUrl });
 await setDoc(doc(db, "settings", "sponsors"), { list: sponsorData });
 alert("후원사 추가 완료!");
 document.getElementById('sp-new-name').value=''; document.getElementById('sp-new-desc').value=''; fileInput.value='';
-renderSponsorSliders();
-openSponsorAdminModal(); 
+renderSponsorSliders(); openSponsorAdminModal(); 
 };
-
 window.deleteSponsor = async (index) => {
 if(!confirm("삭제하시겠습니까?")) return;
 sponsorData.splice(index, 1);
 await setDoc(doc(db, "settings", "sponsors"), { list: sponsorData });
-renderSponsorSliders();
-openSponsorAdminModal();
+renderSponsorSliders(); openSponsorAdminModal();
 };
 
 // ==========================================
-// 💼 지그재그 경력 사항 로드 함수 추가
+// 💼 경력 관리 데이터베이스 연동 함수들
 // ==========================================
-async function loadCareers() {
-  const container = document.getElementById("career-container");
-  const loadingText = document.getElementById("career-loading");
-  if (!container) return;
-  
-  try {
-    const querySnapshot = await getDocs(collection(db, "careers"));
-    let index = 0;
+window.cachedCareers = [];
+
+window.openCareerAdminModal = async () => {
+    document.getElementById('career-admin-modal').style.display = 'flex';
+    window.renderCareerAdminList();
+};
+window.closeCareerAdminModal = () => document.getElementById('career-admin-modal').style.display = 'none';
+
+window.renderCareerAdminList = () => {
+    let html = '';
+    window.cachedCareers.forEach((c) => {
+        html += `<div style="background:#f9f9f9; padding:10px; border:1px solid #ddd; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-size:14px; font-weight:bold;">${c.title}</div>
+                    <button class="dash-btn-sm" style="background:#dc3545;" onclick="deleteCareer('${c.id}')">삭제</button>
+                 </div>`;
+    });
+    document.getElementById('career-admin-list').innerHTML = html || '<p style="font-size:12px; color:#777;">등록된 경력이 없습니다.</p>';
+};
+
+window.loadCareers = async () => {
+    const container = document.getElementById("career-container");
+    const loadingText = document.getElementById("career-loading");
+    if (!container) return;
     
-    if (querySnapshot.empty) {
-       container.innerHTML = '<div style="text-align:center; padding:40px; color:#777;">등록된 경력 사항이 없습니다.</div>';
-       return;
+    try {
+        const querySnapshot = await getDocs(collection(db, "careers"));
+        window.cachedCareers = [];
+        let index = 0;
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:#777;">등록된 경력 사항이 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+        querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            window.cachedCareers.push({ id: docSnap.id, ...data });
+            
+            const layoutClass = index % 2 === 0 ? "row-normal" : "row-reverse";
+            const imgUrl = data.imageUrl || "https://dummyimage.com/600x400/f0f0f0/999999&text=No+Image";
+            
+            html += `
+                <div class="career-item ${layoutClass}">
+                    <img src="${imgUrl}" alt="경력 사진">
+                    <div class="career-info">
+                        <h3>${data.title || '제목 없음'}</h3>
+                        <p>${(data.desc || '').replace(/\n/g, '<br>')}</p>
+                    </div>
+                </div>
+            `;
+            index++;
+        });
+        
+        // 시간순이나 기타 정렬이 필요하면 여기서 cachedCareers.sort() 후 다시 html 생성
+        container.innerHTML = html;
+        
+        // 만약 모달이 열려있다면 리스트도 새로고침
+        if (document.getElementById('career-admin-modal').style.display === 'flex') {
+            window.renderCareerAdminList();
+        }
+    } catch (error) {
+        console.error(error);
+        if(loadingText) loadingText.innerText = "데이터를 불러오는 데 실패했습니다.";
+    }
+};
+
+window.addCareer = async () => {
+    const title = document.getElementById('c-new-title').value.trim();
+    const desc = document.getElementById('c-new-desc').value.trim();
+    const fileInput = document.getElementById('c-new-img');
+    
+    if(!title || !desc) return alert("제목과 내용을 모두 입력하세요.");
+
+    let imageUrl = '';
+    if(fileInput.files && fileInput.files[0]) {
+        alert("사진 업로드 중...");
+        const formData = new FormData(); 
+        formData.append("key", IMGBB_API_KEY); 
+        formData.append("image", fileInput.files[0]);
+        
+        const response = await fetch("https://api.imgbb.com/1/upload", { method: 'POST', body: formData });
+        const data = await response.json();
+        if(data.success) { 
+            imageUrl = data.data.url; 
+        } else { 
+            return alert("업로드 실패: " + data.error.message); 
+        }
     }
 
-    let html = '';
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const layoutClass = index % 2 === 0 ? "row-normal" : "row-reverse";
-      const imgUrl = data.imageUrl || "https://dummyimage.com/600x400/f0f0f0/999999&text=No+Image";
-      
-      html += `
-        <div class="career-item ${layoutClass}">
-          <img src="${imgUrl}" alt="경력 사진">
-          <div class="career-info">
-            <h3>${data.title || '제목 없음'}</h3>
-            <p>${(data.desc || '').replace(/\n/g, '<br>')}</p>
-          </div>
-        </div>
-      `;
-      index++;
-    });
-    container.innerHTML = html;
-  } catch (error) {
-    console.error("경력 데이터 로드 에러:", error);
-    if(loadingText) loadingText.innerText = "데이터를 불러오는 데 실패했습니다.";
-  }
-}
+    try {
+        await addDoc(collection(db, "careers"), { 
+            title, 
+            desc, 
+            imageUrl, 
+            createdAt: Date.now() 
+        });
+        alert("경력 추가 완료!");
+        document.getElementById('c-new-title').value = ''; 
+        document.getElementById('c-new-desc').value = ''; 
+        fileInput.value = '';
+        window.loadCareers();
+    } catch(e) {
+        alert("추가 중 오류 발생: " + e.message);
+    }
+};
+
+window.deleteCareer = async (id) => {
+    if(!confirm("이 경력을 정말 삭제하시겠습니까?")) return;
+    try {
+        await deleteDoc(doc(db, "careers", id));
+        alert("삭제되었습니다.");
+        window.loadCareers();
+    } catch(e) {
+        alert("삭제 실패: " + e.message);
+    }
+};
 
 // --- 기타 네비게이션 ---
 window.toggleDrop = (id) => { document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('show'); }); document.getElementById(id).classList.toggle('show'); };
@@ -1233,7 +1331,7 @@ window.scrollTo(0,0);
 
 window.addEventListener('DOMContentLoaded', () => {
 loadSlider().then(() => {
-loadMembers(); loadActivities(); loadGallery(); loadSponsors(); loadCareers(); // <-- 경력 데이터 로드 추가
+loadMembers(); loadActivities(); loadGallery(); loadSponsors(); window.loadCareers(); 
 getDoc(doc(db, "settings", "page_content")).then(s => { 
 if(s.exists()){ 
 let d = s.data(); 
@@ -1242,122 +1340,6 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
 });
 });
 });
-
-// ==========================================
-// [팀원 정보 수정 기능 덮어쓰기 (Overriding)]
-// ==========================================
-
-window.editingMemberId = null; 
-
-window.openMemberModal = (id) => {
-window.editingMemberId = id; 
-const m = allMembers.find(x => x.id === id);
-if(!m) return;
-
-const img = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Profile";
-const bio = m.bio || "아직 등록된 소개가 없습니다.";
-const contact = m.contact || "없음";
-
-let html = `
-               <div style="text-align:center; margin-bottom:20px;">
-                   <img src="${img}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:15px; border:3px solid var(--border-color);">
-                   <h2 style="font-weight:900;">${m.name} <span style="font-size:14px; color:var(--text-sub);">${m.school} ${m.grade}</span></h2>
-               </div>
-               <div style="background:var(--bg-gray); padding:15px; border-radius:10px; font-size:14px; line-height:1.6;">
-                   <p style="margin-bottom:10px;"><strong>소개글:</strong><br>${bio.replace(/\n/g, '<br>')}</p>
-                   <p><strong>연락처/SNS:</strong><br>${contact}</p>
-               </div>
-           `;
-document.getElementById('member-detail-view').innerHTML = html;
-
-const editSection = document.getElementById('member-detail-edit');
-
-if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
-editSection.style.display = 'block';
-document.getElementById('edit-bio').value = m.bio || '';
-document.getElementById('edit-contact').value = m.contact || '';
-document.getElementById('edit-isnew').checked = !!m.isNew;
-} else { 
-editSection.style.display = 'none'; 
-}
-
-document.getElementById('member-detail-modal').style.display = 'flex';
-};
-
-window.saveMemberDetails = async () => {
-const targetId = window.editingMemberId || currentUserId;
-if(!targetId) return;
-
-const bio = document.getElementById('edit-bio').value;
-const contact = document.getElementById('edit-contact').value;
-const isNew = document.getElementById('edit-isnew').checked;
-
-try {
-await updateDoc(doc(db, "users", targetId), { bio, contact, isNew });
-alert("정보가 저장되었습니다!"); 
-loadMembers(); 
-window.closeMemberModal();
-} catch(e) { 
-alert("저장 실패: " + e.message); 
-}
-};
-
-// ==========================================
-// [메인 슬라이더 이미지 업로드 기능 복구 (Overriding)]
-// ==========================================
-
-window.uploadSliderImg = async (input, idx) => {
-if(!input.files || !input.files[0]) return;
-try {
-alert("배경 이미지를 업로드하는 중입니다...");
-const formData = new FormData();
-formData.append("key", IMGBB_API_KEY);
-formData.append("image", input.files[0]);
-
-const response = await fetch("https://api.imgbb.com/1/upload", {
-method: 'POST',
-body: formData
-});
-const data = await response.json();
-
-if(data.success) {
-const targetInput = document.getElementById(`s-img-${idx}`);
-if(targetInput) {
-targetInput.value = data.data.url;
-alert("배경 사진 업로드 완료! 아래 '변경사항 최종 저장' 버튼을 눌러주세요.");
-} else {
-alert("입력창을 찾을 수 없습니다.");
-}
-} else {
-alert("업로드 실패: " + data.error.message);
-}
-} catch(e){ 
-alert("업로드 에러: " + e.message); 
-}
-};
-
-window.openSliderEditModal = () => {
-let h = ''; 
-for(let i=0; i<5; i++) {
-const s = sliderData[i] || {title:"", sub:"", img:"#111111"};
-h += `<div style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:10px;">
-                   <strong>📍 슬라이드 ${i+1}</strong>
-                   <div style="margin: 8px 0;">
-                       <label style="font-size:11px; color:#555; display:block; margin-bottom:4px;">배경 (헥사코드 #000000 혹은 이미지 링크 주소 입력)</label>
-                       <div style="display:flex; gap:10px;">
-                           <input id="s-img-${i}" value="${s.img}" placeholder="예: #AE1932 또는 https://주소" style="width:100%; padding:5px; background:white;">
-                           <button class="dash-btn-sm" onclick="document.getElementById('s-file-${i}').click()">파일 업로드</button>
-                           <input type="file" id="s-file-${i}" style="display:none" accept="image/*" onchange="window.uploadSliderImg(this, ${i})">
-                       </div>
-                   </div>
-                   <input id="s-t-${i}" value="${s.title}" placeholder="메인 대제목" style="width:100%; padding:5px; margin-bottom:5px; background:white;">
-                   <input id="s-s-${i}" value="${s.sub}" placeholder="서브 소제목" style="width:100%; padding:5px; background:white;">
-               </div>`; 
-}
-document.getElementById('slider-inputs-container').innerHTML = h;
-document.getElementById('slider-edit-modal').style.display = 'flex';
-};
-
 </script>
 </body>
 </html>
