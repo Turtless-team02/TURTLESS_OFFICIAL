@@ -182,21 +182,46 @@ html, body { overflow-x: hidden; max-width: 100vw; }
     .member-card:hover { transform: translateY(-2px); }
 }
 
-/* 경력 사항 지그재그 레이아웃 CSS */
-.career-container { max-width: 1000px; margin: 0 auto; min-height: 200px; }
-.career-item { display: flex; align-items: center; background: #ffffff; margin-bottom: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden; transition: transform 0.3s; }
-.career-item:hover { transform: translateY(-3px); border-color: var(--dan-red); }
-.career-item img { width: 50%; height: 350px; object-fit: cover; }
-.career-info { width: 50%; padding: 50px; box-sizing: border-box; }
-.career-info h3 { margin-top: 0; color: var(--text-main); font-size: 1.5rem; font-weight: 900; margin-bottom: 15px; }
-.career-info p { color: var(--text-sub); line-height: 1.7; word-break: keep-all; margin: 0; }
-.row-normal { flex-direction: row; }
-.row-reverse { flex-direction: row-reverse; }
+/* =========================================
+   💼 [수정] 진짜 타임라인 스타일 시트
+   ========================================= */
+.career-container { max-width: 1000px; margin: 40px auto; position: relative; padding: 20px 0; }
+/* 타임라인 중앙 세로축 선 */
+.career-container::before { content: ''; position: absolute; width: 4px; background-color: var(--border-color); top: 0; bottom: 0; left: 50%; transform: translateX(-50%); }
+
+.career-item { position: relative; width: 50%; padding: 10px 40px; box-sizing: border-box; margin-bottom: 30px; }
+/* 중앙 노드 점 */
+.career-item::after { content: ''; position: absolute; width: 16px; height: 16px; background-color: white; border: 4px solid var(--dan-red); border-radius: 50%; top: 30px; z-index: 10; transition: 0.3s; }
+
+/* 좌측 배치 아이템 */
+.row-normal { left: 0; text-align: right; }
+.row-normal::after { right: -10px; }
+.row-normal .career-card-box { display: flex; flex-direction: column; align-items: flex-end; }
+
+/* 우측 배치 아이템 */
+.row-reverse { left: 50%; text-align: left; }
+.row-reverse::after { left: -10px; }
+.row-reverse .career-card-box { display: flex; flex-direction: column; align-items: flex-start; }
+
+/* 타임라인 카드 본체 디자인 */
+.career-card-box { background: white; border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); width: 100%; overflow: hidden; transition: all 0.3s ease; }
+.career-item:hover .career-card-box { transform: translateY(-3px); border-color: var(--dan-red); box-shadow: 0 8px 25px rgba(174,25,50,0.1); }
+.career-item:hover::after { background-color: var(--dan-red); scale: 1.2; }
+
+.career-card-box img { width: 100%; height: 220px; object-fit: cover; border-bottom: 1px solid var(--border-color); }
+.career-info { padding: 25px; text-align: left; width: 100%; }
+.career-info h3 { font-size: 1.25rem; font-weight: 900; color: var(--text-main); margin-bottom: 10px; }
+.career-info p { font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; }
+
 .career-loading { text-align: center; color: var(--text-sub); padding: 50px 0; font-weight: bold; }
+
+/* 타임라인 모바일 해상도 반응형 제어 */
 @media (max-width: 768px) {
-    .career-item, .row-normal, .row-reverse { flex-direction: column; }
-    .career-item img, .career-info { width: 100%; height: auto; min-height: 200px; }
-    .career-info { padding: 30px; }
+    .career-container::before { left: 30px; }
+    .career-item { width: 100%; padding-left: 60px; padding-right: 15px; text-align: left !important; }
+    .career-item::after { left: 22px !important; }
+    .row-reverse { left: 0; }
+    .career-card-box { align-items: flex-start !important; }
 }
 </style>
 </head>
@@ -1195,7 +1220,7 @@ renderSponsorSliders(); openSponsorAdminModal();
 };
 
 // ==========================================
-// 💼 경력 관리 데이터베이스 연동 함수들
+// 💼 [수정] 경력 관리 및 최신순 정렬 기능
 // ==========================================
 window.cachedCareers = [];
 
@@ -1224,37 +1249,40 @@ window.loadCareers = async () => {
     try {
         const querySnapshot = await getDocs(collection(db, "careers"));
         window.cachedCareers = [];
-        let index = 0;
         
         if (querySnapshot.empty) {
             container.innerHTML = '<div style="text-align:center; padding:40px; color:#777;">등록된 경력 사항이 없습니다.</div>';
             return;
         }
 
-        let html = '';
         querySnapshot.forEach((docSnap) => {
             const data = docSnap.data();
             window.cachedCareers.push({ id: docSnap.id, ...data });
-            
+        });
+        
+        // ⭐ [핵심 추가] 등록 시간(createdAt)을 기준으로 내림차순(최신순) 정렬 진행
+        window.cachedCareers.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+        let html = '';
+        window.cachedCareers.forEach((c, index) => {
             const layoutClass = index % 2 === 0 ? "row-normal" : "row-reverse";
-            const imgUrl = data.imageUrl || "https://dummyimage.com/600x400/f0f0f0/999999&text=No+Image";
+            const imgUrl = c.imageUrl || "https://dummyimage.com/600x400/f0f0f0/999999&text=No+Image";
             
             html += `
                 <div class="career-item ${layoutClass}">
-                    <img src="${imgUrl}" alt="경력 사진">
-                    <div class="career-info">
-                        <h3>${data.title || '제목 없음'}</h3>
-                        <p>${(data.desc || '').replace(/\n/g, '<br>')}</p>
+                    <div class="career-card-box">
+                        <img src="${imgUrl}" alt="경력 사진">
+                        <div class="career-info">
+                            <h3>${c.title || '제목 없음'}</h3>
+                            <p>${(c.desc || '').replace(/\n/g, '<br>')}</p>
+                        </div>
                     </div>
                 </div>
             `;
-            index++;
         });
         
-        // 시간순이나 기타 정렬이 필요하면 여기서 cachedCareers.sort() 후 다시 html 생성
         container.innerHTML = html;
         
-        // 만약 모달이 열려있다면 리스트도 새로고침
         if (document.getElementById('career-admin-modal').style.display === 'flex') {
             window.renderCareerAdminList();
         }
