@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://turtless-team02.github.io/TURTLESS_OFFICIAL/sitemap.xml
