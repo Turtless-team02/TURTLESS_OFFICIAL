@@ -1525,6 +1525,7 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
 </script>
 <script>
   window.onload = function() {
+    console.log("실행됨"); // 이 줄을 넣고 F12 콘솔에 '실행됨'이 뜨는지 확인해 보세요!
     const images = document.querySelectorAll('img');
     images.forEach(img => {
       img.setAttribute('referrerpolicy', 'no-referrer');
