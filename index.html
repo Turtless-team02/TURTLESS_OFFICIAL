@@ -1523,5 +1523,13 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
 });
 
 </script>
+<script>
+  window.onload = function() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+      img.setAttribute('referrerpolicy', 'no-referrer');
+    });
+  };
+</script>
 </body>
 </html>
