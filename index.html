@@ -1588,7 +1588,99 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 1. 로고 7번 연속 클릭 이스터에그
+  // ==========================================
+  // 1. 스타일 동적 생성 (CSS 애니메이션 및 모달 디자인)
+  // ==========================================
+  const style = document.createElement('style');
+  style.innerHTML = `
+    /* 이스터에그 토스트 팝업 스타일 */
+    .turtle-toast {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(17, 17, 17, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(174, 25, 50, 0.5);
+      box-shadow: 0 10px 30px rgba(174, 25, 50, 0.3), 0 0 20px rgba(0, 0, 0, 0.5);
+      color: #ffffff;
+      padding: 16px 28px;
+      border-radius: 50px;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .turtle-toast.show {
+      top: 40px;
+      opacity: 1;
+    }
+    .turtle-toast-icon {
+      font-size: 22px;
+      animation: turtleBounce 1s infinite alternate;
+    }
+
+    /* 화면 글로우 오버레이 */
+    .party-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 99998;
+      box-shadow: inset 0 0 80px rgba(174, 25, 50, 0.6);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .party-overlay.active {
+      opacity: 1;
+      animation: pulseGlow 1.5s infinite alternate ease-in-out;
+    }
+
+    /* 키프레임 애니메이션 */
+    @keyframes turtleBounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-4px); }
+    }
+    @keyframes pulseGlow {
+      from { box-shadow: inset 0 0 50px rgba(174, 25, 50, 0.4); }
+      to { box-shadow: inset 0 0 100px rgba(220, 53, 69, 0.8); }
+    }
+    @keyframes floatTurtle {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 화면 테두리 글로우 엘리먼트 생성
+  const partyOverlay = document.createElement('div');
+  partyOverlay.className = 'party-overlay';
+  document.body.appendChild(partyOverlay);
+
+  // 커스텀 토스트 알림 함수
+  function showCustomToast(message, icon = '🐢') {
+    let toast = document.querySelector('.turtle-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'turtle-toast';
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<span class="turtle-toast-icon">${icon}</span> <span>${message}</span>`;
+    
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  // ==========================================
+  // 2. 로고 7번 연속 클릭 이스터에그 (개선버전)
+  // ==========================================
   let logoClicks = 0;
   let logoTimer = null;
   const logoEl = document.querySelector('.logo');
@@ -1599,63 +1691,84 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(logoTimer);
 
       if (logoClicks === 7) {
-        alert("🐢 TURTLE POWER ACTIVATED! 🚀\nTURTLESS 비밀 파티 모드가 시작됩니다!");
+        showCustomToast("TURTLE POWER ACTIVATED! 비밀 파티 모드 켜짐 🎉", "🚀");
 
-        document.body.style.transition = "filter 0.5s ease";
-        document.body.style.filter = "hue-rotate(180deg) invert(0.1)";
+        // 고급스러운 분위기의 파티 모드 애니메이션
+        partyOverlay.classList.add('active');
+        document.body.style.transition = "transform 0.3s ease";
+        document.body.style.transform = "scale(0.99)";
 
         setTimeout(() => {
-          document.body.style.filter = "none";
-        }, 3500);
+          partyOverlay.classList.remove('active');
+          document.body.style.transform = "scale(1)";
+        }, 4000);
 
         logoClicks = 0;
       }
 
-      logoTimer = setTimeout(() => {
-        logoClicks = 0;
-      }, 2000);
+      logoTimer = setTimeout(() => { logoClicks = 0; }, 2000);
     });
   }
 
-  // 2. 'turtle' 키보드 비밀 입력 이스터에그
+  // ==========================================
+  // 3. 'turtle' 키보드 비밀 입력 이스터에그 (개선버전)
+  // ==========================================
   let inputBuffer = '';
 
   window.addEventListener('keydown', (e) => {
-    inputBuffer += e.key.toLowerCase();
+    // 입력창(input, textarea) 작성 중일 때는 작동하지 않도록 예외 처리
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
-    if (inputBuffer.length > 6) {
-      inputBuffer = inputBuffer.slice(-6);
-    }
+    inputBuffer += e.key.toLowerCase();
+    if (inputBuffer.length > 6) inputBuffer = inputBuffer.slice(-6);
 
     if (inputBuffer === 'turtle') {
       inputBuffer = '';
+      showCustomToast("거북이 로봇이 지나갑니다!", "🤖");
 
+      // 스타일리시한 거북이 뱃지 생성
       const secretTurtle = document.createElement('div');
-      secretTurtle.innerText = '🐢🤖';
+      secretTurtle.innerHTML = `
+        <div style="
+          background: rgba(17, 17, 17, 0.9);
+          border: 1px solid var(--dan-red);
+          padding: 10px 18px;
+          border-radius: 30px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: white;
+          font-weight: 800;
+          font-size: 14px;
+        ">
+          <span style="font-size:24px;">🐢</span>
+          <span>TURTLESS BOT</span>
+        </div>
+      `;
+
       secretTurtle.style.cssText = `
         position: fixed;
-        bottom: 30px;
-        left: -100px;
-        font-size: 45px;
+        bottom: 40px;
+        left: -200px;
         z-index: 99999;
-        transition: transform 4s linear;
+        transition: transform 3.8s cubic-bezier(0.25, 1, 0.5, 1);
         pointer-events: none;
-        filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+        animation: floatTurtle 1.2s infinite ease-in-out;
       `;
       document.body.appendChild(secretTurtle);
 
       setTimeout(() => {
-        secretTurtle.style.transform = `translateX(${window.innerWidth + 200}px)`;
+        secretTurtle.style.transform = `translateX(${window.innerWidth + 400}px)`;
       }, 100);
 
       setTimeout(() => {
         secretTurtle.remove();
-      }, 4200);
+      }, 4000);
     }
   });
 
 });
 </script>
-
 </body>
 </html>
