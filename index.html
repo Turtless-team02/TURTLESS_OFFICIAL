@@ -1585,5 +1585,77 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
     });
   };
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 1. 로고 7번 연속 클릭 이스터에그
+  let logoClicks = 0;
+  let logoTimer = null;
+  const logoEl = document.querySelector('.logo');
+
+  if (logoEl) {
+    logoEl.addEventListener('click', () => {
+      logoClicks++;
+      clearTimeout(logoTimer);
+
+      if (logoClicks === 7) {
+        alert("🐢 TURTLE POWER ACTIVATED! 🚀\nTURTLESS 비밀 파티 모드가 시작됩니다!");
+
+        document.body.style.transition = "filter 0.5s ease";
+        document.body.style.filter = "hue-rotate(180deg) invert(0.1)";
+
+        setTimeout(() => {
+          document.body.style.filter = "none";
+        }, 3500);
+
+        logoClicks = 0;
+      }
+
+      logoTimer = setTimeout(() => {
+        logoClicks = 0;
+      }, 2000);
+    });
+  }
+
+  // 2. 'turtle' 키보드 비밀 입력 이스터에그
+  let inputBuffer = '';
+
+  window.addEventListener('keydown', (e) => {
+    inputBuffer += e.key.toLowerCase();
+
+    if (inputBuffer.length > 6) {
+      inputBuffer = inputBuffer.slice(-6);
+    }
+
+    if (inputBuffer === 'turtle') {
+      inputBuffer = '';
+
+      const secretTurtle = document.createElement('div');
+      secretTurtle.innerText = '🐢🤖';
+      secretTurtle.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        left: -100px;
+        font-size: 45px;
+        z-index: 99999;
+        transition: transform 4s linear;
+        pointer-events: none;
+        filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+      `;
+      document.body.appendChild(secretTurtle);
+
+      setTimeout(() => {
+        secretTurtle.style.transform = `translateX(${window.innerWidth + 200}px)`;
+      }, 100);
+
+      setTimeout(() => {
+        secretTurtle.remove();
+      }, 4200);
+    }
+  });
+
+});
+</script>
+
 </body>
 </html>
