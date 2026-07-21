@@ -1589,98 +1589,134 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
 document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================
-  // 1. 스타일 동적 생성 (CSS 애니메이션 및 모달 디자인)
+  // 1. 솔리테어 스타일 거북이 쏟아지기 함수 (바닥 바운스)
   // ==========================================
-  const style = document.createElement('style');
-  style.innerHTML = `
-    /* 이스터에그 토스트 팝업 스타일 */
-    .turtle-toast {
-      position: fixed;
-      top: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(17, 17, 17, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(174, 25, 50, 0.5);
-      box-shadow: 0 10px 30px rgba(174, 25, 50, 0.3), 0 0 20px rgba(0, 0, 0, 0.5);
-      color: #ffffff;
-      padding: 16px 28px;
-      border-radius: 50px;
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      opacity: 0;
-      pointer-events: none;
-    }
-    .turtle-toast.show {
-      top: 40px;
-      opacity: 1;
-    }
-    .turtle-toast-icon {
-      font-size: 22px;
-      animation: turtleBounce 1s infinite alternate;
-    }
-
-    /* 화면 글로우 오버레이 */
-    .party-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: 99998;
-      box-shadow: inset 0 0 80px rgba(174, 25, 50, 0.6);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    .party-overlay.active {
-      opacity: 1;
-      animation: pulseGlow 1.5s infinite alternate ease-in-out;
-    }
-
-    /* 키프레임 애니메이션 */
-    @keyframes turtleBounce {
-      from { transform: translateY(0); }
-      to { transform: translateY(-4px); }
-    }
-    @keyframes pulseGlow {
-      from { box-shadow: inset 0 0 50px rgba(174, 25, 50, 0.4); }
-      to { box-shadow: inset 0 0 100px rgba(220, 53, 69, 0.8); }
-    }
-    @keyframes floatTurtle {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-15px) rotate(5deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
-  `;
-  document.head.appendChild(style);
-
-  // 화면 테두리 글로우 엘리먼트 생성
-  const partyOverlay = document.createElement('div');
-  partyOverlay.className = 'party-overlay';
-  document.body.appendChild(partyOverlay);
-
-  // 커스텀 토스트 알림 함수
-  function showCustomToast(message, icon = '🐢') {
-    let toast = document.querySelector('.turtle-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.className = 'turtle-toast';
-      document.body.appendChild(toast);
-    }
-    toast.innerHTML = `<span class="turtle-toast-icon">${icon}</span> <span>${message}</span>`;
+  function triggerSolitaireCascade() {
+    const turtleCount = 35; // 쏟아질 거북이 수
     
-    setTimeout(() => toast.classList.add('show'), 50);
-    setTimeout(() => toast.classList.remove('show'), 3500);
+    for (let i = 0; i < turtleCount; i++) {
+      setTimeout(() => {
+        createBouncingTurtle();
+      }, i * 80); // 약간의 시차를 두고 연속 생성
+    }
+  }
+
+  function createBouncingTurtle() {
+    const turtle = document.createElement('div');
+    turtle.innerText = '🐢';
+    
+    // 무작위 크기와 초기 위치 설정
+    const size = Math.floor(Math.random() * 20) + 35; // 35px ~ 55px
+    let posX = Math.random() * (window.innerWidth - 60);
+    let posY = -60;
+    
+    // 물리 속도 설정 (x축 이동, y축 중력 및 탄성)
+    let vx = (Math.random() - 0.5) * 14; 
+    let vy = Math.random() * 4 + 2;
+    const gravity = 0.7;
+    const bounce = -0.72; // 바닥 튕김 계수
+
+    turtle.style.cssText = `
+      position: fixed;
+      font-size: ${size}px;
+      left: ${posX}px;
+      top: ${posY}px;
+      z-index: 999999;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+    `;
+    document.body.appendChild(turtle);
+
+    function animate() {
+      vy += gravity;
+      posX += vx;
+      posY += vy;
+
+      // 화면 바닥 충돌 처리 (솔리테어 카드가 튕기는 효과)
+      if (posY >= window.innerHeight - size) {
+        posY = window.innerHeight - size;
+        vy *= bounce;
+        vx *= 0.96; // 마찰력
+      }
+
+      turtle.style.left = `${posX}px`;
+      turtle.style.top = `${posY}px`;
+
+      // 화면 밖으로 완전히 나가거나 튕김이 끝나면 제거
+      if (posX < -100 || posX > window.innerWidth + 100 || (Math.abs(vy) < 1 && posY >= window.innerHeight - size - 5)) {
+        turtle.style.transition = 'opacity 0.4s ease';
+        turtle.style.opacity = '0';
+        setTimeout(() => turtle.remove(), 400);
+      } else {
+        requestAnimationFrame(animate);
+      }
+    }
+    requestAnimationFrame(animate);
   }
 
   // ==========================================
-  // 2. 로고 7번 연속 클릭 이스터에그 (개선버전)
+  // 2. 화면 전체를 휘젓고 다니는 로봇 거북이 함수
   // ==========================================
+  function triggerWildRoamingTurtle() {
+    const turtle = document.createElement('div');
+    
+    // 이모지 대신 로봇/거북이 이미지를 넣고 싶다면 <img> 태그로 바꾸셔도 됩니다.
+    turtle.innerHTML = '🐢'; 
+    
+    turtle.style.cssText = `
+      position: fixed;
+      font-size: 65px;
+      z-index: 999999;
+      pointer-events: none;
+      user-select: none;
+      left: ${window.innerWidth / 2}px;
+      top: ${window.innerHeight / 2}px;
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+      transform: translate(-50%, -50%) scale(0);
+    `;
+    document.body.appendChild(turtle);
+
+    // 등장 줌인
+    setTimeout(() => {
+      turtle.style.transform = 'translate(-50%, -50%) scale(1)';
+    }, 50);
+
+    let moveCount = 0;
+    const maxMoves = 15; // 난동 부리는 횟수
+
+    const roamInterval = setInterval(() => {
+      moveCount++;
+
+      // 화면 내부 아무 좌표나 무작위 추출
+      const nextX = Math.random() * (window.innerWidth - 120) + 60;
+      const nextY = Math.random() * (window.innerHeight - 120) + 60;
+      const randomRotate = (Math.random() - 0.5) * 720; // 360도 이상 회전
+      const randomScale = Math.random() * 0.8 + 0.8; // 크기 조절 (0.8~1.6배)
+
+      turtle.style.left = `${nextX}px`;
+      turtle.style.top = `${nextY}px`;
+      turtle.style.transform = `translate(-50%, -50%) rotate(${randomRotate}deg) scale(${randomScale})`;
+
+      // 이동 종료 후 회오리치며 소멸
+      if (moveCount >= maxMoves) {
+        clearInterval(roamInterval);
+        setTimeout(() => {
+          turtle.style.transition = 'all 0.6s ease-in';
+          turtle.style.transform = `translate(-50%, -50%) rotate(${randomRotate + 1080}deg) scale(0)`;
+          turtle.style.opacity = '0';
+          setTimeout(() => turtle.remove(), 600);
+        }, 300);
+      }
+    }, 300); // 0.3초마다 사방으로 좌표 변경
+  }
+
+  // ==========================================
+  // 이벤트 리스너 바인딩
+  // ==========================================
+
+  // 1) 로고 7번 연속 클릭 시 -> 솔리테어 거북이 폭포
   let logoClicks = 0;
   let logoTimer = null;
   const logoEl = document.querySelector('.logo');
@@ -1691,18 +1727,7 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(logoTimer);
 
       if (logoClicks === 7) {
-        showCustomToast("TURTLE POWER ACTIVATED! 비밀 파티 모드 켜짐 🎉", "🚀");
-
-        // 고급스러운 분위기의 파티 모드 애니메이션
-        partyOverlay.classList.add('active');
-        document.body.style.transition = "transform 0.3s ease";
-        document.body.style.transform = "scale(0.99)";
-
-        setTimeout(() => {
-          partyOverlay.classList.remove('active');
-          document.body.style.transform = "scale(1)";
-        }, 4000);
-
+        triggerSolitaireCascade();
         logoClicks = 0;
       }
 
@@ -1710,13 +1735,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 3. 'turtle' 키보드 비밀 입력 이스터에그 (개선버전)
-  // ==========================================
+  // 2) 'turtle' 키보드 타이핑 시 -> 화면 난동 거북이
   let inputBuffer = '';
 
   window.addEventListener('keydown', (e) => {
-    // 입력창(input, textarea) 작성 중일 때는 작동하지 않도록 예외 처리
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
     inputBuffer += e.key.toLowerCase();
@@ -1724,47 +1746,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (inputBuffer === 'turtle') {
       inputBuffer = '';
-      showCustomToast("거북이 로봇이 지나갑니다!", "🤖");
-
-      // 스타일리시한 거북이 뱃지 생성
-      const secretTurtle = document.createElement('div');
-      secretTurtle.innerHTML = `
-        <div style="
-          background: rgba(17, 17, 17, 0.9);
-          border: 1px solid var(--dan-red);
-          padding: 10px 18px;
-          border-radius: 30px;
-          box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: white;
-          font-weight: 800;
-          font-size: 14px;
-        ">
-          <span style="font-size:24px;">🐢</span>
-          <span>TURTLESS BOT</span>
-        </div>
-      `;
-
-      secretTurtle.style.cssText = `
-        position: fixed;
-        bottom: 40px;
-        left: -200px;
-        z-index: 99999;
-        transition: transform 3.8s cubic-bezier(0.25, 1, 0.5, 1);
-        pointer-events: none;
-        animation: floatTurtle 1.2s infinite ease-in-out;
-      `;
-      document.body.appendChild(secretTurtle);
-
-      setTimeout(() => {
-        secretTurtle.style.transform = `translateX(${window.innerWidth + 400}px)`;
-      }, 100);
-
-      setTimeout(() => {
-        secretTurtle.remove();
-      }, 4000);
+      triggerWildRoamingTurtle();
     }
   });
 
