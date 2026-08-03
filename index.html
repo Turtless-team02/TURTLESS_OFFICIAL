@@ -698,7 +698,7 @@ snap.forEach(d => {
     const data = d.data();
 
   //[디버깅 코드 추가] 불러오는 모든 문서의 ID와 이름을 콘솔에 출력합니다.
-    console.log("DB에서 불러온 문서 ID:", d.id, " | 이름:", data.name);
+    //console.log("DB에서 불러온 문서 ID:", d.id, " | 이름:", data.name);(임시로 주석처리 나중에 다시 활성화 가능)
   
   //  [추가된 부분] 이름(name) 데이터가 아예 없는 빈 껍데기 문서는 건너뜁니다
     if (!data.name) return; 
