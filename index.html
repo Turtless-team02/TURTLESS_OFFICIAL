@@ -1592,23 +1592,6 @@ window.navigate = function(id, pushHistory = true) {
     // 기존 navigate 코드
 };
 
-
-// 추가
-const redirectPath = new URLSearchParams(window.location.search).get('redirect');
-
-if (redirectPath) {
-    const cleanPath = decodeURIComponent(redirectPath);
-
-    const base = '/TURTLESS_OFFICIAL/';
-    let pageId = cleanPath.replace(base, '');
-    pageId = pageId.replace(/^\/+|\/+$/g, '');
-
-    if (pageId && document.getElementById('page-' + pageId)) {
-        navigate(pageId, false);
-    }
-}
-
-
 // 기존 popstate
 window.addEventListener('popstate', () => {
     ...
