@@ -871,7 +871,29 @@ list.innerHTML = `
                `;
 } catch(e){}
 }
+function getShortSchoolName(school) {
+    if (!school) return '';
 
+    // 학교명 뒤의 불필요한 표현 제거
+    let name = school
+        .replace(/\s+/g, '')
+        .replace(/고등학교$/, '')
+        .replace(/고등$/, '')
+        .replace(/학교$/, '');
+
+    // 이미 2글자 이하라면 그대로 사용
+    if (name.length <= 2) {
+        return name + '고';
+    }
+
+    // 3글자 이상이면 첫 글자 + 핵심 단어의 첫 글자
+    // 예:
+    // 용산철도 → 용철
+    // 서울공업 → 서공
+    // 서울매그넷 → 서매
+    return name[0] + name[2] + '고';
+}
+  
 window.editingMemberId = null; 
 
 window.openMemberModal = (id) => {
@@ -893,7 +915,7 @@ let html = `
             <img src="${img}" alt="${m.name}">
             <h2>
                 ${m.name}
-                <span>${m.school} ${m.grade}</span>
+                <span>${getShortSchoolName(m.school)} ${m.grade}</span>
             </h2>
         </div>
 
