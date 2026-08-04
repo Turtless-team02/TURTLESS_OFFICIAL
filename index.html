@@ -1619,6 +1619,28 @@ document.querySelectorAll('.editable-content').forEach(el => { if(d[el.id]) el.i
 } 
 });
 });
+
+// 여기부터 추가
+const redirectPath = new URLSearchParams(window.location.search).get('redirect');
+
+if (redirectPath) {
+    const fullPath = decodeURIComponent(redirectPath);
+    const base = '/TURTLESS_OFFICIAL/';
+
+    let pageId = fullPath.replace(base, '');
+    pageId = pageId.replace(/^\/+|\/+$/g, '');
+
+    if (pageId && document.getElementById('page-' + pageId)) {
+        navigate(pageId, false);
+
+        history.replaceState(
+            { page: pageId },
+            '',
+            base + pageId
+        );
+    }
+}
+
 });
 
 </script>
