@@ -188,6 +188,79 @@
   .info-area .name { font-size: 1.1rem; font-weight: 900; }
   .member-badge-new { position: absolute; top: -12px; right: 10px; background: #28a745; color: white; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
+/* MEMBER DETAIL */
+.member-detail-header {
+    background: #AE1932;
+    color: white;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.member-detail-body {
+    padding: 25px;
+}
+
+.member-detail-profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.member-detail-profile img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid var(--border-color);
+}
+
+.member-detail-profile h2 {
+    margin: 0;
+    font-weight: 900;
+}
+
+.member-detail-profile h2 span {
+    font-size: 14px;
+    color: var(--text-sub);
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.member-detail-box {
+    background: var(--bg-gray);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.member-detail-box strong {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 800;
+}
+
+.member-detail-box p {
+    margin: 0;
+}
+    .member-detail-close {
+    position: absolute;
+    top: 7px;
+    right: 12px;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 10;
+}
+    
   #admin-panel, #member-actions { display: none; margin-top: 30px; padding: 25px; border-radius: 16px; border-left: 6px solid var(--dan-red); background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
   .editable-content { transition: 0.2s; border-radius: 4px; }
   body.edit-mode .editable-content { border: 2px dashed var(--dan-red) !important; background: rgba(174,25,50,0.05); cursor: text; padding: 3px; }
@@ -335,7 +408,7 @@
 
 <div id="login-modal" class="modal-overlay">
 <div class="modal-content">
-<button style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;" onclick="closeLoginModal()">×</button>
+<button class="member-detail-close" onclick="closeMemberModal()">×</button>
 <h2 style="text-align:center; margin-bottom:20px; font-weight:900;">팀원 인증</h2>
 <select id="school">
 <option value="경기기계공업고">경기기계공업고</option><option value="경복비즈니스고">경복비즈니스고</option>
@@ -804,15 +877,36 @@ const bio = m.bio || "아직 등록된 소개가 없습니다.";
 const contact = m.contact || "없음";
 
 let html = `
-               <div style="text-align:center; margin-bottom:20px;">
-                   <img src="${img}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:15px; border:3px solid var(--border-color);">
-                   <h2 style="font-weight:900;">${m.name} <span style="font-size:14px; color:var(--text-sub);">${m.school} ${m.grade}</span></h2>
-               </div>
-               <div style="background:var(--bg-gray); padding:15px; border-radius:10px; font-size:14px; line-height:1.6;">
-                   <p style="margin-bottom:10px;"><strong>소개글:</strong><br>${bio.replace(/\n/g, '<br>')}</p>
-                   <p><strong>연락처/SNS:</strong><br>${contact}</p>
-               </div>
-           `;
+    <div class="member-detail-header">
+        <span>${m.name}</span>
+    </div>
+
+    <div class="member-detail-body">
+        <div class="member-detail-profile">
+            <img src="${img}" alt="${m.name}">
+            <h2>
+                ${m.name}
+                <span>${m.school} ${m.grade}</span>
+            </h2>
+        </div>
+
+        <div class="member-detail-box">
+            <strong>학교 · 학년</strong>
+            <p>${m.school} ${m.grade}</p>
+        </div>
+
+        <div class="member-detail-box">
+            <strong>소개글</strong>
+            <p>${bio.replace(/\n/g, '<br>')}</p>
+        </div>
+
+        <div class="member-detail-box">
+            <strong>연락처/SNS</strong>
+            <p>${contact}</p>
+        </div>
+    </div>
+`;
+
 document.getElementById('member-detail-view').innerHTML = html;
 
 const editSection = document.getElementById('member-detail-edit');
