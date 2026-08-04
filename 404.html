@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>TURTLESS</title>
+</head>
+<body>
+
+<script>
+    // 현재 주소를 그대로 유지하면서 메인 페이지로 이동
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+
+    window.location.replace(
+        '/TURTLESS_OFFICIAL/' +
+        '?redirect=' +
+        encodeURIComponent(currentPath + currentSearch)
+    );
+</script>
+
+</body>
+</html>
