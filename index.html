@@ -1588,6 +1588,16 @@ window.navigate = function(id, pushHistory = true) {
 
     window.scrollTo(0, 0);
 };
+  window.addEventListener('popstate', () => {
+    let path = window.location.pathname;
+
+    path = path.replace('/TURTLESS_OFFICIAL', '');
+    path = path.replace(/^\/+|\/+$/g, '');
+
+    const id = path || 'home';
+
+    navigate(id, false);
+});
 
 window.addEventListener('DOMContentLoaded', () => {
 loadSlider().then(() => {
