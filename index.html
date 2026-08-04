@@ -1588,14 +1588,7 @@ window.navigate = function(id, pushHistory = true) {
 
     window.scrollTo(0, 0);
 };
-  window.navigate = function(id, pushHistory = true) {
-    // 기존 navigate 코드
-};
-
-// 기존 popstate
-window.addEventListener('popstate', () => {
-    ...
-});
+//여기부터 popstate
 window.addEventListener('popstate', () => {
     const base = '/TURTLESS_OFFICIAL/';
     let path = window.location.pathname;
