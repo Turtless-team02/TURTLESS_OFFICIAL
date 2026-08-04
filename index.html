@@ -1558,13 +1558,35 @@ window.toggleDrop = (id) => { document.querySelectorAll('.dropdown-content').for
 window.openLoginModal = () => document.getElementById('login-modal').style.display='flex';
 window.closeLoginModal = () => document.getElementById('login-modal').style.display='none';
 
-window.navigate = function(id) {
-document.getElementById('page-home').style.display = id === 'home' ? 'block' : 'none';
-document.querySelectorAll('.subpage').forEach(p => p.classList.remove('active'));
-if(id !== 'home') document.getElementById('page-'+id).classList.add('active');
-document.getElementById('nav-links').classList.remove('active');
-document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
-window.scrollTo(0,0);
+window.navigate = function(id, pushHistory = true) {
+    document.getElementById('page-home').style.display =
+        id === 'home' ? 'block' : 'none';
+
+    document.querySelectorAll('.subpage')
+        .forEach(p => p.classList.remove('active'));
+
+    if (id !== 'home') {
+        const page = document.getElementById('page-' + id);
+        if (page) {
+            page.classList.add('active');
+        }
+    }
+
+    // 주소 변경
+    if (pushHistory) {
+        const path = id === 'home'
+            ? '/TURTLESS_OFFICIAL/'
+            : '/TURTLESS_OFFICIAL/' + id;
+
+        history.pushState({ page: id }, '', path);
+    }
+
+    document.getElementById('nav-links').classList.remove('active');
+
+    document.querySelectorAll('.dropdown-content')
+        .forEach(d => d.classList.remove('show'));
+
+    window.scrollTo(0, 0);
 };
 
 window.addEventListener('DOMContentLoaded', () => {
