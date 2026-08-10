@@ -267,6 +267,12 @@
     padding: 0 !important;
     margin: 0 !important;
 }
+
+    .member-detail-modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
     
   #admin-panel, #member-actions { display: none; margin-top: 30px; padding: 25px; border-radius: 16px; border-left: 6px solid var(--dan-red); background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
   .editable-content { transition: 0.2s; border-radius: 4px; }
@@ -434,7 +440,7 @@
 </div>
 
 <div id="member-detail-modal" class="modal-overlay">
-<div class="modal-content">
+<div class="modal-content member-detail-modal-content">
 <button class="member-detail-close" onclick="closeMemberModal()">×</button>
 <div id="member-detail-view"></div>
 <div id="member-detail-edit" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
