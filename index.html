@@ -393,16 +393,45 @@ body.text-cursor {
 /* ================================
    텍스트 선택 커서 감지
    ================================ */
+<script>
+/* ================================
+   텍스트 선택 커서 감지
+   ================================ */
 
 (function () {
 
-    function isTextUnderCursor(x, y) {
+    const interactiveSelector = `
+        a,
+        button,
+        input,
+        select,
+        textarea,
+        [onclick],
+        [role="button"],
+        .feature-card,
+        .unified-card,
+        .member-card,
+        .notice-item,
+        .banner-card,
+        .slider-dot,
+        .slider-control-btn,
+        .filter-btn,
+        .logo,
+        .hamburger,
+        .clickable,
+        .home-photo-item,
+        .home-photo-item img
+    `;
+
+    function isRealSelectableText(x, y) {
+
         let range = null;
 
         if (document.caretRangeFromPoint) {
             range = document.caretRangeFromPoint(x, y);
         } 
         else if (document.caretPositionFromPoint) {
+
             const pos = document.caretPositionFromPoint(x, y);
 
             if (pos && pos.offsetNode) {
@@ -416,11 +445,46 @@ body.text-cursor {
 
         const node = range.startContainer;
 
-        return (
-            node &&
-            node.nodeType === Node.TEXT_NODE &&
-            node.textContent.trim().length > 0
-        );
+        /* 텍스트 노드가 아니면 I-beam 금지 */
+        if (!node || node.nodeType !== Node.TEXT_NODE) {
+            return false;
+        }
+
+        /* 빈 텍스트 노드 무시 */
+        if (!node.textContent || !node.textContent.trim()) {
+            return false;
+        }
+
+        const element = node.parentElement;
+
+        if (!element) return false;
+
+        /* 클릭 가능한 영역이면 I-beam 금지 */
+        if (element.closest(interactiveSelector)) {
+            return false;
+        }
+
+        /*
+         * 실제 CSS에서 텍스트 선택이 막혀 있는 영역이면 금지
+         * (거북이, 이미지, 장식 요소 등)
+         */
+        let current = element;
+
+        while (current && current !== document.body) {
+
+            const style = window.getComputedStyle(current);
+
+            if (
+                style.userSelect === 'none' ||
+                style.webkitUserSelect === 'none'
+            ) {
+                return false;
+            }
+
+            current = current.parentElement;
+        }
+
+        return true;
     }
 
 
@@ -428,38 +492,24 @@ body.text-cursor {
 
         const target = e.target;
 
-        /* 클릭 가능한 요소에서는 기존 커서 사용 */
+        /*
+         * 클릭 가능한 요소에서는 무조건
+         * 기존 레트로 커서를 유지
+         */
         if (
             target.closest &&
-            target.closest(`
-                a,
-                button,
-                input,
-                select,
-                textarea,
-                [onclick],
-                [role="button"],
-                .feature-card,
-                .unified-card,
-                .member-card,
-                .notice-item,
-                .banner-card,
-                .slider-dot,
-                .slider-control-btn,
-                .filter-btn,
-                .logo,
-                .hamburger,
-                .clickable,
-                .home-photo-item img
-            `)
+            target.closest(interactiveSelector)
         ) {
             document.body.classList.remove('text-cursor');
             return;
         }
 
 
-        /* 실제로 텍스트를 선택할 수 있는 곳 */
-        if (isTextUnderCursor(e.clientX, e.clientY)) {
+        /*
+         * 실제 선택 가능한 텍스트 위에서만
+         * 레트로 I-beam 커서 표시
+         */
+        if (isRealSelectableText(e.clientX, e.clientY)) {
             document.body.classList.add('text-cursor');
         } 
         else {
@@ -469,6 +519,8 @@ body.text-cursor {
     });
 
 })();
+</script>
+
 </script>
 </head>
 
