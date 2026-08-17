@@ -352,7 +352,11 @@
       .career-dot { left: 20px; transform: translateX(-50%); top: 15px; }
       .career-year { font-size: 2.2rem; margin-bottom: 10px; }
   }
-  /* 커스텀 마우스 커서 */
+/* ================================
+   커스텀 마우스 커서
+   ================================ */
+
+/* 기본 커서 */
 body {
     cursor: url('./cursor-default.png') 5 2, auto !important;
 }
@@ -379,7 +383,93 @@ textarea,
 .home-photo-item img {
     cursor: url('./cursor-hover.png') 5 2, pointer !important;
 }
+
+/* 실제 텍스트 위 */
+body.text-cursor {
+    cursor: url('./cursor-text.png') 12 12, text !important;
+}
   </style>
+<script>
+/* ================================
+   텍스트 선택 커서 감지
+   ================================ */
+
+(function () {
+
+    function isTextUnderCursor(x, y) {
+        let range = null;
+
+        if (document.caretRangeFromPoint) {
+            range = document.caretRangeFromPoint(x, y);
+        } 
+        else if (document.caretPositionFromPoint) {
+            const pos = document.caretPositionFromPoint(x, y);
+
+            if (pos && pos.offsetNode) {
+                range = document.createRange();
+                range.setStart(pos.offsetNode, pos.offset);
+                range.setEnd(pos.offsetNode, pos.offset);
+            }
+        }
+
+        if (!range) return false;
+
+        const node = range.startContainer;
+
+        return (
+            node &&
+            node.nodeType === Node.TEXT_NODE &&
+            node.textContent.trim().length > 0
+        );
+    }
+
+
+    document.addEventListener('mousemove', function (e) {
+
+        const target = e.target;
+
+        /* 클릭 가능한 요소에서는 기존 커서 사용 */
+        if (
+            target.closest &&
+            target.closest(`
+                a,
+                button,
+                input,
+                select,
+                textarea,
+                [onclick],
+                [role="button"],
+                .feature-card,
+                .unified-card,
+                .member-card,
+                .notice-item,
+                .banner-card,
+                .slider-dot,
+                .slider-control-btn,
+                .filter-btn,
+                .logo,
+                .hamburger,
+                .clickable,
+                .home-photo-item img
+            `)
+        ) {
+            document.body.classList.remove('text-cursor');
+            return;
+        }
+
+
+        /* 실제로 텍스트를 선택할 수 있는 곳 */
+        if (isTextUnderCursor(e.clientX, e.clientY)) {
+            document.body.classList.add('text-cursor');
+        } 
+        else {
+            document.body.classList.remove('text-cursor');
+        }
+
+    });
+
+})();
+</script>
 </head>
 
 <body>
