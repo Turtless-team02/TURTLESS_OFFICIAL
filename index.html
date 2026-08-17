@@ -354,19 +354,17 @@
   }
   /* 커스텀 마우스 커서 */
 body {
-    cursor: url('./cursor-default.png') 5 2, auto;
+    cursor: url('./cursor-default.png') 5 2, auto !important;
 }
 
 /* 클릭 가능한 요소 */
 a,
 button,
-select,
 input,
+select,
 textarea,
 [onclick],
-.clickable,
-.logo,
-.hamburger,
+[role="button"],
 .feature-card,
 .unified-card,
 .member-card,
@@ -374,8 +372,11 @@ textarea,
 .banner-card,
 .slider-dot,
 .slider-control-btn,
-.filter-btn {
-    cursor: url('./cursor-hover.png') 5 2, pointer;
+.filter-btn,
+.logo,
+.hamburger,
+.clickable {
+    cursor: url('./cursor-hover.png') 5 2, pointer !important;
 }
   </style>
 </head>
