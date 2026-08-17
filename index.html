@@ -1979,5 +1979,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 </script>
+<!-- TURTLESS Mouse Trail -->
+<div id="turtless-mouse-trail">
+    <img src="./turtless-trail.png" alt="">
+</div>
+
+<style>
+#turtless-mouse-trail {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    pointer-events: none;
+    z-index: 999999;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.15s ease;
+}
+
+#turtless-mouse-trail img {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+#turtless-mouse-trail.active {
+    opacity: 0.8;
+}
+
+@media (hover: none), (pointer: coarse) {
+    #turtless-mouse-trail {
+        display: none;
+    }
+}
+</style>
+
+<script>
+(function () {
+    const trail = document.getElementById('turtless-mouse-trail');
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let trailX = 0;
+    let trailY = 0;
+    let started = false;
+
+    document.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!started) {
+            trailX = mouseX;
+            trailY = mouseY;
+            started = true;
+        }
+
+        trail.classList.add('active');
+    });
+
+    function animate() {
+        // 마우스를 부드럽게 따라오도록 설정
+        trailX += (mouseX - trailX) * 0.12;
+        trailY += (mouseY - trailY) * 0.12;
+
+        trail.style.left = trailX + 'px';
+        trail.style.top = trailY + 'px';
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    document.addEventListener('mouseleave', function () {
+        trail.classList.remove('active');
+    });
+
+    document.addEventListener('mouseenter', function () {
+        if (started) trail.classList.add('active');
+    });
+})();
+</script>
 </body>
 </html>
