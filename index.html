@@ -2067,43 +2067,47 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <!-- TURTLESS Mouse Trail -->
 <div id="turtless-mouse-trail">
-    <img src="./turtless-trail.png" alt="">
+  <img src="./turtless-trail.png" alt="Mouse Trail">
 </div>
 
 <style>
-#turtless-mouse-trail {
+  #turtless-mouse-trail {
     position: fixed;
-    left: 0;
     top: 0;
+    left: 0;
     width: 28px;
     height: 28px;
-    pointer-events: none;
-    z-index: 999999;
+    pointer-events: none; /* 클릭 방해 방지 */
+    z-index: 999999; /* 화면 최상단에 배치 */
     opacity: 0;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); /* 마우스 포인터 중앙 정렬 */
     transition: opacity 0.15s ease;
-}
+  }
 
-#turtless-mouse-trail img {
-    width: 28px;
-    height: 28px;
+  #turtless-mouse-trail img {
+    width: 100%;
+    height: 100%;
     display: block;
-}
+  }
 
-#turtless-mouse-trail.active {
-    opacity: 0.8;
-}
+  #turtless-mouse-trail.active {
+    opacity: 0.8; /* 마우스가 움직일 때의 투명도 */
+  }
 
-@media (hover: none), (pointer: coarse) {
+  /* 터치 기반의 모바일/태블릿 기기에서는 숨김 처리 */
+  @media (hover: none), (pointer: coarse) {
     #turtless-mouse-trail {
-        display: none;
+      display: none;
     }
-}
+  }
 </style>
 
 <script>
-(function () {
+  (function () {
     const trail = document.getElementById('turtless-mouse-trail');
+    
+    // HTML에 요소가 없을 경우 스크립트 에러 방지
+    if (!trail) return; 
 
     let mouseX = 0;
     let mouseY = 0;
@@ -2111,40 +2115,46 @@ document.addEventListener('DOMContentLoaded', () => {
     let trailY = 0;
     let started = false;
 
+    // 마우스 이동 좌표 업데이트
     document.addEventListener('mousemove', function (e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
 
-        if (!started) {
-            trailX = mouseX;
-            trailY = mouseY;
-            started = true;
-        }
+      if (!started) {
+        trailX = mouseX;
+        trailY = mouseY;
+        started = true;
+      }
 
-        trail.classList.add('active');
+      trail.classList.add('active');
     });
 
+    // 부드러운 애니메이션 구현
     function animate() {
-        // 마우스를 부드럽게 따라오도록 설정
+      if (started) {
+        // 0.12 수치를 조절하면 따라오는 속도가 달라집니다 (1에 가까울수록 빠름)
         trailX += (mouseX - trailX) * 0.12;
         trailY += (mouseY - trailY) * 0.12;
 
         trail.style.left = trailX + 'px';
         trail.style.top = trailY + 'px';
+      }
 
-        requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
 
     animate();
 
+    // 브라우저 밖으로 마우스가 나가면 이미지 숨김
     document.addEventListener('mouseleave', function () {
-        trail.classList.remove('active');
+      trail.classList.remove('active');
     });
 
+    // 브라우저 안으로 마우스가 들어오면 다시 표시
     document.addEventListener('mouseenter', function () {
-        if (started) trail.classList.add('active');
+      if (started) trail.classList.add('active');
     });
-})();
+  })();
 </script>
 </body>
 </html>
