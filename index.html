@@ -2080,7 +2080,6 @@ document.addEventListener('DOMContentLoaded', () => {
     pointer-events: none; /* 클릭 방해 방지 */
     z-index: 999999; /* 화면 최상단에 배치 */
     opacity: 0;
-    transform: translate(-50%, -50%); /* 마우스 포인터 중앙 정렬 */
     transition: opacity 0.15s ease;
   }
 
@@ -2136,8 +2135,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trailX += (mouseX - trailX) * 0.12;
         trailY += (mouseY - trailY) * 0.12;
 
-        trail.style.left = trailX + 'px';
-        trail.style.top = trailY + 'px';
+        trail.style.left = (trailX + 12) + 'px';
+        trail.style.top = (trailY + 12) + 'px';
       }
 
       requestAnimationFrame(animate);
