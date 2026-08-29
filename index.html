@@ -619,6 +619,20 @@ body.text-cursor {
 <div class="slider-nav" id="slider-dots"></div>
 </section>
 
+  <style>
+    .feature-cards-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .feature-cards-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+
 <div class="feature-cards-container">
 <div class="feature-card" onclick="navigate('activity')" style="cursor:pointer;">
 <div class="feature-icon"><i class="fa-solid fa-bullhorn" style="color: var(--primary-color);"></i></div>
