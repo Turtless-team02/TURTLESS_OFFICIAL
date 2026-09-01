@@ -1014,16 +1014,14 @@ leaderSpecs.forEach(spec => {
 
 allMembers.forEach(m => {
     const isLeader = leaderSpecs.some(spec => m.name === spec.name && m.school === spec.school && m.grade === spec.grade);
-    if (isLeader) return; 
+    const isMentor = mentorSpecs.some(spec => spec.name === m.name);
+    
+    if (isLeader || isMentor) return; 
 
     const imgDefault = m.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Default";
     const imgHover = m.profileHoverImage || "https://dummyimage.com/400x400/ffffff/000000&text=Hover";
     const newBadge = m.isNew ? '<span class="member-badge-new">NEW</span>' : '';
-
-    const isMentor = mentorNames.includes(m.name);
-    const roleBadge = isMentor 
-    ? `<span style="position:absolute; top:10px; left:10px; background:#007bff; color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">멘토</span>` 
-    : `<span style="position:absolute; top:10px; left:10px; background:#6c757d; color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">팀원</span>`;
+    const roleBadge = `<span style="position:absolute; top:10px; left:10px; background:#6c757d; color:white; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:900; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">팀원</span>`;
 
     const cardHtml = `<div class="member-card" onclick="window.openMemberModal('${m.id}')">
                            ${newBadge}
@@ -1035,8 +1033,7 @@ allMembers.forEach(m => {
                            <div class="info-area"><div class="school">${m.school}</div><div class="name">${m.name}</div></div>
                    </div>`;
 
-    if(isMentor) { mentorHtml += cardHtml; } 
-    else { memberHtml += cardHtml; }
+    memberHtml += cardHtml;
 });
 
 list.innerHTML = `
