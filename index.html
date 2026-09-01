@@ -952,13 +952,37 @@ let mentorHtml = '';
 let leaderHtml = ''; 
 let memberHtml = '';
 
-const mentorNames = ["김정한", "천강숙", "김도윤", "장동준"];
 const mentorSpecs = [
   { name: "김정한" },
   { name: "천강숙" },
   { name: "김도윤" },
   { name: "장동준" }
 ];
+
+mentorSpecs.forEach(spec => {
+  const found = allMembers.find(m => m.name === spec.name);
+  if (found) {
+    const imgDefault = found.profileImage || "https://dummyimage.com/400x400/000000/ffffff&text=Default";
+    const imgHover = found.profileHoverImage || "https://dummyimage.com/400x400/ffffff/000000&text=Hover";
+    const newBadge = found.isNew ? '<span class="member-badge-new">NEW</span>' : '';
+    const roleBadge = '<span style="position:absolute; top:10px; left:10px; background:#AE1932; color:#ffffff; font-size:11px; padding:2px 6px; border-radius:4px;">멘토</span>';
+
+    mentorHtml += `
+      <div class="member-card" onclick="window.openMemberModal('${found.id}')">
+        <div class="member-img-wrapper">
+          <img src="${imgDefault}" class="img-default" alt="${found.name}" />
+          <img src="${imgHover}" class="img-hover" alt="${found.name}" />
+          ${roleBadge}
+          ${newBadge}
+        </div>
+        <div class="member-info">
+          <div class="member-name">${found.name}</div>
+          <div class="member-school">${found.school || ''} ${found.grade || ''}</div>
+        </div>
+      </div>
+    `;
+  }
+});
   
 const leaderSpecs = [
     { name: "정지우", school: "용산철도고", grade: "2학년", title: "팀 리더" },
