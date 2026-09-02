@@ -38,6 +38,7 @@
 ## 🔗 주요 링크 (Quick Links)
 * 🌐 **공식 웹사이트:** [SSRC2팀 FRC11379 터틀리스 공식 홈페이지](https://turtless-team02.github.io/TURTLESS_OFFICIAL/)
 * 💻 **GitHub Org:** [turtless-team02 GitHub](https://github.com/turtless-team02)
+* Notion WepPage:**[SSRC2팀 터틀리스 노션 페이지](https://app.notion.com/p/greenteacher/FRC-11379-SSRC-Team-2-TURTLESS-2026-26d100ed6f0280319529fd0c833b98a5)
 
 ---
 
