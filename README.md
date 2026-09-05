@@ -44,5 +44,5 @@
 
 ## 📬 Contact & Links
 - **Website:** [https://turtless-team02.github.io/TURTLESS_OFFICIAL/](https://turtless-team02.github.io/TURTLESS_OFFICIAL/)
-- **Email:** turtlelessisland@gmail.com
+- **Email:** officialturtless@gmail.com
 - **전화번호:** 010-8982-1203
