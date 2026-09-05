@@ -529,7 +529,7 @@ body.text-cursor {
 <a onclick="navigate('activity')">주요 활동</a>
 <a onclick="navigate('pr_gallery')">PR 갤러리</a>
 <a onclick="navigate('sponsorship')">후원문의</a>
-<a onclick="navigate('engineering note')">엔지니어링 노트</a>
+<a onclick="navigate('engineering note'); setTimeout(() => { const f = document.querySelector('iframe'); if(f) f.src = f.src; }, 150);">엔지니어링 노트</a>
 <a href="https://turtless-team02.github.io/MINI-GAME/" target="_blank">미니게임</a>
 <button class="login-btn" id="main-login-btn" onclick="openLoginModal()">팀원 로그인</button>
 </div>
@@ -814,10 +814,8 @@ body.text-cursor {
       <div class="notion-embed-wrapper" style="position: relative; width: 100%; max-width: 1000px; margin: 0 auto;">
         <iframe 
   src="https://embed.embednotion.com/p/greenteacher/26d100ed6f0281558a39c2d381b9992b?v=312100ed6f028072b0d6000c39f5b65c" 
-  width="100%" 
-  height="800px" 
-  style="border: none;"
-  allow="fullscreen">
+  style="width: 100%; height: 800px; min-height: 800px; border: none; display: block;" 
+  onload="this.style.height='800px';">
 </iframe>
 
       </div>
