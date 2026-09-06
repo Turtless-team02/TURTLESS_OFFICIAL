@@ -829,33 +829,36 @@ body.text-cursor {
   (function() {
     fetch('https://turtless-team02.github.io/TURTLESS_OFFICIAL/engineering_note.mht')
       .then(res => {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
+        if (!res.ok) throw new Error('HTTP status ' + res.status);
         return res.text();
       })
-      .then(mhtmlData => {
-        const doc = mhtml2html.convert(mhtmlData);
+      .then(async mhtmlData => {
         const viewer = document.getElementById('mhtml-viewer');
-        if (viewer) {
-          // 1. 객체를 HTML 문자열로 안전하게 변환
-          let htmlString = '';
-          if (typeof doc === 'string') {
-            htmlString = doc;
-          } else if (doc && doc.documentElement) {
-            htmlString = doc.documentElement.outerHTML;
-          } else {
-            htmlString = new XMLSerializer().serializeToString(doc);
-          }
+        if (!viewer) return;
 
-          // 2. iframe을 생성해 스타일 충돌 없이 깨끗하게 삽입
-          const iframe = document.createElement('iframe');
-          iframe.style.width = '100%';
-          iframe.style.height = '100%';
-          iframe.style.border = 'none';
-          iframe.srcdoc = htmlString;
+        // 1. 비동기 Promise 및 객체 구조 해제
+        const converted = await mhtml2html.convert(mhtmlData);
+        const doc = converted.document || converted;
 
-          viewer.innerHTML = '';
-          viewer.appendChild(iframe);
+        // 2. HTML 문자열 추출
+        let htmlStr = '';
+        if (typeof doc === 'string') {
+          htmlStr = doc;
+        } else if (doc.documentElement) {
+          htmlStr = doc.documentElement.outerHTML;
+        } else {
+          htmlStr = new XMLSerializer().serializeToString(doc);
         }
+
+        // 3. iframe 주입
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.srcdoc = htmlStr;
+
+        viewer.innerHTML = '';
+        viewer.appendChild(iframe);
       })
       .catch(err => {
         const viewer = document.getElementById('mhtml-viewer');
@@ -865,6 +868,7 @@ body.text-cursor {
       });
   })();
 </script>
+
 
 
   
