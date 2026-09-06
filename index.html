@@ -836,25 +836,36 @@ body.text-cursor {
         const viewer = document.getElementById('mhtml-viewer');
         if (!viewer) return;
 
-        // 1. mhtml2html 변환 (Promise 및 객체 형태 모두 대응)
         let converted = mhtml2html.convert(mhtmlData);
         if (converted && typeof converted.then === 'function') {
           converted = await converted;
         }
 
-        // 2. HTML 문자열 추출
-        let htmlContent = '';
-        if (typeof converted === 'string') {
-          htmlContent = converted;
-        } else if (converted && converted.documentElement) {
-          htmlContent = converted.documentElement.outerHTML;
-        } else if (converted && converted.document && converted.document.documentElement) {
-          htmlContent = converted.document.documentElement.outerHTML;
-        } else {
-          htmlContent = String(converted);
+        // 객체 내부 구조를 순회하여 순수 HTML 텍스트를 자동 추출
+        function getHtmlString(data) {
+          if (!data) return '';
+          if (typeof data === 'string') return data;
+          if (data.documentElement) return data.documentElement.outerHTML;
+          if (data.document && data.document.documentElement) return data.document.documentElement.outerHTML;
+          if (data.window && data.window.document) return data.window.document.documentElement.outerHTML;
+          
+          for (let k in data) {
+            try {
+              const val = data[k];
+              if (typeof val === 'string' && val.includes('<')) return val;
+              if (val && val.documentElement) return val.documentElement.outerHTML;
+            } catch (e) {}
+          }
+          return '';
         }
 
-        // 3. iframe 생성 및 document.write 안전 주입
+        const htmlContent = getHtmlString(converted);
+
+        if (!htmlContent) {
+          throw new Error('변환된 데이터에서 HTML을 읽을 수 없습니다.');
+        }
+
+        // iframe 내부에 HTML 렌더링
         viewer.innerHTML = '';
         const iframe = document.createElement('iframe');
         iframe.style.width = '100%';
@@ -875,9 +886,6 @@ body.text-cursor {
       });
   })();
 </script>
-
-
-
 
   
 <footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;">
