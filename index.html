@@ -827,9 +827,10 @@ body.text-cursor {
 <script src="https://cdn.jsdelivr.net/npm/mhtml2html@2.0.0/dist/mhtml2html.min.js"></script>
 <script>
   (function() {
+    // 404 불러오기 실패를 방지하는 전체 절대 경로
     fetch('https://turtless-team02.github.io/TURTLESS_OFFICIAL/engineering_note.mht')
       .then(res => {
-        if (!res.ok) throw new Error('HTTP status ' + res.status);
+        if (!res.ok) throw new Error('파일을 찾을 수 없습니다 (' + res.status + ')');
         return res.text();
       })
       .then(mhtmlData => {
@@ -837,20 +838,19 @@ body.text-cursor {
         const viewer = document.getElementById('mhtml-viewer');
         if (viewer) {
           viewer.innerHTML = '';
-          // doc 전체 대신 doc.documentElement(HTML 노드)를 전달
-          viewer.appendChild(doc.documentElement);
+          // Document 전체 대신 html 노드(documentElement)만 추출해 삽입
+          const node = doc.documentElement || doc;
+          viewer.appendChild(node);
         }
       })
       .catch(err => {
         const viewer = document.getElementById('mhtml-viewer');
         if (viewer) {
-          viewer.innerHTML = '<p style="padding: 20px; color: red;">파일을 변환하지 못했습니다: ' + err.message + '</p>';
+          viewer.innerHTML = '<p style="padding: 20px; color: red;">불러오기 실패: ' + err.message + '</p>';
         }
       });
   })();
 </script>
-
-
 
 
   
