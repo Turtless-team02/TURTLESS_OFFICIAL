@@ -837,7 +837,8 @@ body.text-cursor {
         const viewer = document.getElementById('mhtml-viewer');
         if (viewer) {
           viewer.innerHTML = '';
-          viewer.appendChild(doc);
+          // doc 전체 대신 doc.documentElement(HTML 노드)를 전달
+          viewer.appendChild(doc.documentElement);
         }
       })
       .catch(err => {
@@ -848,6 +849,7 @@ body.text-cursor {
       });
   })();
 </script>
+
 
 
 
