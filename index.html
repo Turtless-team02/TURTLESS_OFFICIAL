@@ -841,6 +841,26 @@ body.text-cursor {
           converted = await converted;
         }
 
+// blob 이미지 주소를 iframe에서도 읽을 수 있는 Base64(data:) 데이터로 자동 변환
+const docTarget = converted.querySelectorAll ? converted : (converted.document || converted);
+if (docTarget && docTarget.querySelectorAll) {
+  const imgs = docTarget.querySelectorAll('img');
+  for (const img of imgs) {
+    if (img.src && img.src.startsWith('blob:')) {
+      try {
+        const res = await fetch(img.src);
+        const blob = await res.blob();
+        img.src = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch (e) {}
+    }
+  }
+}
+
+        
         // 객체 내부 구조를 순회하여 순수 HTML 텍스트를 자동 추출
         function getHtmlString(data) {
           if (!data) return '';
