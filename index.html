@@ -900,7 +900,7 @@ if (targetDoc && targetDoc.querySelectorAll) {
 
         const destDoc = iframe.contentWindow.document;
         destDoc.open();
-        destDoc.write('<style>* { overflow: visible !important; max-height: none !important; } html, body { overflow: auto !important; height: auto !important; -webkit-overflow-scrolling: touch; }</style>' + htmlContent);
+        destDoc.write('<script>document.addEventListener("error",function(e){if(e.target.tagName==="IMG")e.target.style.display="none";},true);<\/script><style>* { overflow: visible !important; max-height: none !important; } html, body { overflow: auto !important; height: auto !important; -webkit-overflow-scrolling: touch; }</style>' + htmlContent);
         destDoc.close();
       })
       .catch(err => {
