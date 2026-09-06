@@ -829,36 +829,43 @@ body.text-cursor {
   (function() {
     fetch('https://turtless-team02.github.io/TURTLESS_OFFICIAL/engineering_note.mht')
       .then(res => {
-        if (!res.ok) throw new Error('HTTP status ' + res.status);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.text();
       })
       .then(async mhtmlData => {
         const viewer = document.getElementById('mhtml-viewer');
         if (!viewer) return;
 
-        // 1. 비동기 Promise 및 객체 구조 해제
-        const converted = await mhtml2html.convert(mhtmlData);
-        const doc = converted.document || converted;
-
-        // 2. HTML 문자열 추출
-        let htmlStr = '';
-        if (typeof doc === 'string') {
-          htmlStr = doc;
-        } else if (doc.documentElement) {
-          htmlStr = doc.documentElement.outerHTML;
-        } else {
-          htmlStr = new XMLSerializer().serializeToString(doc);
+        // 1. mhtml2html 변환 (Promise 및 객체 형태 모두 대응)
+        let converted = mhtml2html.convert(mhtmlData);
+        if (converted && typeof converted.then === 'function') {
+          converted = await converted;
         }
 
-        // 3. iframe 주입
+        // 2. HTML 문자열 추출
+        let htmlContent = '';
+        if (typeof converted === 'string') {
+          htmlContent = converted;
+        } else if (converted && converted.documentElement) {
+          htmlContent = converted.documentElement.outerHTML;
+        } else if (converted && converted.document && converted.document.documentElement) {
+          htmlContent = converted.document.documentElement.outerHTML;
+        } else {
+          htmlContent = String(converted);
+        }
+
+        // 3. iframe 생성 및 document.write 안전 주입
+        viewer.innerHTML = '';
         const iframe = document.createElement('iframe');
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.border = 'none';
-        iframe.srcdoc = htmlStr;
-
-        viewer.innerHTML = '';
         viewer.appendChild(iframe);
+
+        const destDoc = iframe.contentWindow.document;
+        destDoc.open();
+        destDoc.write(htmlContent);
+        destDoc.close();
       })
       .catch(err => {
         const viewer = document.getElementById('mhtml-viewer');
@@ -868,6 +875,7 @@ body.text-cursor {
       });
   })();
 </script>
+
 
 
 
