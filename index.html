@@ -807,14 +807,23 @@ body.text-cursor {
 
 <section id="page-sponsorship" class="subpage"><div class="inner"><h2 class="subpage-title">후원문의</h2><div class="content-card"><div id="b-spon" class="editable-content">후원 안내 및 문의처를 입력하세요.</div></div></div></section>
 
-<section id="engineering_note" class="subpage">
+<section id="engineering_note" class="subpage" style="display: block !important; padding: 20px 0;">
   <div class="inner">
     <h2 class="subpage-title">엔지니어링 노트</h2>
-    <div class="content-card">
-            <!-- MHT 임베드 박스 -->
-        <div id="mhtml-viewer" style="width: 100%; height: 650px; overflow: auto; border: 1px solid #e1e4e8; border-radius: 8px; background: #ffffff;">
-          <p style="padding: 20px; color: #666;">엔지니어링 노트를 불러오는 중입니다...</p>
-        </div>
+    <div class="content-card" style="display: block !important; width: 100%; min-height: 650px; background: #ffffff; border: 1px solid #ddd; border-radius: 8px; padding: 10px; box-sizing: border-box;">
+
+      <!-- MHT 임베드 프레임 -->
+      <iframe id="mhtml-frame" style="width: 100%; height: 600px; border: none; display: block;"></iframe>
+
+      <!-- 하단 다운로드 링크 -->
+      <div style="text-align: right; margin-top: 10px;">
+        <a href="engineering_note.mht" target="_blank" download style="color: #0969da; font-weight: bold; text-decoration: none;">🔗 engineering_note.mht 원본 파일 다운로드</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
         <!-- 하단 다운로드 링크 -->
         <div style="text-align: right; margin-top: 10px;">
