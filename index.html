@@ -2334,5 +2334,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 </script>
+<script>
+  // 메뉴 클릭 시 엔지니어링 노트 표시/숨김 제어
+  document.addEventListener('click', (e) => {
+    const targetBtn = e.target.closest('a, button, [onclick], .nav-item, .nav-link');
+    if (!targetBtn) return;
+
+    const engNote = document.getElementById('engineering_note');
+    if (!engNote) return;
+
+    // 클릭한 버튼의 이동 목적지 또는 텍스트 확인
+    const attr = (targetBtn.getAttribute('href') || targetBtn.getAttribute('onclick') || targetBtn.innerText || '').toLowerCase();
+
+    // '메인/홈' 또는 '엔지니어링' 메뉴일 때만 활성화
+    const isMainOrEng = attr.includes('home') || attr.includes('main') || attr.includes('engineering') || attr.includes('메인') || attr.includes('엔지니어링');
+
+    if (isMainOrEng) {
+      engNote.classList.add('active');
+      engNote.style.removeProperty('display');
+    } else {
+      engNote.classList.remove('active');
+      engNote.style.setProperty('display', 'none', 'important');
+    }
+  });
+</script>
+
 </body>
 </html>
