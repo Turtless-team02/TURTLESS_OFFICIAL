@@ -2358,6 +2358,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 </script>
-
+<style>
+  /* 엔지니어링 노트 외에 다른 탭(.subpage.active)이 열리면 엔지니어링 노트를 강제 숨김 */
+  body:has(.subpage.active:not(#engineering_note)) #engineering_note {
+    display: none !important;
+  }
+</style>
 </body>
 </html>
