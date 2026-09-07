@@ -2361,6 +2361,41 @@ document.addEventListener('DOMContentLoaded', () => {
   // 페이지 첫 로드 시 바로 실행
   fixEngineeringNote();
 </script>
-  
+
+<!-- 기존 index.html의 맨 밑 코드들... -->
+
+    <!-- 🔻 여기에 복사한 스크립트를 붙여넣으세요 🔻 -->
+    <script>
+      const spObserver = new MutationObserver(() => {
+        const spItems = document.querySelectorAll('#sponsor-list > *, .sponsor-list > *, [id*="sponsor"] li, [id*="sponsor"] .item');
+        
+        spItems.forEach((item) => {
+          if (item.querySelector('.sp-move-btns')) return;
+
+          const btnBox = document.createElement('span');
+          btnBox.className = 'sp-move-btns';
+          btnBox.style.cssText = 'margin-left: 6px; display: inline-flex; gap: 3px;';
+          btnBox.innerHTML = `
+            <button type="button" style="padding: 1px 5px; cursor: pointer;" onclick="moveSponsorElement(this, -1)">◀</button>
+            <button type="button" style="padding: 1px 5px; cursor: pointer;" onclick="moveSponsorElement(this, 1)">▶</button>
+          `;
+          item.appendChild(btnBox);
+        });
+      });
+
+      spObserver.observe(document.body, { childList: true, subtree: true });
+
+      function moveSponsorElement(btn, direction) {
+        const item = btn.closest('li, div, tr, .item');
+        if (!item) return;
+
+        if (direction === -1 && item.previousElementSibling) {
+          item.parentNode.insertBefore(item, item.previousElementSibling);
+        } else if (direction === 1 && item.nextElementSibling) {
+          item.parentNode.insertBefore(item.nextElementSibling, item);
+        }
+      }
+    </script>
+
 </body>
 </html>
