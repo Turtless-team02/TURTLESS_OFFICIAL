@@ -2362,40 +2362,46 @@ document.addEventListener('DOMContentLoaded', () => {
   fixEngineeringNote();
 </script>
 
-<!-- 기존 index.html의 맨 밑 코드들... -->
+<!-- 후원사 관리창 순서 변경(▲/▼) 스크립트 -->
+<script>
+  const spObserver = new MutationObserver(() => {
+    // 모든 버튼 중 '삭제' 텍스트를 가진 버튼을 탐색
+    const deleteBtns = Array.from(document.querySelectorAll('button')).filter(
+      btn => btn.textContent.trim() === '삭제'
+    );
 
-    <!-- 🔻 여기에 복사한 스크립트를 붙여넣으세요 🔻 -->
-    <script>
-      const spObserver = new MutationObserver(() => {
-        const spItems = document.querySelectorAll('#sponsor-list > *, .sponsor-list > *, [id*="sponsor"] li, [id*="sponsor"] .item');
-        
-        spItems.forEach((item) => {
-          if (item.querySelector('.sp-move-btns')) return;
+    deleteBtns.forEach((delBtn) => {
+      // 이미 순서 변경 버튼이 추가되어 있다면 스킵
+      if (delBtn.previousElementSibling?.classList.contains('sp-move-btns')) return;
 
-          const btnBox = document.createElement('span');
-          btnBox.className = 'sp-move-btns';
-          btnBox.style.cssText = 'margin-left: 6px; display: inline-flex; gap: 3px;';
-          btnBox.innerHTML = `
-            <button type="button" style="padding: 1px 5px; cursor: pointer;" onclick="moveSponsorElement(this, -1)">◀</button>
-            <button type="button" style="padding: 1px 5px; cursor: pointer;" onclick="moveSponsorElement(this, 1)">▶</button>
-          `;
-          item.appendChild(btnBox);
-        });
-      });
+      // 삭제 버튼 바로 앞에 ▲, ▼ 버튼 생성
+      const btnBox = document.createElement('span');
+      btnBox.className = 'sp-move-btns';
+      btnBox.style.cssText = 'display: inline-flex; gap: 4px; margin-right: 8px; vertical-align: middle;';
+      btnBox.innerHTML = `
+        <button type="button" style="padding: 4px 8px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; font-size: 12px;" onclick="moveSponsorElement(this, -1)">▲</button>
+        <button type="button" style="padding: 4px 8px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; font-size: 12px;" onclick="moveSponsorElement(this, 1)">▼</button>
+      `;
+      
+      // 삭제 버튼 바로 왼쪽에 삽입
+      delBtn.parentNode.insertBefore(btnBox, delBtn);
+    });
+  });
 
-      spObserver.observe(document.body, { childList: true, subtree: true });
+  spObserver.observe(document.body, { childList: true, subtree: true });
 
-      function moveSponsorElement(btn, direction) {
-        const item = btn.closest('li, div, tr, .item');
-        if (!item) return;
+  // ▲ / ▼ 클릭 시 해당 박스 위/아래 순서 이동
+  function moveSponsorElement(btn, direction) {
+    const item = btn.closest('div, li');
+    if (!item) return;
 
-        if (direction === -1 && item.previousElementSibling) {
-          item.parentNode.insertBefore(item, item.previousElementSibling);
-        } else if (direction === 1 && item.nextElementSibling) {
-          item.parentNode.insertBefore(item.nextElementSibling, item);
-        }
-      }
-    </script>
-
+    if (direction === -1 && item.previousElementSibling) {
+      item.parentNode.insertBefore(item, item.previousElementSibling);
+    } else if (direction === 1 && item.nextElementSibling) {
+      item.parentNode.insertBefore(item.nextElementSibling, item);
+    }
+  }
+</script>
+  
 </body>
 </html>
