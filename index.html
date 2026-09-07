@@ -47,6 +47,16 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
 
+  /* 웹사이트 전체 요소의 스크롤바 없애기 */
+* {
+  -ms-overflow-style: none; /* Edge, Internet Explorer */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+    
   /* 구글 번역기 상단 바, 팝업, 호버 효과 등 모든 UI 완벽 숨김 처리 */
   .skiptranslate { display: none !important; }
   .goog-te-banner-frame { display: none !important; }
