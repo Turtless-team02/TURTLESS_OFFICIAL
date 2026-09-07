@@ -2316,24 +2316,32 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('a, button, .nav-item, .nav-link, [onclick]')) return;
+  function fixEngineeringNote() {
+    const engNote = document.getElementById('engineering_note');
+    if (!engNote) return;
 
-    setTimeout(() => {
-      const engNote = document.getElementById('engineering_note');
-      if (!engNote) return;
+    // 엔지니어링 노트를 제외한 다른 서브페이지가 active 상태인지 확인
+    const otherActiveTab = document.querySelector('.subpage.active:not(#engineering_note)');
 
-      // 현재 화면에 열려있는 서브페이지(.subpage.active) 탐색
-      const activeSubpage = document.querySelector('.subpage.active');
+    if (otherActiveTab) {
+      // 다른 탭(소개, 가치관 등)이 열려있을 때만 숨김
+      engNote.style.setProperty('display', 'none', 'important');
+    } else {
+      // 메인 화면(다른 active 탭 없음)이거나 엔지니어링 노트 탭일 때 강제 표시
+      engNote.style.setProperty('display', 'block', 'important');
+    }
+  }
 
-      // 메인 화면(열린 서브페이지 없음)이거나 '엔지니어링 노트 탭'일 때
-      if (!activeSubpage || activeSubpage.id === 'engineering_note') {
-        engNote.style.display = ''; // 인라인 숨김을 해제하여 정상 노출
-      } else {
-        engNote.style.display = 'none'; // 다른 탭일 때만 숨김
-      }
-    }, 50);
+  // 클릭 발생 및 탭 클래스 변경 시 자동 동작
+  document.addEventListener('click', () => setTimeout(fixEngineeringNote, 30));
+  new MutationObserver(fixEngineeringNote).observe(document.body, {
+    attributes: true,
+    attributeFilter: ['class'],
+    subtree: true
   });
+
+  // 페이지 첫 로드 시 바로 실행
+  fixEngineeringNote();
 </script>
   
 </body>
