@@ -2314,5 +2314,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   })();
 </script>
+<!-- index.html 맨 밑 </body> 바로 위에 붙여넣기 -->
+<script>
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('a, button, .nav-item, .nav-link');
+    if (!btn) return;
+
+    // 엔지니어링 노트 영역 가져오기
+    const engNote = document.querySelector('#engineering-note, .engineering-note');
+    if (!engNote) return;
+
+    const text = btn.innerText || btn.getAttribute('href') || '';
+
+    // '메인/홈'이나 '엔지니어링' 관련 메뉴가 아니면 숨깁니다.
+    if (text.includes('메인') || text.includes('홈') || text.includes('엔지니어링') || text.includes('Home')) {
+      engNote.style.display = 'block';
+    } else {
+      engNote.style.display = 'none';
+    }
+  });
+</script>
 </body>
 </html>
