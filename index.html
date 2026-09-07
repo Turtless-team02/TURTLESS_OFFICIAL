@@ -2316,27 +2316,25 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-  // 메뉴/버튼을 클릭할 때만 딱 1번 실행되는 안전한 스크립트
   document.addEventListener('click', (e) => {
-    // 클릭한 요소가 링크나 버튼일 때만 동작
     if (!e.target.closest('a, button, .nav-item, .nav-link, [onclick]')) return;
 
     setTimeout(() => {
       const engNote = document.getElementById('engineering_note');
       if (!engNote) return;
 
-      // 엔지니어링 노트를 제외한 다른 서브페이지가 열려있는지 확인
-      const otherPage = document.querySelector('.subpage.active:not(#engineering_note)');
+      // 현재 화면에 열려있는 서브페이지(.subpage.active) 탐색
+      const activeSubpage = document.querySelector('.subpage.active');
 
-      // 다른 서브페이지(소개, 가치관 등)가 열려있으면 숨기고, 메인이나 엔지니어링 노트면 표시
-      if (otherPage) {
-        engNote.style.display = 'none';
+      // 메인 화면(열린 서브페이지 없음)이거나 '엔지니어링 노트 탭'일 때
+      if (!activeSubpage || activeSubpage.id === 'engineering_note') {
+        engNote.style.display = ''; // 인라인 숨김을 해제하여 정상 노출
       } else {
-        engNote.style.display = '';
+        engNote.style.display = 'none'; // 다른 탭일 때만 숨김
       }
     }, 50);
   });
 </script>
-
+  
 </body>
 </html>
