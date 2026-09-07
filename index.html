@@ -2314,5 +2314,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   })();
 </script>
+
+<script>
+  // 메뉴/버튼을 클릭할 때만 딱 1번 실행되는 안전한 스크립트
+  document.addEventListener('click', (e) => {
+    // 클릭한 요소가 링크나 버튼일 때만 동작
+    if (!e.target.closest('a, button, .nav-item, .nav-link, [onclick]')) return;
+
+    setTimeout(() => {
+      const engNote = document.getElementById('engineering_note');
+      if (!engNote) return;
+
+      // 엔지니어링 노트를 제외한 다른 서브페이지가 열려있는지 확인
+      const otherPage = document.querySelector('.subpage.active:not(#engineering_note)');
+
+      // 다른 서브페이지(소개, 가치관 등)가 열려있으면 숨기고, 메인이나 엔지니어링 노트면 표시
+      if (otherPage) {
+        engNote.style.display = 'none';
+      } else {
+        engNote.style.display = '';
+      }
+    }, 50);
+  });
+</script>
+
 </body>
 </html>
