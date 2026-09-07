@@ -47,7 +47,15 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
 
-  /* 웹사이트 전체 요소의 스크롤바 없애기 */
+/* 바깥쪽 감싸는 영역의 스크롤바 제거 및 높이 제한 해제 */
+#engineering_note,
+.subpage#engineering_note {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+    
+/* 웹사이트 전체 요소의 스크롤바 없애기 */
 * {
   -ms-overflow-style: none; /* Edge, Internet Explorer */
   scrollbar-width: none; /* Firefox */
