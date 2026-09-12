@@ -2613,5 +2613,63 @@ window.closeRobotModal = function() {
   if (modal) modal.style.display = 'none';
 };
 </script>
+
+<!-- 기존 코드 맨 밑에 추가하는 패치 스크립트 -->
+<script>
+(function() {
+  // 1. 변수 미선언으로 인한 자바스크립트 중단(에러) 방지
+  if (typeof window.sponsorData === 'undefined') window.sponsorData = [];
+  if (typeof window.isSpPaused === 'undefined') window.isSpPaused = false;
+  if (typeof window.spInt === 'undefined') window.spInt = null;
+
+  // 2. 선언되지 않은 함수(loadSlider 등) 호출 시 스크립트 멈춤 방지
+  ['loadSlider', 'loadSponsors', 'loadMembers', 'loadActivities', 'loadGallery'].forEach(fn => {
+    if (typeof window[fn] === 'undefined') window[fn] = function() {};
+  });
+
+  // 3. 서브페이지 백지화 원인(ID 불일치 및 CSS 숨김) 해결 navigate 재정의
+  window.navigate = function(pageId) {
+    if (!pageId) return;
+
+    // 전체 페이지 일단 숨김
+    const allPages = document.querySelectorAll('.subpage, #page-home, [id^="page-"], [id$="-page"]');
+    allPages.forEach(el => {
+      el.style.setProperty('display', 'none', 'important');
+      el.classList.remove('active');
+    });
+
+    // page-xxx / xxx / xxx-page 다양한 ID 형태 자동 탐색
+    let target = null;
+    if (pageId === 'home') {
+      target = document.getElementById('page-home') || document.getElementById('home');
+    } else {
+      target = document.getElementById(`page-${pageId}`) || 
+               document.getElementById(pageId) || 
+               document.getElementById(`${pageId}-page`);
+    }
+
+    if (target) {
+      // 강제 표시 (CSS !important 설정 우회)
+      target.style.setProperty('display', 'block', 'important');
+      target.classList.add('active');
+    } else {
+      console.error(`[이동 실패] '${pageId}'에 해당하는 HTML 태그(id)를 찾지 못했습니다.`);
+    }
+
+    // 메뉴 및 드롭다운 닫기
+    document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+    const nav = document.getElementById('nav-links');
+    if (nav) nav.classList.remove('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 4. 로딩 완료 후 안전하게 메인화면 출력
+  window.addEventListener('DOMContentLoaded', function() {
+    window.navigate('home');
+  });
+})();
+</script>
+
 </body>
 </html>
