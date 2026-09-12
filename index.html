@@ -2067,6 +2067,7 @@ window.navigate = function(id, pushHistory = true) {
 
     window.scrollTo({ top: 0, behavior: 'auto' });
 };
+window._originalNavigate = window.navigate;
 
 // 브라우저 뒤로가기 / 앞으로가기
 window.addEventListener('popstate', () => {
@@ -2610,9 +2611,10 @@ async function deleteRobot(docId) {
 }
 
 // 5. 페이지 이동 감지 및 로드
-const origNavigate = window.navigate;
 window.navigate = function(pageId, pushHistory = true) {
-  if (typeof origNavigate === 'function') origNavigate(pageId, pushHistory);
+  if (typeof window._originalNavigate === 'function') {
+    window._originalNavigate(pageId, pushHistory);
+  }
   if (pageId === 'intro_robot' || pageId === 'page-intro_robot') {
     loadRobotSlides();
     if (window.isAdmin && document.getElementById('robot-admin-tools')) {
