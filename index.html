@@ -2768,6 +2768,40 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<script>
+/* === GitHub Pages URL 경로 및 SPA 라우터 보정 스크립트 === */
+function handleGithubPagesRoute() {
+  // 1. Hash(#)가 있으면 Hash 우선, 없으면 URL 경로의 맨 마지막 단어만 추출
+  let pageId = location.hash.replace('#/', '').replace('#', '');
+  
+  if (!pageId) {
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    // 리포지토리명(TURTLESS_OFFICIAL)을 제외한 실제 서브페이지 ID 추출
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    pageId = (lastSegment && lastSegment !== 'TURTLESS_OFFICIAL') ? lastSegment : 'home';
+  }
+
+  // 2. 모든 서브페이지 구역 숨기기
+  const allPages = document.querySelectorAll('.page-content, section[id], div[id]');
+  allPages.forEach(page => {
+    // 헤더/네비게이션/푸터 등 공통 요소는 제외하고 서브페이지 전용 구역만 숨김
+    if (page.classList.contains('page-content') || page.tagName === 'SECTION') {
+      page.style.display = 'none';
+    }
+  });
+
+  // 3. 추출한 pageId와 일치하는 요소 표시
+  const target = document.getElementById(pageId) || document.getElementById('home');
+  if (target) {
+    target.style.display = 'block';
+  }
+}
+
+// 브라우저 뒤로가기, URL 변경, 최초 로드 시 자동 실행
+window.addEventListener('DOMContentLoaded', handleGithubPagesRoute);
+window.addEventListener('hashchange', handleGithubPagesRoute);
+window.addEventListener('popstate', handleGithubPagesRoute);
+</script>
   
 </body>
 </html>
