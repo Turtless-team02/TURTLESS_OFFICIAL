@@ -634,6 +634,20 @@ body.text-cursor {
     </div>
 </div>
 
+<div id="robot-admin-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 600px;">
+        <button style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;" onclick="closeRobotModal()">×</button>
+        <h2 style="margin-bottom:15px; font-weight:900;">🤖 로봇 슬라이드 관리</h2>
+        <h4 style="color:var(--primary-color); margin-bottom:10px;">새 로봇 프로젝트 추가</h4>
+        <input type="text" id="rb-season" placeholder="시즌/연도 (예: 2026 REEFSCAPE)">
+        <input type="text" id="rb-name" placeholder="로봇 이름 (예: TURTLE-V1)">
+        <textarea id="rb-desc" rows="3" placeholder="로봇 제원 및 설명 (메커니즘, 주요 기능 등)"></textarea>
+        <label style="font-size:12px;">로봇 이미지 URL</label>
+        <input type="text" id="rb-img" placeholder="이미지 URL (Cloudinary / GitHub 등)">
+        <button class="action-btn" onclick="saveRobotToFirebase()">등록하기</button>
+    </div>
+</div>
+
 <div id="page-home">
 <section class="hero-slider" id="hero-slider">
 <div id="slider-content"></div>
@@ -739,16 +753,15 @@ body.text-cursor {
 </div>
 
 <div id="admin-panel">
-<h3 style="margin-bottom:12px; font-weight:900;">👑 관리자 패널</h3>
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
-<button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">메인 슬라이더 편집</button>
-<button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
-<button onclick="openCareerAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">💼 경력 사항 관리</button>
-<button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
+  <h3 style="margin-bottom:12px; font-weight:900;">👑 관리자 패널</h3>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">메인 슬라이더 편집</button>
+    <button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
+    <button onclick="openCareerAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">💼 경력 사항 관리</button>
+    <button onclick="openRobotModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🤖 로봇 소개 관리</button>
+    <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
+  </div>
 </div>
-</div>
-</div>
-</section>
 
 <section class="section" style="padding-top: 20px;">
 <div class="inner">
