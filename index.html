@@ -402,6 +402,69 @@ textarea,
 body.text-cursor {
     cursor: url('./cursor-text.png') 12 12, text !important;
 }
+
+/* ROBOT GALLERY DESIGN */
+
+#robot-slider {
+  height: 600px;
+  background: #111;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+#robot-slider .sp-slide {
+  background: #111;
+}
+
+#robot-slider .sp-left {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+#robot-slider .sp-left img {
+  max-width: 100%;
+  max-height: 430px;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,.5));
+}
+
+#robot-slider .sp-right {
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,.9),
+    rgba(0,0,0,.45)
+  );
+  color: white;
+  padding: 70px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#robot-slider .sp-right span {
+  color: #AE1932 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  letter-spacing: 2px;
+}
+
+#robot-slider .sp-right h3 {
+  color: white;
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 12px 0 25px;
+}
+
+#robot-slider .sp-right p {
+  color: rgba(255,255,255,.75);
+  line-height: 1.8;
+}
+    
 </style>
 
 <script>
