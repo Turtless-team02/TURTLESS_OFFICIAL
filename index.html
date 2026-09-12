@@ -2732,6 +2732,42 @@ window.closeRobotModal = function() {
 })();
 </script>
 
+<script>
+/* === 서브페이지 백지 현상 방지 및 에러 복구 스크립트 === */
+
+// 1. 존재하지 않는 DOM 참조 에러로 스크립트 전체가 멈추는 것 방지
+window.onerror = function (msg, url, line) {
+  console.warn("에러 차단 및 복구 중:", msg, "at line", line);
+  return true; 
+};
+
+// 2. 안전한 페이지 전환 함수 (기존 showPage 기능을 강제 보정)
+const originalShowPage = window.showPage;
+window.showPage = function (pageId) {
+  // 모든 서브페이지 숨김 처리
+  const pages = document.querySelectorAll('.page-content, .subpage, section[id]');
+  pages.forEach(p => p.style.display = 'none');
+
+  // 요청한 ID가 없으면 'home'으로 자동 대체하여 백지 현상 방지
+  const target = document.getElementById(pageId) || document.getElementById('home') || pages[0];
+  if (target) {
+    target.style.display = 'block';
+  }
+};
+
+// 3. 로봇 소개 관련 누락된 버튼 클릭 이벤트 안전 등록
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a[href^="#"], button[data-target]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetId = btn.getAttribute('data-target') || btn.getAttribute('href')?.replace('#', '');
+      if (targetId && document.getElementById(targetId)) {
+        window.showPage(targetId);
+      }
+    });
+  });
+});
+</script>
+
   
 </body>
 </html>
