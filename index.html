@@ -1006,6 +1006,8 @@ appId: "1:794305996729:web:cf7132e77cc5621c5bb868"
 
 const app = initializeApp(firebaseConfig); 
 const db = getFirestore(app); 
+window.addDoc = addDoc;
+window.collection = collection;
 
 const IMGBB_API_KEY = "Ffc86d1890f11e1bb04886dd9c10ecbc";
 
@@ -2564,7 +2566,7 @@ async function saveRobotToFirebase() {
     }
 
     // 2. Cloudinary 주소를 Firebase에 저장
-    await db.collection("robots").add({
+    await addDoc(collection(db, "robots"), {
   season: season,
   name: name,
   imgUrl: data.secure_url,
