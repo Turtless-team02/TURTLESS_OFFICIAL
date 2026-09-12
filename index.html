@@ -1008,6 +1008,11 @@ const app = initializeApp(firebaseConfig);
 window.db = getFirestore(app); 
 window.addDoc = addDoc;
 window.collection = collection;
+window.query = query;
+window.orderBy = orderBy;
+window.getDocs = getDocs;
+window.doc = doc;
+window.deleteDoc = deleteDoc;
 
 const IMGBB_API_KEY = "Ffc86d1890f11e1bb04886dd9c10ecbc";
 
@@ -2458,8 +2463,8 @@ async function loadRobotSlides() {
   if (!wrapper || !dotsContainer) return;
 
   try {
-    const q = query(collection(db, "robots"), orderBy("season", "desc"));
-    const snapshot = await getDocs(q);
+    const q = window.query(window.collection(window.db, "robots"), window.orderBy("season", "desc"));
+    const snapshot = await window.getDocs(q);
     robotSlidesData = [];
     
     snapshot.forEach(doc => {
@@ -2596,7 +2601,7 @@ async function saveRobotToFirebase() {
 async function deleteRobot(docId) {
   if (!confirm('이 로봇 데이터를 삭제하시겠습니까?')) return;
   try {
-    await deleteDoc(doc(db, "robots", docId));
+    await window.deleteDoc(window.doc(window.db, "robots", docId));
     alert('삭제되었습니다.');
     loadRobotSlides();
   } catch (error) {
