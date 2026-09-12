@@ -828,19 +828,6 @@ body.text-cursor {
     </div>
   </div>
 </section>
-
-<!-- 3. 로봇 등록 모달 (서브페이지 외부 독립 배치) -->
-<div id="robot-modal" class="modal-overlay">
-  <div class="modal-content">
-    <button class="login-close" onclick="closeRobotModal()">×</button>
-    <h3 style="margin-bottom:15px; font-weight:900;">새 로봇 프로젝트 추가</h3>
-    <input type="text" id="rb-season" placeholder="시즌/연도 (예: 2025 SSRC / REEFSCAPE)">
-    <input type="text" id="rb-name" placeholder="로봇 이름 (예: TURTLE-V1)">
-    <input type="file" id="rb-file" accept="image/*">
-    <textarea id="rb-desc" rows="5" placeholder="로봇 제원 및 설명 (메커니즘, 주요 기능 등)"></textarea>
-    <button class="action-btn" onclick="saveRobotToFirebase()">등록하기</button>
-  </div>
-</div>
   
 <section id="page-intro_career" class="subpage">
 <div class="inner">
@@ -2533,11 +2520,11 @@ function updateRobotSlideUI() {
 
 // 3. 관리자 모달 및 DB 저장
 function openRobotModal() {
-  document.getElementById('robot-modal').style.display = 'flex';
+  document.getElementById('robot-admin-modal').style.display = 'flex';
 }
 
 function closeRobotModal() {
-  document.getElementById('robot-modal').style.display = 'none';
+  document.getElementById('robot-admin-modal').style.display = 'none';
 }
 
 async function saveRobotToFirebase() {
@@ -2628,12 +2615,12 @@ window.navigate = function(pageId, pushHistory = true) {
 };
 
 window.openRobotModal = function() {
-  const modal = document.getElementById('robot-modal');
+  const modal = document.getElementById('robot-admin-modal');
   if (modal) modal.style.display = 'flex';
 };
 
 window.closeRobotModal = function() {
-  const modal = document.getElementById('robot-modal');
+  const modal = document.getElementById('robot-admin-modal');
   if (modal) modal.style.display = 'none';
 };
 </script>
