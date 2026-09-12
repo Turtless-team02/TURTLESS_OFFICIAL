@@ -528,6 +528,7 @@ body.text-cursor {
 <a class="drop-btn" onclick="toggleDrop('intro-dropdown')">소개</a>
 <div class="dropdown-content" id="intro-dropdown">
 <a onclick="navigate('intro_team')">팀 소개</a>
+<a onclick="navigate('intro_robot')">로봇 소개</a>
 <a onclick="navigate('intro_member')">팀원 소개</a>
 <a onclick="navigate('intro_org')">조직도</a>
 <a onclick="navigate('intro_career')">경력</a>
@@ -766,6 +767,49 @@ body.text-cursor {
 </div>
 </section>
 
+<section id="page-intro_robot" class="subpage">
+<!-- 로봇 소개 서브페이지 -->
+<div class="subpage" id="intro_robot">
+  <h2 class="subpage-title">ROBOT GALLERY</h2>
+  
+  <div class="content-card" style="padding: 20px;">
+    <!-- 로봇 슬라이더 컨테이너 -->
+    <div class="sponsor-slider" id="robot-slider">
+      <div id="robot-slides-wrapper">
+        <!-- 파이어베이스 데이터가 여기에 로드됩니다 -->
+        <div class="sp-slide active">
+          <div class="sp-left"><p>로봇 데이터를 불러오는 중...</p></div>
+        </div>
+      </div>
+
+      <!-- 슬라이더 컨트롤 버튼 및 도트 -->
+      <div class="sp-nav">
+        <button class="slider-control-btn" onclick="moveRobotSlide(-1)">❮</button>
+        <div id="robot-dots" style="display:flex; gap:8px;"></div>
+        <button class="slider-control-btn" onclick="moveRobotSlide(1)">❯</button>
+      </div>
+    </div>
+
+    <!-- 관리자 전용 로봇 추가 버튼 & 모달 버튼 -->
+    <div id="robot-admin-tools" style="display:none; margin-top: 20px; text-align: right;">
+      <button class="dash-btn-sm" style="background:var(--primary-color);" onclick="openRobotModal()">+ 새 로봇 등록하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 로봇 등록 모달 -->
+<div id="robot-modal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="login-close" onclick="closeRobotModal()">×</button>
+    <h3 style="margin-bottom:15px; font-weight:900;">새 로봇 프로젝트 추가</h3>
+    <input type="text" id="rb-season" placeholder="시즌/연도 (예: 2026 REEFSCAPE)">
+    <input type="text" id="rb-name" placeholder="로봇 이름 (예: TURTLE-V1)">
+    <input type="text" id="rb-img" placeholder="이미지 URL (Cloudinary / GitHub 등)">
+    <textarea id="rb-desc" rows="5" placeholder="로봇 제원 및 설명 (메커니즘, 주요 기능 등)"></textarea>
+    <button class="action-btn" onclick="saveRobotToFirebase()">등록하기</button>
+  </div>
+</div>
+  
 <section id="page-intro_org" class="subpage">
   <div class="inner">
     <h2 class="subpage-title">조직도</h2>
@@ -2402,6 +2446,148 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 </script>
+<script>
+// ==========================================
+// 로봇 소개 슬라이더 & 파이어베이스 연동 로직
+// ==========================================
+let robotSlidesData = [];
+let currentRobotIndex = 0;
+
+// 1. 파이어베이스에서 로봇 데이터 불러오기
+async function loadRobotSlides() {
+  const wrapper = document.getElementById('robot-slides-wrapper');
+  const dotsContainer = document.getElementById('robot-dots');
   
+  if (!wrapper || !dotsContainer) return;
+
+  try {
+    const snapshot = await db.collection('robots').orderBy('season', 'desc').get();
+    robotSlidesData = [];
+    
+    snapshot.forEach(doc => {
+      robotSlidesData.push({ id: doc.id, ...doc.data() });
+    });
+
+    if (robotSlidesData.length === 0) {
+      wrapper.innerHTML = `<div class="sp-slide active"><div class="sp-left"><p>등록된 로봇이 없습니다.</p></div></div>`;
+      dotsContainer.innerHTML = '';
+      return;
+    }
+
+    wrapper.innerHTML = robotSlidesData.map((rb, idx) => `
+      <div class="sp-slide ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+        <div class="sp-left">
+          <img src="${rb.imgUrl}" alt="${rb.name}" onerror="this.src='logo.jpg'">
+        </div>
+        <div class="sp-right">
+          <span style="color:var(--primary-color); font-weight:800; font-size:14px;">${rb.season}</span>
+          <h3>${rb.name}</h3>
+          <p style="white-space: pre-line;">${rb.description}</p>
+          ${window.isAdmin ? `<button class="dash-btn-sm" style="background:#dc3545; margin-top:15px; width:fit-content;" onclick="deleteRobot('${rb.id}')">삭제</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+    dotsContainer.innerHTML = robotSlidesData.map((_, idx) => `
+      <span class="slider-dot ${idx === 0 ? 'active' : ''}" onclick="goToRobotSlide(${idx})"></span>
+    `).join('');
+
+    currentRobotIndex = 0;
+  } catch (error) {
+    console.error("로봇 로드 실패:", error);
+  }
+}
+
+// 2. 슬라이더 이동 제어
+function moveRobotSlide(step) {
+  if (robotSlidesData.length === 0) return;
+  currentRobotIndex = (currentRobotIndex + step + robotSlidesData.length) % robotSlidesData.length;
+  updateRobotSlideUI();
+}
+
+function goToRobotSlide(index) {
+  currentRobotIndex = index;
+  updateRobotSlideUI();
+}
+
+function updateRobotSlideUI() {
+  const slides = document.querySelectorAll('#robot-slides-wrapper .sp-slide');
+  const dots = document.querySelectorAll('#robot-dots .slider-dot');
+
+  slides.forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === currentRobotIndex);
+  });
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === currentRobotIndex);
+  });
+}
+
+// 3. 관리자 모달 및 DB 저장
+function openRobotModal() {
+  document.getElementById('robot-modal').style.display = 'flex';
+}
+
+function closeRobotModal() {
+  document.getElementById('robot-modal').style.display = 'none';
+}
+
+async function saveRobotToFirebase() {
+  const season = document.getElementById('rb-season').value.trim();
+  const name = document.getElementById('rb-name').value.trim();
+  const imgUrl = document.getElementById('rb-img').value.trim();
+  const description = document.getElementById('rb-desc').value.trim();
+
+  if (!season || !name || !imgUrl || !description) {
+    alert('모든 항목을 입력해주세요.');
+    return;
+  }
+
+  try {
+    await db.collection('robots').add({
+      season,
+      name,
+      imgUrl,
+      description,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert('성공적으로 등록되었습니다!');
+    closeRobotModal();
+
+    document.getElementById('rb-season').value = '';
+    document.getElementById('rb-name').value = '';
+    document.getElementById('rb-img').value = '';
+    document.getElementById('rb-desc').value = '';
+    
+    loadRobotSlides();
+  } catch (error) {
+    alert('저장 중 오류 발생: ' + error.message);
+  }
+}
+
+// 4. 삭제 기능
+async function deleteRobot(docId) {
+  if (!confirm('이 로봇 데이터를 삭제하시겠습니까?')) return;
+  try {
+    await db.collection('robots').doc(docId).delete();
+    alert('삭제되었습니다.');
+    loadRobotSlides();
+  } catch (error) {
+    alert('삭제 실패: ' + error.message);
+  }
+}
+
+// 5. 페이지 이동 감지 및 로드
+const origNavigate = window.navigate;
+window.navigate = function(pageId) {
+  if (typeof origNavigate === 'function') origNavigate(pageId);
+  if (pageId === 'intro_robot' || pageId === 'page-intro_robot') {
+    loadRobotSlides();
+    if (window.isAdmin && document.getElementById('robot-admin-tools')) {
+      document.getElementById('robot-admin-tools').style.display = 'block';
+    }
+  }
+};
+</script>
 </body>
 </html>
