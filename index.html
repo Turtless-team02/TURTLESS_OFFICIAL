@@ -2564,7 +2564,7 @@ async function saveRobotToFirebase() {
     }
 
     // 2. Cloudinary 주소를 Firebase에 저장
-    await addDoc(collection(db, "robots"), {
+    await db.collection("robots").add({
   season: season,
   name: name,
   imgUrl: data.secure_url,
