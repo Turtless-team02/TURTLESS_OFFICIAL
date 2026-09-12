@@ -2671,5 +2671,67 @@ window.closeRobotModal = function() {
 })();
 </script>
 
+<!-- 기존 코드 맨 밑에 붙여넣는 완전 해결 패치 -->
+<script>
+(function() {
+  // 1. 백지화 방지 강제 CSS 주입 (글자색 묻힘, 높이 0px 방지)
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .subpage.active, [id^="page-"].active {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      min-height: 400px !important;
+      color: #111111 !important; /* 글자색이 흰색으로 묻히는 현상 방지 */
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 2. 완벽 대처 navigate 함수 재정의
+  window.navigate = function(pageId) {
+    if (!pageId) return;
+
+    // 모든 페이지 숨기기
+    const allPages = document.querySelectorAll('.subpage, #page-home, [id^="page-"], [id$="-page"]');
+    allPages.forEach(el => {
+      el.classList.remove('active');
+      el.style.setProperty('display', 'none', 'important');
+    });
+
+    // 서브페이지 ID 탐색 (page-xxx, xxx 모두 지원)
+    let target = null;
+    if (pageId === 'home') {
+      target = document.getElementById('page-home') || document.getElementById('home');
+    } else {
+      target = document.getElementById(`page-${pageId}`) || 
+               document.getElementById(pageId) || 
+               document.getElementById(`${pageId}-page`);
+    }
+
+    if (target) {
+      target.classList.add('active');
+      target.style.setProperty('display', 'block', 'important');
+      
+      // 자식 요소들 중 글자색이 투명/흰색이라 안 보이는 것 강제 처리
+      target.querySelectorAll('*').forEach(child => {
+        if (getComputedStyle(child).color === 'rgb(255, 255, 255)' && getComputedStyle(target).backgroundColor === 'rgb(255, 255, 255)') {
+          child.style.color = '#222';
+        }
+      });
+    } else {
+      console.error(`[오류] ID가 'page-${pageId}' 또는 '${pageId}'인 태그를 찾지 못했습니다.`);
+    }
+
+    // 화면을 가리는 메뉴/오버레이 강제 정리
+    document.querySelectorAll('.dropdown-content, .nav-links, .menu-overlay').forEach(el => {
+      el.classList.remove('show', 'active');
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+})();
+</script>
+
+  
 </body>
 </html>
