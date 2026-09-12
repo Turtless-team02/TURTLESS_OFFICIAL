@@ -763,6 +763,8 @@ body.text-cursor {
   </div>
 </div>
 
+</section>
+
 <section class="section" style="padding-top: 20px;">
 <div class="inner">
 <h2 class="section-subtitle">Our Sponsors</h2>
@@ -782,7 +784,7 @@ body.text-cursor {
 
 <!-- 1. 로봇 소개 서브페이지 -->
 <section id="page-intro_robot" class="subpage">
-  <div class="subpage" id="intro_robot">
+  <div id="intro_robot">
     <h2 class="subpage-title">ROBOT GALLERY</h2>
     
     <div class="content-card" style="padding: 20px;">
@@ -883,7 +885,7 @@ body.text-cursor {
 
 <section id="page-sponsorship" class="subpage"><div class="inner"><h2 class="subpage-title">후원문의</h2><div class="content-card"><div id="b-spon" class="editable-content">후원 안내 및 문의처를 입력하세요.</div></div></div></section>
 
-<section id="engineering_note" class="subpage active" style="display: block !important; min-height: 750px; padding: 40px 0;">
+<section id="engineering_note" class="subpage" style="min-height: 750px; padding: 40px 0;">
   <div class="inner">
     <h2 class="subpage-title" style="color: #333333 !important; margin-bottom: 20px;">엔지니어링 노트</h2>
     <div class="content-card" style="display: block !important; width: 100%; min-height: 620px; background: #ffffff; border-radius: 8px; padding: 15px; box-sizing: border-box; border: 1px solid #e1e4e8;">
@@ -989,27 +991,7 @@ if (targetDoc && targetDoc.querySelectorAll) {
 </script>
 
   
-<footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;">
-<p>© 2026 TURTLESS(터틀리스) TEAM
 
-서울학생로봇대회(SSRC) 고등학생 연합 로봇팀</p>
-
-<div class="lang-selector-container" style="margin-top: 20px; display: inline-flex; align-items: center; gap: 8px;">
-<i class="fa-solid fa-globe" style="color: #aaa; font-size: 18px;"></i>
-<select class="lang-select" onchange="changeLanguage(this.value)" style="background:#222; color:#fff; border:1px solid #444; padding:6px 12px; border-radius:4px; font-size:13px; cursor:pointer;">
-<option value="ko">한국어 (Korean)</option>
-<option value="en">English</option>
-<option value="zh-CN">中文 (Chinese)</option>
-</select>
-</div>
-
-<div style="margin-top: 15px; line-height: 1.6; letter-spacing: -0.3px;">
-<p style="color: #444; font-size: 11px; margin: 2px 0;">* 구글 번역기를 사용한 자동 번역으로, 일부 오역이 발생할 수 있습니다.</p>
-<p style="color: #444; font-size: 11px; margin: 2px 0; font-family: sans-serif;">* Automated translation via Google Translate may contain errors or inaccuracies.</p>
-<p style="color: #444; font-size: 11px; margin: 2px 0;">* 使用谷歌翻译的自动翻译，可能会出现翻译不准确的情况。</p>
-<p style="color: #444; font-size: 11px; margin: 2px 0;">* 홈회면 버튼을 7번 연속으로 누르거나 키보드로 turtle을 입력해 보세요!! :)</p>
-</div>
-</footer>
 
 <script type="text/javascript">
 function googleTranslateElementInit() {
@@ -2046,53 +2028,65 @@ window.openLoginModal = () => document.getElementById('login-modal').style.displ
 window.closeLoginModal = () => document.getElementById('login-modal').style.display='none';
 
 window.navigate = function(id, pushHistory = true) {
-    document.getElementById('page-home').style.display =
-        id === 'home' ? 'block' : 'none';
+    if (!id) id = 'home';
 
-    document.querySelectorAll('.subpage')
-        .forEach(p => p.classList.remove('active'));
+    const home = document.getElementById('page-home');
+    const pages = document.querySelectorAll('section.subpage');
 
+    // 모든 페이지 숨김
+    if (home) {
+        home.style.setProperty('display', id === 'home' ? 'block' : 'none', 'important');
+        home.classList.toggle('active', id === 'home');
+    }
+
+    pages.forEach(page => {
+        page.classList.remove('active');
+        page.style.setProperty('display', 'none', 'important');
+    });
+
+    // 선택한 서브페이지 표시
     if (id !== 'home') {
         const page = document.getElementById('page-' + id);
-        if (page) {
+        if (page && page.classList.contains('subpage')) {
             page.classList.add('active');
+            page.style.setProperty('display', 'block', 'important');
+        } else {
+            console.warn('[TURTLESS] 페이지를 찾지 못함:', id);
+            id = 'home';
+            if (home) {
+                home.classList.add('active');
+                home.style.setProperty('display', 'block', 'important');
+            }
         }
     }
 
-    // 주소 변경
+    // URL 변경
     if (pushHistory) {
-        const path = id === 'home'
-            ? '/TURTLESS_OFFICIAL/'
-            : '/TURTLESS_OFFICIAL/' + id;
-
+        const base = '/TURTLESS_OFFICIAL/';
+        const path = id === 'home' ? base : base + id;
         history.pushState({ page: id }, '', path);
     }
 
-    document.getElementById('nav-links').classList.remove('active');
+    const nav = document.getElementById('nav-links');
+    if (nav) nav.classList.remove('active');
+    document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
 
-    document.querySelectorAll('.dropdown-content')
-        .forEach(d => d.classList.remove('show'));
-
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'auto' });
 };
-//여기부터 popstate
+
+// 브라우저 뒤로가기 / 앞으로가기
 window.addEventListener('popstate', () => {
     const base = '/TURTLESS_OFFICIAL/';
     let path = window.location.pathname;
 
-    if (path.startsWith(base)) {
-        path = path.slice(base.length);
-    }
-
-    path = path.replace(/\/+$/, '');
+    if (path.startsWith(base)) path = path.slice(base.length);
+    path = path.replace(/^\/+|\/+$/g, '');
 
     const id = path || 'home';
-
-    if (
-        id === 'home' ||
-        document.getElementById('page-' + id)
-    ) {
+    if (id === 'home' || document.getElementById('page-' + id)) {
         navigate(id, false);
+    } else {
+        navigate('home', false);
     }
 });
 
@@ -2593,8 +2587,8 @@ async function deleteRobot(docId) {
 
 // 5. 페이지 이동 감지 및 로드
 const origNavigate = window.navigate;
-window.navigate = function(pageId) {
-  if (typeof origNavigate === 'function') origNavigate(pageId);
+window.navigate = function(pageId, pushHistory = true) {
+  if (typeof origNavigate === 'function') origNavigate(pageId, pushHistory);
   if (pageId === 'intro_robot' || pageId === 'page-intro_robot') {
     loadRobotSlides();
     if (window.isAdmin && document.getElementById('robot-admin-tools')) {
@@ -2614,194 +2608,52 @@ window.closeRobotModal = function() {
 };
 </script>
 
-<!-- 기존 코드 맨 밑에 추가하는 패치 스크립트 -->
+
 <script>
-(function() {
-  // 1. 변수 미선언으로 인한 자바스크립트 중단(에러) 방지
-  if (typeof window.sponsorData === 'undefined') window.sponsorData = [];
-  if (typeof window.isSpPaused === 'undefined') window.isSpPaused = false;
-  if (typeof window.spInt === 'undefined') window.spInt = null;
+// GitHub Pages SPA 초기 경로 복원
+(function () {
+  function restoreRoute() {
+    const base = '/TURTLESS_OFFICIAL/';
+    let path = window.location.pathname;
+    if (path.startsWith(base)) path = path.slice(base.length);
+    path = path.replace(/^\/+|\/+$/g, '');
 
-  // 2. 선언되지 않은 함수(loadSlider 등) 호출 시 스크립트 멈춤 방지
-  ['loadSlider', 'loadSponsors', 'loadMembers', 'loadActivities', 'loadGallery'].forEach(fn => {
-    if (typeof window[fn] === 'undefined') window[fn] = function() {};
-  });
+    // 해시가 있으면 해시를 우선 사용
+    const hash = window.location.hash.replace(/^#\/?/, '').replace(/\/+$/, '');
+    const id = hash || path || 'home';
 
-  // 3. 서브페이지 백지화 원인(ID 불일치 및 CSS 숨김) 해결 navigate 재정의
-  window.navigate = function(pageId) {
-    if (!pageId) return;
-
-    // 전체 페이지 일단 숨김
-    const allPages = document.querySelectorAll('.subpage, #page-home, [id^="page-"], [id$="-page"]');
-    allPages.forEach(el => {
-      el.style.setProperty('display', 'none', 'important');
-      el.classList.remove('active');
-    });
-
-    // page-xxx / xxx / xxx-page 다양한 ID 형태 자동 탐색
-    let target = null;
-    if (pageId === 'home') {
-      target = document.getElementById('page-home') || document.getElementById('home');
-    } else {
-      target = document.getElementById(`page-${pageId}`) || 
-               document.getElementById(pageId) || 
-               document.getElementById(`${pageId}-page`);
+    if (typeof window.navigate === 'function') {
+      window.navigate(
+        id === 'home' || document.getElementById('page-' + id) ? id : 'home',
+        false
+      );
     }
-
-    if (target) {
-      // 강제 표시 (CSS !important 설정 우회)
-      target.style.setProperty('display', 'block', 'important');
-      target.classList.add('active');
-    } else {
-      console.error(`[이동 실패] '${pageId}'에 해당하는 HTML 태그(id)를 찾지 못했습니다.`);
-    }
-
-    // 메뉴 및 드롭다운 닫기
-    document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
-    const nav = document.getElementById('nav-links');
-    if (nav) nav.classList.remove('active');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // 4. 로딩 완료 후 안전하게 메인화면 출력
-  window.addEventListener('DOMContentLoaded', function() {
-    window.navigate('home');
-  });
+  }
+  window.addEventListener('DOMContentLoaded', restoreRoute);
+  window.addEventListener('hashchange', restoreRoute);
 })();
 </script>
+<footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;">
+<p>© 2026 TURTLESS(터틀리스) TEAM
 
-<!-- 기존 코드 맨 밑에 붙여넣는 완전 해결 패치 -->
-<script>
-(function() {
-  // 1. 백지화 방지 강제 CSS 주입 (글자색 묻힘, 높이 0px 방지)
-  const style = document.createElement('style');
-  style.innerHTML = `
-    .subpage.active, [id^="page-"].active {
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      min-height: 400px !important;
-      color: #111111 !important; /* 글자색이 흰색으로 묻히는 현상 방지 */
-    }
-  `;
-  document.head.appendChild(style);
+서울학생로봇대회(SSRC) 고등학생 연합 로봇팀</p>
 
-  // 2. 완벽 대처 navigate 함수 재정의
-  window.navigate = function(pageId) {
-    if (!pageId) return;
+<div class="lang-selector-container" style="margin-top: 20px; display: inline-flex; align-items: center; gap: 8px;">
+<i class="fa-solid fa-globe" style="color: #aaa; font-size: 18px;"></i>
+<select class="lang-select" onchange="changeLanguage(this.value)" style="background:#222; color:#fff; border:1px solid #444; padding:6px 12px; border-radius:4px; font-size:13px; cursor:pointer;">
+<option value="ko">한국어 (Korean)</option>
+<option value="en">English</option>
+<option value="zh-CN">中文 (Chinese)</option>
+</select>
+</div>
 
-    // 모든 페이지 숨기기
-    const allPages = document.querySelectorAll('.subpage, #page-home, [id^="page-"], [id$="-page"]');
-    allPages.forEach(el => {
-      el.classList.remove('active');
-      el.style.setProperty('display', 'none', 'important');
-    });
+<div style="margin-top: 15px; line-height: 1.6; letter-spacing: -0.3px;">
+<p style="color: #444; font-size: 11px; margin: 2px 0;">* 구글 번역기를 사용한 자동 번역으로, 일부 오역이 발생할 수 있습니다.</p>
+<p style="color: #444; font-size: 11px; margin: 2px 0; font-family: sans-serif;">* Automated translation via Google Translate may contain errors or inaccuracies.</p>
+<p style="color: #444; font-size: 11px; margin: 2px 0;">* 使用谷歌翻译的自动翻译，可能会出现翻译不准确的情况。</p>
+<p style="color: #444; font-size: 11px; margin: 2px 0;">* 홈회면 버튼을 7번 연속으로 누르거나 키보드로 turtle을 입력해 보세요!! :)</p>
+</div>
+</footer>
 
-    // 서브페이지 ID 탐색 (page-xxx, xxx 모두 지원)
-    let target = null;
-    if (pageId === 'home') {
-      target = document.getElementById('page-home') || document.getElementById('home');
-    } else {
-      target = document.getElementById(`page-${pageId}`) || 
-               document.getElementById(pageId) || 
-               document.getElementById(`${pageId}-page`);
-    }
-
-    if (target) {
-      target.classList.add('active');
-      target.style.setProperty('display', 'block', 'important');
-      
-      // 자식 요소들 중 글자색이 투명/흰색이라 안 보이는 것 강제 처리
-      target.querySelectorAll('*').forEach(child => {
-        if (getComputedStyle(child).color === 'rgb(255, 255, 255)' && getComputedStyle(target).backgroundColor === 'rgb(255, 255, 255)') {
-          child.style.color = '#222';
-        }
-      });
-    } else {
-      console.error(`[오류] ID가 'page-${pageId}' 또는 '${pageId}'인 태그를 찾지 못했습니다.`);
-    }
-
-    // 화면을 가리는 메뉴/오버레이 강제 정리
-    document.querySelectorAll('.dropdown-content, .nav-links, .menu-overlay').forEach(el => {
-      el.classList.remove('show', 'active');
-    });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-})();
-</script>
-
-<script>
-/* === 서브페이지 백지 현상 방지 및 에러 복구 스크립트 === */
-
-// 1. 존재하지 않는 DOM 참조 에러로 스크립트 전체가 멈추는 것 방지
-window.onerror = function (msg, url, line) {
-  console.warn("에러 차단 및 복구 중:", msg, "at line", line);
-  return true; 
-};
-
-// 2. 안전한 페이지 전환 함수 (기존 showPage 기능을 강제 보정)
-const originalShowPage = window.showPage;
-window.showPage = function (pageId) {
-  // 모든 서브페이지 숨김 처리
-  const pages = document.querySelectorAll('.page-content, .subpage, section[id]');
-  pages.forEach(p => p.style.display = 'none');
-
-  // 요청한 ID가 없으면 'home'으로 자동 대체하여 백지 현상 방지
-  const target = document.getElementById(pageId) || document.getElementById('home') || pages[0];
-  if (target) {
-    target.style.display = 'block';
-  }
-};
-
-// 3. 로봇 소개 관련 누락된 버튼 클릭 이벤트 안전 등록
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('a[href^="#"], button[data-target]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const targetId = btn.getAttribute('data-target') || btn.getAttribute('href')?.replace('#', '');
-      if (targetId && document.getElementById(targetId)) {
-        window.showPage(targetId);
-      }
-    });
-  });
-});
-</script>
-
-<script>
-/* === GitHub Pages URL 경로 및 SPA 라우터 보정 스크립트 === */
-function handleGithubPagesRoute() {
-  // 1. Hash(#)가 있으면 Hash 우선, 없으면 URL 경로의 맨 마지막 단어만 추출
-  let pageId = location.hash.replace('#/', '').replace('#', '');
-  
-  if (!pageId) {
-    const pathSegments = location.pathname.split('/').filter(Boolean);
-    // 리포지토리명(TURTLESS_OFFICIAL)을 제외한 실제 서브페이지 ID 추출
-    const lastSegment = pathSegments[pathSegments.length - 1];
-    pageId = (lastSegment && lastSegment !== 'TURTLESS_OFFICIAL') ? lastSegment : 'home';
-  }
-
-  // 2. 모든 서브페이지 구역 숨기기
-  const allPages = document.querySelectorAll('.page-content, section[id], div[id]');
-  allPages.forEach(page => {
-    // 헤더/네비게이션/푸터 등 공통 요소는 제외하고 서브페이지 전용 구역만 숨김
-    if (page.classList.contains('page-content') || page.tagName === 'SECTION') {
-      page.style.display = 'none';
-    }
-  });
-
-  // 3. 추출한 pageId와 일치하는 요소 표시
-  const target = document.getElementById(pageId) || document.getElementById('home');
-  if (target) {
-    target.style.display = 'block';
-  }
-}
-
-// 브라우저 뒤로가기, URL 변경, 최초 로드 시 자동 실행
-window.addEventListener('DOMContentLoaded', handleGithubPagesRoute);
-window.addEventListener('hashchange', handleGithubPagesRoute);
-window.addEventListener('popstate', handleGithubPagesRoute);
-</script>
-  
 </body>
 </html>
