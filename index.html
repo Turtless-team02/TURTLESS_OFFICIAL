@@ -2953,5 +2953,422 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 </footer>
 
+<style>
+/* =========================================================
+   MOBILE UI IMPROVEMENT
+   후원사 + 엔지니어링 노트 + 로봇 소개
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* =====================================================
+       1. 후원사
+       메인 탭 + 후원사 세부 탭 공통
+       ===================================================== */
+
+    #home-sponsor-slider,
+    #page-sponsor-slider {
+        height: 500px !important;
+        border-radius: 18px !important;
+    }
+
+    #home-sponsor-slider .sp-slide,
+    #page-sponsor-slider .sp-slide {
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+    }
+
+    /* 로고 영역 */
+    #home-sponsor-slider .sp-left,
+    #page-sponsor-slider .sp-left {
+        flex: 0 0 46% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        padding: 20px !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        box-sizing: border-box !important;
+    }
+
+    #home-sponsor-slider .sp-left img,
+    #page-sponsor-slider .sp-left img {
+        max-width: 82% !important;
+        max-height: 145px !important;
+        object-fit: contain !important;
+    }
+
+    /* 설명 영역 */
+    #home-sponsor-slider .sp-right,
+    #page-sponsor-slider .sp-right {
+        flex: 1 1 auto !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 22px 24px 78px !important;
+        box-sizing: border-box !important;
+        justify-content: center !important;
+        text-align: center !important;
+        overflow: hidden !important;
+    }
+
+    #home-sponsor-slider .sp-right h3,
+    #page-sponsor-slider .sp-right h3 {
+        font-size: 1.45rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 8px !important;
+    }
+
+    #home-sponsor-slider .sp-right p,
+    #page-sponsor-slider .sp-right p {
+        font-size: .9rem !important;
+        line-height: 1.55 !important;
+        word-break: keep-all !important;
+        margin: 0 !important;
+    }
+
+    /* 후원사 하단 컨트롤 */
+    #home-sponsor-slider .sp-nav,
+    #page-sponsor-slider .sp-nav {
+        height: 64px !important;
+        padding: 12px 18px !important;
+        gap: 9px !important;
+    }
+
+    #home-sponsor-slider .sp-nav .slider-control-btn,
+    #page-sponsor-slider .sp-nav .slider-control-btn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        border-radius: 50% !important;
+    }
+
+    #home-sponsor-slider .sp-nav .slider-dot,
+    #page-sponsor-slider .sp-nav .slider-dot {
+        width: 8px !important;
+        height: 8px !important;
+    }
+
+    #home-sponsor-slider .sp-nav .slider-dot.active,
+    #page-sponsor-slider .sp-nav .slider-dot.active {
+        width: 30px !important;
+    }
+
+
+    /* =====================================================
+       2. 로봇 소개
+       ===================================================== */
+
+    #robot-slider {
+        height: 510px !important;
+        border-radius: 18px !important;
+    }
+
+    #robot-slider .robot-info {
+        width: 100% !important;
+        height: 100% !important;
+        box-sizing: border-box !important;
+        padding: 35px 22px 78px !important;
+        justify-content: flex-end !important;
+    }
+
+    #robot-slider .robot-year {
+        font-size: .8rem !important;
+        letter-spacing: 3px !important;
+        margin-bottom: 5px !important;
+    }
+
+    #robot-slider .robot-game {
+        font-size: 2.15rem !important;
+        line-height: 1 !important;
+        letter-spacing: -1px !important;
+        margin-bottom: 14px !important;
+    }
+
+    #robot-slider .robot-name {
+        font-size: 1.35rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 12px !important;
+    }
+
+    #robot-slider .robot-line {
+        width: 45px !important;
+        height: 3px !important;
+        margin-bottom: 14px !important;
+    }
+
+    #robot-slider .robot-description {
+        max-width: 100% !important;
+        font-size: .82rem !important;
+        line-height: 1.55 !important;
+        word-break: keep-all !important;
+    }
+
+    #robot-slider .sp-nav {
+        height: 64px !important;
+        padding: 12px 18px !important;
+    }
+
+    #robot-slider .sp-nav .slider-control-btn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+    }
+}
+
+
+/* =========================================================
+   작은 스마트폰 추가 보정
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    /* 후원사 */
+    #home-sponsor-slider,
+    #page-sponsor-slider {
+        height: 480px !important;
+    }
+
+    #home-sponsor-slider .sp-left,
+    #page-sponsor-slider .sp-left {
+        flex-basis: 44% !important;
+        padding: 16px !important;
+    }
+
+    #home-sponsor-slider .sp-left img,
+    #page-sponsor-slider .sp-left img {
+        max-height: 125px !important;
+    }
+
+    #home-sponsor-slider .sp-right,
+    #page-sponsor-slider .sp-right {
+        padding: 18px 18px 72px !important;
+    }
+
+    #home-sponsor-slider .sp-right h3,
+    #page-sponsor-slider .sp-right h3 {
+        font-size: 1.3rem !important;
+    }
+
+    #home-sponsor-slider .sp-right p,
+    #page-sponsor-slider .sp-right p {
+        font-size: .84rem !important;
+    }
+
+
+    /* 로봇 */
+    #robot-slider {
+        height: 490px !important;
+    }
+
+    #robot-slider .robot-info {
+        padding: 28px 18px 76px !important;
+    }
+
+    #robot-slider .robot-game {
+        font-size: 1.9rem !important;
+    }
+
+    #robot-slider .robot-name {
+        font-size: 1.2rem !important;
+    }
+
+    #robot-slider .robot-description {
+        font-size: .78rem !important;
+        line-height: 1.5 !important;
+    }
+}
+</style>
+
+
+<script>
+/* =========================================================
+   ENGINEERING NOTE MOBILE FIX
+   MHT -> iframe 생성 후 내부에도 모바일 CSS 적용
+   ========================================================= */
+
+(function () {
+
+    function fixEngineeringIframe(iframe) {
+
+        if (!iframe || iframe.dataset.mobileFixed === '1') {
+            return;
+        }
+
+        function applyFix() {
+
+            try {
+
+                const doc = iframe.contentDocument;
+
+                if (!doc || !doc.head) {
+                    return;
+                }
+
+                iframe.dataset.mobileFixed = '1';
+
+
+                /* -------------------------------------------------
+                   모바일 viewport
+                   ------------------------------------------------- */
+
+                let viewport = doc.querySelector(
+                    'meta[name="viewport"]'
+                );
+
+                if (!viewport) {
+
+                    viewport = doc.createElement('meta');
+
+                    viewport.name = 'viewport';
+
+                    doc.head.appendChild(viewport);
+                }
+
+                viewport.setAttribute(
+                    'content',
+                    'width=device-width, initial-scale=1.0, maximum-scale=1.0'
+                );
+
+
+                /* -------------------------------------------------
+                   모바일 CSS
+                   ------------------------------------------------- */
+
+                const style = doc.createElement('style');
+
+                style.textContent = `
+
+                    * {
+                        box-sizing: border-box !important;
+                    }
+
+                    html,
+                    body {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                        max-width: 100% !important;
+                        overflow-x: hidden !important;
+                    }
+
+                    img {
+                        max-width: 100% !important;
+                        height: auto !important;
+                    }
+
+                    table {
+                        max-width: 100% !important;
+                    }
+
+
+                    @media (max-width: 768px) {
+
+                        body {
+                            font-size: 15px !important;
+                        }
+
+
+                        /* 고정 min-width 제거 */
+
+                        [style*="min-width"] {
+                            min-width: 0 !important;
+                        }
+
+
+                        /* 지나치게 넓은 고정 폭 요소 */
+
+                        [style*="width: 1000px"],
+                        [style*="width: 1100px"],
+                        [style*="width: 1200px"] {
+                            width: 100% !important;
+                            max-width: 100% !important;
+                        }
+
+
+                        /* 긴 텍스트 줄바꿈 */
+
+                        p,
+                        div,
+                        span,
+                        a,
+                        h1,
+                        h2,
+                        h3,
+                        h4,
+                        h5,
+                        h6 {
+                            overflow-wrap: break-word !important;
+                            word-break: normal !important;
+                        }
+
+
+                        /* 링크 */
+
+                        a {
+                            max-width: 100% !important;
+                        }
+
+
+                        /* 노션 계열 콘텐츠 */
+
+                        .notion-page-content,
+                        .notion-frame,
+                        .notion-selectable {
+                            width: 100% !important;
+                            max-width: 100% !important;
+                        }
+
+                    }
+                `;
+
+                doc.head.appendChild(style);
+
+            } catch (e) {
+                /* iframe이 아직 로드되지 않았으면 무시 */
+            }
+        }
+
+
+        /* iframe 로드 완료 */
+
+        iframe.addEventListener('load', applyFix);
+
+
+        /* 이미 로드되어 있는 경우 */
+
+        setTimeout(applyFix, 100);
+        setTimeout(applyFix, 500);
+    }
+
+
+    /* =====================================================
+       엔지니어링 노트 iframe 감시
+       ===================================================== */
+
+    const observer = new MutationObserver(function () {
+
+        const viewer = document.getElementById('mhtml-viewer');
+
+        if (!viewer) {
+            return;
+        }
+
+        const iframe = viewer.querySelector('iframe');
+
+        if (iframe) {
+            fixEngineeringIframe(iframe);
+        }
+
+    });
+
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+})();
+</script>
+  
 </body>
 </html>
