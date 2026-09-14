@@ -775,7 +775,511 @@ body.text-cursor {
 #page-home>.feature-cards-container{display:none!important}
 @media(max-width:900px){.home-overview-head{display:block}.home-overview-desc{margin-top:9px}.home-latest-grid{grid-template-columns:1fr}.home-youtube-panel{min-height:350px}}
 @media(max-width:650px){.home-overview{padding:52px 5%}.home-stats{grid-template-columns:1fr}.home-stat:not(:last-child){border-right:0;border-bottom:1px solid #e5e9ee}.home-latest-section{padding-top:48px!important;padding-bottom:48px!important}.home-section-head{align-items:start}.home-section-title{font-size:27px}.home-quick-links .inner{grid-template-columns:repeat(2,1fr)}.home-quick-links button:nth-child(odd){border-right:1px solid #e5e9ee}.home-quick-links button{border-bottom:1px solid #e5e9ee}.home-quick-links button:last-child{grid-column:1/-1;border-right:0}}
-</style></head>
+</style>
+<style id="turtless-refine-v16">
+/* V16 — targeted refinement only. Existing page components/data remain intact. */
+
+/* HOME: use the existing right column to remove dead space without changing content */
+#page-home .home-latest-grid{align-items:stretch!important;grid-template-columns:minmax(0,1.22fr) minmax(360px,.78fr)!important}
+#page-home .home-side-panel{height:100%!important;min-height:100%!important;display:flex!important;flex-direction:column!important;gap:16px!important}
+#page-home .home-gallery-panel{flex:0 0 auto!important}
+#page-home .home-sns-panel{flex:1 1 auto!important;min-height:0!important}
+#page-home .home-notice-panel{flex:0 0 auto!important}
+#page-home .home-sns-cards{display:flex!important;flex-direction:column!important;gap:12px!important}
+#page-home .home-sns-card{min-height:154px!important;height:154px!important;padding:23px 25px!important}
+#page-home .home-sns-card i{font-size:36px!important}
+#page-home .home-sns-card strong{font-size:20px!important}
+#page-home .home-sns-card span{font-size:12.5px!important}
+@media(max-width:900px){
+ #page-home .home-latest-grid{grid-template-columns:1fr!important}
+ #page-home .home-side-panel{height:auto!important;min-height:0!important}
+}
+
+/* TEAM INTRO: distinctive corporate/editorial composition, still within the site's existing system */
+#page-intro_team{background:#fff!important;position:relative!important;overflow:hidden!important}
+#page-intro_team .inner{max-width:1200px!important}
+#page-intro_team .subpage-title{text-align:left!important;font-size:clamp(40px,5vw,68px)!important;line-height:1.05!important;letter-spacing:-.055em!important;margin-bottom:42px!important;padding-left:20px!important;position:relative!important}
+#page-intro_team .subpage-title::before{content:"";position:absolute;left:0;top:.1em;width:4px;height:.8em;background:var(--primary-color);border-radius:4px}
+#page-intro_team .content-card{max-width:none!important;margin:0!important;min-height:360px!important;padding:48px 58px!important;border-radius:0 18px 18px 0!important;border-left:3px solid var(--primary-color)!important;background:linear-gradient(110deg,#f7faff 0%,#fff 72%)!important;box-shadow:none!important;position:relative!important}
+#page-intro_team .editable-content{max-width:900px!important;font-size:clamp(17px,1.45vw,21px)!important;line-height:1.95!important;color:#293640!important;position:relative!important;z-index:2}
+#page-intro_team .content-card::after{content:"TURTLESS\A 11379";white-space:pre;position:absolute;right:38px;bottom:22px;font:900 clamp(54px,7vw,92px)/.78 Arial,sans-serif;letter-spacing:-.07em;color:#edf3f8;text-align:right;z-index:0;pointer-events:none}
+
+/* CAREER: restore the original symmetric POSCO-style timeline exactly */
+#page-intro_career .career-container{max-width:1200px!important;margin:40px auto!important;position:relative!important;padding:40px 0!important}
+#page-intro_career .career-container::before{content:''!important;display:block!important;position:absolute!important;width:2px!important;background-color:var(--border-color)!important;top:0!important;bottom:0!important;left:50%!important;transform:translateX(-50%)!important}
+#page-intro_career .career-row{display:flex!important;align-items:center!important;width:100%!important;margin-bottom:80px!important;position:relative!important;padding:0!important;border:0!important;box-shadow:none!important}
+#page-intro_career .career-col-text,#page-intro_career .career-col-img{width:50%!important;padding:0 50px!important;box-sizing:border-box!important}
+#page-intro_career .career-dot{display:block!important;position:absolute!important;width:16px!important;height:16px!important;background:#fff!important;border:4px solid #005a9c!important;border-radius:50%!important;left:50%!important;transform:translateX(-50%)!important;z-index:10!important}
+#page-intro_career .career-row.normal{flex-direction:row!important}
+#page-intro_career .career-row.normal .career-col-text{text-align:right!important}
+#page-intro_career .career-row.normal .career-col-img{text-align:left!important}
+#page-intro_career .career-row.reverse{flex-direction:row-reverse!important}
+#page-intro_career .career-row.reverse .career-col-text{text-align:left!important}
+#page-intro_career .career-row.reverse .career-col-img{text-align:right!important}
+#page-intro_career .career-year{font-size:3rem!important;font-weight:900!important;color:#111!important;line-height:1.1!important;margin-bottom:15px!important;letter-spacing:-1px!important}
+#page-intro_career .career-details{display:inline-block!important;text-align:left!important;width:100%!important;max-width:450px!important}
+#page-intro_career .career-row.normal .career-details{text-align:right!important}
+#page-intro_career .career-details h3{font-size:1.25rem!important;font-weight:800!important;color:var(--text-main)!important;margin-bottom:8px!important}
+#page-intro_career .career-details p{font-size:.95rem!important;color:var(--text-sub)!important;line-height:1.7!important}
+#page-intro_career .career-img-box{display:inline-block!important;width:100%!important;max-width:500px!important;aspect-ratio:16/10!important;overflow:hidden!important;border-radius:4px!important;box-shadow:0 4px 20px rgba(0,0,0,.06)!important;background:#f7f7f7!important}
+@media(max-width:768px){
+ #page-intro_career .career-container::before{left:20px!important;transform:none!important}
+ #page-intro_career .career-row{flex-direction:column!important;align-items:flex-start!important;margin-bottom:50px!important}
+ #page-intro_career .career-col-text,#page-intro_career .career-col-img{width:100%!important;padding-left:45px!important;padding-right:15px!important;text-align:left!important}
+ #page-intro_career .career-details{text-align:left!important;max-width:100%!important}
+ #page-intro_career .career-col-img{margin-top:15px!important}
+ #page-intro_career .career-img-box{max-width:100%!important}
+ #page-intro_career .career-dot{left:20px!important;transform:translateX(-50%)!important;top:15px!important}
+ #page-intro_career .career-year{font-size:2.2rem!important;margin-bottom:10px!important}
+}
+
+/* SLOGAN: same mood, cleaner hierarchy; watermark is fully visible */
+#page-intro_slogan{background:#0d141b!important;min-height:calc(100vh - 80px)!important;display:flex!important;align-items:center!important;position:relative!important;overflow:hidden!important}
+#page-intro_slogan .inner{max-width:1200px!important;width:100%!important;position:relative!important;z-index:2!important}
+#page-intro_slogan .subpage-title{color:#8e9aa4!important;text-align:left!important;font-size:11px!important;line-height:1!important;letter-spacing:.32em!important;margin-bottom:28px!important}
+#page-intro_slogan .content-card{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;min-height:0!important;margin:0!important;position:relative!important;z-index:2!important}
+#page-intro_slogan .content-card::before{content:"TURTLESS / IDENTITY";display:block;color:var(--primary-color);font:800 10px/1 Arial,sans-serif;letter-spacing:.24em;margin-bottom:20px}
+#page-intro_slogan .editable-content{max-width:1050px!important;color:#fff!important;background:transparent!important;border:0!important;font-size:clamp(43px,6.1vw,86px)!important;line-height:1.05!important;letter-spacing:-.06em!important;font-weight:900!important}
+#page-intro_slogan .editable-content *{color:#fff!important}
+#page-intro_slogan::before{content:"TURTLESS";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;text-align:center;white-space:nowrap;font:900 clamp(110px,18vw,260px)/.8 Arial,sans-serif;letter-spacing:-.09em;color:rgba(255,255,255,.035);pointer-events:none;z-index:1}
+#page-intro_slogan::after{content:"";position:absolute;left:5%;bottom:44px;width:58px;height:2px;background:var(--primary-color);opacity:.8}
+
+/* LOGO: new brand-gallery design; content itself remains editable */
+#page-intro_logo{background:#f5f7f9!important;position:relative!important;overflow:hidden!important}
+#page-intro_logo .inner{max-width:1200px!important}
+#page-intro_logo .subpage-title{text-align:left!important;font-size:clamp(40px,5vw,68px)!important;line-height:1.05!important;letter-spacing:-.055em!important;margin-bottom:38px!important}
+#page-intro_logo .subpage-title::after{content:"";display:block;width:46px;height:3px;background:var(--primary-color);border-radius:3px;margin-top:17px}
+#page-intro_logo .content-card{max-width:none!important;min-height:520px!important;margin:0!important;padding:0!important;border:1px solid #dfe5ea!important;border-radius:20px!important;background:#fff!important;box-shadow:0 20px 55px rgba(15,35,52,.07)!important;display:grid!important;grid-template-columns:1.15fr .85fr!important;overflow:hidden!important;position:relative!important}
+#page-intro_logo .content-card::before{content:"BRAND IDENTITY";position:absolute;left:38px;top:32px;font:800 9px/1 Arial,sans-serif;letter-spacing:.24em;color:#98a5ae;z-index:3}
+#page-intro_logo .editable-content{width:100%!important;height:100%!important;min-height:520px!important;padding:82px 58px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;font-size:17px!important;line-height:1.8!important;color:#53616c!important;position:relative!important}
+#page-intro_logo .editable-content::before{content:"";position:absolute;right:0;top:0;width:1px;height:100%;background:#e6ebef}
+#page-intro_logo .editable-content img{max-width:min(78%,520px)!important;max-height:360px!important;object-fit:contain!important;margin:0 auto!important;display:block!important}
+#page-intro_logo .content-card::after{content:"TURTLESS  ·  FRC 11379";position:absolute;right:38px;bottom:30px;font:800 9px/1 Arial,sans-serif;letter-spacing:.18em;color:#9aa6af}
+@media(max-width:700px){
+ #page-intro_logo .content-card{display:block!important;min-height:420px!important}
+ #page-intro_logo .editable-content{min-height:420px!important;padding:70px 26px 55px!important}
+ #page-intro_logo .editable-content::before{display:none!important}
+ #page-intro_logo .editable-content img{max-width:88%!important}
+}
+
+/* MAIN ACTIVITIES: make the ACT badge look like a real editorial index marker */
+#page-activity{background:#f7f9fb!important}
+#page-activity .inner{max-width:1200px!important}
+#page-activity .subpage-title{text-align:left!important;font-size:clamp(40px,5vw,68px)!important;line-height:1.05!important;letter-spacing:-.055em!important;margin-bottom:40px!important}
+#page-activity .content-card{max-width:none!important;margin:0!important;padding:0 36px!important;border-radius:18px!important;border:1px solid #e0e6eb!important;background:#fff!important;box-shadow:0 15px 42px rgba(15,35,52,.055)!important}
+#page-activity .content-card>.act-list-item{padding:30px 22px 32px 88px!important;border-bottom:1px solid #e6ebef!important;border-top:0!important;position:relative!important;background:#fff!important;transition:background .25s ease,padding-left .25s ease!important}
+#page-activity .content-card>.act-list-item:last-child{border-bottom:0!important}
+#page-activity .content-card>.act-list-item::before{content:""!important;position:absolute!important;left:22px!important;top:30px!important;width:44px!important;height:44px!important;border-radius:50%!important;border:1.5px solid #bcdcff!important;background:#f5faff!important;box-shadow:inset 0 0 0 5px #fff!important;box-sizing:border-box!important}
+#page-activity .content-card>.act-list-item::after{content:"ACT"!important;position:absolute!important;left:22px!important;top:47px!important;width:44px!important;text-align:center!important;font:900 8px/1 Arial,sans-serif!important;letter-spacing:.12em!important;color:var(--primary-color)!important}
+#page-activity .content-card>.act-list-item:hover{background:#fbfdff!important;padding-left:94px!important}
+#page-activity .act-list-item h3{font-size:clamp(19px,2vw,26px)!important;line-height:1.35!important;letter-spacing:-.025em!important;color:#18242e!important;margin-bottom:8px!important}
+#page-activity .act-list-item p{font-size:15px!important;line-height:1.8!important;color:#687681!important}
+#page-activity .act-list-item .resizable-img-box{max-width:560px!important;margin-top:20px!important;border-radius:10px!important;overflow:hidden!important;border:1px solid #e3e8ec!important}
+@media(max-width:700px){
+ #page-activity .content-card{padding:0 18px!important}
+ #page-activity .content-card>.act-list-item{padding-left:70px!important}
+ #page-activity .content-card>.act-list-item:hover{padding-left:70px!important}
+ #page-activity .content-card>.act-list-item::before,#page-activity .content-card>.act-list-item::after{left:12px!important}
+}
+
+/* Professional scroll reveal — no layout shift, subtle and fast */
+@media(prefers-reduced-motion:no-preference){
+ .turtless-scroll-reveal{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
+ .turtless-scroll-reveal.is-visible{opacity:1;transform:none}
+ .turtless-scroll-reveal:nth-child(2){transition-delay:.06s}.turtless-scroll-reveal:nth-child(3){transition-delay:.12s}.turtless-scroll-reveal:nth-child(4){transition-delay:.18s}
+}
+</style>
+
+<script id="turtless-professional-scroll-v16">
+(function(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const groups=[
+    '#page-home .home-overview-head, #page-home .home-stats, #page-home .home-latest-section .home-section-head, #page-home .home-latest-grid, #page-home .home-quick-links, #page-home .home-sponsor-section',
+    '#page-intro_team .subpage-title, #page-intro_team .content-card',
+    '#page-intro_logo .subpage-title, #page-intro_logo .content-card',
+    '#page-intro_slogan .subpage-title, #page-intro_slogan .content-card',
+    '#page-activity .subpage-title, #page-activity .content-card',
+    '#page-intro_career .career-row'
+  ];
+  function collect(){
+    const els=[];
+    groups.forEach(sel=>document.querySelectorAll(sel).forEach(el=>els.push(el)));
+    return [...new Set(els)];
+  }
+  let observer;
+  function scan(){
+    const els=collect();
+    if(!els.length)return;
+    if(!observer){
+      observer=new IntersectionObserver(entries=>entries.forEach(e=>{
+        if(e.isIntersecting){e.target.classList.add('is-visible');observer.unobserve(e.target);}
+      }),{threshold:.08,rootMargin:'0px 0px -45px 0px'});
+    }
+    els.forEach(el=>{if(!el.classList.contains('turtless-scroll-reveal')){el.classList.add('turtless-scroll-reveal');observer.observe(el);}});
+  }
+  document.addEventListener('DOMContentLoaded',scan);
+  const mo=new MutationObserver(scan);
+  mo.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','style']});
+})();
+</script>
+
+<style id="turtless-sponsor-editorial-v19">
+/* ===== Sponsor / Editorial Slider V19 ===== */
+#home-sponsor-slider,
+#page-sponsor-slider{
+  position:relative!important;
+  height:520px!important;
+  margin-top:10px!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:#f4f7fa!important;
+  overflow:hidden!important;
+}
+#home-sponsor-slider::before,
+#page-sponsor-slider::before{
+  content:"SPONSORS";
+  position:absolute;
+  left:28px;
+  top:22px;
+  z-index:5;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.24em;
+  color:#7890a3;
+}
+#home-sponsor-slider .sp-slide,
+#page-sponsor-slider .sp-slide{
+  position:absolute!important;
+  inset:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(40%,48%) 1fr!important;
+  background:transparent!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  transform:translateX(22px)!important;
+  transition:opacity .55s ease,transform .65s cubic-bezier(.2,.7,.2,1),visibility .55s!important;
+}
+#home-sponsor-slider .sp-slide.active,
+#page-sponsor-slider .sp-slide.active{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translateX(0)!important;
+  z-index:2!important;
+}
+#home-sponsor-slider .sp-left,
+#page-sponsor-slider .sp-left{
+  position:relative!important;
+  min-width:0!important;
+  height:100%!important;
+  padding:74px 60px 92px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:0!important;
+  background:#fff!important;
+}
+#home-sponsor-slider .sp-left::after,
+#page-sponsor-slider .sp-left::after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:74px;
+  bottom:74px;
+  width:1px;
+  background:#d9e2e9;
+}
+#home-sponsor-slider .sp-left img,
+#page-sponsor-slider .sp-left img{
+  display:block!important;
+  width:auto!important;
+  max-width:72%!important;
+  max-height:210px!important;
+  object-fit:contain!important;
+  filter:none!important;
+}
+#home-sponsor-slider .sp-right,
+#page-sponsor-slider .sp-right{
+  min-width:0!important;
+  height:100%!important;
+  padding:86px 72px 96px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  text-align:left!important;
+  background:#f4f7fa!important;
+}
+#home-sponsor-slider .sp-right::before,
+#page-sponsor-slider .sp-right::before{
+  content:"THANK YOU FOR SUPPORTING TURTLESS";
+  margin-bottom:22px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+  color:#6e8496;
+}
+#home-sponsor-slider .sp-right h3,
+#page-sponsor-slider .sp-right h3{
+  margin:0 0 20px!important;
+  padding:0!important;
+  border:0!important;
+  font-size:clamp(34px,4vw,58px)!important;
+  line-height:1.04!important;
+  letter-spacing:-.055em!important;
+  font-weight:800!important;
+  color:#102331!important;
+}
+#home-sponsor-slider .sp-right h3::after,
+#page-sponsor-slider .sp-right h3::after{
+  content:"";
+  display:block;
+  width:42px;
+  height:3px;
+  margin-top:22px;
+  background:#2563eb;
+}
+#home-sponsor-slider .sp-right p,
+#page-sponsor-slider .sp-right p{
+  max-width:540px!important;
+  margin:0!important;
+  font-size:14px!important;
+  line-height:1.9!important;
+  color:#61717e!important;
+}
+#home-sponsor-slider .sp-nav,
+#page-sponsor-slider .sp-nav{
+  position:absolute!important;
+  left:28px!important;
+  right:28px!important;
+  bottom:22px!important;
+  z-index:10!important;
+  height:42px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:7px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+#home-sponsor-slider .sp-nav .slider-control-btn,
+#page-sponsor-slider .sp-nav .slider-control-btn{
+  width:38px!important;
+  height:38px!important;
+  margin:0!important;
+  border:1px solid #cfd9e1!important;
+  border-radius:50%!important;
+  background:rgba(255,255,255,.92)!important;
+  color:#344b5b!important;
+  box-shadow:none!important;
+  transition:all .2s ease!important;
+}
+#home-sponsor-slider .sp-nav .slider-control-btn:hover,
+#page-sponsor-slider .sp-nav .slider-control-btn:hover{
+  border-color:#2563eb!important;
+  color:#2563eb!important;
+  transform:translateY(-1px)!important;
+}
+#home-sponsor-slider .sp-nav .slider-dot,
+#page-sponsor-slider .sp-nav .slider-dot{
+  width:6px!important;
+  height:6px!important;
+  padding:0!important;
+  margin:0 2px!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:#b7c4ce!important;
+  transition:all .25s ease!important;
+}
+#home-sponsor-slider .sp-nav .slider-dot.active,
+#page-sponsor-slider .sp-nav .slider-dot.active{
+  width:24px!important;
+  border-radius:10px!important;
+  background:#2563eb!important;
+}
+#home-sponsor-slider .sp-nav .sp-pause-btn,
+#page-sponsor-slider .sp-nav .sp-pause-btn{
+  margin-left:5px!important;
+}
+@media(max-width:768px){
+  #home-sponsor-slider,
+  #page-sponsor-slider{height:540px!important}
+  #home-sponsor-slider::before,
+  #page-sponsor-slider::before{left:20px;top:18px}
+  #home-sponsor-slider .sp-slide,
+  #page-sponsor-slider .sp-slide{display:flex!important;flex-direction:column!important}
+  #home-sponsor-slider .sp-left,
+  #page-sponsor-slider .sp-left{
+    flex:0 0 50%!important;
+    height:50%!important;
+    padding:54px 30px 20px!important;
+  }
+  #home-sponsor-slider .sp-left::after,
+  #page-sponsor-slider .sp-left::after{
+    right:30px;left:30px;top:auto;bottom:0;width:auto;height:1px;
+  }
+  #home-sponsor-slider .sp-left img,
+  #page-sponsor-slider .sp-left img{max-width:65%!important;max-height:145px!important}
+  #home-sponsor-slider .sp-right,
+  #page-sponsor-slider .sp-right{
+    flex:1!important;
+    height:50%!important;
+    padding:30px 28px 76px!important;
+    justify-content:flex-start!important;
+  }
+  #home-sponsor-slider .sp-right::before,
+  #page-sponsor-slider .sp-right::before{margin-bottom:12px;font-size:9px}
+  #home-sponsor-slider .sp-right h3,
+  #page-sponsor-slider .sp-right h3{font-size:34px!important;margin-bottom:15px!important}
+  #home-sponsor-slider .sp-right h3::after,
+  #page-sponsor-slider .sp-right h3::after{margin-top:15px}
+  #home-sponsor-slider .sp-right p,
+  #page-sponsor-slider .sp-right p{font-size:13px!important;line-height:1.75!important}
+  #home-sponsor-slider .sp-nav,
+  #page-sponsor-slider .sp-nav{left:20px!important;right:20px!important;bottom:17px!important}
+}
+</style>
+
+
+<style id="engineering-note-full-width-fix">
+/* Engineering Note: 좌우 빈 공간을 줄이고 노트 영역을 넓게 사용 */
+#engineering_note > .inner{
+  width:100% !important;
+  max-width:none !important;
+  padding-left:clamp(12px,3vw,42px) !important;
+  padding-right:clamp(12px,3vw,42px) !important;
+  box-sizing:border-box !important;
+}
+#engineering_note .content-card{
+  width:100% !important;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+#engineering_note #mhtml-viewer{
+  width:100% !important;
+  max-width:none !important;
+}
+@media(max-width:768px){
+  #engineering_note > .inner{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+  #engineering_note .content-card{
+    padding:8px !important;
+    border-radius:6px !important;
+  }
+}
+</style>
+
+<style id="turtless-numbers-v23">
+.turtless-numbers-section{padding:88px 0 92px;background:#f7f9fc;border-top:1px solid #e8edf3;border-bottom:1px solid #e8edf3}
+.turtless-numbers-head{margin-bottom:42px}
+.turtless-numbers-head .home-kicker{display:block;margin-bottom:9px}
+.turtless-numbers-head .home-section-title{margin:0 0 12px}
+.turtless-numbers-head p{margin:0;color:#6c7784;font-size:15px;line-height:1.7}
+.turtless-number-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #dce4ec;border-bottom:1px solid #dce4ec}
+.turtless-number-item{min-height:205px;padding:28px 30px 30px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid #dce4ec;position:relative}
+.turtless-number-item:last-child{border-right:0}
+.turtless-number-item strong{font-family:Arial,sans-serif;font-size:clamp(68px,7vw,104px);font-weight:800;line-height:.9;letter-spacing:-.08em;color:#101820}
+.turtless-number-item .x,.turtless-number-item .eq{font-size:.42em;letter-spacing:-.02em;vertical-align:middle;margin:0 .06em}
+.turtless-number-item span:not(.x):not(.eq){font-size:15px;font-weight:600;color:#354250;letter-spacing:-.025em}
+.turtless-number-final strong{white-space:nowrap;font-size:clamp(42px,4.5vw,70px);letter-spacing:-.07em}
+@media(max-width:900px){.turtless-number-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.turtless-number-item:nth-child(2){border-right:0}.turtless-number-item:nth-child(-n+2){border-bottom:1px solid #dce4ec}.turtless-number-final strong{font-size:clamp(38px,9vw,62px)}}
+@media(max-width:600px){.turtless-numbers-section{padding:62px 0 68px}.turtless-numbers-head{margin-bottom:28px}.turtless-numbers-head p{font-size:14px}.turtless-number-grid{grid-template-columns:1fr}.turtless-number-item{min-height:160px;padding:24px 22px;border-right:0!important;border-bottom:1px solid #dce4ec}.turtless-number-item:last-child{border-bottom:0}.turtless-number-item strong{font-size:72px}.turtless-number-final strong{font-size:48px}}
+</style>
+<style id="turtless-numbers-v24">
+.turtless-equation{display:flex;align-items:center;justify-content:center;gap:clamp(20px,4vw,56px);padding:22px 0 8px}
+.turtless-equation-result,.turtless-factor{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.turtless-equation-result>span,.turtless-factor>span{font-size:14px;font-weight:600;color:#53606d;letter-spacing:-.02em;white-space:nowrap}
+.turtless-bubble{width:clamp(112px,11vw,154px);height:clamp(112px,11vw,154px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-size:clamp(64px,7vw,94px);font-weight:800;line-height:1;letter-spacing:-.08em}
+.turtless-bubble-blue{background:#fff;border:3px solid #1769aa;color:#1769aa;box-shadow:0 12px 30px rgba(23,105,170,.12)}
+.turtless-bubble-white{background:#fff;border:2px solid #d7e0e8;color:#18232d;box-shadow:0 10px 25px rgba(20,35,50,.07)}
+.turtless-equation-equals,.turtless-operator{font-family:Arial,sans-serif;font-size:clamp(34px,4vw,58px);font-weight:400;color:#84909b;line-height:1}
+.turtless-equation-factors{display:flex;align-items:center;gap:clamp(14px,2.2vw,34px)}
+@media(max-width:900px){.turtless-equation{gap:20px}.turtless-equation-factors{gap:12px}.turtless-bubble{width:108px;height:108px;font-size:62px}}
+@media(max-width:700px){.turtless-equation{gap:12px;align-items:center}.turtless-equation-factors{gap:7px}.turtless-bubble{width:76px;height:76px;font-size:45px}.turtless-equation-equals,.turtless-operator{font-size:30px}.turtless-equation-result,.turtless-factor{gap:12px}.turtless-equation-result>span,.turtless-factor>span{font-size:11px;white-space:normal;max-width:82px;line-height:1.45}}
+@media(max-width:430px){.turtless-equation{gap:7px}.turtless-equation-factors{gap:4px}.turtless-bubble{width:62px;height:62px;font-size:37px}.turtless-equation-equals,.turtless-operator{font-size:23px}.turtless-equation-result>span,.turtless-factor>span{font-size:10px;max-width:68px}}
+</style>
+<style id="turtless-number-polish-v25">
+/* 숫자로 보는 TURTLESS V25 */
+.number-stat, .t-number-stat, .numbers-stat { position:relative; }
+/* 8 버블은 팀 컬러로 완전 채움 */
+.number-stat .num-eight, .t-number-stat .num-eight, .numbers-stat .num-eight,
+.number-stat .number-eight, .t-number-stat .number-eight, .numbers-stat .number-eight {
+  background:var(--team-blue,#1f5eff)!important;
+  color:#fff!important;
+  border:0!important;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -5px 10px rgba(0,0,0,.12), 0 8px 18px rgba(0,0,0,.12)!important;
+}
+/* 숫자 버블 입체감 */
+.number-stat .num-bubble, .t-number-stat .num-bubble, .numbers-stat .num-bubble,
+.number-stat .number-bubble, .t-number-stat .number-bubble, .numbers-stat .number-bubble {
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.85), inset 0 -5px 10px rgba(0,0,0,.08), 0 7px 16px rgba(15,35,52,.12)!important;
+  transform:translateZ(0);
+}
+/* 연산자는 버블과 분리하고 숫자 원의 세로 중앙선에 정렬 */
+.number-stat .operator, .t-number-stat .operator, .numbers-stat .operator,
+.number-stat .num-op, .t-number-stat .num-op, .numbers-stat .num-op {
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:center!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0 10px!important;
+}
+</style>
+
+<style id="turtless-numbers-v26-fix">
+/* 숫자로 보는 TURTLESS: 실제 클래스에 직접 적용 */
+.turtless-numbers-section .turtless-bubble-blue{
+  background:#1769aa!important;
+  border:0!important;
+  color:#fff!important;
+  box-shadow:
+    inset 0 4px 7px rgba(255,255,255,.22),
+    inset 0 -9px 16px rgba(0,35,75,.20),
+    0 10px 20px rgba(23,105,170,.22)!important;
+}
+.turtless-numbers-section .turtless-bubble-white{
+  background:#fff!important;
+  border:1px solid #d8e1e9!important;
+  color:#18232d!important;
+  box-shadow:
+    inset 0 4px 7px rgba(255,255,255,.95),
+    inset 0 -9px 16px rgba(30,50,70,.08),
+    0 10px 20px rgba(15,35,52,.13)!important;
+}
+/* 화면 진입 전에는 숫자들이 아래에 대기 */
+.turtless-numbers-section .turtless-equation-result,
+.turtless-numbers-section .turtless-factor{
+  opacity:0;
+  transform:translateY(38px);
+}
+.turtless-numbers-section .turtless-equation-equals,
+.turtless-numbers-section .turtless-equation-factors > .turtless-operator{
+  opacity:0;
+  transform:translateY(20px);
+}
+.turtless-numbers-section.numbers-visible .turtless-equation-result{animation:turtlessNumberUp .72s cubic-bezier(.2,.8,.2,1) .05s forwards;}
+.turtless-numbers-section.numbers-visible .turtless-equation-equals{animation:turtlessOperatorUp .5s ease .48s forwards;}
+.turtless-numbers-section.numbers-visible .turtless-factor:nth-child(1){animation:turtlessNumberUp .72s cubic-bezier(.2,.8,.2,1) .62s forwards;}
+.turtless-numbers-section.numbers-visible .turtless-equation-factors > .turtless-operator:nth-child(2){animation:turtlessOperatorUp .5s ease 1.03s forwards;}
+.turtless-numbers-section.numbers-visible .turtless-factor:nth-child(3){animation:turtlessNumberUp .72s cubic-bezier(.2,.8,.2,1) 1.16s forwards;}
+.turtless-numbers-section.numbers-visible .turtless-equation-factors > .turtless-operator:nth-child(4){animation:turtlessOperatorUp .5s ease 1.57s forwards;}
+.turtless-numbers-section.numbers-visible .turtless-factor:nth-child(5){animation:turtlessNumberUp .72s cubic-bezier(.2,.8,.2,1) 1.70s forwards;}
+@keyframes turtlessNumberUp{from{opacity:0;transform:translateY(38px)}to{opacity:1;transform:translateY(0)}}
+@keyframes turtlessOperatorUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){
+  .turtless-numbers-section .turtless-equation-result,.turtless-numbers-section .turtless-factor,.turtless-numbers-section .turtless-equation-equals,.turtless-numbers-section .turtless-equation-factors>.turtless-operator{opacity:1;transform:none;animation:none!important}
+}
+</style>
+</head>
 <body>
 <div id="google_translate_element" style="display:none;"></div>
 <div id="edit-toolbar">
@@ -809,7 +1313,7 @@ body.text-cursor {
 <div class="nav-links" id="nav-links">
 <button class="close-menu" onclick="document.getElementById('nav-links').classList.remove('active')">×</button>
 <div class="dropdown">
-<a class="drop-btn" onclick="toggleDrop('about-dropdown')">ABOUT</a>
+<a class="drop-btn" onclick="toggleDrop('about-dropdown')">소개</a>
 <div class="dropdown-content" id="about-dropdown">
 <a onclick="navigate('intro_team')">팀 소개</a>
 <a onclick="navigate('intro_member')">팀원</a>
@@ -820,28 +1324,28 @@ body.text-cursor {
 </div>
 </div>
 <div class="dropdown">
-<a class="drop-btn" onclick="toggleDrop('robot-dropdown')">ROBOT</a>
+<a class="drop-btn" onclick="toggleDrop('robot-dropdown')">로봇</a>
 <div class="dropdown-content" id="robot-dropdown">
 <a onclick="navigate('intro_robot')">로봇 소개</a>
 </div>
 </div>
 <div class="dropdown">
-<a class="drop-btn" onclick="toggleDrop('activities-dropdown')">ACTIVITIES</a>
+<a class="drop-btn" onclick="toggleDrop('activities-dropdown')">활동</a>
 <div class="dropdown-content" id="activities-dropdown">
 <a onclick="navigate('activity')">주요 활동</a>
 <a onclick="navigate('value_social')">사회공헌</a>
 <a onclick="navigate('value_esg')">ESG</a>
-<a onclick="navigate('pr_gallery')">PR Gallery</a>
+<a onclick="navigate('pr_gallery')">PR 갤러리</a>
 </div>
 </div>
 <div class="dropdown">
-<a class="drop-btn" onclick="toggleDrop('engineering-dropdown')">ENGINEERING</a>
+<a class="drop-btn" onclick="toggleDrop('engineering-dropdown')">엔지니어링</a>
 <div class="dropdown-content" id="engineering-dropdown">
-<a onclick="navigate('engineering_note'); setTimeout(() =&gt; { const f = document.querySelector('#mhtml-viewer iframe'); if(f) f.src = f.src; }, 150);">Engineering Note</a>
+<a onclick="navigate('engineering_note'); setTimeout(() =&gt; { const f = document.querySelector('#mhtml-viewer iframe'); if(f) f.src = f.src; }, 150);">엔지니어링 노트</a>
 </div>
 </div>
 <div class="dropdown">
-<a class="drop-btn" onclick="toggleDrop('sponsors-dropdown')">SPONSORS</a>
+<a class="drop-btn" onclick="toggleDrop('sponsors-dropdown')">후원</a>
 <div class="dropdown-content" id="sponsors-dropdown">
 <a onclick="navigate('intro_sponsor')">후원사</a>
 <a onclick="navigate('sponsorship')">후원문의</a>
@@ -969,7 +1473,16 @@ body.text-cursor {
 </div>
 </div>
 </div>
-</section><section class="home-overview"><div class="inner home-overview-inner"><div class="home-overview-head"><span class="home-kicker">TURTLESS</span><h2 class="home-section-title">한눈에 보는 TURTLESS</h2><p class="home-overview-desc">로봇을 만들고, 경험을 쌓고, 함께 성장합니다.</p></div><div class="home-stats"><div class="home-stat"><strong>01</strong><h3>SSRC</h3><p>서울학생로봇대회</p></div><div class="home-stat"><strong>02</strong><h3>FRC 11379</h3><p>국제 로봇대회 경험</p></div><div class="home-stat"><strong>03</strong><h3>TEAM</h3><p>협업으로 만드는 로봇</p></div></div></div></section><section class="section home-latest-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">최근</span><h2 class="home-section-title">최근 소식</h2></div><button class="home-text-link" onclick="navigate('activity')">전체 활동 보기 →</button></div><div class="home-latest-grid"><div class="home-youtube-panel"><div class="home-panel-head"><h3>YouTube</h3><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank">채널 보기 →</a></div><div id="youtube-auto-list"></div></div><div class="home-side-panel"><div class="home-gallery-panel"><div class="home-panel-head"><h3>최근 사진</h3><span onclick="navigate('pr_gallery')" style="cursor:pointer">갤러리 보기 →</span></div><div class="home-photo-grid" id="home-gallery-4grid"></div></div><div class="home-sns-panel"><div class="home-panel-head"><h3>SNS</h3><span>TURTLESS의 소식과 콘텐츠를 만나보세요</span></div><div class="home-sns-cards"><a class="home-sns-card" href="https://www.instagram.com/turtless_11379" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i><strong>Instagram</strong><span>팀의 활동과 일상을 사진으로 만나보세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i><strong>YouTube</strong><span>로봇과 대회, 팀 활동 영상을 확인하세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.tiktok.com/@turtless_11379" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i><strong>TikTok</strong><span>TURTLESS의 짧고 생생한 콘텐츠를 만나보세요.</span><b>바로가기 →</b></a></div></div><div class="home-notice-panel" id="home-notice-board"><div class="home-panel-head"><h3>최근 활동</h3><button class="home-text-link" onclick="navigate('activity')">전체 보기 →</button></div><div class="home-notice-list"></div></div></div></div></div></section><section class="home-quick-links"><div class="inner"><button onclick="navigate('intro_team')">팀 소개</button><button onclick="navigate('intro_robot')">로봇 소개</button><button onclick="navigate('activity')">활동</button><button onclick="navigate('engineering_note')">엔지니어링 노트</button><button onclick="navigate('intro_sponsor')">후원사</button></div></section><section class="section home-sponsor-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">후원</span><h2 class="home-section-title">후원사</h2></div><button class="home-text-link" onclick="navigate('intro_sponsor')">후원사 보기 →</button></div><div class="sponsor-slider" id="home-sponsor-slider"></div></div></section><div id="member-actions">
+</section><section class="home-overview"><div class="inner home-overview-inner"><div class="home-overview-head"><span class="home-kicker">TURTLESS</span><h2 class="home-section-title">한눈에 보는 TURTLESS</h2><p class="home-overview-desc">로봇을 만들고, 경험을 쌓고, 함께 성장합니다.</p></div><div class="home-stats"><div class="home-stat"><strong>01</strong><h3>SSRC</h3><p>서울학생로봇대회</p></div><div class="home-stat"><strong>02</strong><h3>FRC 11379</h3><p>국제 로봇대회 경험</p></div><div class="home-stat"><strong>03</strong><h3>TEAM</h3><p>협업으로 만드는 로봇</p></div></div></div></section><section class="turtless-numbers-section" aria-label="숫자로 보는 TURTLESS"><div class="inner"><div class="turtless-numbers-head"><span class="home-kicker">TURTLESS IN NUMBERS</span><h2 class="home-section-title">숫자로 보는 TURTLESS</h2><p>숫자 하나하나에 우리가 걸어온 과정과 다음 도전이 담겨 있습니다.</p></div><div class="turtless-equation">
+<div class="turtless-equation-result"><div class="turtless-bubble turtless-bubble-blue">8</div><span>8개교 학생들이 만들어가는</span></div>
+<div class="turtless-equation-equals">=</div>
+<div class="turtless-equation-factors">
+<div class="turtless-factor"><div class="turtless-bubble turtless-bubble-white">2</div><span>두 번째 SSRC 준비</span></div>
+<div class="turtless-operator">×</div>
+<div class="turtless-factor"><div class="turtless-bubble turtless-bubble-white">2</div><span>두 배 더 나은 실력</span></div>
+<div class="turtless-operator">×</div>
+<div class="turtless-factor"><div class="turtless-bubble turtless-bubble-white">2</div><span>두 번째 FRC 도전</span></div>
+</div></div></div></section><section class="section home-latest-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">최근</span><h2 class="home-section-title">최근 소식</h2></div><button class="home-text-link" onclick="navigate('activity')">전체 활동 보기 →</button></div><div class="home-latest-grid"><div class="home-youtube-panel"><div class="home-panel-head"><h3>YouTube</h3><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank">채널 보기 →</a></div><div id="youtube-auto-list"></div></div><div class="home-side-panel"><div class="home-gallery-panel"><div class="home-panel-head"><h3>최근 사진</h3><span onclick="navigate('pr_gallery')" style="cursor:pointer">갤러리 보기 →</span></div><div class="home-photo-grid" id="home-gallery-4grid"></div></div><div class="home-sns-panel"><div class="home-panel-head"><h3>SNS</h3><span>TURTLESS의 소식과 콘텐츠를 만나보세요</span></div><div class="home-sns-cards"><a class="home-sns-card" href="https://www.instagram.com/turtless_11379" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i><strong>Instagram</strong><span>팀의 활동과 일상을 사진으로 만나보세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i><strong>YouTube</strong><span>로봇과 대회, 팀 활동 영상을 확인하세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.tiktok.com/@turtless_11379" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i><strong>TikTok</strong><span>TURTLESS의 짧고 생생한 콘텐츠를 만나보세요.</span><b>바로가기 →</b></a></div></div><div class="home-notice-panel" id="home-notice-board"><div class="home-panel-head"><h3>최근 활동</h3><button class="home-text-link" onclick="navigate('activity')">전체 보기 →</button></div><div class="home-notice-list"></div></div></div></div></div></section><section class="home-quick-links"><div class="inner"><button onclick="navigate('intro_team')">팀 소개</button><button onclick="navigate('intro_robot')">로봇 소개</button><button onclick="navigate('activity')">활동</button><button onclick="navigate('engineering_note')">엔지니어링 노트</button><button onclick="navigate('intro_sponsor')">후원사</button></div></section><section class="section home-sponsor-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">후원</span><h2 class="home-section-title">후원사</h2></div><button class="home-text-link" onclick="navigate('intro_sponsor')">후원사 보기 →</button></div><div class="sponsor-slider" id="home-sponsor-slider"></div></div></section><div id="member-actions">
 <h3 style="color: var(--primary-color); margin-bottom: 10px;">📋 팀원 대시보드</h3>
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
 <p id="welcome-msg" style="font-weight:700; margin: 0;"></p>
@@ -1069,7 +1582,23 @@ body.text-cursor {
 </div>
 </section>
 <section class="subpage" id="page-intro_slogan"><div class="inner"><h2 class="subpage-title">슬로건</h2><div class="content-card"><div class="editable-content" id="b-slogan">여기에 슬로건을 입력하세요.</div></div></div></section>
-<section class="subpage" id="page-intro_logo"><div class="inner"><h2 class="subpage-title">로고</h2><div class="content-card"><div class="editable-content" id="b-logo">여기에 로고 설명 및 이미지를 입력하세요.</div></div></div></section>
+<section class="subpage" id="page-intro_logo"><div class="inner">
+<h2 class="subpage-title">로고</h2>
+<div class="logo-brand-board">
+  <div class="logo-brand-main">
+    <div class="logo-brand-eyebrow">TURTLESS / BRAND MARK</div>
+    <div class="editable-content" id="b-logo">여기에 로고 설명 및 이미지를 입력하세요.</div>
+  </div>
+  <div class="logo-brand-side">
+    <span class="logo-side-index">01</span>
+    <div class="logo-side-line"></div>
+    <h3>우리의 이름을<br>하나의 형태로</h3>
+    <p>TURTLESS의 로고는 팀의 정체성과 활동을 대표하는 브랜드 마크입니다.</p>
+    <div class="logo-side-meta"><b>TEAM</b><span>11379</span></div>
+    <div class="logo-side-meta"><b>IDENTITY</b><span>ROBOTICS · TEAMWORK</span></div>
+  </div>
+</div>
+</div></section>
 <section class="subpage" id="page-intro_sponsor">
 <div class="inner">
 <h2 class="subpage-title">후원사 소개</h2>
@@ -3422,7 +3951,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </style>
 <script>
 (function(){
-  const TARGET_DATE = '2026-10-31T09:00:00+09:00'; // 공식 정확한 대회일 확정 시 이 한 줄만 변경
+  const TARGET_DATE = '2026-10-24T00:00:00+09:00'; // 공식 정확한 대회일 확정 시 이 한 줄만 변경
   const target = new Date(TARGET_DATE);
 
   function makeHomeEnhancements(){
@@ -3446,7 +3975,7 @@ window.addEventListener('DOMContentLoaded', () => {
       <section class="t-section"><div class="t-wrap t-about"><div class="t-about-main"><div class="t-kicker">ABOUT TURTLESS</div><h2 class="t-title">학교와 전공의 경계를 넘어, 로봇으로 연결됩니다.</h2><p>터틀리스는 서울학생로봇대회(SSRC)를 기반으로 로봇 개발뿐 아니라 전략·회계·마케팅·브랜딩까지 함께 경험하며 성장하는 고등학생 연합 로봇팀입니다. SSRC에서 쌓은 경험을 FRC 도전으로 확장하고 있습니다.</p><div class="t-flow"><span>SSRC</span><span>Project</span><span>FRC</span><span>Global Challenge</span></div><button class="t-link blue" onclick="navigate('intro_team')">팀 소개 보기 →</button></div><div class="t-about-side"><div class="t-stat"><b>11379</b><span>FRC TEAM</span></div><div class="t-stat"><b>SSRC → FRC</b><span>도전의 흐름</span></div><div class="t-stat"><b>일반고</b><span>참여 학교의 차별성</span></div></div></div></section>
       <section class="t-section alt"><div class="t-wrap"><div class="t-kicker">OUR ROBOT</div><h2 class="t-title">우리가 만든 로봇</h2><p class="t-desc">시즌·게임·로봇 이름과 설명을 한 곳에서 확인하세요.</p><div id="t-robot-home-slot" style="margin-top:28px"></div><button class="t-link blue" onclick="navigate('intro_robot')">전체 로봇 보기 →</button></div></section>
       <section class="t-section"><div class="t-wrap"><div class="t-kicker">WHY TURTLESS</div><h2 class="t-title">세 가지 핵심가치</h2><div class="t-values"><div class="t-value"><i class="fa-solid fa-people-group"></i><h3>협력</h3><p>서로 다른 역할과 지식을 연결해 하나의 로봇과 프로젝트를 완성합니다.</p></div><div class="t-value"><i class="fa-solid fa-leaf"></i><h3>지속가능성</h3><p>기술의 결과가 새로운 문제를 만들지 않도록 환경과 사회적 영향을 함께 생각합니다.</p></div><div class="t-value"><i class="fa-solid fa-compass"></i><h3>초심</h3><p>처음의 책임감과 배우려는 자세를 잃지 않고 꾸준히 성장합니다.</p></div></div></div></section>
-      <section class="t-section alt"><div class="t-wrap"><div class="t-kicker">ENGINEERING NOTE</div><h2 class="t-title">만들고, 기록하고, 다시 개선합니다.</h2><div class="t-preview"><div><div class="t-preview-meta" id="t-note-date">Engineering Note</div><h3 id="t-note-title">최근 Engineering Note를 불러오는 중...</h3></div><button class="t-link blue" onclick="navigate('engineering_note'); setTimeout(()=>{const f=document.querySelector('#mhtml-viewer iframe');if(f)f.src=f.src},150)">VIEW ALL →</button></div></div></section>
+      <section class="t-section alt t-engineering-preview"><div class="t-wrap"><div class="t-kicker">ENGINEERING NOTE</div><h2 class="t-title">만들고, 기록하고, 다시 개선합니다.</h2><div class="t-preview"><div><div class="t-preview-meta" id="t-note-date">Engineering Note</div><h3 id="t-note-title">최근 Engineering Note를 불러오는 중...</h3></div><button class="t-link blue" onclick="navigate('engineering_note'); setTimeout(()=>{const f=document.querySelector('#mhtml-viewer iframe');if(f)f.src=f.src},150)">VIEW ALL →</button></div></div></section>
       <section class="t-section"><div class="t-wrap"><div class="t-kicker">SOCIAL CONTRIBUTION / ESG</div><h2 class="t-title">로봇을 넘어, 우리가 살아가는 사회로</h2><div class="t-grid"><div class="t-card"><span class="t-mini-label">E</span><h3>환경</h3><p>해양 생태계 보호와 플로깅 등 환경 문제를 직접 관찰하고 행동으로 연결합니다.</p></div><div class="t-card"><span class="t-mini-label">S</span><h3>사회</h3><p>캔으로 달려요, 전자기기 활용 교육 등 다양한 세대와 지역사회를 연결합니다.</p></div><div class="t-card"><span class="t-mini-label">G</span><h3>거버넌스</h3><p>수평적 토론, 투표, 역할 분담과 규칙·안전 준수를 통해 함께 결정합니다.</p></div></div><button class="t-link" onclick="navigate('value_social')">사회공헌 보기 →</button></div></section>
       <section class="t-section alt"><div class="t-wrap"><div class="t-kicker">PR GALLERY</div><h2 class="t-title">활동의 순간을 기록합니다.</h2><div id="t-gallery-home-slot" style="margin-top:25px"></div><button class="t-link blue" onclick="navigate('pr_gallery')">VIEW ALL →</button></div></section>
       <section class="t-section"><div class="t-wrap"><div class="t-kicker">SOCIAL</div><h2 class="t-title">TURTLESS를 더 가까이</h2><div class="t-social"><a href="https://www.instagram.com/turtless_11379" target="_blank"><div class="t-card"><i class="fa-brands fa-instagram" style="font-size:28px;color:#e1306c"></i><h3>Instagram</h3><p>TURTLESS의 활동과 일상을 사진으로 만나보세요.</p></div></a><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank"><div class="t-card"><i class="fa-brands fa-youtube" style="font-size:28px;color:#f00"></i><h3>YouTube</h3><p>로봇과 팀 활동의 영상 콘텐츠를 확인하세요.</p></div></a><a href="https://www.tiktok.com/@turtless_11379" target="_blank"><div class="t-card"><i class="fa-brands fa-tiktok" style="font-size:28px"></i><h3>TikTok</h3><p>짧고 생생한 TURTLESS 콘텐츠를 만나보세요.</p></div></a></div></div></section>
@@ -3456,7 +3985,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const gallery=document.getElementById('home-gallery-4grid'); if(gallery) document.getElementById('t-gallery-home-slot').appendChild(gallery.cloneNode(true));
     updateCountdown(); setInterval(updateCountdown,1000); loadEngineeringPreview(); protectNames();
   }
-  function updateCountdown(){const diff=target-new Date();const status=document.getElementById('t-count-status');const date=document.getElementById('t-count-date');if(!status)return;date.textContent='2026.10.31 예정';const setFlip=(id,value)=>{const el=document.getElementById(id);if(!el)return;const next=String(value).padStart(2,'0');if(el.textContent!==next){el.textContent=next;el.classList.remove('is-flipping');void el.offsetWidth;el.classList.add('is-flipping');setTimeout(()=>el.classList.remove('is-flipping'),540);}};if(diff<=0){setFlip('t-days','00');setFlip('t-hours','00');setFlip('t-minutes','00');setFlip('t-seconds','00');status.textContent=diff>-86400000?'D-DAY':'대회가 종료되었습니다.';return;}const d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);setFlip('t-days',d);setFlip('t-hours',h);setFlip('t-minutes',m);setFlip('t-seconds',s);status.textContent='대회까지 남은 시간';}
+  function updateCountdown(){const diff=target-new Date();const status=document.getElementById('t-count-status');const date=document.getElementById('t-count-date');if(!status)return;date.textContent='2026.10.24 예정';const setFlip=(id,value)=>{const el=document.getElementById(id);if(!el)return;const next=String(value).padStart(2,'0');if(el.textContent!==next){el.textContent=next;el.classList.remove('is-flipping');void el.offsetWidth;el.classList.add('is-flipping');setTimeout(()=>el.classList.remove('is-flipping'),540);}};if(diff<=0){setFlip('t-days','00');setFlip('t-hours','00');setFlip('t-minutes','00');setFlip('t-seconds','00');status.textContent=diff>-86400000?'D-DAY':'대회가 종료되었습니다.';return;}const d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);setFlip('t-days',d);setFlip('t-hours',h);setFlip('t-minutes',m);setFlip('t-seconds',s);status.textContent='대회까지 남은 시간';}
   async function loadEngineeringPreview(){try{const r=await fetch('https://turtless-team02.github.io/TURTLESS_OFFICIAL/engineering_note.mht');const txt=await r.text();const title=(txt.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1];const date=(txt.match(/20\d{2}[./-]\d{1,2}[./-]\d{1,2}/)||[])[0];if(title)document.getElementById('t-note-title').textContent=title.replace(/<[^>]+>/g,'').trim();if(date)document.getElementById('t-note-date').textContent=date;}catch(e){document.getElementById('t-note-title').textContent='Engineering Note';}}
   function protectNames(){const protectedTerms=['TURTLESS','터틀리스','SSRC','FRC','Team 11379','11379'];const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(n=>{if(!n.nodeValue.trim()||n.parentElement.closest('script,style,textarea,input,.notranslate,[contenteditable="true"]'))return;let text=n.nodeValue;let changed=false;protectedTerms.forEach(term=>{if(text.includes(term))changed=true});if(!changed)return;const frag=document.createDocumentFragment();let rest=text;protectedTerms.sort((a,b)=>b.length-a.length).forEach(term=>{const parts=rest.split(term);if(parts.length===1)return;parts.forEach((part,i)=>{if(part)frag.appendChild(document.createTextNode(part));if(i<parts.length-1){const span=document.createElement('span');span.className='notranslate';span.setAttribute('translate','no');span.textContent=term;frag.appendChild(span)}});rest=''});if(rest)frag.appendChild(document.createTextNode(rest));if(frag.childNodes.length)n.parentNode.replaceChild(frag,n);});document.querySelectorAll('.robot-name,.sp-right h3,[alt="TURTLESS"]').forEach(el=>{el.classList.add('notranslate');el.setAttribute('translate','no')});}
   document.addEventListener('DOMContentLoaded',()=>{makeHomeEnhancements();setTimeout(protectNames,1500);});
@@ -3687,7 +4216,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 <script id="t-countdown-clean-script">
 (function(){
-  const TARGET_DATE='2026-10-31T09:00:00+09:00';
+  const TARGET_DATE='2026-10-24T00:00:00+09:00';
   let initialized=false;
   function setDigit(id,next,animate){
     const card=document.getElementById(id);
@@ -4029,6 +4558,55 @@ window.addEventListener('DOMContentLoaded', () => {
   #page-home .home-sns-card{height:82px!important;min-height:82px!important;}
 }
 </style>
+
+<style id="turtless-sponsor-arrow-fix-v20">
+/* Sponsor slider arrow clipping fix */
+#home-sponsor-slider .sp-nav,
+#page-sponsor-slider .sp-nav{
+  left:28px!important;
+  right:40px!important;
+  width:auto!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;
+  padding-right:0!important;
+}
+#home-sponsor-slider .sp-nav .slider-control-btn,
+#page-sponsor-slider .sp-nav .slider-control-btn{
+  flex:0 0 38px!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:768px){
+  #home-sponsor-slider .sp-nav,
+  #page-sponsor-slider .sp-nav{
+    left:20px!important;
+    right:28px!important;
+    width:auto!important;
+  }
+}
+</style>
+
+<script id="turtless-numbers-v26-script">
+(function(){
+  function initTurtlessNumbers(){
+    const section=document.querySelector('.turtless-numbers-section');
+    if(!section || section.dataset.numberMotionReady) return;
+    section.dataset.numberMotionReady='1';
+    if(!('IntersectionObserver' in window)){ section.classList.add('numbers-visible'); return; }
+    const io=new IntersectionObserver((entries,observer)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          section.classList.add('numbers-visible');
+          observer.unobserve(section);
+        }
+      });
+    },{threshold:.22,rootMargin:'0px 0px -8% 0px'});
+    io.observe(section);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initTurtlessNumbers);
+  else initTurtlessNumbers();
+})();
+</script>
 </body>
 
 <style id="home-sns-thick-final">
@@ -4194,4 +4772,239 @@ window.addEventListener('DOMContentLoaded', () => {
 }
 </style>
 
+
+<style id="turtless-ui-v17-final">
+/* =========================================================
+   V17 — requested focused refinements only
+   ========================================================= */
+
+/* 1) 홈: SNS와 최근 활동 사이의 불필요한 간격 제거 */
+#page-home .home-side-panel{gap:16px!important}
+#page-home .home-sns-panel + .home-notice-panel{margin-top:-16px!important}
+#page-home .home-notice-panel{border-top-left-radius:0!important;border-top-right-radius:0!important}
+
+/* 2) 상단 배너/내비게이션 — 한글 카테고리 */
+.nav-links .drop-btn{font-size:14px!important;letter-spacing:-.02em!important}
+
+/* 3) 로고 페이지 — 기존 카드 느낌 대신 브랜드 보드 */
+#page-intro_logo{background:#f4f7fa!important;padding-top:78px!important;padding-bottom:90px!important}
+#page-intro_logo .subpage-title{margin-bottom:30px!important}
+.logo-brand-board{position:relative;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.65fr);min-height:560px;background:#fff;border:1px solid #dfe6ec;border-radius:24px;overflow:hidden;box-shadow:0 22px 60px rgba(24,52,75,.08)}
+.logo-brand-main{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:72px 64px 64px;background:radial-gradient(circle at 50% 42%,#fff 0,#fff 52%,#f7fafc 100%)}
+.logo-brand-eyebrow{position:absolute;left:38px;top:30px;font:900 9px/1 Arial,sans-serif;letter-spacing:.24em;color:#8c99a5}
+.logo-brand-main .editable-content{width:100%!important;min-height:390px!important;padding:20px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;border:0!important;background:transparent!important;box-shadow:none!important;color:#596774!important}
+.logo-brand-main .editable-content img{max-width:min(80%,600px)!important;max-height:370px!important;object-fit:contain!important;margin:auto!important}
+.logo-brand-side{position:relative;padding:72px 42px 42px;background:#101820;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;border-left:1px solid #dfe6ec}
+.logo-side-index{position:absolute;top:32px;right:38px;font:900 10px/1 'Courier Prime',monospace;letter-spacing:.16em;color:#7f8d99}
+.logo-side-line{width:42px;height:3px;background:var(--primary-color);margin-bottom:24px}
+.logo-brand-side h3{font-size:clamp(27px,3vw,42px);line-height:1.08;letter-spacing:-.055em;margin-bottom:18px;font-weight:900}
+.logo-brand-side p{color:#b9c4ce;font-size:13px;line-height:1.8;margin-bottom:36px;word-break:keep-all}
+.logo-side-meta{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-top:1px solid rgba(255,255,255,.13);font-size:10px;letter-spacing:.12em}
+.logo-side-meta b{color:#8e9aa5;font-weight:900}.logo-side-meta span{color:#fff;font-weight:800;text-align:right}
+
+/* 4) 주요 활동 — ACT를 단순 원 안의 글자가 아니라 인덱스 디자인 요소로 */
+#page-activity .content-card{counter-reset:activity-index!important}
+#page-activity .content-card>.act-list-item{counter-increment:activity-index!important;padding-left:112px!important;min-height:128px!important}
+#page-activity .content-card>.act-list-item::before{left:24px!important;top:31px!important;width:58px!important;height:58px!important;border:1px solid #b8d9fb!important;background:#fff!important;box-shadow:inset 0 0 0 7px #f1f7fd,0 8px 20px rgba(44,145,249,.08)!important}
+#page-activity .content-card>.act-list-item::after{content:'ACT ' counter(activity-index, decimal-leading-zero)!important;left:24px!important;top:54px!important;width:58px!important;color:var(--primary-color)!important;font:900 8px/1 Arial,sans-serif!important;letter-spacing:.1em!important}
+#page-activity .content-card>.act-list-item:hover{padding-left:118px!important}
+#page-activity .act-list-item h3{position:relative!important}
+#page-activity .act-list-item h3::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary-color);margin:0 10px 3px 0}
+
+/* 5) PR 갤러리 — 카테고리를 버튼 나열이 아닌 segmented navigation */
+#page-pr_gallery .filter-tabs{display:flex!important;justify-content:flex-start!important;align-items:center!important;gap:0!important;flex-wrap:nowrap!important;margin:0 0 24px!important;padding:5px!important;background:#eef3f7!important;border:1px solid #dde5eb!important;border-radius:14px!important;overflow-x:auto!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)!important}
+#page-pr_gallery .filter-btn{flex:0 0 auto!important;border:0!important;background:transparent!important;color:#667480!important;border-radius:10px!important;padding:11px 17px!important;font-size:12px!important;font-weight:850!important;letter-spacing:-.02em!important;transition:all .2s ease!important;white-space:nowrap!important;cursor:pointer!important}
+#page-pr_gallery .filter-btn:hover{color:#18242e!important;background:#fff!important}
+#page-pr_gallery .filter-btn.active{background:#fff!important;color:var(--primary-color)!important;box-shadow:0 4px 12px rgba(24,52,75,.09)!important}
+
+/* 6) 후원사 슬라이드 — 이전에 사용하던 좌우 분할형을 다시 선명하게 */
+#home-sponsor-slider,#page-sponsor-slider{height:560px!important;border-radius:20px!important;background:#fff!important;border:1px solid #dfe5ea!important;box-shadow:0 18px 50px rgba(15,35,52,.07)!important}
+#home-sponsor-slider .sp-slide,#page-sponsor-slider .sp-slide{display:grid!important;grid-template-columns:1fr 1fr!important;flex-wrap:nowrap!important;background:#fff!important}
+#home-sponsor-slider .sp-left,#page-sponsor-slider .sp-left{min-width:0!important;padding:46px!important;border-right:1px solid #e2e8ed!important;border-bottom:0!important;background:#fff!important}
+#home-sponsor-slider .sp-left img,#page-sponsor-slider .sp-left img{max-width:78%!important;max-height:260px!important;object-fit:contain!important}
+#home-sponsor-slider .sp-right,#page-sponsor-slider .sp-right{min-width:0!important;padding:60px!important;justify-content:center!important;text-align:left!important;background:#fbfcfd!important}
+#home-sponsor-slider .sp-right h3,#page-sponsor-slider .sp-right h3{font-size:clamp(28px,3.3vw,42px)!important;line-height:1.15!important;letter-spacing:-.045em!important;margin-bottom:20px!important;padding-bottom:16px!important;border-bottom:1px solid #dfe6ec!important}
+#home-sponsor-slider .sp-right p,#page-sponsor-slider .sp-right p{font-size:14px!important;line-height:1.85!important;color:#65727d!important}
+#home-sponsor-slider .sp-nav,#page-sponsor-slider .sp-nav{height:66px!important;background:#f5f7f9!important;border-top:1px solid #e1e7ec!important}
+
+/* 7) 홈 Engineering Note — 다른 홈 섹션과 같은 좌측 정렬 */
+#page-home .t-engineering-preview .t-wrap{text-align:left!important}
+#page-home .t-engineering-preview .t-title{display:block!important;text-align:left!important;margin-left:0!important;margin-right:0!important}
+#page-home .t-engineering-preview .t-preview{margin-left:0!important;margin-right:0!important;text-align:left!important}
+
+@media(max-width:768px){
+  .logo-brand-board{grid-template-columns:1fr;min-height:0}
+  .logo-brand-main{min-height:390px;padding:70px 24px 36px}
+  .logo-brand-side{min-height:330px;padding:64px 28px 34px;border-left:0;border-top:1px solid #dfe6ec}
+  .logo-brand-main .editable-content{min-height:300px!important}
+  .logo-brand-main .editable-content img{max-width:90%!important;max-height:260px!important}
+  #page-activity .content-card>.act-list-item{padding-left:88px!important}
+  #page-activity .content-card>.act-list-item:hover{padding-left:88px!important}
+  #page-activity .content-card>.act-list-item::before,#page-activity .content-card>.act-list-item::after{left:18px!important}
+  #home-sponsor-slider,#page-sponsor-slider{height:500px!important}
+  #home-sponsor-slider .sp-slide,#page-sponsor-slider .sp-slide{display:flex!important;flex-direction:column!important}
+  #home-sponsor-slider .sp-left,#page-sponsor-slider .sp-left{flex:0 0 46%!important;padding:20px!important;border-right:0!important;border-bottom:1px solid #e2e8ed!important}
+  #home-sponsor-slider .sp-right,#page-sponsor-slider .sp-right{padding:22px 24px 76px!important;text-align:center!important}
+  #home-sponsor-slider .sp-right h3,#page-sponsor-slider .sp-right h3{font-size:1.45rem!important}
+  #page-pr_gallery .filter-tabs{border-radius:12px!important}
+  #page-pr_gallery .filter-btn{padding:10px 14px!important}
+}
+</style>
 </html>
+<style id="turtless-mobile-global-v21">
+/* =========================================================
+   TURTLESS MOBILE GLOBAL V21
+   V20의 데스크톱 디자인은 유지하고 모바일에서만 재배치/축소
+   ========================================================= */
+@media (max-width: 768px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden!important;}
+  *{box-sizing:border-box;}
+  img,video,iframe{max-width:100%;}
+  .inner,.t-wrap,.section,.subpage{width:100%;max-width:100%;}
+  .section{padding-left:5%!important;padding-right:5%!important;}
+
+  /* header / navigation */
+  header,.header,.site-header{width:100%;}
+  .nav-container,.header-inner{padding-left:5%!important;padding-right:5%!important;}
+  .nav-links{width:min(310px,82vw)!important;padding:76px 24px 30px!important;}
+  .nav-links a,.nav-links button{max-width:100%;}
+
+  /* hero */
+  .hero-slider{width:100%!important;aspect-ratio:auto!important;min-height:0!important;height:62vh!important;}
+  .slide{padding:0 7%!important;}
+  .slide h1{font-size:clamp(1.7rem,8vw,2.5rem)!important;line-height:1.15!important;}
+  .slide p{font-size:.9rem!important;line-height:1.7!important;}
+
+  /* common headings */
+  .page-title,.subpage-title{font-size:clamp(2rem,8vw,3rem)!important;line-height:1.15!important;}
+  .section-title,.section-subtitle{max-width:100%;word-break:keep-all;}
+  .section-subtitle{font-size:1.1rem!important;}
+
+  /* generic grids / legacy cards */
+  .master-grid,.feature-cards-container,.feature-grid,.content-grid,.two-column,.three-column{grid-template-columns:1fr!important;}
+  .feature-card,.unified-card,.content-card{min-width:0;}
+  .feature-card{padding:22px!important;}
+
+  /* home */
+  #page-home .home-overview{padding:50px 5%!important;}
+  #page-home .home-overview-head{display:block!important;margin-bottom:24px!important;}
+  #page-home .home-overview-desc{max-width:100%!important;font-size:.9rem!important;line-height:1.75!important;}
+  #page-home .home-stats{grid-template-columns:1fr!important;}
+  #page-home .home-stat{border-right:0!important;border-bottom:1px solid #e5e9ee!important;padding:18px 0!important;}
+  #page-home .home-stat:last-child{border-bottom:0!important;}
+  #page-home .home-latest-grid{grid-template-columns:1fr!important;gap:22px!important;}
+  #page-home .home-youtube-panel{min-height:0!important;aspect-ratio:16/9;}
+  #page-home .home-side-panel{height:auto!important;min-height:0!important;gap:16px!important;}
+  #page-home #home-gallery-4grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;padding:11px!important;}
+  #page-home .home-sns-cards{gap:12px!important;}
+  #page-home .home-sns-card{height:155px!important;min-height:155px!important;padding:20px!important;}
+  #page-home .home-notice-list{padding-left:14px!important;padding-right:14px!important;}
+  #page-home .home-quick-links .inner{grid-template-columns:repeat(2,1fr)!important;}
+
+  /* countdown */
+  #page-home #t-next-challenge .t-wrap{padding:34px 5%!important;}
+  #page-home #t-next-challenge .t-clock{width:100%!important;max-width:100%!important;}
+  #page-home #t-next-challenge .t-time{min-width:0!important;}
+  #page-home #t-next-challenge .t-time strong{font-size:clamp(1.8rem,10vw,3rem)!important;}
+
+  /* sponsor */
+  #home-sponsor-slider,#page-sponsor-slider{width:100%!important;height:500px!important;border-radius:0!important;overflow:hidden!important;}
+  #home-sponsor-slider .sp-slide,#page-sponsor-slider .sp-slide{width:100%!important;}
+  #home-sponsor-slider .sp-left,#page-sponsor-slider .sp-left{padding:20px!important;min-width:0!important;}
+  #home-sponsor-slider .sp-left img,#page-sponsor-slider .sp-left img{max-width:82%!important;max-height:190px!important;}
+  #home-sponsor-slider .sp-right,#page-sponsor-slider .sp-right{padding:24px 24px 82px!important;min-width:0!important;overflow:hidden!important;}
+  #home-sponsor-slider .sp-right h3,#page-sponsor-slider .sp-right h3{font-size:1.5rem!important;line-height:1.2!important;word-break:keep-all!important;}
+  #home-sponsor-slider .sp-right p,#page-sponsor-slider .sp-right p{font-size:.85rem!important;line-height:1.7!important;overflow-wrap:anywhere!important;}
+  #home-sponsor-slider .sp-nav,#page-sponsor-slider .sp-nav{left:12px!important;right:12px!important;width:auto!important;height:58px!important;padding:8px 0!important;}
+  #home-sponsor-slider .sp-nav .slider-control-btn,#page-sponsor-slider .sp-nav .slider-control-btn{width:38px!important;height:38px!important;min-width:38px!important;flex:0 0 38px!important;}
+
+  /* robot */
+  #robot-slider{width:100%!important;height:560px!important;}
+  #robot-slider .robot-info{padding:34px 24px 82px!important;width:100%!important;}
+  #robot-slider .robot-game{font-size:clamp(2rem,10vw,2.8rem)!important;}
+  #robot-slider .robot-description{font-size:.85rem!important;line-height:1.7!important;}
+
+  /* team members */
+  .member-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;}
+  .member-card{min-width:0!important;}
+  .info-area{padding:10px!important;}
+  .info-area .name{font-size:.9rem!important;}
+  .info-area .school{font-size:.62rem!important;}
+  .member-detail-modal,.modal-content{width:min(94vw,720px)!important;max-width:94vw!important;max-height:90vh!important;overflow-y:auto!important;}
+
+  /* career: preserve POSCO symmetric timeline, only make it single-side */
+  .career-container{width:100%!important;margin:25px auto!important;padding:25px 0!important;}
+  .career-container::before{left:18px!important;transform:none!important;}
+  .career-row{width:100%!important;flex-direction:column!important;align-items:flex-start!important;margin-bottom:48px!important;}
+  .career-col-text,.career-col-img{width:100%!important;padding-left:43px!important;padding-right:10px!important;text-align:left!important;}
+  .career-col-img{margin-top:14px!important;}
+  .career-img-box{width:100%!important;max-width:100%!important;}
+  .career-dot{left:18px!important;transform:translateX(-50%)!important;top:12px!important;}
+  .career-year{font-size:2rem!important;}
+  .career-details{max-width:100%!important;text-align:left!important;font-size:.88rem!important;line-height:1.7!important;}
+
+  /* logo page */
+  .logo-brand-board{grid-template-columns:1fr!important;min-height:0!important;}
+  .logo-brand-main{min-height:360px!important;padding:56px 22px 30px!important;}
+  .logo-brand-side{min-height:290px!important;padding:46px 22px 30px!important;border-left:0!important;border-top:1px solid #dfe6ec!important;}
+  .logo-brand-main .editable-content{min-height:270px!important;}
+  .logo-brand-main .editable-content img{max-width:88%!important;max-height:220px!important;}
+
+  /* activities */
+  #page-activity .content-card>.act-list-item{padding:20px 18px 20px 78px!important;min-height:110px!important;}
+  #page-activity .content-card>.act-list-item:hover{padding-left:78px!important;}
+  #page-activity .content-card>.act-list-item::before,#page-activity .content-card>.act-list-item::after{left:18px!important;}
+  #page-activity .act-list-item h3{font-size:1rem!important;}
+  #page-activity .act-list-item p{font-size:.84rem!important;line-height:1.65!important;}
+
+  /* engineering */
+  .t-preview{overflow-x:auto!important;max-width:100%!important;}
+  .t-engineering-preview,.t-section{width:100%!important;}
+  .t-section .t-title{font-size:clamp(1.7rem,7vw,2.5rem)!important;line-height:1.2!important;}
+  .t-section .t-wrap{padding-left:5%!important;padding-right:5%!important;}
+
+  /* PR gallery / filters */
+  .filter-buttons,.gallery-filters{display:flex!important;flex-wrap:wrap!important;gap:7px!important;}
+  .filter-btn{font-size:.75rem!important;padding:9px 12px!important;}
+  .gallery-grid,.pr-grid{grid-template-columns:1fr 1fr!important;gap:10px!important;}
+
+  /* tables / long content */
+  .table-wrap,.table-container{width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch;}
+  table{min-width:620px;}
+
+  /* forms / admin */
+  input,select,textarea{max-width:100%!important;font-size:16px!important;}
+  .form-row,.admin-grid{grid-template-columns:1fr!important;}
+  button{max-width:100%;}
+
+  /* modals */
+  .modal-overlay{padding:12px!important;align-items:center!important;}
+  .modal-content{margin:0!important;}
+}
+
+@media (max-width: 600px){
+  .member-grid{grid-template-columns:1fr 1fr!important;}
+  .gallery-grid,.pr-grid{grid-template-columns:1fr!important;}
+  .home-quick-links .inner{grid-template-columns:1fr 1fr!important;}
+  .section{padding-top:38px!important;padding-bottom:48px!important;}
+  .page-title,.subpage-title{font-size:2rem!important;}
+  .home-section-title{font-size:26px!important;}
+}
+
+@media (max-width: 430px){
+  .nav-links{width:88vw!important;padding-left:20px!important;padding-right:20px!important;}
+  .hero-slider{height:58vh!important;}
+  .slide{padding:0 6%!important;}
+  .member-grid{gap:8px!important;}
+  .info-area .name{font-size:.82rem!important;}
+  .info-area .school{font-size:.57rem!important;}
+  #home-sponsor-slider,#page-sponsor-slider{height:470px!important;}
+  #home-sponsor-slider .sp-left,#page-sponsor-slider .sp-left{flex-basis:43%!important;}
+  #home-sponsor-slider .sp-left img,#page-sponsor-slider .sp-left img{max-height:160px!important;}
+  #home-sponsor-slider .sp-right,#page-sponsor-slider .sp-right{padding:20px 18px 76px!important;}
+  #home-sponsor-slider .sp-right h3,#page-sponsor-slider .sp-right h3{font-size:1.3rem!important;}
+  #home-sponsor-slider .sp-right p,#page-sponsor-slider .sp-right p{font-size:.8rem!important;}
+  #home-sponsor-slider .sp-nav,#page-sponsor-slider .sp-nav{left:8px!important;right:8px!important;}
+  #home-sponsor-slider .sp-nav .slider-control-btn,#page-sponsor-slider .sp-nav .slider-control-btn{width:34px!important;height:34px!important;min-width:34px!important;flex-basis:34px!important;}
+}
+</style>
