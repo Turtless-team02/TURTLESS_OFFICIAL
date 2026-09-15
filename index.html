@@ -1705,7 +1705,28 @@ footer {
   font-family: 'Noto Sans KR', sans-serif;
 }
 </style>
+<style>
+html[lang="ja"] body,
+html[lang="zh"] body {
+  font-family: 'Noto Sans KR', sans-serif !important;
+}
 
+html[lang="ja"] body *,
+html[lang="zh"] body * {
+  font-family: inherit !important;
+}
+
+html[lang="ja"] .fa,
+html[lang="ja"] .fas,
+html[lang="ja"] .far,
+html[lang="ja"] .fab,
+html[lang="zh"] .fa,
+html[lang="zh"] .fas,
+html[lang="zh"] .far,
+html[lang="zh"] .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
+</style>
 </head>
 <body>
 <div id="google_translate_element" style="display:none;"></div>
