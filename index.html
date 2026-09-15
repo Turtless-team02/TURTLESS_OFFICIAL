@@ -3467,8 +3467,6 @@ if (redirectPath) {
     }
 }
 
-});
-
 </script>
 <script>
   window.onload = function() {
@@ -5763,8 +5761,20 @@ document.addEventListener("DOMContentLoaded", function(){
     updateTeamColor(i);
   }
 
-  document.body.classList.contains("edit-mode") || 
-    document.querySelectorAll(".team-color-hex").forEach(el => el.style.display = "none");
+  const syncTeamColorInputs = () => {
+    const editing = document.body.classList.contains("edit-mode");
+    document.querySelectorAll(".team-color-hex").forEach(el => {
+      el.disabled = !editing;
+      el.style.display = "";
+    });
+  };
+
+  syncTeamColorInputs();
+
+  new MutationObserver(syncTeamColorInputs).observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class"]
+  });
 });
 </script>
   
