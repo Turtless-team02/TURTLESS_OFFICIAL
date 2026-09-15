@@ -3615,12 +3615,12 @@ window.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
 
-    <div class="site-footer-notes">
-      <p>※ 자동 번역은 Google Translate를 사용하며, 일부 표현에서 오역이 발생할 수 있습니다.</p>
-      <p>※ Automated translation via Google Translate may contain errors or inaccuracies.</p>
-      <p>※ 使用 Google 翻译进行自动翻译，部分表达可能存在翻译错误。</p>
-      <p>※ Google 翻訳による自動翻訳のため、一部の表現で誤訳が生じる場合があります。</p>
-      <p>※ 홈 화면의 버튼을 7번 연속으로 누르거나 키보드로 <b>turtle</b>을 입력해 보세요.</p>
+    <div class="site-footer-notes notranslate">
+      <p class="footer-translation-note notranslate">※ 자동 번역은 Google Translate를 사용하며, 일부 표현에서 오역이 발생할 수 있습니다.</p>
+      <p class="footer-translation-note notranslate">※ Automated translation via Google Translate may contain errors or inaccuracies.</p>
+      <p class="footer-translation-note notranslate">※ 使用 Google 翻译进行自动翻译，部分表达可能存在翻译错误。</p>
+      <p class="footer-translation-note notranslate">※ Google 翻訳による自動翻訳のため、一部の表現で誤訳が生じる場合があります。</p>
+      <p class="notranslate">※ 홈 화면의 버튼을 7번 연속으로 누르거나 키보드로 <b>turtle</b>을 입력해 보세요.</p>
     </div>
 
     <div class="site-footer-credit">
@@ -3739,6 +3739,30 @@ window.addEventListener('DOMContentLoaded', () => {
   .footer-language{width:100%;align-items:stretch;flex-direction:column;gap:8px}
   .site-footer .lang-select{width:100%;min-width:0}
   .site-footer-notes,.site-footer-credit{grid-column:auto}
+}
+
+
+/* Footer translation notes: keep original language and prevent Google Translate re-processing */
+.site-footer-notes.notranslate,
+.site-footer-notes.notranslate *{
+  -webkit-text-size-adjust:100%;
+}
+.site-footer-notes p{
+  font-family:'Noto Sans KR', sans-serif !important;
+  white-space:normal !important;
+  word-break:keep-all !important;
+  overflow-wrap:anywhere !important;
+  max-width:100%;
+  box-sizing:border-box;
+}
+@media(max-width:700px){
+  .site-footer-notes p{
+    font-size:12px !important;
+    line-height:1.8 !important;
+    white-space:normal !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
 }
 
 /* =========================================================
