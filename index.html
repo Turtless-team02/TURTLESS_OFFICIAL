@@ -695,22 +695,6 @@ body.text-cursor {
   #page-intro_team .notebook-ring{left:8px;top:4px;transform:scale(.78);transform-origin:top left}
   #page-intro_team .notebook-note{font-size:16px}
 }
-<style>
-@font-face {
-  font-family: 'BMDOHYEON';
-  src: url('./BMDOHYEON_ttf.ttf') format('truetype');
-}
-
-body > *:not(footer),
-body > *:not(footer) * {
-  font-family: 'BMDOHYEON', sans-serif !important;
-}
-
-footer,
-footer * {
-  font-family: 'Noto Sans KR', sans-serif !important;
-}
-</style>
 </style>
 <script>
 (function () {
@@ -1702,6 +1686,23 @@ footer * {
   .team-notebook-pages{height:635px!important}
   .team-notebook-pages .team-note-page{min-height:635px!important}
   .team-note-ring-hole{left:6px!important;top:18px!important;width:11px!important;height:11px!important}
+}
+</style>
+
+<style>
+@font-face {
+  font-family: 'BMDOHYEON';
+  src: url('./BMDOHYEON_ttf.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'BMDOHYEON', 'Noto Sans KR', sans-serif;
+}
+
+footer {
+  font-family: 'Noto Sans KR', sans-serif;
 }
 </style>
 
