@@ -18,6 +18,15 @@
 <meta content="https://turtless-team02.github.io/TURTLESS_OFFICIAL/" property="og:url"/>
 <meta content="https://res.cloudinary.com/k8m3zaye/image/upload/v1784358487/55153106925_2c0f65bbe0_o1_rp5zgi.webp" property="og:image"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;500;700;900&amp;family=Nanum+Myeongjo:wght=400;700&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<style>
+@font-face {
+  font-family: 'BMDOHYEON';
+  src: url('./BMDOHYEON_ttf.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+</style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 <script type="application/ld+json">
   {
@@ -40,7 +49,7 @@
   --text-main: #111111; --text-sub: #666666; --border-color: #eaeaea;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
+  body { font-family: 'BMDOHYEON', 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
 
 /* 바깥쪽 감싸는 영역의 스크롤바 제거 및 높이 제한 해제 */
 #engineering_note,
@@ -3562,26 +3571,137 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', restoreRoute);
 })();
 </script>
-<footer style="background:#111; color:#555; padding:40px 5%; text-align:center; font-size:14px;">
-<p>© 2026 TURTLESS(터틀리스) TEAM
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-brand">
+      <strong>TURTLESS</strong>
+      <p>© 2026 TURTLESS(터틀리스) TEAM</p>
+      <p>서울학생로봇대회(SSRC) 고등학생 연합 로봇팀</p>
+    </div>
 
-서울학생로봇대회(SSRC) 고등학생 연합 로봇팀</p>
-<div class="lang-selector-container" style="margin-top: 20px; display: inline-flex; align-items: center; gap: 8px;">
-<i class="fa-solid fa-globe" style="color: #aaa; font-size: 18px;"></i>
-<select class="lang-select" onchange="changeLanguage(this.value)" style="background:#222; color:#fff; border:1px solid #444; padding:6px 12px; border-radius:4px; font-size:13px; cursor:pointer;">
-<option value="ko">한국어 (Korean)</option>
-<option value="en">English</option>
-<option value="ja">日本語 (Japanese)</option>
-</select>
-</div>
-<div style="margin-top: 15px; line-height: 1.6; letter-spacing: -0.3px;">
-<p style="color: #444; font-size: 11px; margin: 2px 0;">* 구글 번역기를 사용한 자동 번역으로, 일부 오역이 발생할 수 있습니다.</p>
-<p style="color: #444; font-size: 11px; margin: 2px 0; font-family: sans-serif;">* Automated translation via Google Translate may contain errors or inaccuracies.</p>
-<p style="color: #444; font-size: 11px; margin: 2px 0;">* 使用谷歌翻译的自动翻译，可能会出现翻译不准确的情况。</p>
-<p style="color: #444; font-size: 11px; margin: 2px 0;">* 홈회면 버튼을 7번 연속으로 누르거나 키보드로 turtle을 입력해 보세요!! :)</p>
-</div>
+    <div class="site-footer-tools">
+      <div class="footer-language">
+        <span class="footer-label"><i class="fa-solid fa-globe"></i> LANGUAGE</span>
+        <select class="lang-select" onchange="changeLanguage(this.value)">
+          <option value="ko">한국어 (Korean)</option>
+          <option value="en">English</option>
+          <option value="ja">日本語 (Japanese)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="site-footer-notes">
+      <p>※ 자동 번역은 Google Translate를 사용하며, 일부 표현에서 오역이 발생할 수 있습니다.</p>
+      <p>※ Automated translation via Google Translate may contain errors or inaccuracies.</p>
+      <p>※ 使用 Google 翻译进行自动翻译，部分内容可能存在翻译误差。</p>
+      <p>※ 홈 화면의 버튼을 7번 연속으로 누르거나 키보드로 <b>turtle</b>을 입력해 보세요.</p>
+    </div>
+
+    <div class="site-footer-credit">
+      <span>Typeface</span>
+      <strong>BM도현체</strong>
+      <span>·</span>
+      <span>BMDOHYEON_ttf.ttf</span>
+    </div>
+  </div>
 </footer>
 <style>
+/* =========================================================
+   FOOTER / TYPOGRAPHY
+   ========================================================= */
+.site-footer{
+  background:#111827;
+  color:#d7dee8;
+  padding:52px 5% 44px;
+  border-top:1px solid #263244;
+  font-size:14px;
+}
+.site-footer-inner{
+  width:min(1180px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(220px,.7fr);
+  gap:30px 70px;
+}
+.site-footer-brand strong{
+  display:block;
+  margin-bottom:12px;
+  color:#fff;
+  font-size:24px;
+  letter-spacing:.04em;
+  line-height:1.1;
+}
+.site-footer-brand p{
+  margin:4px 0;
+  color:#b9c4d1;
+  line-height:1.8;
+}
+.site-footer-tools{
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-end;
+}
+.footer-language{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.footer-label{
+  color:#aebaca;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.08em;
+  white-space:nowrap;
+}
+.footer-label i{margin-right:5px;color:#79b8ff}
+.site-footer .lang-select{
+  min-width:170px;
+  background:#1a2433 !important;
+  color:#f2f6fa !important;
+  border:1px solid #3a485b !important;
+  border-radius:7px !important;
+  padding:9px 12px !important;
+  font-family:inherit !important;
+  font-size:13px !important;
+  line-height:1.4;
+}
+.site-footer .lang-select:focus{
+  outline:2px solid rgba(44,145,249,.35);
+  outline-offset:2px;
+}
+.site-footer-notes{
+  grid-column:1 / -1;
+  padding-top:24px;
+  border-top:1px solid #293547;
+}
+.site-footer-notes p{
+  margin:5px 0;
+  color:#9eabba;
+  font-size:12px;
+  line-height:1.75;
+}
+.site-footer-notes b{color:#cbd6e2}
+.site-footer-credit{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding-top:18px;
+  color:#8997a8;
+  font-size:11px;
+  line-height:1.6;
+}
+.site-footer-credit strong{color:#c4d0dd;font-weight:700}
+@media(max-width:700px){
+  .site-footer{padding:40px 22px 34px}
+  .site-footer-inner{grid-template-columns:1fr;gap:24px}
+  .site-footer-tools{justify-content:flex-start}
+  .footer-language{width:100%;align-items:stretch;flex-direction:column;gap:8px}
+  .site-footer .lang-select{width:100%;min-width:0}
+  .site-footer-notes,.site-footer-credit{grid-column:auto}
+}
+
 /* =========================================================
    MOBILE UI IMPROVEMENT
    후원사 + 엔지니어링 노트 + 로봇 소개
