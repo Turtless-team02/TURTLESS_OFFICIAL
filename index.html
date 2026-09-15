@@ -2267,25 +2267,94 @@ alert("날짜 수정 실패: " + e.message);
 
 // --- 유튜브 ---
 function loadYoutubeFallback() {
-const ytList = document.getElementById('youtube-auto-list');
-if(!ytList) return;
-fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=UC8QwTy46OaCGdTauiPYkeow`)
-.then(res => res.json())
-.then(data => {
-if (data.status === 'ok' && data.items.length > 0) {
-ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
-for(let i=0; i<Math.min(data.items.length, 3); i++) {
-let item = data.items[i]; let thumb = item.thumbnail;
-if (!thumb) {
-let vId = "";
-if (item.link.includes("v=")) vId = item.link.split("v=")[1].substring(0, 11);
-else if (item.link.includes("youtu.be/")) vId = item.link.split("youtu.be/")[1].substring(0, 11);
-thumb = vId ? `https://img.youtube.com/vi/${vId}/mqdefault.jpg` : 'https://dummyimage.com/600x400/000/fff&text=Video';
-}
-ytList.innerHTML += `<a href="${item.link}" target="_blank" class="unified-card"><div class="card-top"><img src="${thumb}"></div><div class="card-bottom"><h4>${item.title}</h4></div></a>`;
-}
-}
-}).catch(()=>{});
+  const ytList = document.getElementById('youtube-auto-list');
+  if(!ytList) return;
+
+  const channelId = 'UC8QwTy46OaCGdTauiPYkeow';
+  const cacheKey = 'turtless_youtube_latest_v3';
+  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+
+  ytList.innerHTML = '<div class="youtube-auto-loading">최근 영상을 불러오는 중…</div>';
+
+  const escapeHtml = (v) => String(v || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+  const render = (items) => {
+    if(!Array.isArray(items) || !items.length) throw new Error('No videos');
+    ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
+    items.slice(0,3).forEach(item => {
+      const videoId = item.videoId || '';
+      const href = item.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : `https://www.youtube.com/channel/${channelId}`);
+      const thumb = item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
+      const title = escapeHtml(item.title || 'YouTube 영상');
+      ytList.innerHTML += `<a href="${href}" target="_blank" rel="noopener" class="unified-card"><div class="card-top"><img src="${thumb}" alt="${title}" loading="lazy"></div><div class="card-bottom"><h4>${title}</h4></div></a>`;
+    });
+    try { localStorage.setItem(cacheKey, JSON.stringify({time:Date.now(),items:items.slice(0,3)})); } catch(e){}
+  };
+
+  const getCache = () => {
+    try {
+      const c = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+      if(c && Array.isArray(c.items) && c.items.length) return c.items;
+    } catch(e){}
+    return null;
+  };
+
+  // 1) rss2json — 기존에 실제로 사용하던 방식
+  const rss2json = () => fetch(
+    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=3`,
+    {cache:'no-store'}
+  ).then(r => { if(!r.ok) throw new Error('rss2json failed'); return r.json(); })
+   .then(data => {
+     if(data.status !== 'ok' || !Array.isArray(data.items) || !data.items.length) throw new Error('rss2json empty');
+     return data.items.slice(0,3).map(item => {
+       let videoId = '';
+       if(item.link && item.link.includes('v=')) videoId = item.link.split('v=')[1].split('&')[0].substring(0,11);
+       else if(item.link && item.link.includes('youtu.be/')) videoId = item.link.split('youtu.be/')[1].split('?')[0].substring(0,11);
+       return {videoId,title:item.title,thumbnail:item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : ''),link:item.link};
+     });
+   });
+
+  // 2) YouTube RSS를 직접 읽을 수 있는 경우
+  const directRss = () => fetch(feedUrl,{cache:'no-store'})
+    .then(r => { if(!r.ok) throw new Error('direct RSS failed'); return r.text(); })
+    .then(parseRss);
+
+  // 3) CORS 프록시를 통한 RSS — rss2json이 막혔을 때 보조
+  const proxyRss = () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`,{cache:'no-store'})
+    .then(r => { if(!r.ok) throw new Error('proxy RSS failed'); return r.text(); })
+    .then(parseRss);
+
+  function parseRss(xmlText) {
+    const xml = new DOMParser().parseFromString(xmlText,'text/xml');
+    if(xml.querySelector('parsererror')) throw new Error('RSS parse failed');
+    const entries = Array.from(xml.querySelectorAll('entry')).slice(0,3);
+    if(!entries.length) throw new Error('RSS has no entries');
+    return entries.map(entry => {
+      const videoId = entry.getElementsByTagNameNS('*','videoId')[0]?.textContent || '';
+      const title = entry.getElementsByTagName('title')[0]?.textContent || 'YouTube 영상';
+      const links = Array.from(entry.querySelectorAll('link'));
+      const linkNode = links.find(n => n.getAttribute('rel') === 'alternate') || links[0];
+      return {videoId,title,thumbnail:videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '',link:linkNode?.getAttribute('href') || `https://www.youtube.com/watch?v=${videoId}`};
+    });
+  }
+
+  // 실패하더라도 이전에 한 번이라도 받아둔 영상은 계속 보여줌
+  const cached = getCache();
+  if(cached) {
+    try { render(cached); } catch(e){}
+  }
+
+  rss2json()
+    .catch(() => directRss())
+    .catch(() => proxyRss())
+    .then(items => render(items))
+    .catch(() => {
+      if(!cached) {
+        ytList.innerHTML = '<div class="youtube-auto-empty">최근 영상을 불러오지 못했습니다. <a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" rel="noopener">채널에서 확인하기 →</a></div>';
+      }
+    });
 }
 
 // --- 로그인/로그아웃 및 기타 권한 ---
@@ -4607,6 +4676,32 @@ window.addEventListener('DOMContentLoaded', () => {
   else initTurtlessNumbers();
 })();
 </script>
+
+<style id="v27-youtube-and-number-operator-fix">
+.youtube-auto-loading,.youtube-auto-empty{padding:28px 20px;text-align:center;color:#697582;font-size:14px;line-height:1.7}
+/* 숫자로 보는 TURTLESS: 연산자를 각 숫자 버블의 정확한 중앙 높이에 배치 */
+.turtless-equation-factors{align-items:flex-start!important}
+.turtless-equation-factors>.turtless-operator{
+  flex:0 0 auto!important;
+  align-self:flex-start!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  height:clamp(112px,11vw,154px)!important;
+  margin:0!important;
+  padding:0!important;
+  line-height:1!important;
+}
+@media(max-width:900px){
+  .turtless-equation-factors>.turtless-operator{height:108px!important}
+}
+@media(max-width:700px){
+  .turtless-equation-factors>.turtless-operator{height:76px!important}
+}
+@media(max-width:430px){
+  .turtless-equation-factors>.turtless-operator{height:62px!important}
+}
+</style>
 </body>
 
 <style id="home-sns-thick-final">
