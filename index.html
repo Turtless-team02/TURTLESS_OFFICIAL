@@ -1421,8 +1421,70 @@ body.text-cursor {
 .team-note-writing-content{position:relative;z-index:2;min-height:340px;margin-top:8px;color:#26343e;font-size:16px;line-height:1.9;outline:none}.team-note-writing-content:empty::before{content:'이곳에 팀 소개의 추가 내용을 작성할 수 있습니다.';color:#aab3b9;font-style:italic}body.edit-mode .team-note-writing-content:empty::before{color:#2c91f9}
 .team-note-colors{min-height:620px;padding-bottom:62px}.team-note-color-head{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin-bottom:30px}.team-note-color-head h3{font-size:clamp(30px,4vw,48px);line-height:1;letter-spacing:-.05em;color:#202d36;margin-bottom:9px}.team-note-color-head p{font-size:13px;color:#74808a}
 .team-note-current-badge{font:900 10px/1 'Courier Prime',monospace;letter-spacing:.14em;color:#2c91f9;border:1px solid #bcdcff;padding:8px 10px;border-radius:999px;white-space:nowrap;background:#f5faff}
-.team-color-history{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;position:relative;z-index:2}.team-color-entry{display:grid;grid-template-columns:34px 46px 1fr;align-items:center;gap:13px;min-height:92px;padding:15px 16px;background:rgba(255,255,255,.68);border:1px solid #e4e8e9;border-radius:10px}.team-color-entry.current{border-color:#bcdcff;background:#f7fbff}
-.team-color-index{font:700 10px/1 'Courier Prime',monospace;color:#9ca6ad}.team-color-swatch{width:42px;height:42px;border-radius:50%;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 3px 8px rgba(0,0,0,.08)}.color-placeholder{background:repeating-linear-gradient(135deg,#edf0f2 0,#edf0f2 5px,#dfe4e7 5px,#dfe4e7 10px)!important;border:1px dashed #aab4bb;box-shadow:none}.team-color-entry strong{display:block;font-size:15px;color:#25333d;line-height:1.3}.team-color-entry small{display:block;margin-top:4px;font-size:10px;color:#87929a;line-height:1.4}
+.team-color-history{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.team-color-entry{
+  display:grid;
+  grid-template-columns:34px 46px 1fr;
+  align-items:center;
+  gap:10px;
+  padding:18px;
+  border-bottom:1px solid #e8edf2;
+}
+
+.team-color-index{
+  font-family:"Courier Prime",monospace;
+  font-size:13px;
+  color:#8b949e;
+}
+
+.team-color-swatch{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#EDF0F2;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
+}
+
+.team-color-entry strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.team-color-entry small{
+  display:block;
+  color:#8b949e;
+  font-size:12px;
+}
+
+.team-color-hex{
+  display:block;
+  width:105px;
+  margin-top:9px;
+  padding:5px 8px;
+  border:1px solid #d9e0e7;
+  border-radius:5px;
+  background:#fff;
+  font-family:"Courier Prime",monospace;
+  font-size:12px;
+  color:#333;
+  outline:none;
+}
+
+.team-color-hex:focus{
+  border-color:var(--primary-color);
+}
+
+@media(max-width:700px){
+  .team-color-history{
+    grid-template-columns:1fr;
+  }
+}
 .team-note-color-foot{position:absolute;left:82px;bottom:22px;font:700 9px/1 'Courier Prime',monospace;letter-spacing:.12em;color:#9aa4aa}#page-intro_team .editable-content img{max-width:100%;height:auto;border-radius:4px}
 @media(max-width:800px){#page-intro_team{padding:42px 4% 64px!important}.team-notebook{padding-left:12px}.team-notebook-binding{left:-4px;top:24px;width:62px;height:52px}.team-notebook-binding span{left:2px;top:0;width:42px;height:21px;border-width:3px}.team-notebook-binding span::after{left:17px;top:-2px;width:9px;height:25px;box-shadow:inset 0 0 0 1.5px rgba(120,130,138,.45)}.team-note-page{padding:34px 28px 48px 58px;min-height:560px}.team-note-page::after{left:40px}.team-note-lines{left:58px;right:28px;top:215px}.team-note-color-foot{left:58px}.team-color-history{grid-template-columns:1fr}.team-note-color-head{align-items:flex-start;flex-direction:column}}
 @media(max-width:520px){.team-note-page{padding:28px 20px 45px 42px;min-height:600px;border-radius:2px 11px 11px 2px}.team-note-page:not(:first-of-type){margin-left:3px}.team-note-page::after{left:33px}.team-note-topline{font-size:8px;margin-bottom:23px}.team-note-cover-title{font-size:52px}.team-note-cover-sub{font-size:12px;line-height:1.7}.team-note-cover-content{font-size:14px;line-height:1.85}.team-note-writing-head h3{font-size:25px}.team-note-writing-head p{font-size:12px}.team-note-lines{left:48px;right:20px;top:215px}.team-note-line-row{font-size:8px}.team-note-writing-content{font-size:14px;min-height:350px}.team-note-color-head h3{font-size:31px}.team-note-color-head p{font-size:11px;line-height:1.6}.team-color-entry{grid-template-columns:28px 38px 1fr;gap:9px;padding:12px}.team-color-swatch{width:36px;height:36px}.team-color-entry strong{font-size:13px}.team-color-entry small{font-size:9px}.team-note-color-foot{left:48px;font-size:7px}}
@@ -1906,10 +1968,55 @@ body.text-cursor {
 <div class="team-note-topline">COLOR ARCHIVE / TEAM IDENTITY</div>
 <div class="team-note-color-head"><div><h3>팀 컬러의 변화</h3><p>시간에 따라 변화해 온 TURTLESS의 시각적 아이덴티티를 기록합니다.</p></div><span class="team-note-current-badge">CURRENT</span></div>
 <div class="team-color-history">
-<div class="team-color-entry current"><span class="team-color-index">01</span><span class="team-color-swatch" style="background:#2c91f9"></span><div><strong>푸른색 계열</strong><small>현재 팀 컬러 · TURTLESS BLUE</small></div></div>
-<div class="team-color-entry"><span class="team-color-index">02</span><span class="team-color-swatch" style="background:#AE1932"></span><div><strong>단청 레드</strong><small>이전 팀 컬러 · ARCHIVED</small></div></div>
-<div class="team-color-entry editable-color-entry"><span class="team-color-index">03</span><span class="team-color-swatch color-placeholder"></span><div><strong class="editable-content" id="b-intro_team_color3">컬러 기록 추가</strong><small>이전 컬러 / 사용 기간 / 의미 등을 기록</small></div></div>
-<div class="team-color-entry editable-color-entry"><span class="team-color-index">04</span><span class="team-color-swatch color-placeholder"></span><div><strong class="editable-content" id="b-intro_team_color4">컬러 기록 추가</strong><small>이전 컬러 / 사용 기간 / 의미 등을 기록</small></div></div>
+
+  <div class="team-color-entry">
+    <span class="team-color-index">01</span>
+    <span class="team-color-swatch" id="team-color-swatch-1"></span>
+    <div>
+      <strong class="editable-content" id="b-intro_team_color1_name">푸른색 계열</strong>
+      <small class="editable-content" id="b-intro_team_color1_desc">현재 팀 컬러 · TURTLESS BLUE</small>
+      <input class="team-color-hex" id="team-color-hex-1"
+             value="#2C91F9" maxlength="7"
+             oninput="updateTeamColor(1)">
+    </div>
+  </div>
+
+  <div class="team-color-entry">
+    <span class="team-color-index">02</span>
+    <span class="team-color-swatch" id="team-color-swatch-2"></span>
+    <div>
+      <strong class="editable-content" id="b-intro_team_color2_name">단청 레드</strong>
+      <small class="editable-content" id="b-intro_team_color2_desc">이전 팀 컬러 · ARCHIVED</small>
+      <input class="team-color-hex" id="team-color-hex-2"
+             value="#AE1932" maxlength="7"
+             oninput="updateTeamColor(2)">
+    </div>
+  </div>
+
+  <div class="team-color-entry">
+    <span class="team-color-index">03</span>
+    <span class="team-color-swatch" id="team-color-swatch-3"></span>
+    <div>
+      <strong class="editable-content" id="b-intro_team_color3_name">컬러 기록 추가</strong>
+      <small class="editable-content" id="b-intro_team_color3_desc">이전 컬러 / 사용 기간 / 의미</small>
+      <input class="team-color-hex" id="team-color-hex-3"
+             value="#EDF0F2" maxlength="7"
+             oninput="updateTeamColor(3)">
+    </div>
+  </div>
+
+  <div class="team-color-entry">
+    <span class="team-color-index">04</span>
+    <span class="team-color-swatch" id="team-color-swatch-4"></span>
+    <div>
+      <strong class="editable-content" id="b-intro_team_color4_name">컬러 기록 추가</strong>
+      <small class="editable-content" id="b-intro_team_color4_desc">이전 컬러 / 사용 기간 / 의미</small>
+      <input class="team-color-hex" id="team-color-hex-4"
+             value="#EDF0F2" maxlength="7"
+             oninput="updateTeamColor(4)">
+    </div>
+  </div>
+
 </div>
 <div class="team-note-color-foot">TEAM 11379 · VISUAL IDENTITY ARCHIVE</div><div class="team-note-page-no">03</div>
 </article>
@@ -5612,6 +5719,37 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+<script>
+function updateTeamColor(index){
+  const input = document.getElementById(`team-color-hex-${index}`);
+  const swatch = document.getElementById(`team-color-swatch-${index}`);
+
+  if(!input || !swatch) return;
+
+  let hex = input.value.trim();
+
+  if(hex && !hex.startsWith("#")){
+    hex = "#" + hex;
+  }
+
+  if(/^#[0-9A-Fa-f]{6}$/.test(hex)){
+    swatch.style.backgroundColor = hex;
+    input.style.borderColor = "";
+  }else if(hex === ""){
+    swatch.style.backgroundColor = "#EDF0F2";
+    input.style.borderColor = "";
+  }else{
+    input.style.borderColor = "#d66";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  for(let i = 1; i <= 4; i++){
+    updateTeamColor(i);
+  }
+});
+</script>
+  
 </body>
 
 <style id="home-sns-thick-final">
