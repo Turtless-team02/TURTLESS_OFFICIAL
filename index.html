@@ -2280,7 +2280,7 @@ function loadYoutubeFallback() {
   if(!ytList) return;
 
   const channelId = 'UC8QwTy46OaCGdTauiPYkeow';
-  const cacheKey = 'turtless_youtube_latest_v3';
+  const cacheKey = 'turtless_youtube_latest_v4';
   const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
   ytList.innerHTML = '<div class="youtube-auto-loading">최근 영상을 불러오는 중…</div>';
@@ -2289,17 +2289,29 @@ function loadYoutubeFallback() {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 
+  const normalize = (items) => {
+    if(!Array.isArray(items)) throw new Error('Invalid video list');
+    const out = items.map(item => {
+      const videoId = item.videoId || item.id || '';
+      const title = item.title || 'YouTube 영상';
+      const link = item.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : '');
+      const thumbnail = item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
+      return {videoId, title, thumbnail, link};
+    }).filter(v => v.videoId || v.link);
+    if(!out.length) throw new Error('No videos');
+    return out.slice(0,3);
+  };
+
   const render = (items) => {
-    if(!Array.isArray(items) || !items.length) throw new Error('No videos');
+    const list = normalize(items);
     ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
-    items.slice(0,3).forEach(item => {
-      const videoId = item.videoId || '';
-      const href = item.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : `https://www.youtube.com/channel/${channelId}`);
-      const thumb = item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
-      const title = escapeHtml(item.title || 'YouTube 영상');
+    list.forEach(item => {
+      const title = escapeHtml(item.title);
+      const href = item.link || `https://www.youtube.com/watch?v=${item.videoId}`;
+      const thumb = item.thumbnail || `https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`;
       ytList.innerHTML += `<a href="${href}" target="_blank" rel="noopener" class="unified-card"><div class="card-top"><img src="${thumb}" alt="${title}" loading="lazy"></div><div class="card-bottom"><h4>${title}</h4></div></a>`;
     });
-    try { localStorage.setItem(cacheKey, JSON.stringify({time:Date.now(),items:items.slice(0,3)})); } catch(e){}
+    try { localStorage.setItem(cacheKey, JSON.stringify({time:Date.now(),items:list})); } catch(e){}
   };
 
   const getCache = () => {
@@ -2310,7 +2322,32 @@ function loadYoutubeFallback() {
     return null;
   };
 
-  // 1) rss2json — 기존에 실제로 사용하던 방식
+  function parseRss(xmlText) {
+    const xml = new DOMParser().parseFromString(xmlText,'text/xml');
+    if(xml.querySelector('parsererror')) throw new Error('RSS parse failed');
+    const entries = Array.from(xml.querySelectorAll('entry')).slice(0,3);
+    if(!entries.length) throw new Error('RSS has no entries');
+    return entries.map(entry => {
+      const videoId = entry.getElementsByTagNameNS('*','videoId')[0]?.textContent || '';
+      const title = entry.getElementsByTagName('title')[0]?.textContent || 'YouTube 영상';
+      const links = Array.from(entry.querySelectorAll('link'));
+      const linkNode = links.find(n => n.getAttribute('rel') === 'alternate') || links[0];
+      return {
+        videoId,
+        title,
+        thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '',
+        link: linkNode?.getAttribute('href') || `https://www.youtube.com/watch?v=${videoId}`
+      };
+    });
+  }
+
+  // 1순위: GitHub Pages에 배포된 로컬 JSON.
+  // GitHub Actions가 YouTube RSS를 서버에서 읽어 youtube-latest.json을 주기적으로 갱신한다.
+  const localJson = () => fetch(`./youtube-latest.json?t=${Date.now()}`, {cache:'no-store'})
+    .then(r => { if(!r.ok) throw new Error('local JSON failed'); return r.json(); })
+    .then(data => normalize(data.items || data));
+
+  // 2순위: RSS2JSON
   const rss2json = () => fetch(
     `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=3`,
     {cache:'no-store'}
@@ -2325,38 +2362,25 @@ function loadYoutubeFallback() {
      });
    });
 
-  // 2) YouTube RSS를 직접 읽을 수 있는 경우
-  const directRss = () => fetch(feedUrl,{cache:'no-store'})
-    .then(r => { if(!r.ok) throw new Error('direct RSS failed'); return r.text(); })
-    .then(parseRss);
+  // 3순위: CORS 프록시들. 하나가 막혀도 다음 프록시로 넘어간다.
+  const proxyUrls = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(feedUrl)}`,
+    `https://corsproxy.io/?url=${encodeURIComponent(feedUrl)}`
+  ];
+  const proxyRss = () => proxyUrls.reduce((promise, url) =>
+    promise.catch(() => fetch(url,{cache:'no-store'}).then(r => {
+      if(!r.ok) throw new Error('proxy failed');
+      return r.text();
+    }).then(parseRss)), Promise.reject(new Error('proxy start')));
 
-  // 3) CORS 프록시를 통한 RSS — rss2json이 막혔을 때 보조
-  const proxyRss = () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`,{cache:'no-store'})
-    .then(r => { if(!r.ok) throw new Error('proxy RSS failed'); return r.text(); })
-    .then(parseRss);
-
-  function parseRss(xmlText) {
-    const xml = new DOMParser().parseFromString(xmlText,'text/xml');
-    if(xml.querySelector('parsererror')) throw new Error('RSS parse failed');
-    const entries = Array.from(xml.querySelectorAll('entry')).slice(0,3);
-    if(!entries.length) throw new Error('RSS has no entries');
-    return entries.map(entry => {
-      const videoId = entry.getElementsByTagNameNS('*','videoId')[0]?.textContent || '';
-      const title = entry.getElementsByTagName('title')[0]?.textContent || 'YouTube 영상';
-      const links = Array.from(entry.querySelectorAll('link'));
-      const linkNode = links.find(n => n.getAttribute('rel') === 'alternate') || links[0];
-      return {videoId,title,thumbnail:videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '',link:linkNode?.getAttribute('href') || `https://www.youtube.com/watch?v=${videoId}`};
-    });
-  }
-
-  // 실패하더라도 이전에 한 번이라도 받아둔 영상은 계속 보여줌
   const cached = getCache();
   if(cached) {
     try { render(cached); } catch(e){}
   }
 
-  rss2json()
-    .catch(() => directRss())
+  localJson()
+    .catch(() => rss2json())
     .catch(() => proxyRss())
     .then(items => render(items))
     .catch(() => {
