@@ -5822,6 +5822,47 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
   
+<script>
+(function () {
+  const style = document.createElement('style');
+  style.textContent = `
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+
+    body.turtless-chinese,
+    body.turtless-chinese * {
+      font-family: 'Noto Sans SC', sans-serif !important;
+    }
+
+    body.turtless-chinese .fa,
+    body.turtless-chinese .fas,
+    body.turtless-chinese .far,
+    body.turtless-chinese .fab,
+    body.turtless-chinese .fa-solid,
+    body.turtless-chinese .fa-regular,
+    body.turtless-chinese .fa-brands {
+      font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  function checkChinese() {
+    const select = document.querySelector('.lang-select');
+    const isChinese = select && select.value === 'zh-CN';
+    document.body.classList.toggle('turtless-chinese', !!isChinese);
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('lang-select')) {
+      setTimeout(checkChinese, 300);
+      setTimeout(checkChinese, 1000);
+      setTimeout(checkChinese, 2000);
+    }
+  });
+
+  setInterval(checkChinese, 1000);
+})();
+</script>
+
 </body>
 
 <style id="home-sns-thick-final">
