@@ -18,15 +18,6 @@
 <meta content="https://turtless-team02.github.io/TURTLESS_OFFICIAL/" property="og:url"/>
 <meta content="https://res.cloudinary.com/k8m3zaye/image/upload/v1784358487/55153106925_2c0f65bbe0_o1_rp5zgi.webp" property="og:image"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;500;700;900&amp;family=Nanum+Myeongjo:wght=400;700&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
-<style>
-@font-face {
-  font-family: 'BMDOHYEON';
-  src: url('./BMDOHYEON_ttf.ttf') format('truetype');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-</style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 <script type="application/ld+json">
   {
@@ -49,7 +40,7 @@
   --text-main: #111111; --text-sub: #666666; --border-color: #eaeaea;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'BMDOHYEON', 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
+  body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); background-color: #ffffff; line-height: 1.6; overflow-x: hidden; word-break: keep-all; top: 0 !important; }
 
 /* 바깥쪽 감싸는 영역의 스크롤바 제거 및 높이 제한 해제 */
 #engineering_note,
@@ -581,6 +572,128 @@ body.text-cursor {
   #robot-slider .robot-description {
     font-size: .9rem;
   }
+}
+/* TEAM INTRO NOTEBOOK — refined single-ring binding */
+#page-intro_team.notebook-page{
+  --paper:#fffdf8;
+  --paper-edge:#e9e3d8;
+  --ink:#24313b;
+  --blue:#2c91f9;
+  background:transparent!important;
+  overflow:hidden!important;
+}
+#page-intro_team .notebook-wrap{
+  position:relative;
+  max-width:1080px;
+  margin:0 auto;
+  padding:42px 34px 72px 76px;
+}
+#page-intro_team .notebook-sheet{
+  position:relative;
+  min-height:570px;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.025),transparent 7%,transparent 93%,rgba(0,0,0,.018)),
+    var(--paper);
+  border:1px solid var(--paper-edge);
+  border-radius:5px 15px 15px 5px;
+  box-shadow:0 18px 45px rgba(24,38,50,.12),0 2px 5px rgba(24,38,50,.08);
+  overflow:hidden;
+  transform:rotate(-.18deg);
+}
+#page-intro_team .notebook-sheet:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:12px;
+  background:linear-gradient(90deg,#ded8ce,#f5f0e7 45%,transparent);
+  opacity:.72;
+}
+#page-intro_team .notebook-content{
+  position:relative;
+  z-index:2;
+  padding:66px 72px 58px 78px;
+}
+#page-intro_team .notebook-title{
+  font-size:clamp(38px,5vw,66px);
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-.06em;
+  color:var(--ink);
+  margin:0 0 34px;
+}
+#page-intro_team .notebook-title:after{
+  content:"";
+  display:block;
+  width:42px;height:3px;
+  margin-top:18px;
+  background:var(--blue);
+  border-radius:4px;
+}
+#page-intro_team .notebook-note{
+  color:#34434e;
+  font-size:18px;
+  line-height:1.95;
+  max-width:850px;
+}
+#page-intro_team .notebook-ring{
+  position:absolute;
+  z-index:8;
+  left:30px;
+  top:8px;
+  width:78px;
+  height:78px;
+  pointer-events:none;
+}
+#page-intro_team .notebook-ring:before{
+  content:"";
+  position:absolute;
+  left:22px;top:8px;
+  width:39px;height:62px;
+  border:7px solid #a9adb0;
+  border-left-color:#d7d9da;
+  border-right-color:#7e8387;
+  border-radius:50%;
+  transform:rotate(-13deg);
+  box-shadow:
+    inset 2px 0 2px rgba(255,255,255,.8),
+    2px 3px 5px rgba(0,0,0,.2);
+}
+#page-intro_team .notebook-ring:after{
+  content:"";
+  position:absolute;
+  left:20px;top:20px;
+  width:43px;height:42px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,.62);
+  border-left-color:transparent;
+  border-bottom-color:rgba(92,98,102,.5);
+  transform:rotate(-13deg);
+}
+#page-intro_team .ring-hole{
+  position:absolute;
+  z-index:7;
+  left:42px;top:37px;
+  width:16px;height:16px;
+  border-radius:50%;
+  background:#d9d4cb;
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.18),0 1px 1px rgba(255,255,255,.8);
+}
+#page-intro_team .ring-shadow{
+  position:absolute;
+  z-index:6;
+  left:31px;top:63px;
+  width:58px;height:13px;
+  background:rgba(25,35,42,.13);
+  filter:blur(7px);
+  border-radius:50%;
+  transform:rotate(-12deg);
+}
+@media(max-width:700px){
+  #page-intro_team .notebook-wrap{padding:28px 14px 55px 45px}
+  #page-intro_team .notebook-sheet{min-height:520px}
+  #page-intro_team .notebook-content{padding:52px 28px 42px 42px}
+  #page-intro_team .notebook-ring{left:8px;top:4px;transform:scale(.78);transform-origin:top left}
+  #page-intro_team .notebook-note{font-size:16px}
 }
 </style>
 <script>
@@ -1288,6 +1401,232 @@ body.text-cursor {
   .turtless-numbers-section .turtless-equation-result,.turtless-numbers-section .turtless-factor,.turtless-numbers-section .turtless-equation-equals,.turtless-numbers-section .turtless-equation-factors>.turtless-operator{opacity:1;transform:none;animation:none!important}
 }
 </style>
+<style id="turtless-team-notebook-v32">
+#page-intro_team{background:#eef3f7!important;padding:70px 5% 90px!important;overflow:hidden!important}
+#page-intro_team .inner{max-width:1180px!important}#page-intro_team .subpage-title{display:none!important}
+.team-notebook{position:relative;max-width:1080px;margin:0 auto;padding:18px 0 24px 54px;filter:drop-shadow(0 24px 35px rgba(20,40,60,.12))}
+.team-notebook-binding{position:absolute;left:-2px;top:34px;width:92px;height:76px;z-index:8;pointer-events:none}
+.team-notebook-binding span{position:absolute;left:3px;top:0;width:62px;height:30px;border:4px solid #8f989f;border-radius:50%;background:linear-gradient(180deg,#f5f7f8 0%,#c3cbd0 48%,#eef1f3 100%);box-shadow:inset 0 2px 3px rgba(255,255,255,.9),0 4px 7px rgba(0,0,0,.16);transform:rotate(24deg)}
+.team-notebook-binding span::after{content:"";position:absolute;left:25px;top:-3px;width:12px;height:34px;border-radius:50%;background:#eef3f7;box-shadow:inset 0 0 0 2px rgba(120,130,138,.45)}
+.team-note-page{position:relative;min-height:590px;background:#fffdf7;border:1px solid #e7e1d6;border-radius:3px 16px 16px 3px;padding:42px 62px 48px 82px;overflow:hidden;isolation:isolate}
+.team-note-page:not(:first-of-type){margin-top:-12px;margin-left:7px;box-shadow:0 8px 0 #f2eee6,0 14px 0 #e9e4da}
+.team-note-page::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(69,105,128,.10) 32px);z-index:-2;pointer-events:none}
+.team-note-page::after{content:"";position:absolute;left:58px;top:0;bottom:0;width:1px;background:rgba(44,145,249,.16);z-index:-1}
+.team-note-topline{font:800 10px/1 'Courier Prime',monospace;letter-spacing:.16em;color:#7d8992;text-transform:uppercase;margin-bottom:28px}
+.team-note-cover{min-height:620px}.team-note-cover-title{font-size:clamp(48px,7vw,88px);font-weight:950;letter-spacing:-.065em;line-height:.95;color:#165fa8;margin:15px 0 8px}
+.team-note-cover-sub{font-family:'Nanum Myeongjo',serif;color:#65717b;font-size:15px;margin-bottom:36px}.team-note-cover-content{max-width:760px;font-size:17px;line-height:1.95;color:#26343e}.team-note-cover-content .editable-content{min-height:210px;position:relative;z-index:2}
+.team-note-cover-mark{position:absolute;right:52px;bottom:32px;font:900 clamp(58px,8vw,105px)/.8 Arial,sans-serif;letter-spacing:-.08em;color:#e8f0f6;z-index:-1}.team-note-page-no{position:absolute;right:28px;bottom:20px;font:700 10px/1 'Courier Prime',monospace;color:#8d989f;letter-spacing:.12em}
+.team-note-writing{min-height:620px}.team-note-writing-head h3{font-size:clamp(26px,3vw,38px);line-height:1.15;letter-spacing:-.04em;color:#202d36;margin-bottom:10px}.team-note-writing-head p{font-size:14px;color:#74808a;margin-bottom:18px}
+.team-note-lines{position:absolute;left:82px;right:62px;top:218px;bottom:60px;display:flex;flex-direction:column;justify-content:space-around;pointer-events:none;z-index:0}.team-note-line-row{display:flex;align-items:center;gap:15px;color:#a1abb1;font:700 10px/1 'Courier Prime',monospace}.team-note-rule{height:1px;flex:1;background:rgba(69,105,128,.13)}
+.team-note-writing-content{position:relative;z-index:2;min-height:340px;margin-top:8px;color:#26343e;font-size:16px;line-height:1.9;outline:none}.team-note-writing-content:empty::before{content:'이곳에 팀 소개의 추가 내용을 작성할 수 있습니다.';color:#aab3b9;font-style:italic}body.edit-mode .team-note-writing-content:empty::before{color:#2c91f9}
+.team-note-colors{min-height:620px;padding-bottom:62px}.team-note-color-head{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin-bottom:30px}.team-note-color-head h3{font-size:clamp(30px,4vw,48px);line-height:1;letter-spacing:-.05em;color:#202d36;margin-bottom:9px}.team-note-color-head p{font-size:13px;color:#74808a}
+.team-note-current-badge{font:900 10px/1 'Courier Prime',monospace;letter-spacing:.14em;color:#2c91f9;border:1px solid #bcdcff;padding:8px 10px;border-radius:999px;white-space:nowrap;background:#f5faff}
+.team-color-history{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;position:relative;z-index:2}.team-color-entry{display:grid;grid-template-columns:34px 46px 1fr;align-items:center;gap:13px;min-height:92px;padding:15px 16px;background:rgba(255,255,255,.68);border:1px solid #e4e8e9;border-radius:10px}.team-color-entry.current{border-color:#bcdcff;background:#f7fbff}
+.team-color-index{font:700 10px/1 'Courier Prime',monospace;color:#9ca6ad}.team-color-swatch{width:42px;height:42px;border-radius:50%;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 3px 8px rgba(0,0,0,.08)}.color-placeholder{background:repeating-linear-gradient(135deg,#edf0f2 0,#edf0f2 5px,#dfe4e7 5px,#dfe4e7 10px)!important;border:1px dashed #aab4bb;box-shadow:none}.team-color-entry strong{display:block;font-size:15px;color:#25333d;line-height:1.3}.team-color-entry small{display:block;margin-top:4px;font-size:10px;color:#87929a;line-height:1.4}
+.team-note-color-foot{position:absolute;left:82px;bottom:22px;font:700 9px/1 'Courier Prime',monospace;letter-spacing:.12em;color:#9aa4aa}#page-intro_team .editable-content img{max-width:100%;height:auto;border-radius:4px}
+@media(max-width:800px){#page-intro_team{padding:42px 4% 64px!important}.team-notebook{padding-left:12px}.team-notebook-binding{left:-4px;top:24px;width:62px;height:52px}.team-notebook-binding span{left:2px;top:0;width:42px;height:21px;border-width:3px}.team-notebook-binding span::after{left:17px;top:-2px;width:9px;height:25px;box-shadow:inset 0 0 0 1.5px rgba(120,130,138,.45)}.team-note-page{padding:34px 28px 48px 58px;min-height:560px}.team-note-page::after{left:40px}.team-note-lines{left:58px;right:28px;top:215px}.team-note-color-foot{left:58px}.team-color-history{grid-template-columns:1fr}.team-note-color-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.team-note-page{padding:28px 20px 45px 42px;min-height:600px;border-radius:2px 11px 11px 2px}.team-note-page:not(:first-of-type){margin-left:3px}.team-note-page::after{left:33px}.team-note-topline{font-size:8px;margin-bottom:23px}.team-note-cover-title{font-size:52px}.team-note-cover-sub{font-size:12px;line-height:1.7}.team-note-cover-content{font-size:14px;line-height:1.85}.team-note-writing-head h3{font-size:25px}.team-note-writing-head p{font-size:12px}.team-note-lines{left:48px;right:20px;top:215px}.team-note-line-row{font-size:8px}.team-note-writing-content{font-size:14px;min-height:350px}.team-note-color-head h3{font-size:31px}.team-note-color-head p{font-size:11px;line-height:1.6}.team-color-entry{grid-template-columns:28px 38px 1fr;gap:9px;padding:12px}.team-color-swatch{width:36px;height:36px}.team-color-entry strong{font-size:13px}.team-color-entry small{font-size:9px}.team-note-color-foot{left:48px;font-size:7px}}
+
+/* v32 page-turn notebook: one sheet at a time */
+.team-notebook{padding-left:24px;overflow:visible}
+.team-notebook-pages{display:flex;width:100%;overflow:hidden;position:relative;border-radius:3px 16px 16px 3px;touch-action:pan-y;cursor:grab}
+.team-notebook-pages.dragging{cursor:grabbing}
+.team-notebook-pages .team-note-page{flex:0 0 100%;width:100%;box-sizing:border-box;margin:0!important;box-shadow:none!important;transition:transform .55s cubic-bezier(.22,.8,.22,1),opacity .35s ease;will-change:transform}
+.team-notebook-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin:22px auto 0}
+.team-notebook-arrow{width:40px;height:40px;border:1px solid #d7e0e7;background:#fff;color:#236fae;border-radius:50%;font-size:28px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:.2s}
+.team-notebook-arrow:hover{background:#eef7ff;border-color:#9fcdf2;transform:translateY(-1px)}
+.team-notebook-arrow:disabled{opacity:.35;cursor:default;transform:none}
+.team-notebook-dots{display:flex;align-items:center;gap:8px}
+.team-notebook-dot{width:8px;height:8px;border:0;border-radius:50%;padding:0;background:#cbd4da;cursor:pointer;transition:.25s}
+.team-notebook-dot.active{width:25px;border-radius:8px;background:#2c91f9}
+.team-notebook-pages .team-note-page-no{z-index:3}
+@media(max-width:800px){.team-notebook-pages{border-radius:2px 11px 11px 2px}.team-notebook-controls{margin-top:18px;gap:14px}}
+</style>
+
+<style id="turtless-team-notebook-ring-clean">
+/* Reference-style single binder ring: small, round, attached at the upper-left corner. */
+.team-notebook{padding-left:18px!important;overflow:visible!important}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-25px!important;
+  top:22px!important;
+  width:82px!important;
+  height:82px!important;
+  z-index:12!important;
+  pointer-events:none!important;
+}
+.team-notebook-binding span{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:66px!important;
+  height:66px!important;
+  box-sizing:border-box!important;
+  border:4px solid #777d82!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:rotate(-17deg)!important;
+  box-shadow:
+    inset 1px 1px 1px rgba(255,255,255,.9),
+    inset -2px -2px 2px rgba(45,50,54,.28),
+    1px 3px 5px rgba(30,35,40,.18)!important;
+}
+/* narrow metal section entering the punched corner — no separate fake hole */
+.team-notebook-binding span::before{
+  content:""!important;
+  position:absolute!important;
+  width:13px!important;
+  height:23px!important;
+  right:-5px!important;
+  top:28px!important;
+  border-radius:8px!important;
+  border:4px solid #858b90!important;
+  border-left:0!important;
+  background:transparent!important;
+  transform:rotate(-20deg)!important;
+  box-shadow:inset -1px 1px 1px rgba(255,255,255,.75)!important;
+}
+/* restrained metal highlight */
+.team-notebook-binding span::after{
+  content:""!important;
+  position:absolute!important;
+  left:10px!important;
+  top:6px!important;
+  width:29px!important;
+  height:12px!important;
+  border-top:2px solid rgba(255,255,255,.72)!important;
+  border-radius:50%!important;
+  transform:rotate(-8deg)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+@media(max-width:800px){
+  .team-notebook{padding-left:12px!important}
+  .team-notebook-binding{left:-18px!important;top:17px!important;transform:scale(.78)!important;transform-origin:top left!important}
+  .team-note-page{padding-left:54px!important}
+}
+@media(max-width:520px){
+  .team-notebook{padding-left:9px!important}
+  .team-notebook-binding{left:-14px!important;top:14px!important;transform:scale(.68)!important}
+  .team-note-page{padding-left:42px!important}
+}
+</style>
+
+<style id="turtless-team-notebook-v38">
+/* Word-book reference: one small metal ring behind the paper, with the page covering its overlap. */
+.team-notebook{
+  position:relative!important;
+  max-width:1160px!important;
+  padding-left:18px!important;
+  overflow:visible!important;
+  perspective:1400px!important;
+}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-34px!important;
+  top:30px!important;
+  width:70px!important;
+  height:70px!important;
+  z-index:2!important;
+  pointer-events:none!important;
+}
+.team-notebook-binding span{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:53px!important;
+  height:53px!important;
+  box-sizing:border-box!important;
+  border:3px solid #73787b!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:rotate(-12deg)!important;
+  box-shadow:
+    inset 1px 1px 1px rgba(255,255,255,.9),
+    inset -1px -2px 2px rgba(45,50,54,.20),
+    1px 2px 4px rgba(30,35,40,.13)!important;
+}
+/* tiny metal section that appears to pass through the punched hole */
+.team-note-ring-hole{
+  position:absolute!important;
+  left:8px!important;
+  top:22px!important;
+  width:13px!important;
+  height:13px!important;
+  border-radius:50%!important;
+  z-index:9!important;
+  pointer-events:none!important;
+  background:#f7f5ef!important;
+  box-shadow:0 0 0 1px rgba(80,86,90,.28), inset 0 0 0 2px rgba(205,201,192,.72)!important;
+}
+.team-note-ring-hole::after{
+  content:""!important;
+  position:absolute!important;
+  left:-2px!important;
+  top:4px!important;
+  width:10px!important;
+  height:4px!important;
+  border:2px solid #73787b!important;
+  border-right:0!important;
+  border-radius:8px 0 0 8px!important;
+  transform:rotate(-18deg)!important;
+  opacity:.95!important;
+}
+.team-notebook-pages{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:660px!important;
+  overflow:visible!important;
+  border-radius:3px 16px 16px 3px!important;
+  touch-action:pan-y!important;
+  cursor:grab!important;
+  isolation:isolate!important;
+}
+.team-notebook-pages.dragging{cursor:grabbing!important}
+.team-notebook-pages .team-note-page{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:660px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  transform-origin:7% 7%!important;
+  transition:transform .72s cubic-bezier(.2,.78,.22,1),opacity .55s ease,box-shadow .72s ease!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+}
+.team-note-page.is-current{box-shadow:0 18px 28px rgba(20,40,60,.13)!important}
+.team-note-page.is-before{box-shadow:0 8px 0 #f1ede5,0 13px 0 #e7e1d8,0 18px 25px rgba(20,40,60,.08)!important}
+.team-note-page.is-after{box-shadow:0 7px 0 #f1ede5,0 12px 0 #e7e1d8,0 16px 22px rgba(20,40,60,.07)!important}
+.team-note-page.is-turning-next{
+  transform:translate3d(-20px,3px,0) rotateZ(-4deg)!important;
+  box-shadow:0 13px 22px rgba(20,40,60,.12)!important;
+}
+.team-note-page.is-turning-prev{
+  transform:translate3d(14px,-3px,0) rotateZ(3deg)!important;
+  box-shadow:0 13px 22px rgba(20,40,60,.12)!important;
+}
+.team-notebook-controls{position:relative!important;z-index:20!important}
+@media(max-width:800px){
+  .team-notebook{max-width:none!important;padding-left:10px!important}
+  .team-notebook-binding{left:-24px!important;top:25px!important;transform:scale(.78)!important;transform-origin:top left!important}
+  .team-notebook-pages{height:625px!important}
+  .team-notebook-pages .team-note-page{min-height:625px!important}
+  .team-note-ring-hole{left:7px!important;top:20px!important;width:12px!important;height:12px!important}
+  .team-note-ring-hole::after{left:-2px!important;top:4px!important;width:9px!important;height:3px!important}
+}
+@media(max-width:520px){
+  .team-notebook{padding-left:7px!important}
+  .team-notebook-binding{left:-19px!important;top:20px!important;transform:scale(.68)!important}
+  .team-notebook-pages{height:635px!important}
+  .team-notebook-pages .team-note-page{min-height:635px!important}
+  .team-note-ring-hole{left:6px!important;top:18px!important;width:11px!important;height:11px!important}
+}
+</style>
+
 </head>
 <body>
 <div id="google_translate_element" style="display:none;"></div>
@@ -1536,7 +1875,55 @@ body.text-cursor {
 <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
 </div>
 </div></div>
-<section class="subpage" id="page-intro_team"><div class="inner"><h2 class="subpage-title">팀 소개</h2><div class="content-card"><div class="editable-content" id="b-intro_team">여기에 팀 소개 내용을 입력하세요.</div></div></div></section>
+<section class="subpage" id="page-intro_team"><div class="inner">
+<div class="team-notebook" aria-label="TURTLESS 팀 소개 단어장">
+<div class="team-notebook-binding" aria-hidden="true">
+<svg class="team-notebook-ring-svg" viewBox="0 0 72 72" aria-hidden="true">
+  <defs>
+    <linearGradient id="turtlessRingMetal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b9296"/><stop offset=".22" stop-color="#eef1f2"/><stop offset=".48" stop-color="#747b80"/><stop offset=".72" stop-color="#dfe3e4"/><stop offset="1" stop-color="#686f73"/>
+    </linearGradient>
+  </defs>
+  <circle cx="36" cy="36" r="27" fill="none" stroke="url(#turtlessRingMetal)" stroke-width="4.2"/>
+  <circle cx="36" cy="36" r="24.7" fill="none" stroke="rgba(255,255,255,.72)" stroke-width=".8"/>
+</svg>
+</div>
+<div class="team-notebook-pages" id="team-notebook-pages">
+<article class="team-note-page team-note-cover"><span class="team-note-ring-hole" aria-hidden="true"></span>
+<div class="team-note-topline">TURTLESS / TEAM NOTE</div>
+<div class="team-note-cover-title">팀 소개</div>
+<div class="team-note-cover-sub">우리가 누구인지, 무엇을 만들고 어디로 향하는지.</div>
+<div class="team-note-cover-content"><div class="editable-content" id="b-intro_team">여기에 팀 소개 내용을 입력하세요.</div></div>
+<div class="team-note-cover-mark">11379</div><div class="team-note-page-no">01</div>
+</article>
+<article class="team-note-page team-note-writing"><span class="team-note-ring-hole" aria-hidden="true"></span>
+<div class="team-note-topline">KEYWORD NOTE / WRITE</div>
+<div class="team-note-writing-head"><h3>우리 팀을 더 자세히 기록해 보세요.</h3><p>팀의 시작, 역할, 가치관, 목표 등 자유롭게 작성할 수 있는 페이지입니다.</p></div>
+<div class="team-note-lines"><div class="team-note-line-row"><span>01</span><div class="team-note-rule"></div></div><div class="team-note-line-row"><span>02</span><div class="team-note-rule"></div></div><div class="team-note-line-row"><span>03</span><div class="team-note-rule"></div></div><div class="team-note-line-row"><span>04</span><div class="team-note-rule"></div></div><div class="team-note-line-row"><span>05</span><div class="team-note-rule"></div></div><div class="team-note-line-row"><span>06</span><div class="team-note-rule"></div></div></div>
+<div class="team-note-writing-content editable-content" id="b-intro_team_note"></div><div class="team-note-page-no">02</div>
+</article>
+<article class="team-note-page team-note-colors"><span class="team-note-ring-hole" aria-hidden="true"></span>
+<div class="team-note-topline">COLOR ARCHIVE / TEAM IDENTITY</div>
+<div class="team-note-color-head"><div><h3>팀 컬러의 변화</h3><p>시간에 따라 변화해 온 TURTLESS의 시각적 아이덴티티를 기록합니다.</p></div><span class="team-note-current-badge">CURRENT</span></div>
+<div class="team-color-history">
+<div class="team-color-entry current"><span class="team-color-index">01</span><span class="team-color-swatch" style="background:#2c91f9"></span><div><strong>푸른색 계열</strong><small>현재 팀 컬러 · TURTLESS BLUE</small></div></div>
+<div class="team-color-entry"><span class="team-color-index">02</span><span class="team-color-swatch" style="background:#AE1932"></span><div><strong>단청 레드</strong><small>이전 팀 컬러 · ARCHIVED</small></div></div>
+<div class="team-color-entry editable-color-entry"><span class="team-color-index">03</span><span class="team-color-swatch color-placeholder"></span><div><strong class="editable-content" id="b-intro_team_color3">컬러 기록 추가</strong><small>이전 컬러 / 사용 기간 / 의미 등을 기록</small></div></div>
+<div class="team-color-entry editable-color-entry"><span class="team-color-index">04</span><span class="team-color-swatch color-placeholder"></span><div><strong class="editable-content" id="b-intro_team_color4">컬러 기록 추가</strong><small>이전 컬러 / 사용 기간 / 의미 등을 기록</small></div></div>
+</div>
+<div class="team-note-color-foot">TEAM 11379 · VISUAL IDENTITY ARCHIVE</div><div class="team-note-page-no">03</div>
+</article>
+</div>
+<div class="team-notebook-controls" aria-label="팀 소개 페이지 넘기기">
+<button type="button" class="team-notebook-arrow" id="team-notebook-prev" aria-label="이전 페이지">‹</button>
+<div class="team-notebook-dots" role="tablist" aria-label="페이지 선택">
+<button type="button" class="team-notebook-dot active" data-page="0" aria-label="1페이지" aria-selected="true"></button>
+<button type="button" class="team-notebook-dot" data-page="1" aria-label="2페이지" aria-selected="false"></button>
+<button type="button" class="team-notebook-dot" data-page="2" aria-label="3페이지" aria-selected="false"></button>
+</div>
+<button type="button" class="team-notebook-arrow" id="team-notebook-next" aria-label="다음 페이지">›</button>
+</div>
+</div></div></section>
 <section class="subpage" id="page-intro_member">
 <div class="inner">
 <h2 class="subpage-title">Team Members</h2>
@@ -1744,6 +2131,25 @@ autoDisplay: false
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" type="text/javascript"></script>
+<script>
+  // Footer language selector -> hidden Google Translate selector
+  function changeLanguage(lang) {
+    const tryTranslate = () => {
+      const select = document.querySelector('.goog-te-combo');
+      if (!select) return false;
+      const value = lang === 'zh' ? 'zh-CN' : lang;
+      select.value = value;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    };
+    if (tryTranslate()) return;
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      if (tryTranslate() || tries >= 30) clearInterval(timer);
+    }, 150);
+  }
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, query, where, orderBy, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -2280,7 +2686,7 @@ function loadYoutubeFallback() {
   if(!ytList) return;
 
   const channelId = 'UC8QwTy46OaCGdTauiPYkeow';
-  const cacheKey = 'turtless_youtube_latest_v4';
+  const cacheKey = 'turtless_youtube_latest_v3';
   const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
   ytList.innerHTML = '<div class="youtube-auto-loading">최근 영상을 불러오는 중…</div>';
@@ -2289,29 +2695,17 @@ function loadYoutubeFallback() {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 
-  const normalize = (items) => {
-    if(!Array.isArray(items)) throw new Error('Invalid video list');
-    const out = items.map(item => {
-      const videoId = item.videoId || item.id || '';
-      const title = item.title || 'YouTube 영상';
-      const link = item.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : '');
-      const thumbnail = item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
-      return {videoId, title, thumbnail, link};
-    }).filter(v => v.videoId || v.link);
-    if(!out.length) throw new Error('No videos');
-    return out.slice(0,3);
-  };
-
   const render = (items) => {
-    const list = normalize(items);
+    if(!Array.isArray(items) || !items.length) throw new Error('No videos');
     ytList.innerHTML = '<h2 class="section-subtitle">Youtube Media</h2>';
-    list.forEach(item => {
-      const title = escapeHtml(item.title);
-      const href = item.link || `https://www.youtube.com/watch?v=${item.videoId}`;
-      const thumb = item.thumbnail || `https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`;
+    items.slice(0,3).forEach(item => {
+      const videoId = item.videoId || '';
+      const href = item.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : `https://www.youtube.com/channel/${channelId}`);
+      const thumb = item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
+      const title = escapeHtml(item.title || 'YouTube 영상');
       ytList.innerHTML += `<a href="${href}" target="_blank" rel="noopener" class="unified-card"><div class="card-top"><img src="${thumb}" alt="${title}" loading="lazy"></div><div class="card-bottom"><h4>${title}</h4></div></a>`;
     });
-    try { localStorage.setItem(cacheKey, JSON.stringify({time:Date.now(),items:list})); } catch(e){}
+    try { localStorage.setItem(cacheKey, JSON.stringify({time:Date.now(),items:items.slice(0,3)})); } catch(e){}
   };
 
   const getCache = () => {
@@ -2322,32 +2716,7 @@ function loadYoutubeFallback() {
     return null;
   };
 
-  function parseRss(xmlText) {
-    const xml = new DOMParser().parseFromString(xmlText,'text/xml');
-    if(xml.querySelector('parsererror')) throw new Error('RSS parse failed');
-    const entries = Array.from(xml.querySelectorAll('entry')).slice(0,3);
-    if(!entries.length) throw new Error('RSS has no entries');
-    return entries.map(entry => {
-      const videoId = entry.getElementsByTagNameNS('*','videoId')[0]?.textContent || '';
-      const title = entry.getElementsByTagName('title')[0]?.textContent || 'YouTube 영상';
-      const links = Array.from(entry.querySelectorAll('link'));
-      const linkNode = links.find(n => n.getAttribute('rel') === 'alternate') || links[0];
-      return {
-        videoId,
-        title,
-        thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '',
-        link: linkNode?.getAttribute('href') || `https://www.youtube.com/watch?v=${videoId}`
-      };
-    });
-  }
-
-  // 1순위: GitHub Pages에 배포된 로컬 JSON.
-  // GitHub Actions가 YouTube RSS를 서버에서 읽어 youtube-latest.json을 주기적으로 갱신한다.
-  const localJson = () => fetch(`./youtube-latest.json?t=${Date.now()}`, {cache:'no-store'})
-    .then(r => { if(!r.ok) throw new Error('local JSON failed'); return r.json(); })
-    .then(data => normalize(data.items || data));
-
-  // 2순위: RSS2JSON
+  // 1) rss2json — 기존에 실제로 사용하던 방식
   const rss2json = () => fetch(
     `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=3`,
     {cache:'no-store'}
@@ -2362,25 +2731,38 @@ function loadYoutubeFallback() {
      });
    });
 
-  // 3순위: CORS 프록시들. 하나가 막혀도 다음 프록시로 넘어간다.
-  const proxyUrls = [
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`,
-    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(feedUrl)}`,
-    `https://corsproxy.io/?url=${encodeURIComponent(feedUrl)}`
-  ];
-  const proxyRss = () => proxyUrls.reduce((promise, url) =>
-    promise.catch(() => fetch(url,{cache:'no-store'}).then(r => {
-      if(!r.ok) throw new Error('proxy failed');
-      return r.text();
-    }).then(parseRss)), Promise.reject(new Error('proxy start')));
+  // 2) YouTube RSS를 직접 읽을 수 있는 경우
+  const directRss = () => fetch(feedUrl,{cache:'no-store'})
+    .then(r => { if(!r.ok) throw new Error('direct RSS failed'); return r.text(); })
+    .then(parseRss);
 
+  // 3) CORS 프록시를 통한 RSS — rss2json이 막혔을 때 보조
+  const proxyRss = () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`,{cache:'no-store'})
+    .then(r => { if(!r.ok) throw new Error('proxy RSS failed'); return r.text(); })
+    .then(parseRss);
+
+  function parseRss(xmlText) {
+    const xml = new DOMParser().parseFromString(xmlText,'text/xml');
+    if(xml.querySelector('parsererror')) throw new Error('RSS parse failed');
+    const entries = Array.from(xml.querySelectorAll('entry')).slice(0,3);
+    if(!entries.length) throw new Error('RSS has no entries');
+    return entries.map(entry => {
+      const videoId = entry.getElementsByTagNameNS('*','videoId')[0]?.textContent || '';
+      const title = entry.getElementsByTagName('title')[0]?.textContent || 'YouTube 영상';
+      const links = Array.from(entry.querySelectorAll('link'));
+      const linkNode = links.find(n => n.getAttribute('rel') === 'alternate') || links[0];
+      return {videoId,title,thumbnail:videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '',link:linkNode?.getAttribute('href') || `https://www.youtube.com/watch?v=${videoId}`};
+    });
+  }
+
+  // 실패하더라도 이전에 한 번이라도 받아둔 영상은 계속 보여줌
   const cached = getCache();
   if(cached) {
     try { render(cached); } catch(e){}
   }
 
-  localJson()
-    .catch(() => rss2json())
+  rss2json()
+    .catch(() => directRss())
     .catch(() => proxyRss())
     .then(items => render(items))
     .catch(() => {
@@ -3595,176 +3977,137 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', restoreRoute);
 })();
 </script>
-<footer class="site-footer">
-  <div class="site-footer-inner">
-    <div class="site-footer-brand">
-      <strong>TURTLESS</strong>
-      <p>© 2026 TURTLESS(터틀리스) TEAM</p>
-      <p>서울학생로봇대회(SSRC) 고등학생 연합 로봇팀</p>
+<footer class="turtless-footer">
+  <div class="turtless-footer-inner">
+    <div class="turtless-footer-main">
+      <div class="turtless-footer-brand">
+        <div class="turtless-footer-title">TURTLESS</div>
+        <p>SSRC와 FRC를 통해 로봇공학을 배우고,<br>함께 만들며 성장하는 학생 로봇팀입니다.</p>
+        <div class="turtless-footer-socials">
+          <a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://www.instagram.com/turtless_11379" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@turtless_11379" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://github.com/Turtless-team02/TURTLESS_OFFICIAL" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+        <div class="turtless-footer-identity">
+          <strong>© 2026 TURTLESS(터틀리스) TEAM. All rights reserved.</strong>
+          <span>SSRC (Seoul Student Robotics Competition) · FRC Team 11379</span>
+        </div>
+      </div>
+
+      <div class="turtless-footer-column turtless-footer-affiliation-column">
+        <h3>소속</h3>
+        <div class="turtless-footer-affiliation-list">
+          <div>용산철도고</div>
+          <div>용산고</div>
+          <div>서울매그넷고</div>
+          <div>서울공고</div>
+          <div>경기기계공고</div>
+          <div>경복비즈니스고</div>
+          <div>선린인터넷고</div>
+        </div>
+      </div>
+
+      <div class="turtless-footer-column turtless-footer-contact-column">
+        <h3>담당자 연락처</h3>
+        <div class="turtless-footer-contact-item">
+          <span>전화번호</span>
+          <a href="tel:010-5635-3087">010-5635-3087</a>
+          <a href="tel:010-8982-1203">010-8982-1203</a>
+        </div>
+        <div class="turtless-footer-contact-item">
+          <span>이메일</span>
+          <a href="mailto:officialturtless@gmail.com">officialturtless@gmail.com</a>
+        </div>
+      </div>
     </div>
 
-    <div class="site-footer-tools">
-      <div class="footer-language">
-        <span class="footer-label"><i class="fa-solid fa-globe"></i> LANGUAGE</span>
-        <select class="lang-select" onchange="changeLanguage(this.value)">
+    <div class="turtless-footer-language-row">
+      <div class="turtless-footer-language">
+        <span class="turtless-footer-language-label"><i class="fa-solid fa-globe" aria-hidden="true"></i> LANGUAGE</span>
+        <select class="lang-select" onchange="changeLanguage(this.value)" aria-label="Language">
           <option value="ko">한국어 (Korean)</option>
           <option value="en">English</option>
           <option value="ja">日本語 (Japanese)</option>
-          <option value="zh-CN">简体中文 (Chinese)</option>
+          <option value="zh-CN">中文 (Chinese)</option>
         </select>
       </div>
     </div>
 
-    <div class="site-footer-notes notranslate">
-      <p class="footer-translation-note notranslate">※ 자동 번역은 Google Translate를 사용하며, 일부 표현에서 오역이 발생할 수 있습니다.</p>
-      <p class="footer-translation-note notranslate">※ Automated translation via Google Translate may contain errors or inaccuracies.</p>
-      <p class="footer-translation-note notranslate">※ 使用 Google 翻译进行自动翻译，部分表达可能存在翻译错误。</p>
-      <p class="footer-translation-note notranslate">※ Google 翻訳による自動翻訳のため、一部の表現で誤訳が生じる場合があります。</p>
-      <p class="notranslate">※ 홈 화면의 버튼을 7번 연속으로 누르거나 키보드로 <b>turtle</b>을 입력해 보세요.</p>
+    <div class="turtless-footer-divider"></div>
+
+    <div class="turtless-footer-bottom">
+      <div class="turtless-footer-links">
+        <a href="https://turtless-team02.github.io/TURTLESS_OFFICIAL/" target="_blank" rel="noopener">Official Website ↗</a>
+        <a href="https://github.com/Turtless-team02/TURTLESS_OFFICIAL" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
     </div>
 
-    <div class="site-footer-credit">
-      <span>Typeface</span>
-      <strong>BM도현체</strong>
-      <span>·</span>
-      <span>BMDOHYEON_ttf.ttf</span>
-      <span>·</span>
-      <a href="https://font.woowahan.com/dohyeon/" target="_blank" rel="noopener noreferrer">
-        도현체 다운로드 / 폰트 안내 ↗
-      </a>
+    <div class="turtless-footer-notices">
+      <p>※ 자동 번역은 Google Translate를 사용하며, 일부 표현에서 오역이 발생할 수 있습니다.</p>
+      <p>※ Automated translation via Google Translate may contain errors or inaccuracies.</p>
+      <p>※ 使用 Google 翻译进行自动翻译，部分表达可能存在翻译错误。</p>
+      <p>※ Google 翻訳による自動翻訳のため、一部の表現で誤訳が生じる場合があります。</p>
+      <p>※ 홈 화면의 버튼을 7번 연속으로 누르거나 키보드로 turtle을 입력해 보세요.</p>
+    </div>
+
+    <div class="turtless-footer-typeface">
+      <span>Typeface</span><strong>BM도현체</strong><span>·</span><span>BMDOHYEON_ttf.ttf</span><span>·</span>
+      <a href="http://font.woowahan.com/dohyeon/" target="_blank" rel="noopener">도현체 다운로드 / 폰트 안내 ↗</a>
     </div>
   </div>
 </footer>
+
+<style id="turtless-footer-restore">
+.turtless-footer{width:100%;box-sizing:border-box;margin:0;padding:58px 0 46px;background:#101827;color:#aeb8c9;font-family:inherit;text-align:left;font-size:14px;line-height:1.6}
+.turtless-footer *{box-sizing:border-box}
+.turtless-footer-inner{width:min(1260px,calc(100% - 48px));margin:0 auto}
+.turtless-footer-main{display:grid;grid-template-columns:minmax(270px,1.65fr) minmax(250px,1.15fr) minmax(250px,1fr);gap:54px}
+.turtless-footer-brand{min-width:0}
+.turtless-footer-title{margin:0 0 12px;color:#f4f6fb;font-size:31px;line-height:1.1;font-weight:800;letter-spacing:-.8px}
+.turtless-footer-brand p{margin:0;color:#98a4b7;font-size:14px;line-height:1.75;font-weight:500;letter-spacing:-.2px}
+
+.turtless-footer-identity{margin-top:22px;display:flex;flex-direction:column;gap:5px}
+.turtless-footer-identity strong{color:#e8edf5;font-size:16px;line-height:1.55;font-weight:800;letter-spacing:-.25px}
+.turtless-footer-identity span{color:#a0adbf;font-size:15px;line-height:1.55;font-weight:600;letter-spacing:-.15px}
+@media(max-width:680px){.turtless-footer-identity{margin-top:19px}.turtless-footer-identity strong{font-size:14px}.turtless-footer-identity span{font-size:13px}}
+.turtless-footer-socials{display:flex;gap:10px;margin-top:22px}
+.turtless-footer-socials a{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#182235;color:#aeb8c9;text-decoration:none;transition:.2s ease}
+.turtless-footer-socials a:hover{background:#24334b;color:#fff;transform:translateY(-2px)}
+.turtless-footer-socials i{font-size:17px}
+.turtless-footer-column{display:flex;flex-direction:column;align-items:flex-start;gap:9px}
+.turtless-footer-column h3{margin:2px 0 11px;color:#f1f4fa;font-size:13px;line-height:1.2;font-weight:800;letter-spacing:1.3px}
+.turtless-footer-column a{color:#98a4b7;text-decoration:none;font-size:14px;line-height:1.5;font-weight:600;transition:.18s ease}
+.turtless-footer-column a:hover{color:#fff;transform:translateX(2px)}
+.turtless-footer-affiliation{color:#98a4b7;font-size:14px;line-height:1.7;font-weight:600}
+.turtless-footer-affiliation-list{display:flex;flex-direction:column;gap:5px;color:#98a4b7;font-size:14px;line-height:1.5;font-weight:600}
+.turtless-footer-contact-column{padding-left:8px}
+.turtless-footer-contact-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:15px}
+.turtless-footer-contact-item span{color:#68768a;font-size:11px;font-weight:800;letter-spacing:.4px;margin-bottom:1px}
+.turtless-footer-contact-item a{color:#98a4b7;text-decoration:none;font-size:14px;line-height:1.45;font-weight:600;word-break:break-all}
+.turtless-footer-contact-item a:hover{color:#fff}
+.turtless-footer-column-last{padding-left:8px}
+.turtless-footer-language-row{display:flex;justify-content:flex-end;margin-top:38px}
+.turtless-footer-language{display:flex;align-items:center;gap:13px}
+.turtless-footer-language-label{display:inline-flex;align-items:center;gap:9px;color:#aeb8c9;font-size:13px;font-weight:700;letter-spacing:1.2px;white-space:nowrap}
+.turtless-footer-language-label i{color:#5ba8ff;font-size:15px}
+.turtless-footer .lang-select{width:190px;min-height:42px;padding:8px 35px 8px 14px;border:1px solid #344156;border-radius:8px;outline:none;background:#182233;color:#f1f4fa;font:600 14px/1.2 inherit;cursor:pointer}
+.turtless-footer-divider{height:1px;margin:28px 0 24px;background:#293548}
+.turtless-footer-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:30px}
+.turtless-footer-copy{margin:0;color:#7f8ca0;font-size:13px;line-height:1.55;font-weight:600}
+.turtless-footer-meta{margin-top:5px;color:#59677d;font-size:11px;line-height:1.5}
+.turtless-footer-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+.turtless-footer-links a{color:#7f8ca0;text-decoration:none;font-size:12px;font-weight:700}
+.turtless-footer-links a:hover{color:#fff;text-decoration:underline}
+.turtless-footer-notices{margin-top:27px}
+.turtless-footer-notices p{margin:0 0 7px;color:#6f7d91;font-size:11px;line-height:1.55;letter-spacing:-.1px}
+.turtless-footer-typeface{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:34px;color:#66748a;font-size:11px;font-weight:600}
+.turtless-footer-typeface strong{color:#8996aa;font-weight:800}.turtless-footer-typeface a{color:#8cbaff;text-decoration:none;font-weight:800}.turtless-footer-typeface a:hover{text-decoration:underline}
+@media(max-width:900px){.turtless-footer-main{grid-template-columns:1.35fr 1fr;gap:34px}.turtless-footer-brand{grid-column:1/-1}.turtless-footer-contact-column{padding-left:0}.turtless-footer-language-row{margin-top:34px}}
+@media(max-width:680px){.turtless-footer{padding:42px 0 34px}.turtless-footer-inner{width:min(100% - 32px,680px)}.turtless-footer-main{grid-template-columns:1fr 1fr;gap:30px 22px}.turtless-footer-brand{grid-column:1/-1;grid-row:auto}.turtless-footer-title{font-size:27px}.turtless-footer-brand p{font-size:13px}.turtless-footer-column h3{font-size:12px}.turtless-footer-column a{font-size:13px}.turtless-footer-language-row{justify-content:flex-start}.turtless-footer-language{width:100%;align-items:stretch;flex-direction:column;gap:9px}.turtless-footer .lang-select{width:100%;max-width:none}.turtless-footer-bottom{flex-direction:column;align-items:flex-start;gap:17px}.turtless-footer-links{justify-content:flex-start}.turtless-footer-divider{margin:25px 0 21px}.turtless-footer-notices p{font-size:10px}.turtless-footer-typeface{margin-top:28px;font-size:10px}}
+</style>
+
 <style>
-/* =========================================================
-   FOOTER / TYPOGRAPHY
-   ========================================================= */
-.site-footer{
-  background:#111827;
-  color:#d7dee8;
-  padding:52px 5% 44px;
-  border-top:1px solid #263244;
-  font-size:14px;
-}
-.site-footer-inner{
-  width:min(1180px,100%);
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:minmax(0,1.5fr) minmax(220px,.7fr);
-  gap:30px 70px;
-}
-.site-footer-brand strong{
-  display:block;
-  margin-bottom:12px;
-  color:#fff;
-  font-size:24px;
-  letter-spacing:.04em;
-  line-height:1.1;
-}
-.site-footer-brand p{
-  margin:4px 0;
-  color:#b9c4d1;
-  line-height:1.8;
-}
-.site-footer-tools{
-  display:flex;
-  align-items:flex-start;
-  justify-content:flex-end;
-}
-.footer-language{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.footer-label{
-  color:#aebaca;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.08em;
-  white-space:nowrap;
-}
-.footer-label i{margin-right:5px;color:#79b8ff}
-.site-footer .lang-select{
-  min-width:170px;
-  background:#1a2433 !important;
-  color:#f2f6fa !important;
-  border:1px solid #3a485b !important;
-  border-radius:7px !important;
-  padding:9px 12px !important;
-  font-family:inherit !important;
-  font-size:13px !important;
-  line-height:1.4;
-}
-.site-footer .lang-select:focus{
-  outline:2px solid rgba(44,145,249,.35);
-  outline-offset:2px;
-}
-.site-footer-notes{
-  grid-column:1 / -1;
-  padding-top:24px;
-  border-top:1px solid #293547;
-}
-.site-footer-notes p{
-  margin:5px 0;
-  color:#9eabba;
-  font-size:12px;
-  line-height:1.75;
-}
-.site-footer-notes b{color:#cbd6e2}
-.site-footer-credit{
-  grid-column:1 / -1;
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:8px;
-  padding-top:18px;
-  color:#8997a8;
-  font-size:11px;
-  line-height:1.6;
-}
-.site-footer-credit strong{color:#c4d0dd;font-weight:700}
-.site-footer-credit a{
-  color:#9fcaff;
-  text-decoration:none;
-  transition:color .2s ease, opacity .2s ease;
-}
-.site-footer-credit a:hover{
-  color:#fff;
-  text-decoration:underline;
-}
-@media(max-width:700px){
-  .site-footer{padding:40px 22px 34px}
-  .site-footer-inner{grid-template-columns:1fr;gap:24px}
-  .site-footer-tools{justify-content:flex-start}
-  .footer-language{width:100%;align-items:stretch;flex-direction:column;gap:8px}
-  .site-footer .lang-select{width:100%;min-width:0}
-  .site-footer-notes,.site-footer-credit{grid-column:auto}
-}
-
-
-/* Footer translation notes: keep original language and prevent Google Translate re-processing */
-.site-footer-notes.notranslate,
-.site-footer-notes.notranslate *{
-  -webkit-text-size-adjust:100%;
-}
-.site-footer-notes p{
-  font-family:'Noto Sans KR', sans-serif !important;
-  white-space:normal !important;
-  word-break:keep-all !important;
-  overflow-wrap:anywhere !important;
-  max-width:100%;
-  box-sizing:border-box;
-}
-@media(max-width:700px){
-  .site-footer-notes p{
-    font-size:12px !important;
-    line-height:1.8 !important;
-    white-space:normal !important;
-    word-break:break-word !important;
-    overflow-wrap:anywhere !important;
-  }
-}
-
 /* =========================================================
    MOBILE UI IMPROVEMENT
    후원사 + 엔지니어링 노트 + 로봇 소개
@@ -4885,6 +5228,390 @@ window.addEventListener('DOMContentLoaded', () => {
   .turtless-equation-factors>.turtless-operator{height:62px!important}
 }
 </style>
+
+<script id="turtless-team-notebook-pager">
+(function(){
+  function initNotebook(){
+    const track=document.getElementById('team-notebook-pages');
+    const prev=document.getElementById('team-notebook-prev');
+    const next=document.getElementById('team-notebook-next');
+    const dots=[...document.querySelectorAll('.team-notebook-dot')];
+    if(!track||!prev||!next||!dots.length||track.dataset.ready==='1') return;
+    track.dataset.ready='1';
+    const pages=[...track.querySelectorAll('.team-note-page')];
+    let index=0, startX=0, deltaX=0, dragging=false, animating=false;
+
+    function render(animate=true, direction=0){
+      pages.forEach((page,i)=>{
+        page.classList.remove('is-current','is-before','is-after','is-turning-next','is-turning-prev');
+        page.style.transition=animate
+          ? 'transform .72s cubic-bezier(.2,.78,.22,1), opacity .55s ease, box-shadow .72s ease'
+          : 'none';
+
+        if(i===index){
+          page.classList.add('is-current');
+          page.style.transform='translate3d(0,0,0) rotateZ(0deg)';
+          page.style.opacity='1';
+          page.style.zIndex='6';
+        }else if(i<index){
+          page.classList.add('is-before');
+          page.style.transform='translate3d(-6px,6px,0) rotateZ(-0.6deg)';
+          page.style.opacity='1';
+          page.style.zIndex=String(3+i);
+        }else{
+          page.classList.add('is-after');
+          const offset=(i-index)*8;
+          const y=(i-index)*5.5;
+          const r=(i-index)*0.45;
+          page.style.transform='translate3d('+offset+'px,'+y+'px,0) rotateZ('+r+'deg)';
+          page.style.opacity='1';
+          page.style.zIndex=String(5-i);
+        }
+      });
+      if(animate && direction!==0){
+        const current=pages[index];
+        current.classList.add(direction>0?'is-turning-next':'is-turning-prev');
+      }
+      /* 양 끝에서 끊기지 않고 마지막↔처음이 순환하도록 버튼은 항상 활성화 */
+      prev.disabled=false;
+      next.disabled=false;
+      dots.forEach((dot,i)=>{
+        dot.classList.toggle('active',i===index);
+        dot.setAttribute('aria-selected',i===index?'true':'false');
+      });
+      window.updateTurtlessNotebookHeight?.();
+    }
+
+    function go(n){
+      if(animating)return;
+      if(!pages.length)return;
+      /* 마지막 → 처음 / 처음 → 마지막 순환 */
+      const nextIndex=((n % pages.length)+pages.length)%pages.length;
+      if(nextIndex===index)return;
+      const direction=(nextIndex>index || (index===pages.length-1 && nextIndex===0))?1:-1;
+      animating=true;
+      index=nextIndex;
+      render(true,direction);
+      window.setTimeout(()=>{animating=false;render(false,0)},760);
+    }
+
+    prev.addEventListener('click',()=>go(index-1));
+    next.addEventListener('click',()=>go(index+1));
+    dots.forEach(dot=>dot.addEventListener('click',()=>go(Number(dot.dataset.page))));
+
+    track.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse' && e.button!==0)return;
+      if(animating)return;
+      dragging=true;startX=e.clientX;deltaX=0;
+      track.classList.add('dragging');
+      track.setPointerCapture?.(e.pointerId);
+    });
+    track.addEventListener('pointermove',e=>{if(dragging)deltaX=e.clientX-startX});
+    const release=e=>{
+      if(!dragging)return;
+      dragging=false;track.classList.remove('dragging');
+      if(Math.abs(deltaX)>55)go(index+(deltaX<0?1:-1));
+      else render(true,0);
+      try{track.releasePointerCapture?.(e.pointerId)}catch(_){ }
+    };
+    track.addEventListener('pointerup',release);
+    track.addEventListener('pointercancel',release);
+    document.addEventListener('keydown',e=>{
+      const section=document.getElementById('page-intro_team');
+      if(!section||!section.classList.contains('active'))return;
+      if(e.key==='ArrowLeft')go(index-1);
+      if(e.key==='ArrowRight')go(index+1);
+    });
+    render(false,0);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initNotebook);else initNotebook();
+  window.initTurtlessTeamNotebook=initNotebook;
+})();
+</script>
+
+
+
+
+
+<style id="turtless-team-notebook-v39-final">
+/* v39 — 실제 링 단어장 구조: 링은 종이 뒤, 페이지는 링을 축으로 넘김 */
+.team-notebook{
+  max-width:1180px!important;
+  padding-left:0!important;
+  overflow:visible!important;
+  perspective:1800px!important;
+}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-28px!important;
+  top:24px!important;
+  width:58px!important;
+  height:58px!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+/* 사진처럼 단순한 철제 링. 종이보다 뒤에 있으므로 종이가 겹치는 부분을 자연스럽게 가린다. */
+.team-notebook-binding span{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:50px!important;
+  height:50px!important;
+  box-sizing:border-box!important;
+  border:3px solid #70767a!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:rotate(-10deg)!important;
+  box-shadow:inset 1px 1px 1px rgba(255,255,255,.85),1px 2px 3px rgba(25,30,35,.16)!important;
+}
+.team-notebook-binding span::before,
+.team-notebook-binding span::after{content:none!important}
+/* 기존 가짜 구멍은 제거 */
+.team-note-ring-hole{display:none!important}
+
+/* 카드 자체를 조금 키우고, 내용이 길어지면 페이지 높이가 따라가도록 */
+.team-notebook-pages{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:660px!important;
+  overflow:visible!important;
+  border-radius:3px 18px 18px 3px!important;
+  touch-action:pan-y!important;
+  cursor:grab!important;
+  isolation:isolate!important;
+}
+.team-notebook-pages.dragging{cursor:grabbing!important}
+.team-notebook-pages .team-note-page{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:660px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  overflow:visible!important;
+  transform-origin:3.5% 6%!important;
+  transition:transform .78s cubic-bezier(.18,.78,.22,1),opacity .55s ease,box-shadow .78s ease!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+}
+/* 실제 단어장처럼 뒤쪽 장을 살짝 밀어둔다. */
+.team-notebook-pages .team-note-page.is-after:nth-child(2){transform:translate3d(9px,6px,0) rotateZ(.45deg)!important}
+.team-notebook-pages .team-note-page.is-after:nth-child(3){transform:translate3d(16px,11px,0) rotateZ(.8deg)!important}
+.team-note-page.is-current{
+  z-index:6!important;
+  box-shadow:0 18px 30px rgba(20,40,60,.13)!important;
+}
+.team-note-page.is-before{
+  z-index:2!important;
+  box-shadow:0 8px 0 #f1ede5,0 13px 0 #e7e1d8,0 18px 25px rgba(20,40,60,.08)!important;
+}
+.team-note-page.is-after{
+  box-shadow:0 7px 0 #f1ede5,0 12px 0 #e7e1d8,0 16px 22px rgba(20,40,60,.07)!important;
+}
+/* 다음 장: 왼쪽 링을 중심으로 실제 종이를 들어 넘기는 느낌 */
+.team-note-page.is-turning-next{
+  transform:translate3d(-7px,4px,0) rotateZ(-7deg)!important;
+  box-shadow:0 16px 24px rgba(20,40,60,.15)!important;
+  z-index:7!important;
+}
+.team-note-page.is-turning-prev{
+  transform:translate3d(8px,-3px,0) rotateZ(6deg)!important;
+  box-shadow:0 16px 24px rgba(20,40,60,.15)!important;
+  z-index:7!important;
+}
+
+/* 긴 Firebase 데이터/이미지/줄바꿈도 페이지 밖으로 잘리지 않게 */
+#page-intro_team .editable-content{
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  white-space:normal!important;
+}
+#page-intro_team .editable-content img{max-width:100%!important;height:auto!important}
+.team-note-writing-content{min-height:340px!important;height:auto!important;overflow:visible!important}
+.team-note-cover-content .editable-content{min-height:210px!important;height:auto!important;overflow:visible!important}
+.team-notebook-pages .team-note-page{
+  /* JS가 현재 페이지의 실제 내용 높이를 읽을 수 있도록 고정 높이를 없앤다. */
+  contain:layout style!important;
+}
+
+@media(max-width:800px){
+  .team-notebook{max-width:none!important}
+  .team-notebook-binding{left:-23px!important;top:21px!important;transform:scale(.82)!important;transform-origin:top left!important}
+  .team-notebook-pages{min-height:625px!important}
+  .team-notebook-pages .team-note-page{min-height:625px!important}
+}
+@media(max-width:520px){
+  .team-notebook-binding{left:-19px!important;top:18px!important;transform:scale(.72)!important}
+  .team-notebook-pages{min-height:635px!important}
+  .team-notebook-pages .team-note-page{min-height:635px!important}
+}
+</style>
+
+<script id="turtless-team-notebook-v39-height">
+(function(){
+  function initNotebookHeight(){
+    const track=document.getElementById('team-notebook-pages');
+    if(!track) return;
+    const pages=[...track.querySelectorAll('.team-note-page')];
+    const current=pages.find(p=>p.classList.contains('is-current')) || pages[0];
+    if(!current) return;
+    const h=Math.max(660,current.scrollHeight+8);
+    track.style.height=h+'px';
+  }
+  function bind(){
+    const track=document.getElementById('team-notebook-pages');
+    if(!track || track.dataset.heightBound==='1') return;
+    track.dataset.heightBound='1';
+    const resize=()=>window.requestAnimationFrame(initNotebookHeight);
+    window.addEventListener('resize',resize,{passive:true});
+    const ro=window.ResizeObserver ? new ResizeObserver(resize) : null;
+    if(ro) track.querySelectorAll('.team-note-page').forEach(p=>ro.observe(p));
+    track.querySelectorAll('.editable-content').forEach(el=>{
+      el.addEventListener('input',resize);
+      el.addEventListener('keyup',resize);
+    });
+    setTimeout(resize,80);
+    setTimeout(resize,400);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind);
+  else bind();
+  window.updateTurtlessNotebookHeight=initNotebookHeight;
+})();
+</script>
+
+<style id="turtless-team-notebook-v40-final">
+/* v40: 실제 단어장에 가까운 링 + 모든 페이지 동일 높이/공통 글자 크기 */
+.team-notebook{padding-left:0!important;overflow:visible!important;position:relative!important;perspective:1600px!important}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-31px!important;
+  top:13px!important;
+  width:72px!important;
+  height:72px!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  transform:none!important;
+}
+.team-notebook-ring-svg{
+  display:block!important;
+  width:72px!important;
+  height:72px!important;
+  overflow:visible!important;
+  transform:rotate(-16deg)!important;
+  transform-origin:50% 50%!important;
+  filter:drop-shadow(1px 2px 1.5px rgba(30,35,40,.18))!important;
+}
+/* 페이지가 링보다 위. 링의 일부만 페이지 바깥에서 보인다. */
+.team-notebook-pages{position:relative!important;z-index:2!important;min-height:0!important;height:660px!important;overflow:visible!important}
+.team-notebook-pages .team-note-page{
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  padding-bottom:58px!important;
+}
+/* 종이에 뚫린 작은 구멍: mask로 실제 투명 구멍을 만들어 뒤의 링이 통과해 보이게 함 */
+.team-notebook-pages .team-note-page{
+  -webkit-mask-image:radial-gradient(circle 8px at 17px 25px,transparent 0 6px,#000 7px);
+  mask-image:radial-gradient(circle 8px at 17px 25px,transparent 0 6px,#000 7px);
+}
+.team-note-ring-hole{display:none!important}
+/* 카드 안쪽의 글은 같은 크기로 맞추고, 내용이 많아도 카드 밖으로 새지 않게 */
+#page-intro_team .team-note-cover-content .editable-content,
+#page-intro_team .team-note-writing-content{
+  overflow:visible!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  white-space:normal!important;
+  font-size:16px!important;
+  line-height:1.78!important;
+  max-width:100%!important;
+}
+#page-intro_team .team-note-cover-content .editable-content img,
+#page-intro_team .team-note-writing-content img{max-width:100%!important;height:auto!important}
+/* 데이터가 많을 때 JS가 넣는 공통 축소 단계 */
+#page-intro_team.team-notebook-compact-1 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-1 .team-note-writing-content{font-size:15px!important;line-height:1.72!important}
+#page-intro_team.team-notebook-compact-2 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-2 .team-note-writing-content{font-size:14px!important;line-height:1.66!important}
+#page-intro_team.team-notebook-compact-3 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-3 .team-note-writing-content{font-size:13px!important;line-height:1.6!important}
+#page-intro_team.team-notebook-compact-4 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-4 .team-note-writing-content{font-size:12px!important;line-height:1.55!important}
+/* 긴 데이터는 내부 스크롤 대신 공통 높이 안에서 자연스럽게 축소. */
+.team-note-writing-content{min-height:0!important;height:auto!important}
+.team-note-cover-content .editable-content{min-height:0!important;height:auto!important}
+/* 뒤쪽 페이지는 사진처럼 살짝 어긋남 */
+.team-notebook-pages .team-note-page.is-after:nth-child(2){transform:translate3d(9px,6px,0) rotateZ(.45deg)!important}
+.team-notebook-pages .team-note-page.is-after:nth-child(3){transform:translate3d(16px,11px,0) rotateZ(.8deg)!important}
+@media(max-width:800px){
+  .team-notebook-binding{left:-26px!important;top:11px!important;transform:scale(.82)!important;transform-origin:50% 50%!important}
+  .team-notebook-pages{height:625px!important}
+  .team-notebook-pages .team-note-page{-webkit-mask-image:radial-gradient(circle 7px at 13px 21px,transparent 0 5px,#000 6px);mask-image:radial-gradient(circle 7px at 13px 21px,transparent 0 5px,#000 6px)}
+}
+@media(max-width:520px){
+  .team-notebook-binding{left:-23px!important;top:9px!important;transform:scale(.70)!important}
+  .team-notebook-pages{height:600px!important}
+  .team-notebook-pages .team-note-page{-webkit-mask-image:radial-gradient(circle 6.5px at 11px 19px,transparent 0 4.5px,#000 5.5px);mask-image:radial-gradient(circle 6.5px at 11px 19px,transparent 0 4.5px,#000 5.5px)}
+}
+</style>
+<script id="turtless-team-notebook-v40-fit">
+(function(){
+  function fitNotebook(){
+    const section=document.getElementById('page-intro_team');
+    const track=document.getElementById('team-notebook-pages');
+    if(!section||!track)return;
+    const pages=[...track.querySelectorAll('.team-note-page')];
+    if(!pages.length)return;
+    /* 모든 페이지를 같은 높이로 유지한다. 현재 디자인의 카드 높이를 기준으로 내용은 글자 크기로 압축한다. */
+    const writing=document.getElementById('b-intro_team_note');
+    const intro=document.getElementById('b-intro_team');
+    section.classList.remove('team-notebook-compact-1','team-notebook-compact-2','team-notebook-compact-3','team-notebook-compact-4');
+    const targets=[intro,writing].filter(Boolean);
+    const limit=window.innerWidth<=520?470:(window.innerWidth<=800?500:535);
+    let level=0;
+    for(let i=0;i<targets.length;i++){
+      if(targets[i].scrollHeight>limit)level=Math.max(level,1);
+    }
+    if(level===1){
+      section.classList.add('team-notebook-compact-1');
+      if(targets.some(el=>el.scrollHeight>limit))level=2;
+    }
+    if(level===2){
+      section.classList.remove('team-notebook-compact-1');section.classList.add('team-notebook-compact-2');
+      if(targets.some(el=>el.scrollHeight>limit))level=3;
+    }
+    if(level===3){
+      section.classList.remove('team-notebook-compact-2');section.classList.add('team-notebook-compact-3');
+      if(targets.some(el=>el.scrollHeight>limit))level=4;
+    }
+    if(level===4){
+      section.classList.remove('team-notebook-compact-3');section.classList.add('team-notebook-compact-4');
+    }
+    /* 세 페이지 모두 같은 실제 높이. 한 장만 길어져서 카드가 길어지는 현상을 막는다. */
+    const h=window.innerWidth<=520?600:(window.innerWidth<=800?625:660);
+    track.style.height=h+'px';
+    pages.forEach(p=>p.style.height=h+'px');
+  }
+  function bind(){
+    if(window.__turtlessNotebookV40Bound)return;
+    window.__turtlessNotebookV40Bound=true;
+    const run=()=>requestAnimationFrame(()=>requestAnimationFrame(fitNotebook));
+    window.addEventListener('resize',run,{passive:true});
+    document.addEventListener('input',e=>{if(e.target.closest('#page-intro_team'))run()});
+    document.addEventListener('keyup',e=>{if(e.target.closest('#page-intro_team'))run()});
+    const track=document.getElementById('team-notebook-pages');
+    if(track&&window.ResizeObserver){const ro=new ResizeObserver(run);track.querySelectorAll('.editable-content').forEach(el=>ro.observe(el));}
+    setTimeout(run,100);setTimeout(run,500);setTimeout(run,1200);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+
 </body>
 
 <style id="home-sns-thick-final">
