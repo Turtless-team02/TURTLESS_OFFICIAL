@@ -152,52 +152,6 @@
 <button class="action-btn" onclick="saveRobotToFirebase()">등록하기</button>
 </div>
 </div>
-<div id="member-actions">
-<h3 style="color: var(--primary-color); margin-bottom: 10px;">📋 팀원 대시보드</h3>
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-<p id="welcome-msg" style="font-weight:700; margin: 0;"></p>
-<div style="display: flex; gap: 8px; flex-wrap:wrap;">
-<input accept="image/*" id="profile-file-input" onchange="window.uploadProfileImage(this, 'profileImage')" style="display: none;" type="file"/>
-<button class="dash-btn-sm" onclick="document.getElementById('profile-file-input').click()">📸 기본 프로필 변경</button>
-<input accept="image/*" id="hover-file-input" onchange="window.uploadProfileImage(this, 'profileHoverImage')" style="display: none;" type="file"/>
-<button class="dash-btn-sm" onclick="document.getElementById('hover-file-input').click()" style="background:#555;">✨ 호버용 사진 변경</button>
-<button class="dash-btn-sm" onclick="window.resetProfileImage()" style="background:#dc3545;">🗑️ 사진 초기화</button>
-</div>
-</div>
-<hr style="border:0; border-top:1px solid #eaeaea; margin: 20px 0;"/>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-<div style="background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-<h4 style="margin-bottom: 15px; font-size: 15px;">✍️ 새로운 [주요 활동] 남기기</h4>
-<input class="dash-input" id="new-act-title" placeholder="활동 제목" type="text"/>
-<textarea class="dash-input" id="new-act-content" placeholder="활동 내용" style="height: 80px; resize: none;"></textarea>
-<label style="font-size:12px; color:#555;">활동 사진 첨부 (선택)</label>
-<input accept="image/*" class="dash-input" id="new-act-file" style="background: white;" type="file"/>
-<button class="action-btn" onclick="window.uploadActivity()" style="padding: 10px;">활동 게시물 등록</button>
-</div>
-<div style="background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-<h4 style="margin-bottom: 15px; font-size: 15px;">🖼️ [PR 갤러리] 사진 올리기</h4>
-<label style="font-size:12px; font-weight:bold; color:var(--text-sub); display:block; margin-bottom:5px;">등록일 (선택 날짜 기준으로 정렬됩니다)</label>
-<input class="dash-input" id="new-gal-date" style="margin-bottom: 12px;" type="date"/>
-<select class="dash-input" id="new-gal-category">
-<option value="종합">카테고리 (기본: 종합)</option>
-<option value="팀">팀</option><option value="엔지니어">엔지니어</option><option value="마케팅">마케팅</option>
-<option value="회계">회계</option><option value="전략">전략</option><option value="홍보자료">홍보자료</option>
-</select>
-<input accept="image/*" class="dash-input" id="new-gal-file" style="background: white;" type="file"/>
-<button class="action-btn" onclick="window.uploadGalleryImage()" style="padding: 10px; background: #111;">사진 업로드</button>
-</div>
-</div>
-</div>
-<div id="admin-panel">
-<h3 style="margin-bottom:12px; font-weight:900;">👑 관리자 패널</h3>
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
-<button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">메인 슬라이더 편집</button>
-<button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
-<button onclick="openCareerAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">💼 경력 사항 관리</button>
-<button onclick="openRobotModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🤖 로봇 소개 관리</button>
-<button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
-</div>
-</div>
 <div id="turtless-mouse-trail">
 <img alt="Mouse Trail" src="./turtless-trail.png"/>
 </div>
@@ -291,7 +245,7 @@
 <div class="turtless-factor"><div class="turtless-bubble turtless-bubble-white">2</div><span>두 배 더 나은 실력</span></div>
 <div class="turtless-operator">×</div>
 <div class="turtless-factor"><div class="turtless-bubble turtless-bubble-white">2</div><span>두 번째 FRC 도전</span></div>
-</div></div></div></section><section class="section home-latest-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">최근</span><h2 class="home-section-title">최근 소식</h2></div><button class="home-text-link" onclick="location.href='./pages/activity/'">전체 활동 보기 →</button></div><div class="home-latest-grid"><div class="home-youtube-panel"><div class="home-panel-head"><h3>YouTube</h3><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank">채널 보기 →</a></div><div id="youtube-auto-list"></div></div><div class="home-side-panel"><div class="home-gallery-panel"><div class="home-panel-head"><h3>최근 사진</h3><span onclick="location.href='./pages/gallery/'" style="cursor:pointer">갤러리 보기 →</span></div><div class="home-photo-grid" id="home-gallery-4grid"></div></div><div class="home-sns-panel"><div class="home-panel-head"><h3>SNS</h3><span>TURTLESS의 소식과 콘텐츠를 만나보세요</span></div><div class="home-sns-cards"><a class="home-sns-card" href="https://www.instagram.com/turtless_11379" rel="noopener" target="_blank"><i class="fa-brands fa-instagram"></i><strong>Instagram</strong><span>팀의 활동과 일상을 사진으로 만나보세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" rel="noopener" target="_blank"><i class="fa-brands fa-youtube"></i><strong>YouTube</strong><span>로봇과 대회, 팀 활동 영상을 확인하세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.tiktok.com/@turtless_11379" rel="noopener" target="_blank"><i class="fa-brands fa-tiktok"></i><strong>TikTok</strong><span>TURTLESS의 짧고 생생한 콘텐츠를 만나보세요.</span><b>바로가기 →</b></a></div></div><div class="home-notice-panel" id="home-notice-board"><div class="home-panel-head"><h3>최근 활동</h3><button class="home-text-link" onclick="location.href='./pages/activity/'">전체 보기 →</button></div><div class="home-notice-list"></div></div></div></div></div></section><section class="home-quick-links"><div class="inner"><button onclick="location.href='./pages/intro-team/'">팀 소개</button><button onclick="location.href='./pages/robot/'">로봇 소개</button><button onclick="location.href='./pages/activity/'">활동</button><button onclick="location.href='./pages/engineering/'">엔지니어링 노트</button><button onclick="location.href='./pages/sponsors/'">후원사</button></div></section><section class="section home-sponsor-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">후원</span><h2 class="home-section-title">후원사</h2></div><button class="home-text-link" onclick="location.href='./pages/sponsors/'">후원사 보기 →</button></div><div class="sponsor-slider" id="home-sponsor-slider"></div></div></section><div id="member-actions">
+</div></div></div></section><section class="section home-latest-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">최근</span><h2 class="home-section-title">최근 소식</h2></div><button class="home-text-link" onclick="location.href='./pages/activity/'">전체 활동 보기 →</button></div><div class="home-latest-grid"><div class="home-youtube-panel"><div class="home-panel-head"><h3>YouTube</h3><a href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" target="_blank">채널 보기 →</a></div><div id="youtube-auto-list"></div></div><div class="home-side-panel"><div class="home-gallery-panel"><div class="home-panel-head"><h3>최근 사진</h3><span onclick="location.href='./pages/gallery/'" style="cursor:pointer">갤러리 보기 →</span></div><div class="home-photo-grid" id="home-gallery-4grid"></div></div><div class="home-sns-panel"><div class="home-panel-head"><h3>SNS</h3><span>TURTLESS의 소식과 콘텐츠를 만나보세요</span></div><div class="home-sns-cards"><a class="home-sns-card" href="https://www.instagram.com/turtless_11379" rel="noopener" target="_blank"><i class="fa-brands fa-instagram"></i><strong>Instagram</strong><span>팀의 활동과 일상을 사진으로 만나보세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" rel="noopener" target="_blank"><i class="fa-brands fa-youtube"></i><strong>YouTube</strong><span>로봇과 대회, 팀 활동 영상을 확인하세요.</span><b>바로가기 →</b></a><a class="home-sns-card" href="https://www.tiktok.com/@turtless_11379" rel="noopener" target="_blank"><i class="fa-brands fa-tiktok"></i><strong>TikTok</strong><span>TURTLESS의 짧고 생생한 콘텐츠를 만나보세요.</span><b>바로가기 →</b></a></div></div><div class="home-notice-panel" id="home-notice-board"><div class="home-panel-head"><h3>최근 활동</h3><button class="home-text-link" onclick="location.href='./pages/activity/'">전체 보기 →</button></div><div class="home-notice-list"></div></div></div></div></div></section><section class="home-quick-links"><div class="inner"><button onclick="location.href='./pages/intro-team/'">팀 소개</button><button onclick="location.href='./pages/robot/'">로봇 소개</button><button onclick="location.href='./pages/activity/'">활동</button><button onclick="location.href='./pages/engineering/'">엔지니어링 노트</button><button onclick="location.href='./pages/sponsors/'">후원사</button></div></section><div id="home-member-admin-area"><div id="member-actions">
 <h3 style="color: var(--primary-color); margin-bottom: 10px;">📋 팀원 대시보드</h3>
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
 <p id="welcome-msg" style="font-weight:700; margin: 0;"></p>
@@ -335,7 +289,7 @@
 <button onclick="openRobotModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🤖 로봇 소개 관리</button>
 <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
 </div>
-</div></div>
+</div></div></div><section class="section home-sponsor-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">후원</span><h2 class="home-section-title">후원사</h2></div><button class="home-text-link" onclick="location.href='./pages/sponsors/'">후원사 보기 →</button></div><div class="sponsor-slider" id="home-sponsor-slider"></div></div></section>
 </main>
 <footer class="turtless-footer">
 <div class="turtless-footer-inner">
