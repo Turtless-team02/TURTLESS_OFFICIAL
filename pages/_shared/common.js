@@ -454,3 +454,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(checkChinese, 1000);
 })();
+
+// ==========================================
+// 팀원 대시보드 / 관리자 패널
+// 메인 페이지에서만 표시
+// ==========================================
+(function () {
+  function hideMemberAdminOnSubpages() {
+    const isSubPage = window.location.pathname.includes('/pages/');
+
+    if (!isSubPage) return;
+
+    const memberActions = document.getElementById('member-actions');
+    const adminPanel = document.getElementById('admin-panel');
+
+    if (memberActions) {
+      memberActions.style.display = 'none';
+    }
+
+    if (adminPanel) {
+      adminPanel.style.display = 'none';
+    }
+  }
+
+  // 처음 로드될 때
+  document.addEventListener('DOMContentLoaded', hideMemberAdminOnSubpages);
+
+  // Firebase가 로그인 복구 후 다시 display:block으로 바꾸는 경우까지 방지
+  const observer = new MutationObserver(hideMemberAdminOnSubpages);
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style', 'class']
+  });
+})();
