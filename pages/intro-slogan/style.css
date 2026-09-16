@@ -1,10 +1,9 @@
-```css
 /* =========================================
    TURTLESS - SLOGAN
    ========================================= */
 
 #page-intro_slogan {
-  min-height: calc(100vh - 80px);
+  min-height: 650px;
   margin: 0;
   padding: 0;
 
@@ -56,10 +55,9 @@
   width: 100%;
   max-width: 1500px;
 
-  min-height: calc(100vh - 80px);
+  min-height: 650px;
 
   margin: 0 auto;
-
   padding: 80px 8vw;
 
   display: flex;
@@ -104,18 +102,14 @@
 
 #page-intro_slogan #b-slogan,
 #page-intro_slogan .editable-content#b-slogan {
-
   width: 100%;
   max-width: 1050px;
 
-  /* 왼쪽 정렬 */
   text-align: left !important;
 
-  /* 흰색 */
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 
-  /* 기존보다 조금 작게 */
   font-size: clamp(3rem, 6.5vw, 7rem);
 
   font-weight: 900;
@@ -134,7 +128,7 @@
 }
 
 
-/* 혹시 Firebase가 내부 태그를 넣어도 흰색 유지 */
+/* Firebase가 내부 태그를 넣어도 흰색 유지 */
 
 #page-intro_slogan #b-slogan *,
 #page-intro_slogan .editable-content#b-slogan * {
@@ -150,37 +144,26 @@
 @media (max-width: 768px) {
 
   #page-intro_slogan {
-    min-height: calc(100vh - 64px);
+    min-height: 560px;
   }
-
 
   #page-intro_slogan .inner {
-    min-height: calc(100vh - 64px);
-
+    min-height: 560px;
     padding: 60px 28px;
-
-    align-items: center;
   }
-
 
   #page-intro_slogan #b-slogan,
   #page-intro_slogan .editable-content#b-slogan {
-
     font-size: clamp(2.5rem, 11vw, 4.8rem);
-
     line-height: 1.08;
-
     text-align: left !important;
   }
 
-
   #page-intro_slogan::before {
-
     right: 5vw;
     bottom: 4vh;
 
     font-size: clamp(3rem, 15vw, 6rem);
-
     line-height: 0.85;
   }
 }
@@ -192,24 +175,23 @@
 
 @media (max-width: 480px) {
 
+  #page-intro_slogan {
+    min-height: 500px;
+  }
+
   #page-intro_slogan .inner {
+    min-height: 500px;
     padding: 50px 22px;
   }
 
-
   #page-intro_slogan #b-slogan,
   #page-intro_slogan .editable-content#b-slogan {
-
     font-size: clamp(2.3rem, 12vw, 4rem);
   }
 
-
   #page-intro_slogan::before {
-
     right: 4vw;
     bottom: 3vh;
-
     font-size: 16vw;
   }
 }
-```
