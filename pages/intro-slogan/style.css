@@ -7,7 +7,7 @@
   margin: 0;
   padding: 0;
 
-  background: #071a33;
+  background: #071a33 !important;
   position: relative;
   overflow: hidden;
 
@@ -20,26 +20,29 @@
    ========================================= */
 
 #page-intro_slogan::before {
-  content: "11379 TURTLESS";
+  content: "11379\A TURTLESS";
 
   position: absolute;
-  left: -40px;
-  bottom: -25px;
+  left: 6vw;
+  bottom: 4vh;
 
-  font-size: clamp(8rem, 19vw, 22rem);
+  white-space: pre;
+  text-align: left;
+
+  font-size: clamp(4rem, 9vw, 9rem);
   font-weight: 900;
-  line-height: 0.8;
-  letter-spacing: -0.07em;
-  white-space: nowrap;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
 
-  color: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.045) !important;
 
   pointer-events: none;
   user-select: none;
+  z-index: 0;
 }
 
 /* =========================================
-   전체 내용
+   내용
    ========================================= */
 
 #page-intro_slogan .inner {
@@ -58,12 +61,12 @@
   z-index: 2;
 }
 
-/* 제목 숨김 */
+/* 제목 제거 */
 #page-intro_slogan .subpage-title {
   display: none !important;
 }
 
-/* 기존 카드 디자인 제거 */
+/* 카드 제거 */
 #page-intro_slogan .content-card {
   width: 100%;
 
@@ -77,29 +80,35 @@
 }
 
 /* =========================================
-   슬로건
+   슬로건 글씨
    ========================================= */
 
-#page-intro_slogan #b-slogan {
+#page-intro_slogan #b-slogan,
+#page-intro_slogan .editable-content#b-slogan {
   width: 100%;
   max-width: 1200px;
 
-  /* 좌측 정렬 */
   text-align: left !important;
 
-  /* 흰색 */
+  /* 무조건 흰색 */
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 
   font-size: clamp(3.5rem, 8vw, 9rem);
   font-weight: 900;
-
   line-height: 1.03;
   letter-spacing: -0.055em;
 
   word-break: keep-all;
   overflow-wrap: break-word;
 
-  text-shadow: none;
+  text-shadow: none !important;
+}
+
+/* 혹시 common.css가 a/p/div 등에 색을 지정해도 흰색 유지 */
+#page-intro_slogan #b-slogan * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* =========================================
@@ -114,24 +123,22 @@
 
   #page-intro_slogan .inner {
     min-height: calc(100vh - 64px);
-
     padding: 60px 28px;
-
-    align-items: center;
   }
 
-  #page-intro_slogan #b-slogan {
+  #page-intro_slogan #b-slogan,
+  #page-intro_slogan .editable-content#b-slogan {
     font-size: clamp(2.8rem, 13vw, 5rem);
     line-height: 1.08;
-
     text-align: left !important;
   }
 
   #page-intro_slogan::before {
-    left: -20px;
-    bottom: 15px;
+    left: 5vw;
+    bottom: 4vh;
 
-    font-size: 30vw;
+    font-size: clamp(3.5rem, 16vw, 6rem);
+    line-height: 0.85;
   }
 }
 
@@ -145,11 +152,12 @@
     padding: 50px 22px;
   }
 
-  #page-intro_slogan #b-slogan {
+  #page-intro_slogan #b-slogan,
+  #page-intro_slogan .editable-content#b-slogan {
     font-size: clamp(2.5rem, 14vw, 4rem);
   }
 
   #page-intro_slogan::before {
-    font-size: 32vw;
+    font-size: 17vw;
   }
 }
