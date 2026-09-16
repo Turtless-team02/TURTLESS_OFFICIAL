@@ -1,4 +1,199 @@
+/* ==========================================
+   ROBOT GALLERY
+   원본 디자인 그대로
+   ========================================== */
 
-/* Standalone page visibility: the original SPA hid all subpages by default. */
-.subpage{display:block!important;}
+.subpage {
+  display: block !important;
+}
 
+#robot-slider {
+  height: 600px;
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 12px 40px rgba(0,0,0,.12);
+}
+
+#robot-slider #robot-slides-wrapper {
+  position: absolute;
+  inset: 0;
+}
+
+#robot-slider .sp-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .45s ease;
+  overflow: hidden;
+  background: #111;
+}
+
+#robot-slider .sp-slide.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+
+/* 배경 이미지 */
+
+#robot-slider .robot-bg {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transform: scale(1.03);
+}
+
+#robot-slider .robot-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.92) 0%,
+      rgba(0,0,0,.72) 38%,
+      rgba(0,0,0,.25) 72%,
+      rgba(0,0,0,.08) 100%
+    );
+}
+
+
+/* 내용 */
+
+#robot-slider .robot-info {
+  position: relative;
+  z-index: 3;
+
+  width: 58%;
+  height: 100%;
+
+  padding: 70px 55px 100px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  color: white;
+}
+
+#robot-slider .robot-year {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #2c91f9;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+#robot-slider .robot-game {
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: .95;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 25px;
+  color: white;
+}
+
+#robot-slider .robot-name {
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 900;
+  margin-bottom: 18px;
+  color: white;
+}
+
+#robot-slider .robot-line {
+  width: 55px;
+  height: 4px;
+  background: #2c91f9;
+  margin-bottom: 22px;
+}
+
+#robot-slider .robot-description {
+  max-width: 600px;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,.82);
+  white-space: pre-line;
+}
+
+#robot-slider .robot-delete {
+  margin-top: 22px;
+  width: fit-content;
+  background: #dc3545;
+}
+
+
+/* 하단 네비게이션 */
+
+#robot-slider .sp-nav {
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,.8),
+    transparent
+  );
+
+  border: none;
+  height: 80px;
+  padding: 20px;
+  z-index: 10;
+}
+
+#robot-slider .sp-nav .slider-control-btn {
+  background: rgba(255,255,255,.14);
+  backdrop-filter: blur(5px);
+}
+
+#robot-slider .sp-nav .slider-control-btn:hover {
+  background: #2c91f9;
+}
+
+#robot-slider .sp-nav .slider-dot {
+  background: rgba(255,255,255,.35);
+}
+
+#robot-slider .sp-nav .slider-dot.active {
+  background: #2c91f9;
+}
+
+
+/* 모바일 */
+
+@media (max-width: 768px) {
+
+  #robot-slider {
+    height: 560px;
+  }
+
+  #robot-slider .robot-info {
+    width: 100%;
+    padding: 45px 30px 90px;
+    justify-content: flex-end;
+
+    background: linear-gradient(
+      0deg,
+      rgba(0,0,0,.9),
+      rgba(0,0,0,.25)
+    );
+  }
+
+  #robot-slider .robot-game {
+    font-size: 2.5rem;
+  }
+
+  #robot-slider .robot-description {
+    font-size: .9rem;
+  }
+
+}
