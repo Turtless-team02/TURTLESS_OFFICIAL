@@ -1,0 +1,485 @@
+
+/* Standalone page visibility: the original SPA hid all subpages by default. */
+.subpage{display:block!important;}
+
+
+#page-intro_team{background:#eef3f7!important;padding:70px 5% 90px!important;overflow:hidden!important}
+#page-intro_team .inner{max-width:1180px!important}#page-intro_team .subpage-title{display:none!important}
+.team-notebook{position:relative;max-width:1080px;margin:0 auto;padding:18px 0 24px 54px;filter:drop-shadow(0 24px 35px rgba(20,40,60,.12))}
+.team-notebook-binding{position:absolute;left:-2px;top:34px;width:92px;height:76px;z-index:8;pointer-events:none}
+.team-notebook-binding span{position:absolute;left:3px;top:0;width:62px;height:30px;border:4px solid #8f989f;border-radius:50%;background:linear-gradient(180deg,#f5f7f8 0%,#c3cbd0 48%,#eef1f3 100%);box-shadow:inset 0 2px 3px rgba(255,255,255,.9),0 4px 7px rgba(0,0,0,.16);transform:rotate(24deg)}
+.team-notebook-binding span::after{content:"";position:absolute;left:25px;top:-3px;width:12px;height:34px;border-radius:50%;background:#eef3f7;box-shadow:inset 0 0 0 2px rgba(120,130,138,.45)}
+.team-note-page{position:relative;min-height:590px;background:#fffdf7;border:1px solid #e7e1d6;border-radius:3px 16px 16px 3px;padding:42px 62px 48px 82px;overflow:hidden;isolation:isolate}
+.team-note-page:not(:first-of-type){margin-top:-12px;margin-left:7px;box-shadow:0 8px 0 #f2eee6,0 14px 0 #e9e4da}
+.team-note-page::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(69,105,128,.10) 32px);z-index:-2;pointer-events:none}
+.team-note-page::after{content:"";position:absolute;left:58px;top:0;bottom:0;width:1px;background:rgba(44,145,249,.16);z-index:-1}
+.team-note-topline{font:800 10px/1 'Courier Prime',monospace;letter-spacing:.16em;color:#7d8992;text-transform:uppercase;margin-bottom:28px}
+.team-note-cover{min-height:620px}.team-note-cover-title{font-size:clamp(48px,7vw,88px);font-weight:950;letter-spacing:-.065em;line-height:.95;color:#165fa8;margin:15px 0 8px}
+.team-note-cover-sub{font-family:'Nanum Myeongjo',serif;color:#65717b;font-size:15px;margin-bottom:36px}.team-note-cover-content{max-width:760px;font-size:17px;line-height:1.95;color:#26343e}.team-note-cover-content .editable-content{min-height:210px;position:relative;z-index:2}
+.team-note-cover-mark{position:absolute;right:52px;bottom:32px;font:900 clamp(58px,8vw,105px)/.8 Arial,sans-serif;letter-spacing:-.08em;color:#e8f0f6;z-index:-1}.team-note-page-no{position:absolute;right:28px;bottom:20px;font:700 10px/1 'Courier Prime',monospace;color:#8d989f;letter-spacing:.12em}
+.team-note-writing{min-height:620px}.team-note-writing-head h3{font-size:clamp(26px,3vw,38px);line-height:1.15;letter-spacing:-.04em;color:#202d36;margin-bottom:10px}.team-note-writing-head p{font-size:14px;color:#74808a;margin-bottom:18px}
+.team-note-lines{position:absolute;left:82px;right:62px;top:218px;bottom:60px;display:flex;flex-direction:column;justify-content:space-around;pointer-events:none;z-index:0}.team-note-line-row{display:flex;align-items:center;gap:15px;color:#a1abb1;font:700 10px/1 'Courier Prime',monospace}.team-note-rule{height:1px;flex:1;background:rgba(69,105,128,.13)}
+.team-note-writing-content{position:relative;z-index:2;min-height:340px;margin-top:8px;color:#26343e;font-size:16px;line-height:1.9;outline:none}.team-note-writing-content:empty::before{content:'이곳에 팀 소개의 추가 내용을 작성할 수 있습니다.';color:#aab3b9;font-style:italic}body.edit-mode .team-note-writing-content:empty::before{color:#2c91f9}
+.team-note-colors{min-height:620px;padding-bottom:62px}.team-note-color-head{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin-bottom:30px}.team-note-color-head h3{font-size:clamp(30px,4vw,48px);line-height:1;letter-spacing:-.05em;color:#202d36;margin-bottom:9px}.team-note-color-head p{font-size:13px;color:#74808a}
+.team-note-current-badge{font:900 10px/1 'Courier Prime',monospace;letter-spacing:.14em;color:#2c91f9;border:1px solid #bcdcff;padding:8px 10px;border-radius:999px;white-space:nowrap;background:#f5faff}
+.team-color-history{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.team-color-entry{
+  display:grid;
+  grid-template-columns:34px 46px 1fr;
+  align-items:center;
+  gap:10px;
+  padding:18px;
+  border-bottom:1px solid #e8edf2;
+}
+
+.team-color-index{
+  font-family:"Courier Prime",monospace;
+  font-size:13px;
+  color:#8b949e;
+}
+
+.team-color-swatch{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#EDF0F2;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
+}
+
+.team-color-entry strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.team-color-entry small{
+  display:block;
+  color:#8b949e;
+  font-size:12px;
+}
+
+.team-color-hex{
+  display:block;
+  width:105px;
+  margin-top:9px;
+  padding:5px 8px;
+  border:1px solid #d9e0e7;
+  border-radius:5px;
+  background:#fff;
+  font-family:"Courier Prime",monospace;
+  font-size:12px;
+  color:#333;
+  outline:none;
+}
+
+.team-color-hex:focus{
+  border-color:var(--primary-color);
+}
+
+@media(max-width:700px){
+  .team-color-history{
+    grid-template-columns:1fr;
+  }
+}
+.team-note-color-foot{position:absolute;left:82px;bottom:22px;font:700 9px/1 'Courier Prime',monospace;letter-spacing:.12em;color:#9aa4aa}#page-intro_team .editable-content img{max-width:100%;height:auto;border-radius:4px}
+@media(max-width:800px){#page-intro_team{padding:42px 4% 64px!important}.team-notebook{padding-left:12px}.team-notebook-binding{left:-4px;top:24px;width:62px;height:52px}.team-notebook-binding span{left:2px;top:0;width:42px;height:21px;border-width:3px}.team-notebook-binding span::after{left:17px;top:-2px;width:9px;height:25px;box-shadow:inset 0 0 0 1.5px rgba(120,130,138,.45)}.team-note-page{padding:34px 28px 48px 58px;min-height:560px}.team-note-page::after{left:40px}.team-note-lines{left:58px;right:28px;top:215px}.team-note-color-foot{left:58px}.team-color-history{grid-template-columns:1fr}.team-note-color-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.team-note-page{padding:28px 20px 45px 42px;min-height:600px;border-radius:2px 11px 11px 2px}.team-note-page:not(:first-of-type){margin-left:3px}.team-note-page::after{left:33px}.team-note-topline{font-size:8px;margin-bottom:23px}.team-note-cover-title{font-size:52px}.team-note-cover-sub{font-size:12px;line-height:1.7}.team-note-cover-content{font-size:14px;line-height:1.85}.team-note-writing-head h3{font-size:25px}.team-note-writing-head p{font-size:12px}.team-note-lines{left:48px;right:20px;top:215px}.team-note-line-row{font-size:8px}.team-note-writing-content{font-size:14px;min-height:350px}.team-note-color-head h3{font-size:31px}.team-note-color-head p{font-size:11px;line-height:1.6}.team-color-entry{grid-template-columns:28px 38px 1fr;gap:9px;padding:12px}.team-color-swatch{width:36px;height:36px}.team-color-entry strong{font-size:13px}.team-color-entry small{font-size:9px}.team-note-color-foot{left:48px;font-size:7px}}
+
+/* v32 page-turn notebook: one sheet at a time */
+.team-notebook{padding-left:24px;overflow:visible}
+.team-notebook-pages{display:flex;width:100%;overflow:hidden;position:relative;border-radius:3px 16px 16px 3px;touch-action:pan-y;cursor:grab}
+.team-notebook-pages.dragging{cursor:grabbing}
+.team-notebook-pages .team-note-page{flex:0 0 100%;width:100%;box-sizing:border-box;margin:0!important;box-shadow:none!important;transition:transform .55s cubic-bezier(.22,.8,.22,1),opacity .35s ease;will-change:transform}
+.team-notebook-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin:22px auto 0}
+.team-notebook-arrow{width:40px;height:40px;border:1px solid #d7e0e7;background:#fff;color:#236fae;border-radius:50%;font-size:28px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:.2s}
+.team-notebook-arrow:hover{background:#eef7ff;border-color:#9fcdf2;transform:translateY(-1px)}
+.team-notebook-arrow:disabled{opacity:.35;cursor:default;transform:none}
+.team-notebook-dots{display:flex;align-items:center;gap:8px}
+.team-notebook-dot{width:8px;height:8px;border:0;border-radius:50%;padding:0;background:#cbd4da;cursor:pointer;transition:.25s}
+.team-notebook-dot.active{width:25px;border-radius:8px;background:#2c91f9}
+.team-notebook-pages .team-note-page-no{z-index:3}
+@media(max-width:800px){.team-notebook-pages{border-radius:2px 11px 11px 2px}.team-notebook-controls{margin-top:18px;gap:14px}}
+
+
+
+/* Reference-style single binder ring: small, round, attached at the upper-left corner. */
+.team-notebook{padding-left:18px!important;overflow:visible!important}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-25px!important;
+  top:22px!important;
+  width:82px!important;
+  height:82px!important;
+  z-index:12!important;
+  pointer-events:none!important;
+}
+.team-notebook-binding span{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:66px!important;
+  height:66px!important;
+  box-sizing:border-box!important;
+  border:4px solid #777d82!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:rotate(-17deg)!important;
+  box-shadow:
+    inset 1px 1px 1px rgba(255,255,255,.9),
+    inset -2px -2px 2px rgba(45,50,54,.28),
+    1px 3px 5px rgba(30,35,40,.18)!important;
+}
+/* narrow metal section entering the punched corner — no separate fake hole */
+.team-notebook-binding span::before{
+  content:""!important;
+  position:absolute!important;
+  width:13px!important;
+  height:23px!important;
+  right:-5px!important;
+  top:28px!important;
+  border-radius:8px!important;
+  border:4px solid #858b90!important;
+  border-left:0!important;
+  background:transparent!important;
+  transform:rotate(-20deg)!important;
+  box-shadow:inset -1px 1px 1px rgba(255,255,255,.75)!important;
+}
+/* restrained metal highlight */
+.team-notebook-binding span::after{
+  content:""!important;
+  position:absolute!important;
+  left:10px!important;
+  top:6px!important;
+  width:29px!important;
+  height:12px!important;
+  border-top:2px solid rgba(255,255,255,.72)!important;
+  border-radius:50%!important;
+  transform:rotate(-8deg)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+@media(max-width:800px){
+  .team-notebook{padding-left:12px!important}
+  .team-notebook-binding{left:-18px!important;top:17px!important;transform:scale(.78)!important;transform-origin:top left!important}
+  .team-note-page{padding-left:54px!important}
+}
+@media(max-width:520px){
+  .team-notebook{padding-left:9px!important}
+  .team-notebook-binding{left:-14px!important;top:14px!important;transform:scale(.68)!important}
+  .team-note-page{padding-left:42px!important}
+}
+
+
+
+/* Word-book reference: one small metal ring behind the paper, with the page covering its overlap. */
+.team-notebook{
+  position:relative!important;
+  max-width:1160px!important;
+  padding-left:18px!important;
+  overflow:visible!important;
+  perspective:1400px!important;
+}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-34px!important;
+  top:30px!important;
+  width:70px!important;
+  height:70px!important;
+  z-index:2!important;
+  pointer-events:none!important;
+}
+.team-notebook-binding span{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:53px!important;
+  height:53px!important;
+  box-sizing:border-box!important;
+  border:3px solid #73787b!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:rotate(-12deg)!important;
+  box-shadow:
+    inset 1px 1px 1px rgba(255,255,255,.9),
+    inset -1px -2px 2px rgba(45,50,54,.20),
+    1px 2px 4px rgba(30,35,40,.13)!important;
+}
+/* tiny metal section that appears to pass through the punched hole */
+.team-note-ring-hole{
+  position:absolute!important;
+  left:8px!important;
+  top:22px!important;
+  width:13px!important;
+  height:13px!important;
+  border-radius:50%!important;
+  z-index:9!important;
+  pointer-events:none!important;
+  background:#f7f5ef!important;
+  box-shadow:0 0 0 1px rgba(80,86,90,.28), inset 0 0 0 2px rgba(205,201,192,.72)!important;
+}
+.team-note-ring-hole::after{
+  content:""!important;
+  position:absolute!important;
+  left:-2px!important;
+  top:4px!important;
+  width:10px!important;
+  height:4px!important;
+  border:2px solid #73787b!important;
+  border-right:0!important;
+  border-radius:8px 0 0 8px!important;
+  transform:rotate(-18deg)!important;
+  opacity:.95!important;
+}
+.team-notebook-pages{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:660px!important;
+  overflow:visible!important;
+  border-radius:3px 16px 16px 3px!important;
+  touch-action:pan-y!important;
+  cursor:grab!important;
+  isolation:isolate!important;
+}
+.team-notebook-pages.dragging{cursor:grabbing!important}
+.team-notebook-pages .team-note-page{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:660px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  transform-origin:7% 7%!important;
+  transition:transform .72s cubic-bezier(.2,.78,.22,1),opacity .55s ease,box-shadow .72s ease!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+}
+.team-note-page.is-current{box-shadow:0 18px 28px rgba(20,40,60,.13)!important}
+.team-note-page.is-before{box-shadow:0 8px 0 #f1ede5,0 13px 0 #e7e1d8,0 18px 25px rgba(20,40,60,.08)!important}
+.team-note-page.is-after{box-shadow:0 7px 0 #f1ede5,0 12px 0 #e7e1d8,0 16px 22px rgba(20,40,60,.07)!important}
+.team-note-page.is-turning-next{
+  transform:translate3d(-20px,3px,0) rotateZ(-4deg)!important;
+  box-shadow:0 13px 22px rgba(20,40,60,.12)!important;
+}
+.team-note-page.is-turning-prev{
+  transform:translate3d(14px,-3px,0) rotateZ(3deg)!important;
+  box-shadow:0 13px 22px rgba(20,40,60,.12)!important;
+}
+.team-notebook-controls{position:relative!important;z-index:20!important}
+@media(max-width:800px){
+  .team-notebook{max-width:none!important;padding-left:10px!important}
+  .team-notebook-binding{left:-24px!important;top:25px!important;transform:scale(.78)!important;transform-origin:top left!important}
+  .team-notebook-pages{height:625px!important}
+  .team-notebook-pages .team-note-page{min-height:625px!important}
+  .team-note-ring-hole{left:7px!important;top:20px!important;width:12px!important;height:12px!important}
+  .team-note-ring-hole::after{left:-2px!important;top:4px!important;width:9px!important;height:3px!important}
+}
+@media(max-width:520px){
+  .team-notebook{padding-left:7px!important}
+  .team-notebook-binding{left:-19px!important;top:20px!important;transform:scale(.68)!important}
+  .team-notebook-pages{height:635px!important}
+  .team-notebook-pages .team-note-page{min-height:635px!important}
+  .team-note-ring-hole{left:6px!important;top:18px!important;width:11px!important;height:11px!important}
+}
+
+
+
+/* v39 — 실제 링 단어장 구조: 링은 종이 뒤, 페이지는 링을 축으로 넘김 */
+.team-notebook{
+  max-width:1180px!important;
+  padding-left:0!important;
+  overflow:visible!important;
+  perspective:1800px!important;
+}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-28px!important;
+  top:24px!important;
+  width:58px!important;
+  height:58px!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+/* 사진처럼 단순한 철제 링. 종이보다 뒤에 있으므로 종이가 겹치는 부분을 자연스럽게 가린다. */
+.team-notebook-binding span{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:50px!important;
+  height:50px!important;
+  box-sizing:border-box!important;
+  border:3px solid #70767a!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:rotate(-10deg)!important;
+  box-shadow:inset 1px 1px 1px rgba(255,255,255,.85),1px 2px 3px rgba(25,30,35,.16)!important;
+}
+.team-notebook-binding span::before,
+.team-notebook-binding span::after{content:none!important}
+/* 기존 가짜 구멍은 제거 */
+.team-note-ring-hole{display:none!important}
+
+/* 카드 자체를 조금 키우고, 내용이 길어지면 페이지 높이가 따라가도록 */
+.team-notebook-pages{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:660px!important;
+  overflow:visible!important;
+  border-radius:3px 18px 18px 3px!important;
+  touch-action:pan-y!important;
+  cursor:grab!important;
+  isolation:isolate!important;
+}
+.team-notebook-pages.dragging{cursor:grabbing!important}
+.team-notebook-pages .team-note-page{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:660px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  overflow:visible!important;
+  transform-origin:3.5% 6%!important;
+  transition:transform .78s cubic-bezier(.18,.78,.22,1),opacity .55s ease,box-shadow .78s ease!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+}
+/* 실제 단어장처럼 뒤쪽 장을 살짝 밀어둔다. */
+.team-notebook-pages .team-note-page.is-after:nth-child(2){transform:translate3d(9px,6px,0) rotateZ(.45deg)!important}
+.team-notebook-pages .team-note-page.is-after:nth-child(3){transform:translate3d(16px,11px,0) rotateZ(.8deg)!important}
+.team-note-page.is-current{
+  z-index:6!important;
+  box-shadow:0 18px 30px rgba(20,40,60,.13)!important;
+}
+.team-note-page.is-before{
+  z-index:2!important;
+  box-shadow:0 8px 0 #f1ede5,0 13px 0 #e7e1d8,0 18px 25px rgba(20,40,60,.08)!important;
+}
+.team-note-page.is-after{
+  box-shadow:0 7px 0 #f1ede5,0 12px 0 #e7e1d8,0 16px 22px rgba(20,40,60,.07)!important;
+}
+/* 다음 장: 왼쪽 링을 중심으로 실제 종이를 들어 넘기는 느낌 */
+.team-note-page.is-turning-next{
+  transform:translate3d(-7px,4px,0) rotateZ(-7deg)!important;
+  box-shadow:0 16px 24px rgba(20,40,60,.15)!important;
+  z-index:7!important;
+}
+.team-note-page.is-turning-prev{
+  transform:translate3d(8px,-3px,0) rotateZ(6deg)!important;
+  box-shadow:0 16px 24px rgba(20,40,60,.15)!important;
+  z-index:7!important;
+}
+
+/* 긴 Firebase 데이터/이미지/줄바꿈도 페이지 밖으로 잘리지 않게 */
+#page-intro_team .editable-content{
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  white-space:normal!important;
+}
+#page-intro_team .editable-content img{max-width:100%!important;height:auto!important}
+.team-note-writing-content{min-height:340px!important;height:auto!important;overflow:visible!important}
+.team-note-cover-content .editable-content{min-height:210px!important;height:auto!important;overflow:visible!important}
+.team-notebook-pages .team-note-page{
+  /* JS가 현재 페이지의 실제 내용 높이를 읽을 수 있도록 고정 높이를 없앤다. */
+  contain:layout style!important;
+}
+
+@media(max-width:800px){
+  .team-notebook{max-width:none!important}
+  .team-notebook-binding{left:-23px!important;top:21px!important;transform:scale(.82)!important;transform-origin:top left!important}
+  .team-notebook-pages{min-height:625px!important}
+  .team-notebook-pages .team-note-page{min-height:625px!important}
+}
+@media(max-width:520px){
+  .team-notebook-binding{left:-19px!important;top:18px!important;transform:scale(.72)!important}
+  .team-notebook-pages{min-height:635px!important}
+  .team-notebook-pages .team-note-page{min-height:635px!important}
+}
+
+
+
+/* v40: 실제 단어장에 가까운 링 + 모든 페이지 동일 높이/공통 글자 크기 */
+.team-notebook{padding-left:0!important;overflow:visible!important;position:relative!important;perspective:1600px!important}
+.team-notebook-binding{
+  position:absolute!important;
+  left:-31px!important;
+  top:13px!important;
+  width:72px!important;
+  height:72px!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  transform:none!important;
+}
+.team-notebook-ring-svg{
+  display:block!important;
+  width:72px!important;
+  height:72px!important;
+  overflow:visible!important;
+  transform:rotate(-16deg)!important;
+  transform-origin:50% 50%!important;
+  filter:drop-shadow(1px 2px 1.5px rgba(30,35,40,.18))!important;
+}
+/* 페이지가 링보다 위. 링의 일부만 페이지 바깥에서 보인다. */
+.team-notebook-pages{position:relative!important;z-index:2!important;min-height:0!important;height:660px!important;overflow:visible!important}
+.team-notebook-pages .team-note-page{
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  padding-bottom:58px!important;
+}
+/* 종이에 뚫린 작은 구멍: mask로 실제 투명 구멍을 만들어 뒤의 링이 통과해 보이게 함 */
+.team-notebook-pages .team-note-page{
+  -webkit-mask-image:radial-gradient(circle 8px at 17px 25px,transparent 0 6px,#000 7px);
+  mask-image:radial-gradient(circle 8px at 17px 25px,transparent 0 6px,#000 7px);
+}
+.team-note-ring-hole{display:none!important}
+/* 카드 안쪽의 글은 같은 크기로 맞추고, 내용이 많아도 카드 밖으로 새지 않게 */
+#page-intro_team .team-note-cover-content .editable-content,
+#page-intro_team .team-note-writing-content{
+  overflow:visible!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  white-space:normal!important;
+  font-size:16px!important;
+  line-height:1.78!important;
+  max-width:100%!important;
+}
+#page-intro_team .team-note-cover-content .editable-content img,
+#page-intro_team .team-note-writing-content img{max-width:100%!important;height:auto!important}
+/* 데이터가 많을 때 JS가 넣는 공통 축소 단계 */
+#page-intro_team.team-notebook-compact-1 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-1 .team-note-writing-content{font-size:15px!important;line-height:1.72!important}
+#page-intro_team.team-notebook-compact-2 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-2 .team-note-writing-content{font-size:14px!important;line-height:1.66!important}
+#page-intro_team.team-notebook-compact-3 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-3 .team-note-writing-content{font-size:13px!important;line-height:1.6!important}
+#page-intro_team.team-notebook-compact-4 .team-note-cover-content .editable-content,
+#page-intro_team.team-notebook-compact-4 .team-note-writing-content{font-size:12px!important;line-height:1.55!important}
+/* 긴 데이터는 내부 스크롤 대신 공통 높이 안에서 자연스럽게 축소. */
+.team-note-writing-content{min-height:0!important;height:auto!important}
+.team-note-cover-content .editable-content{min-height:0!important;height:auto!important}
+/* 뒤쪽 페이지는 사진처럼 살짝 어긋남 */
+.team-notebook-pages .team-note-page.is-after:nth-child(2){transform:translate3d(9px,6px,0) rotateZ(.45deg)!important}
+.team-notebook-pages .team-note-page.is-after:nth-child(3){transform:translate3d(16px,11px,0) rotateZ(.8deg)!important}
+@media(max-width:800px){
+  .team-notebook-binding{left:-26px!important;top:11px!important;transform:scale(.82)!important;transform-origin:50% 50%!important}
+  .team-notebook-pages{height:625px!important}
+  .team-notebook-pages .team-note-page{-webkit-mask-image:radial-gradient(circle 7px at 13px 21px,transparent 0 5px,#000 6px);mask-image:radial-gradient(circle 7px at 13px 21px,transparent 0 5px,#000 6px)}
+}
+@media(max-width:520px){
+  .team-notebook-binding{left:-23px!important;top:9px!important;transform:scale(.70)!important}
+  .team-notebook-pages{height:600px!important}
+  .team-notebook-pages .team-note-page{-webkit-mask-image:radial-gradient(circle 6.5px at 11px 19px,transparent 0 4.5px,#000 5.5px);mask-image:radial-gradient(circle 6.5px at 11px 19px,transparent 0 4.5px,#000 5.5px)}
+}

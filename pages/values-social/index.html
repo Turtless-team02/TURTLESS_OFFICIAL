@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="N4VlYevFyRrBG_uMjeQJYdLG6q5Sh_8hS9OHEobkLbM" name="google-site-verification">
+<meta content="b1db4cd1ab5d5fe1382aa16a7bf23942bda33a77" name="naver-site-verification">
+
+<meta content="FIRST Robotics Competition(FRC) #11379 SSRC2팀 터틀리스(TURTLESS) 공식 웹사이트입니다. 팀 소개, 로봇 프로젝트 및 활동 소식을 확인하세요." name="description"/>
+<meta content="TURTLESS, 터틀리스, FRC11379, SSRC2, SSRC, FIRST Robotics Competition, 서울학생로봇대회, 로봇팀, STEM" name="keywords"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://turtless-team02.github.io/TURTLESS_OFFICIAL/" rel="canonical"/>
+<meta content="website" property="og:type"/>
+<meta content="SSRC2팀 FRC11379 터틀리스 (TURTLESS)" property="og:site_name"/>
+<meta content="SSRC2팀 / FRC 11379 터틀리스 (TURTLESS)" property="og:title"/>
+<meta content="FIRST Robotics Competition(FRC) #11379 터틀리스 공식 웹사이트에 오신 것을 환영합니다!" property="og:description"/>
+<meta content="https://turtless-team02.github.io/TURTLESS_OFFICIAL/" property="og:url"/>
+<meta content="https://res.cloudinary.com/k8m3zaye/image/upload/v1784358487/55153106925_2c0f65bbe0_o1_rp5zgi.webp" property="og:image"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;500;700;900&amp;family=Nanum+Myeongjo:wght=400;700&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "TURTLESS",
+    "alternateName": "터틀리스",
+    "url": "https://turtless-team02.github.io/TURTLESS_OFFICIAL/",
+    "logo": "https://turtless-team02.github.io/TURTLESS_OFFICIAL/logo.jpg",
+    "description": "대한민국 고등학생 로봇공학 팀 TURTLESS. 서울학생로봇대회(SSRC)와 FIRST Robotics Competition(FRC)에 참가하며 STEM 교육과 글로벌 엔지니어 양성을 목표로 합니다.",
+    "sameAs": [
+      "https://www.instagram.com/turtless_11379?igsh=MXNiaTltY2xyNGxsYg==",
+      "https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow"
+    ]
+  }
+  </script>
+
+
+
+</meta></meta><title>사회공헌 | TURTLESS</title>
+<link rel="stylesheet" href="../_shared/common.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div id="google_translate_element" style="display:none;"></div>
+<div id="edit-toolbar">
+<label>서체</label>
+<select onchange="document.execCommand('fontName', false, this.value)">
+<option value="Noto Sans KR">노토산스 (기본)</option>
+<option value="Nanum Myeongjo">나눔명조 (세리프)</option>
+<option value="Courier Prime">코리어 (타자기)</option>
+<option value="Arial">Arial</option>
+</select>
+<label>크기</label>
+<select onchange="window.applyCustomFontSize(this.value)">
+<option value="">선택</option>
+<option value="12px">12px</option>
+<option value="16px">16px</option>
+<option value="20px">20px</option>
+<option value="24px">24px</option>
+<option value="32px">32px</option>
+</select>
+<button class="dash-btn-sm" onclick="document.execCommand('bold', false, null)"><b>B</b></button>
+<button class="dash-btn-sm" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
+<input accept="image/*" id="editor-img-upload" onchange="window.insertEditorImage(this)" style="display:none" type="file"/>
+<button class="dash-btn-sm" onclick="document.getElementById('editor-img-upload').click()" onmousedown="window.saveEditorSelection()" style="background:var(--primary-color);">🖼️ 삽입</button>
+</div>
+<div class="modal-overlay" id="login-modal">
+<div class="modal-content">
+<button class="login-close" onclick="document.getElementById('login-modal').style.display='none'">×</button>
+<h2 style="text-align:center; margin-bottom:20px; font-weight:900;">팀원 인증</h2>
+<select id="school">
+<option value="경기기계공업고">경기기계공업고</option><option value="경복비즈니스고">경복비즈니스고</option>
+<option value="서울공업고">서울공업고</option><option value="서울매그넷고">서울매그넷고</option>
+<option value="선린인터넷고">선린인터넷고</option><option value="용산고">용산고</option><option value="용산철도고">용산철도고</option>
+<option value="서울로봇고">서울로봇고</option>
+</select>
+<select id="grade">
+<option value="1학년">1학년</option><option value="2학년">2학년</option><option value="3학년">3학년</option>
+<option value="지도교사">지도교사</option>
+</select>
+<input id="username" placeholder="이름 (예: 홍길동)" type="text"/>
+<input id="password" placeholder="비밀번호" type="password"/>
+<button class="action-btn" onclick="firebaseLogin()">인증하기</button>
+</div>
+</div>
+<div class="modal-overlay" id="member-detail-modal">
+<div class="modal-content member-detail-modal-content">
+<button class="member-detail-close" onclick="closeMemberModal()">×</button>
+<div id="member-detail-view"></div>
+<div id="member-detail-edit" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
+<h4 style="margin-bottom:10px; color:var(--primary-color);">✏️ 내 정보 수정</h4>
+<label style="font-size:12px; font-weight:bold;">소개글</label>
+<textarea id="edit-bio" placeholder="간단한 자기소개를 입력하세요" rows="3"></textarea>
+<label style="font-size:12px; font-weight:bold;">연락처/SNS 링크</label>
+<input id="edit-contact" placeholder="이메일 또는 인스타그램 ID" type="text"/>
+<label style="font-size:12px; font-weight:bold; display:flex; align-items:center; gap:8px;">
+<input id="edit-isnew" style="width:auto; margin:0;" type="checkbox"/> 🆕 신규 멤버 뱃지 표시하기
+</label>
+<button class="action-btn" onclick="saveMemberDetails()">정보 저장</button>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="sponsor-admin-modal">
+<div class="modal-content">
+<button onclick="closeSponsorAdminModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;">×</button>
+<h2 style="margin-bottom:15px; font-weight:900;">후원사 슬라이드 관리</h2>
+<div id="sponsor-admin-list" style="margin-bottom:20px;"></div>
+<hr style="margin:15px 0;"/>
+<h4>새 후원사 추가</h4>
+<input id="sp-new-name" placeholder="후원사 이름" type="text"/>
+<textarea id="sp-new-desc" placeholder="후원사 설명 및 내용" rows="3"></textarea>
+<label style="font-size:12px;">로고 이미지 (파일 업로드)</label>
+<input accept="image/*" id="sp-new-logo" type="file"/>
+<button class="action-btn" onclick="addSponsor()">추가하기</button>
+</div>
+</div>
+<div class="modal-overlay" id="slider-edit-modal">
+<div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
+<button onclick="closeSliderEditModal()" style="float:right; border:none; background:none; font-size:20px; cursor:pointer;">×</button>
+<h2 style="margin-bottom:10px; font-weight:900;">메인 슬라이더 관리 (5개 고정)</h2>
+<p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">각 슬라이드의 단색 배경 혹은 이미지 URL을 개별 수정할 수 있습니다.</p>
+<div id="slider-inputs-container"></div>
+<button class="action-btn" onclick="saveSliderData()">변경사항 최종 저장</button>
+</div>
+</div>
+<div class="modal-overlay" id="career-admin-modal">
+<div class="modal-content" style="max-width: 600px;">
+<button onclick="closeCareerAdminModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;">×</button>
+<h2 style="margin-bottom:15px; font-weight:900;">💼 경력 사항 관리</h2>
+<div id="career-admin-list" style="margin-bottom:20px; max-height:250px; overflow-y:auto; padding-right:10px;"></div>
+<hr style="margin:15px 0;"/>
+<h4 id="c-form-title" style="color:var(--primary-color);">새 경력 추가</h4>
+<input id="c-new-period" placeholder="연도 또는 기간 (예: 2026)" type="text"/>
+<input id="c-new-title" placeholder="경력 제목 (예: 서울 로봇 대회 대상)" type="text"/>
+<textarea id="c-new-desc" placeholder="경력 상세 내용" rows="3"></textarea>
+<label style="font-size:12px;">관련 사진 (파일 업로드) - ※수정 시 비워두면 기존 사진 유지</label>
+<input accept="image/*" id="c-new-img" type="file"/>
+<button class="action-btn" id="c-submit-btn" onclick="addOrUpdateCareer()">경력 등록하기</button>
+<button class="dash-btn-sm" id="c-cancel-btn" onclick="cancelEditCareer()" style="display:none; width:100%; margin-top:10px; padding:12px; font-size:14px; background:#555;">수정 취소</button>
+</div>
+</div>
+<div class="modal-overlay" id="robot-admin-modal">
+<div class="modal-content" style="max-width: 600px;">
+<button onclick="closeRobotModal()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:24px; cursor:pointer;">×</button>
+<h2 style="margin-bottom:15px; font-weight:900;">🤖 로봇 슬라이드 관리</h2>
+<h4 style="color:var(--primary-color); margin-bottom:10px;">새 로봇 프로젝트 추가</h4>
+<input id="rb-season" placeholder="시즌/연도 (예: 2026 REEFSCAPE)" type="text"/>
+<input id="rb-name" placeholder="로봇 이름 (예: TURTLE-V1)" type="text"/>
+<textarea id="rb-desc" placeholder="로봇 제원 및 설명 (메커니즘, 주요 기능 등)" rows="3"></textarea>
+<label style="font-size:12px;">로봇 이미지</label>
+<input accept="image/*" id="rb-file" type="file"/>
+<button class="action-btn" onclick="saveRobotToFirebase()">등록하기</button>
+</div>
+</div>
+<div id="member-actions">
+<h3 style="color: var(--primary-color); margin-bottom: 10px;">📋 팀원 대시보드</h3>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+<p id="welcome-msg" style="font-weight:700; margin: 0;"></p>
+<div style="display: flex; gap: 8px; flex-wrap:wrap;">
+<input accept="image/*" id="profile-file-input" onchange="window.uploadProfileImage(this, 'profileImage')" style="display: none;" type="file"/>
+<button class="dash-btn-sm" onclick="document.getElementById('profile-file-input').click()">📸 기본 프로필 변경</button>
+<input accept="image/*" id="hover-file-input" onchange="window.uploadProfileImage(this, 'profileHoverImage')" style="display: none;" type="file"/>
+<button class="dash-btn-sm" onclick="document.getElementById('hover-file-input').click()" style="background:#555;">✨ 호버용 사진 변경</button>
+<button class="dash-btn-sm" onclick="window.resetProfileImage()" style="background:#dc3545;">🗑️ 사진 초기화</button>
+</div>
+</div>
+<hr style="border:0; border-top:1px solid #eaeaea; margin: 20px 0;"/>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+<div style="background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+<h4 style="margin-bottom: 15px; font-size: 15px;">✍️ 새로운 [주요 활동] 남기기</h4>
+<input class="dash-input" id="new-act-title" placeholder="활동 제목" type="text"/>
+<textarea class="dash-input" id="new-act-content" placeholder="활동 내용" style="height: 80px; resize: none;"></textarea>
+<label style="font-size:12px; color:#555;">활동 사진 첨부 (선택)</label>
+<input accept="image/*" class="dash-input" id="new-act-file" style="background: white;" type="file"/>
+<button class="action-btn" onclick="window.uploadActivity()" style="padding: 10px;">활동 게시물 등록</button>
+</div>
+<div style="background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+<h4 style="margin-bottom: 15px; font-size: 15px;">🖼️ [PR 갤러리] 사진 올리기</h4>
+<label style="font-size:12px; font-weight:bold; color:var(--text-sub); display:block; margin-bottom:5px;">등록일 (선택 날짜 기준으로 정렬됩니다)</label>
+<input class="dash-input" id="new-gal-date" style="margin-bottom: 12px;" type="date"/>
+<select class="dash-input" id="new-gal-category">
+<option value="종합">카테고리 (기본: 종합)</option>
+<option value="팀">팀</option><option value="엔지니어">엔지니어</option><option value="마케팅">마케팅</option>
+<option value="회계">회계</option><option value="전략">전략</option><option value="홍보자료">홍보자료</option>
+</select>
+<input accept="image/*" class="dash-input" id="new-gal-file" style="background: white;" type="file"/>
+<button class="action-btn" onclick="window.uploadGalleryImage()" style="padding: 10px; background: #111;">사진 업로드</button>
+</div>
+</div>
+</div>
+<div id="admin-panel">
+<h3 style="margin-bottom:12px; font-weight:900;">👑 관리자 패널</h3>
+<div style="display:flex; gap:10px; flex-wrap:wrap;">
+<button onclick="openSliderEditModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">메인 슬라이더 편집</button>
+<button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
+<button onclick="openCareerAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">💼 경력 사항 관리</button>
+<button onclick="openRobotModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🤖 로봇 소개 관리</button>
+<button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
+</div>
+</div>
+<div id="turtless-mouse-trail">
+<img alt="Mouse Trail" src="../../turtless-trail.png"/>
+</div>
+<header>
+<div class="logo" onclick="location.href='../../'" style="display: flex; align-items: center;">
+<img alt="TURTLESS" class="notranslate" src="logo.jpg" style="height: 48px; width: auto; object-fit: contain;" translate="no"/>
+</div>
+<div class="hamburger" onclick="document.getElementById('nav-links').classList.add('active')">☰</div>
+<div class="nav-links" id="nav-links">
+<button class="close-menu" onclick="document.getElementById('nav-links').classList.remove('active')">×</button>
+<div class="dropdown">
+<a class="drop-btn" onclick="toggleDrop('about-dropdown')">소개</a>
+<div class="dropdown-content" id="about-dropdown">
+<a href="../intro-team/">팀 소개</a>
+<a href="../intro-members/">팀원</a>
+<a href="../intro-organization/">조직도</a>
+<a href="../intro-career/">경력</a>
+<a href="../intro-slogan/">슬로건</a>
+<a href="../intro-logo/">로고</a>
+</div>
+</div>
+<div class="dropdown">
+<a class="drop-btn" onclick="toggleDrop('robot-dropdown')">로봇</a>
+<div class="dropdown-content" id="robot-dropdown">
+<a href="../robot/">로봇 소개</a>
+</div>
+</div>
+<div class="dropdown">
+<a class="drop-btn" onclick="toggleDrop('activities-dropdown')">활동</a>
+<div class="dropdown-content" id="activities-dropdown">
+<a href="../activity/">주요 활동</a>
+<a href="../values-social/">사회공헌</a>
+<a href="../values-esg/">ESG</a>
+<a href="../gallery/">PR 갤러리</a>
+</div>
+</div>
+<div class="dropdown">
+<a class="drop-btn" onclick="toggleDrop('engineering-dropdown')">엔지니어링</a>
+<div class="dropdown-content" id="engineering-dropdown">
+<a href="../engineering/">엔지니어링 노트</a>
+</div>
+</div>
+<div class="dropdown">
+<a class="drop-btn" onclick="toggleDrop('sponsors-dropdown')">후원</a>
+<div class="dropdown-content" id="sponsors-dropdown">
+<a href="../sponsors/">후원사</a>
+<a href="../sponsorship/">후원문의</a>
+</div>
+</div>
+<a href="https://turtless-team02.github.io/MINI-GAME/" target="_blank">미니게임</a>
+<button class="login-btn" id="main-login-btn" onclick="openLoginModal()">팀원 로그인</button>
+</div>
+</header>
+<main>
+<section class="subpage" id="page-value_social"><div class="inner"><h2 class="subpage-title">사회공헌</h2><div class="content-card"><div class="editable-content" id="b-value-soc">사회공헌 활동을 입력하세요.</div></div></div></section>
+</main>
+<footer class="turtless-footer">
+<div class="turtless-footer-inner">
+<div class="turtless-footer-main">
+<div class="turtless-footer-brand">
+<div class="turtless-footer-title">TURTLESS</div>
+<p>SSRC와 FRC를 통해 로봇공학을 배우고,<br/>함께 만들며 성장하는 학생 로봇팀입니다.</p>
+<div class="turtless-footer-socials">
+<a aria-label="YouTube" href="https://www.youtube.com/channel/UC8QwTy46OaCGdTauiPYkeow" rel="noopener" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+<a aria-label="Instagram" href="https://www.instagram.com/turtless_11379" rel="noopener" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+<a aria-label="TikTok" href="https://www.tiktok.com/@turtless_11379" rel="noopener" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+<a aria-label="GitHub" href="https://github.com/Turtless-team02/TURTLESS_OFFICIAL" rel="noopener" target="_blank"><i class="fa-brands fa-github"></i></a>
+</div>
+<div class="turtless-footer-identity">
+<strong>© 2026 TURTLESS(터틀리스) TEAM. All rights reserved.</strong>
+<span>SSRC (Seoul Student Robotics Competition) · FRC Team 11379</span>
+</div>
+</div>
+<div class="turtless-footer-column turtless-footer-affiliation-column">
+<h3>소속</h3>
+<div class="turtless-footer-affiliation-list">
+<div>용산철도고</div>
+<div>용산고</div>
+<div>서울매그넷고</div>
+<div>서울공고</div>
+<div>경기기계공고</div>
+<div>경복비즈니스고</div>
+<div>선린인터넷고</div>
+</div>
+</div>
+<div class="turtless-footer-column turtless-footer-contact-column">
+<h3>담당자 연락처</h3>
+<div class="turtless-footer-contact-item">
+<span>전화번호</span>
+<a href="tel:010-5635-3087">010-5635-3087</a>
+<a href="tel:010-8982-1203">010-8982-1203</a>
+</div>
+<div class="turtless-footer-contact-item">
+<span>이메일</span>
+<a href="mailto:officialturtless@gmail.com">officialturtless@gmail.com</a>
+</div>
+</div>
+</div>
+<div class="turtless-footer-language-row">
+<div class="turtless-footer-language">
+<span class="turtless-footer-language-label"><i aria-hidden="true" class="fa-solid fa-globe"></i> LANGUAGE</span>
+<select aria-label="Language" class="lang-select" onchange="changeLanguage(this.value)">
+<option value="ko">한국어 (Korean)</option>
+<option value="en">English</option>
+<option value="ja">日本語 (Japanese)</option>
+<option value="zh-CN">中文 (Chinese)</option>
+</select>
+</div>
+</div>
+<div class="turtless-footer-divider"></div>
+<div class="turtless-footer-bottom">
+<div class="turtless-footer-links">
+<a href="https://turtless-team02.github.io/TURTLESS_OFFICIAL/" rel="noopener" target="_blank">Official Website ↗</a>
+<a href="https://github.com/Turtless-team02/TURTLESS_OFFICIAL" rel="noopener" target="_blank">GitHub ↗</a>
+</div>
+</div>
+<div class="turtless-footer-notices">
+<p>※ 자동 번역은 Google Translate를 사용하며, 일부 표현에서 오역이 발생할 수 있습니다.</p>
+<p>※ Automated translation via Google Translate may contain errors or inaccuracies.</p>
+<p>※ 使用 Google 翻译进行自动翻译，部分表达可能存在翻译错误。</p>
+<p>※ Google 翻訳による自動翻訳のため、一部の表現で誤訳が生じる場合があります。</p>
+<p>※ 홈 화면의 버튼을 7번 연속으로 누르거나 키보드로 turtle을 입력해 보세요.</p>
+</div>
+<div class="turtless-footer-typeface">
+<span>Typeface</span><strong>BM도현체</strong><span>·</span><span>BMDOHYEON_ttf.ttf</span><span>·</span>
+<a href="http://font.woowahan.com/dohyeon/" rel="noopener" target="_blank">도현체 다운로드 / 폰트 안내 ↗</a>
+</div>
+</div>
+</footer>
+<script src="../_shared/common.js"></script>
+<script type="module" src="../_shared/firebase.js"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="./script.js"></script>
+</body>
+</html>

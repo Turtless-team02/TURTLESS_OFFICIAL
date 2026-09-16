@@ -1,0 +1,4 @@
+
+/* Standalone page visibility: the original SPA hid all subpages by default. */
+.subpage{display:block!important;}
+

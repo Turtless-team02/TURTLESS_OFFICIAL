@@ -1,0 +1,33 @@
+
+/* Standalone page visibility: the original SPA hid all subpages by default. */
+.subpage{display:block!important;}
+
+
+/* Engineering Note: 좌우 빈 공간을 줄이고 노트 영역을 넓게 사용 */
+#engineering_note > .inner{
+  width:100% !important;
+  max-width:none !important;
+  padding-left:clamp(12px,3vw,42px) !important;
+  padding-right:clamp(12px,3vw,42px) !important;
+  box-sizing:border-box !important;
+}
+#engineering_note .content-card{
+  width:100% !important;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+#engineering_note #mhtml-viewer{
+  width:100% !important;
+  max-width:none !important;
+}
+@media(max-width:768px){
+  #engineering_note > .inner{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+  #engineering_note .content-card{
+    padding:8px !important;
+    border-radius:6px !important;
+  }
+}
