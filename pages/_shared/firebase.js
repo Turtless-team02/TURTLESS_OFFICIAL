@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, query, where, orderBy, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -23,7 +22,8 @@ window.deleteDoc = deleteDoc;
 
 const IMGBB_API_KEY = "Ffc86d1890f11e1bb04886dd9c10ecbc";
 
-let currentUserId = null; let currentUserData = null;
+let currentUserId = sessionStorage.getItem('turtlessUserId');
+let currentUserData = null;
 let isEditMode = false; let cachedGallery = [];
 let sliderData = []; let sponsorData = []; let allMembers = [];
 let savedEditorRange = null;
@@ -176,7 +176,7 @@ leaderSpecs.forEach(spec => {
 
 allMembers.forEach(m => {
     const isLeader = leaderSpecs.some(spec => m.name === spec.name && m.school === spec.school && m.grade === spec.grade);
-    const isMentor = mentorSpecs.some(spec => spec.name === m.name);
+    const isMentor = mentorSpecs.some(spec => m.name === spec.name);
     
     if (isLeader || isMentor) return; 
 
@@ -631,41 +631,176 @@ function loadYoutubeFallback() {
 }
 
 // --- 로그인/로그아웃 및 기타 권한 ---
+
 window.firebaseLogin = async () => {
-const s = document.getElementById('school').value; const g = document.getElementById('grade').value;
-const n = document.getElementById('username').value.trim(); const p = document.getElementById('password').value.trim();
-const snap = await getDocs(query(collection(db, "users"), where("school","==",s), where("grade","==",g), where("name","==",n), where("pass","==",p)));
+const s = document.getElementById('school').value;
+const g = document.getElementById('grade').value;
+const n = document.getElementById('username').value.trim();
+const p = document.getElementById('password').value.trim();
+
+const snap = await getDocs(
+    query(
+        collection(db, "users"),
+        where("school","==",s),
+        where("grade","==",g),
+        where("name","==",n),
+        where("pass","==",p)
+    )
+);
+
 if(!snap.empty) {
-currentUserId = snap.docs[0].id; currentUserData = snap.docs[0].data();
-alert(n + "님 인증 성공"); closeLoginModal();
-document.getElementById('welcome-msg').innerText = `${s} ${g} [${n}]`;
-document.getElementById('member-actions').style.display = 'block';
-if(currentUserData?.role === 'admin') document.getElementById('admin-panel').style.display = 'block';
+
+currentUserId = snap.docs[0].id;
+currentUserData = snap.docs[0].data();
+
+// ★ 로그인 상태 저장
+sessionStorage.setItem('turtlessUserId', currentUserId);
+
+alert(n + "님 인증 성공");
+closeLoginModal();
+
+const welcomeMsg = document.getElementById('welcome-msg');
+if(welcomeMsg) {
+    welcomeMsg.innerText = `${s} ${g} [${n}]`;
+}
+
+const memberActions = document.getElementById('member-actions');
+if(memberActions) {
+    memberActions.style.display = 'block';
+}
+
+const adminPanel = document.getElementById('admin-panel');
+if(adminPanel && currentUserData?.role === 'admin') {
+    adminPanel.style.display = 'block';
+}
 
 const loginBtn = document.getElementById('main-login-btn');
-loginBtn.innerText = '로그아웃';
-loginBtn.onclick = window.firebaseLogout;
+if(loginBtn) {
+    loginBtn.innerText = '로그아웃';
+    loginBtn.onclick = window.firebaseLogout;
+}
 
-document.getElementById('new-gal-date').valueAsDate = new Date();
+const dateInput = document.getElementById('new-gal-date');
+if(dateInput) {
+    dateInput.valueAsDate = new Date();
+}
 
-loadActivities(); loadGallery(); loadMembers();
-} else { alert("인증 실패"); }
+loadActivities();
+loadGallery();
+loadMembers();
+
+} else {
+alert("인증 실패");
+}
 };
 
-window.firebaseLogout = () => {
-if(confirm("로그아웃 하시겠습니까?")) {
-currentUserId = null; currentUserData = null;
-document.getElementById('member-actions').style.display = 'none';
-document.getElementById('admin-panel').style.display = 'none';
+
+// ★ 페이지 이동 후 저장된 로그인 상태 복구
+async function restoreLoginSession() {
+
+const savedUserId = sessionStorage.getItem('turtlessUserId');
+
+if(!savedUserId) return;
+
+try {
+
+const userSnap = await getDoc(doc(db, "users", savedUserId));
+
+if(!userSnap.exists()) {
+
+sessionStorage.removeItem('turtlessUserId');
+currentUserId = null;
+currentUserData = null;
+
+return;
+}
+
+currentUserId = savedUserId;
+currentUserData = userSnap.data();
+
+const welcomeMsg = document.getElementById('welcome-msg');
+if(welcomeMsg) {
+    welcomeMsg.innerText =
+        `${currentUserData.school || ''} ${currentUserData.grade || ''} [${currentUserData.name || ''}]`;
+}
+
+const memberActions = document.getElementById('member-actions');
+if(memberActions) {
+    memberActions.style.display = 'block';
+}
+
+const adminPanel = document.getElementById('admin-panel');
+
+if(adminPanel && currentUserData?.role === 'admin') {
+    adminPanel.style.display = 'block';
+}
 
 const loginBtn = document.getElementById('main-login-btn');
-loginBtn.innerText = '팀원 로그인';
-loginBtn.onclick = openLoginModal;
 
-if(isEditMode) window.toggleEditMode();
+if(loginBtn) {
+    loginBtn.innerText = '로그아웃';
+    loginBtn.onclick = window.firebaseLogout;
+}
+
+const dateInput = document.getElementById('new-gal-date');
+if(dateInput) {
+    dateInput.valueAsDate = new Date();
+}
+
+loadActivities();
+loadGallery();
+loadMembers();
+
+} catch(error) {
+
+console.error('[TURTLESS] 로그인 세션 복구 실패:', error);
+
+sessionStorage.removeItem('turtlessUserId');
+
+currentUserId = null;
+currentUserData = null;
+
+}
+}
+
+
+window.firebaseLogout = () => {
+
+if(confirm("로그아웃 하시겠습니까?")) {
+
+// ★ 실제 로그아웃할 때만 저장된 로그인 정보 삭제
+sessionStorage.removeItem('turtlessUserId');
+
+currentUserId = null;
+currentUserData = null;
+
+const memberActions = document.getElementById('member-actions');
+if(memberActions) {
+    memberActions.style.display = 'none';
+}
+
+const adminPanel = document.getElementById('admin-panel');
+if(adminPanel) {
+    adminPanel.style.display = 'none';
+}
+
+const loginBtn = document.getElementById('main-login-btn');
+
+if(loginBtn) {
+    loginBtn.innerText = '팀원 로그인';
+    loginBtn.onclick = openLoginModal;
+}
+
+if(isEditMode) {
+    window.toggleEditMode();
+}
 
 alert("로그아웃 되었습니다.");
-loadActivities(); loadGallery(); loadMembers();
+
+loadActivities();
+loadGallery();
+loadMembers();
+
 }
 };
 
@@ -1112,7 +1247,11 @@ window.closeLoginModal = () => document.getElementById('login-modal').style.disp
 
 // SPA navigate/history code removed during multi-page split.
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+
+  // ★ 페이지가 열릴 때 가장 먼저 로그인 상태 복구
+  await restoreLoginSession();
+
   loadSlider().then(() => {
     loadMembers(); loadActivities(); loadGallery(); loadSponsors(); window.loadCareers();
 
@@ -1134,4 +1273,3 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-  
