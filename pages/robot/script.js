@@ -48,7 +48,11 @@ const robotDb = getFirestore(robotApp);
 let robotSlidesData = [];
 let currentRobotIndex = 0;
 let robotLoadInProgress = false;
+const heights = [...document.querySelectorAll('#robot-slides-wrapper .sp-slide')]
+  .map(el => el.scrollHeight);
 
+document.getElementById('robot-slider').style.height =
+  Math.max(...heights) + 'px';
 
 // ==========================================
 // HTML 이스케이프
