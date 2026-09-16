@@ -6,90 +6,150 @@
   min-height: calc(100vh - 80px);
   margin: 0;
   padding: 0;
+
   background: #071a33;
-  color: #fff;
+  position: relative;
+  overflow: hidden;
+
   display: flex !important;
   align-items: center;
-  justify-content: center;
 }
+
+/* =========================================
+   배경 워터마크
+   ========================================= */
+
+#page-intro_slogan::before {
+  content: "11379 TURTLESS";
+
+  position: absolute;
+  left: -40px;
+  bottom: -25px;
+
+  font-size: clamp(8rem, 19vw, 22rem);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.07em;
+  white-space: nowrap;
+
+  color: rgba(255, 255, 255, 0.045);
+
+  pointer-events: none;
+  user-select: none;
+}
+
+/* =========================================
+   전체 내용
+   ========================================= */
 
 #page-intro_slogan .inner {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1500px;
+
   min-height: calc(100vh - 80px);
+
   margin: 0 auto;
-  padding: 80px 7vw;
+  padding: 80px 8vw;
+
   display: flex;
   align-items: center;
-  justify-content: center;
+
+  position: relative;
+  z-index: 2;
 }
 
-/* 위쪽 '슬로건' 제목 제거 */
+/* 제목 숨김 */
 #page-intro_slogan .subpage-title {
   display: none !important;
 }
 
-/* 기존 카드 제거 */
+/* 기존 카드 디자인 제거 */
 #page-intro_slogan .content-card {
   width: 100%;
+
   padding: 0 !important;
   margin: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
-/* 실제 슬로건 */
+/* =========================================
+   슬로건
+   ========================================= */
+
 #page-intro_slogan #b-slogan {
   width: 100%;
-  text-align: center;
+  max-width: 1200px;
 
-  color: #fff;
-  font-size: clamp(3rem, 7vw, 7.5rem);
+  /* 좌측 정렬 */
+  text-align: left !important;
+
+  /* 흰색 */
+  color: #ffffff !important;
+
+  font-size: clamp(3.5rem, 8vw, 9rem);
   font-weight: 900;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
+
+  line-height: 1.03;
+  letter-spacing: -0.055em;
 
   word-break: keep-all;
   overflow-wrap: break-word;
 
-  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  text-shadow: none;
 }
 
-/* 슬로건 앞뒤에 은은한 파란 포인트 */
-#page-intro_slogan #b-slogan::before {
-  content: "";
-  display: block;
+/* =========================================
+   모바일
+   ========================================= */
 
-  width: 70px;
-  height: 5px;
-
-  margin: 0 auto 38px;
-
-  background: #2c91f9;
-  border-radius: 10px;
-}
-
-/* 모바일 */
 @media (max-width: 768px) {
+
   #page-intro_slogan {
     min-height: calc(100vh - 64px);
   }
 
   #page-intro_slogan .inner {
     min-height: calc(100vh - 64px);
-    padding: 60px 25px;
+
+    padding: 60px 28px;
+
+    align-items: center;
   }
 
   #page-intro_slogan #b-slogan {
-    font-size: clamp(2.3rem, 11vw, 4.5rem);
-    line-height: 1.12;
+    font-size: clamp(2.8rem, 13vw, 5rem);
+    line-height: 1.08;
+
+    text-align: left !important;
   }
 
-  #page-intro_slogan #b-slogan::before {
-    width: 50px;
-    height: 4px;
-    margin-bottom: 28px;
+  #page-intro_slogan::before {
+    left: -20px;
+    bottom: 15px;
+
+    font-size: 30vw;
+  }
+}
+
+/* =========================================
+   작은 모바일
+   ========================================= */
+
+@media (max-width: 480px) {
+
+  #page-intro_slogan .inner {
+    padding: 50px 22px;
+  }
+
+  #page-intro_slogan #b-slogan {
+    font-size: clamp(2.5rem, 14vw, 4rem);
+  }
+
+  #page-intro_slogan::before {
+    font-size: 32vw;
   }
 }
