@@ -1,3 +1,4 @@
+```css
 /* =========================================
    TURTLESS - SLOGAN
    ========================================= */
@@ -8,12 +9,14 @@
   padding: 0;
 
   background: #071a33 !important;
+
   position: relative;
   overflow: hidden;
 
   display: flex !important;
   align-items: center;
 }
+
 
 /* =========================================
    배경 워터마크
@@ -23,14 +26,16 @@
   content: "11379\A TURTLESS";
 
   position: absolute;
-  left: 6vw;
-  bottom: 4vh;
+
+  right: 5vw;
+  bottom: 5vh;
 
   white-space: pre;
-  text-align: left;
+  text-align: right;
 
-  font-size: clamp(4rem, 9vw, 9rem);
+  font-size: clamp(3.5rem, 8vw, 8rem);
   font-weight: 900;
+
   line-height: 0.85;
   letter-spacing: -0.06em;
 
@@ -38,11 +43,13 @@
 
   pointer-events: none;
   user-select: none;
+
   z-index: 0;
 }
 
+
 /* =========================================
-   내용
+   내용 영역
    ========================================= */
 
 #page-intro_slogan .inner {
@@ -52,6 +59,7 @@
   min-height: calc(100vh - 80px);
 
   margin: 0 auto;
+
   padding: 80px 8vw;
 
   display: flex;
@@ -61,12 +69,20 @@
   z-index: 2;
 }
 
-/* 제목 제거 */
+
+/* =========================================
+   기존 제목 제거
+   ========================================= */
+
 #page-intro_slogan .subpage-title {
   display: none !important;
 }
 
-/* 카드 제거 */
+
+/* =========================================
+   기존 카드 제거
+   ========================================= */
+
 #page-intro_slogan .content-card {
   width: 100%;
 
@@ -74,42 +90,58 @@
   margin: 0;
 
   background: transparent !important;
+
   border: none !important;
   border-radius: 0 !important;
+
   box-shadow: none !important;
 }
 
+
 /* =========================================
-   슬로건 글씨
+   슬로건
    ========================================= */
 
 #page-intro_slogan #b-slogan,
 #page-intro_slogan .editable-content#b-slogan {
-  width: 100%;
-  max-width: 1200px;
 
+  width: 100%;
+  max-width: 1050px;
+
+  /* 왼쪽 정렬 */
   text-align: left !important;
 
-  /* 무조건 흰색 */
+  /* 흰색 */
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 
-  font-size: clamp(3.5rem, 8vw, 9rem);
+  /* 기존보다 조금 작게 */
+  font-size: clamp(3rem, 6.5vw, 7rem);
+
   font-weight: 900;
-  line-height: 1.03;
+
+  line-height: 1.06;
+
   letter-spacing: -0.055em;
 
   word-break: keep-all;
   overflow-wrap: break-word;
 
   text-shadow: none !important;
+
+  position: relative;
+  z-index: 3;
 }
 
-/* 혹시 common.css가 a/p/div 등에 색을 지정해도 흰색 유지 */
-#page-intro_slogan #b-slogan * {
+
+/* 혹시 Firebase가 내부 태그를 넣어도 흰색 유지 */
+
+#page-intro_slogan #b-slogan *,
+#page-intro_slogan .editable-content#b-slogan * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
+
 
 /* =========================================
    모바일
@@ -121,26 +153,38 @@
     min-height: calc(100vh - 64px);
   }
 
+
   #page-intro_slogan .inner {
     min-height: calc(100vh - 64px);
+
     padding: 60px 28px;
+
+    align-items: center;
   }
+
 
   #page-intro_slogan #b-slogan,
   #page-intro_slogan .editable-content#b-slogan {
-    font-size: clamp(2.8rem, 13vw, 5rem);
+
+    font-size: clamp(2.5rem, 11vw, 4.8rem);
+
     line-height: 1.08;
+
     text-align: left !important;
   }
 
+
   #page-intro_slogan::before {
-    left: 5vw;
+
+    right: 5vw;
     bottom: 4vh;
 
-    font-size: clamp(3.5rem, 16vw, 6rem);
+    font-size: clamp(3rem, 15vw, 6rem);
+
     line-height: 0.85;
   }
 }
+
 
 /* =========================================
    작은 모바일
@@ -152,12 +196,20 @@
     padding: 50px 22px;
   }
 
+
   #page-intro_slogan #b-slogan,
   #page-intro_slogan .editable-content#b-slogan {
-    font-size: clamp(2.5rem, 14vw, 4rem);
+
+    font-size: clamp(2.3rem, 12vw, 4rem);
   }
 
+
   #page-intro_slogan::before {
-    font-size: 17vw;
+
+    right: 4vw;
+    bottom: 3vh;
+
+    font-size: 16vw;
   }
 }
+```
