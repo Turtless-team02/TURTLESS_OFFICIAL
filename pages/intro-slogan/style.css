@@ -1,4 +1,95 @@
+/* =========================================
+   TURTLESS - SLOGAN
+   ========================================= */
 
-/* Standalone page visibility: the original SPA hid all subpages by default. */
-.subpage{display:block!important;}
+#page-intro_slogan {
+  min-height: calc(100vh - 80px);
+  margin: 0;
+  padding: 0;
+  background: #071a33;
+  color: #fff;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
 
+#page-intro_slogan .inner {
+  width: 100%;
+  max-width: 1400px;
+  min-height: calc(100vh - 80px);
+  margin: 0 auto;
+  padding: 80px 7vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 위쪽 '슬로건' 제목 제거 */
+#page-intro_slogan .subpage-title {
+  display: none !important;
+}
+
+/* 기존 카드 제거 */
+#page-intro_slogan .content-card {
+  width: 100%;
+  padding: 0 !important;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* 실제 슬로건 */
+#page-intro_slogan #b-slogan {
+  width: 100%;
+  text-align: center;
+
+  color: #fff;
+  font-size: clamp(3rem, 7vw, 7.5rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+
+  word-break: keep-all;
+  overflow-wrap: break-word;
+
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* 슬로건 앞뒤에 은은한 파란 포인트 */
+#page-intro_slogan #b-slogan::before {
+  content: "";
+  display: block;
+
+  width: 70px;
+  height: 5px;
+
+  margin: 0 auto 38px;
+
+  background: #2c91f9;
+  border-radius: 10px;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  #page-intro_slogan {
+    min-height: calc(100vh - 64px);
+  }
+
+  #page-intro_slogan .inner {
+    min-height: calc(100vh - 64px);
+    padding: 60px 25px;
+  }
+
+  #page-intro_slogan #b-slogan {
+    font-size: clamp(2.3rem, 11vw, 4.5rem);
+    line-height: 1.12;
+  }
+
+  #page-intro_slogan #b-slogan::before {
+    width: 50px;
+    height: 4px;
+    margin-bottom: 28px;
+  }
+}
