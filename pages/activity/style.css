@@ -1,4 +1,658 @@
+/* =========================================================
+   TURTLESS - 주요 활동 전용 스타일
+   공통 CSS를 수정하지 않고 이 페이지에서만 덮어씀
+   ========================================================= */
 
-/* Standalone page visibility: the original SPA hid all subpages by default. */
-.subpage{display:block!important;}
+#page-activity .content-card {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
 
+/* 기존 활동 리스트 초기화 */
+#page-activity .content-card > .act-list-item {
+  box-sizing: border-box;
+  position: relative !important;
+
+  width: auto !important;
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  border-bottom: 0 !important;
+
+  background: transparent !important;
+
+  overflow: visible !important;
+
+  counter-increment: none !important;
+}
+
+/* 기존 common.css의 번호 장식 제거 */
+#page-activity .content-card > .act-list-item::before,
+#page-activity .content-card > .act-list-item::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 기존 hover padding 변경 제거 */
+#page-activity .content-card > .act-list-item:hover {
+  padding: 0 !important;
+  transform: none;
+}
+
+
+/* =========================================================
+   TETRIS / COLLAGE GRID
+   ========================================================= */
+
+#page-activity .content-card {
+  display: grid;
+
+  grid-template-columns:
+    repeat(12, minmax(0, 1fr));
+
+  grid-auto-rows: 105px;
+  grid-auto-flow: dense;
+
+  gap: 18px;
+
+  align-items: stretch;
+}
+
+
+/* 각각의 활동 타일 */
+#page-activity .activity-tile {
+  position: relative;
+
+  min-width: 0;
+  min-height: 0;
+
+  cursor: pointer;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(245,248,252,.98)
+    );
+
+  box-shadow:
+    0 8px 25px rgba(20, 35, 55, .08);
+
+  transition:
+    transform .28s cubic-bezier(.2,.75,.25,1),
+    box-shadow .28s ease,
+    filter .28s ease;
+
+  z-index: 1;
+}
+
+
+/* 사진 */
+#page-activity .activity-tile-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition:
+    transform .5s cubic-bezier(.2,.75,.25,1),
+    filter .35s ease;
+}
+
+
+/* 사진 위 어두운 그라데이션 */
+#page-activity .activity-tile::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, .72) 0%,
+      rgba(0, 0, 0, .18) 48%,
+      rgba(0, 0, 0, 0) 75%
+    );
+}
+
+
+/* =========================================================
+   텍스트 영역
+   ========================================================= */
+
+#page-activity .activity-tile-info {
+  position: absolute;
+
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+
+  z-index: 3;
+
+  color: #fff;
+
+  pointer-events: none;
+}
+
+#page-activity .activity-tile-date {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-family: "Courier Prime", monospace;
+  font-size: 12px;
+  font-weight: 600;
+
+  letter-spacing: .08em;
+
+  opacity: .78;
+}
+
+#page-activity .activity-tile-title {
+  margin: 0;
+
+  color: #fff !important;
+
+  font-size: clamp(17px, 1.55vw, 24px);
+  font-weight: 800;
+
+  line-height: 1.25;
+
+  word-break: keep-all;
+}
+
+
+/* =========================================================
+   이미지 없는 활동
+   ========================================================= */
+
+#page-activity .activity-tile.no-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  padding: 25px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(44,145,249,.12),
+      rgba(255,255,255,.98) 70%
+    );
+}
+
+#page-activity .activity-tile.no-image::before {
+  content: "TURTLESS";
+
+  position: absolute;
+
+  top: 22px;
+  left: 25px;
+
+  font-family: "Courier Prime", monospace;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: .14em;
+
+  color: var(--primary-color, #2c91f9);
+
+  opacity: .75;
+}
+
+#page-activity .activity-tile.no-image::after {
+  display: none;
+}
+
+#page-activity .activity-tile.no-image
+.activity-tile-info {
+  position: static;
+
+  color: #17202b;
+}
+
+#page-activity .activity-tile.no-image
+.activity-tile-title {
+  color: #17202b !important;
+}
+
+#page-activity .activity-tile.no-image
+.activity-tile-date {
+  color: #657180;
+}
+
+
+/* =========================================================
+   최신 활동 - 중앙 강조
+   ========================================================= */
+
+#page-activity .activity-tile.featured {
+  box-shadow:
+    0 18px 45px rgba(30, 55, 85, .16);
+}
+
+#page-activity .activity-tile.featured
+.activity-tile-title {
+  font-size: clamp(23px, 2.4vw, 36px);
+}
+
+#page-activity .activity-tile.featured
+.activity-tile-date {
+  font-size: 13px;
+}
+
+
+/* NEW 표시 */
+#page-activity .activity-new {
+  position: absolute;
+
+  top: 18px;
+  left: 18px;
+
+  z-index: 5;
+
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  background: var(--primary-color, #2c91f9);
+  color: #fff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: .1em;
+
+  box-shadow: 0 5px 15px rgba(0,0,0,.15);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HOVER
+   ★ 해당 사진 하나만 확대
+   ========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+
+  #page-activity .activity-tile:hover {
+    transform: scale(1.025);
+
+    box-shadow:
+      0 20px 45px rgba(20, 40, 70, .19);
+
+    z-index: 20;
+  }
+
+  #page-activity .activity-tile:hover
+  .activity-tile-image {
+    transform: scale(1.055);
+
+    filter: saturate(1.05);
+  }
+
+  #page-activity .activity-tile:not(:hover) {
+    filter: none;
+  }
+}
+
+
+/* =========================================================
+   관리자 삭제 버튼
+   ========================================================= */
+
+#page-activity .activity-tile .delete-btn {
+  position: absolute !important;
+
+  top: 17px !important;
+  right: 17px !important;
+
+  z-index: 10 !important;
+
+  width: 34px !important;
+  height: 34px !important;
+
+  padding: 0 !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: rgba(0,0,0,.58) !important;
+
+  color: #fff !important;
+
+  font-size: 13px !important;
+
+  cursor: pointer !important;
+
+  opacity: .9 !important;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+#page-activity .activity-tile .delete-btn:hover {
+  transform: scale(1.08);
+
+  background: #d93636 !important;
+}
+
+
+/* =========================================================
+   상세보기 MODAL
+   ========================================================= */
+
+.activity-detail-modal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background: rgba(8, 15, 25, .72);
+
+  backdrop-filter: blur(10px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity .25s ease,
+    visibility .25s ease;
+}
+
+.activity-detail-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.activity-detail-window {
+  position: relative;
+
+  width: min(940px, 100%);
+
+  max-height: min(88vh, 900px);
+
+  overflow-y: auto;
+
+  border-radius: 25px;
+
+  background: #fff;
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.3);
+
+  transform: translateY(20px) scale(.97);
+
+  transition:
+    transform .3s cubic-bezier(.2,.75,.25,1);
+}
+
+.activity-detail-modal.is-open
+.activity-detail-window {
+  transform: translateY(0) scale(1);
+}
+
+
+/* 상세 이미지 */
+.activity-detail-image {
+  display: block;
+
+  width: 100%;
+  max-height: 530px;
+
+  object-fit: contain;
+
+  background: #eef2f6;
+}
+
+
+/* 이미지가 없을 때 */
+.activity-detail-image-wrap.no-image {
+  display: none;
+}
+
+
+/* 상세 내용 */
+.activity-detail-body {
+  padding: 35px 40px 42px;
+}
+
+.activity-detail-date {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: var(--primary-color, #2c91f9);
+
+  font-family: "Courier Prime", monospace;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: .08em;
+}
+
+.activity-detail-title {
+  margin: 0 0 24px;
+
+  color: #151d27;
+
+  font-size: clamp(25px, 3vw, 38px);
+  font-weight: 850;
+
+  line-height: 1.25;
+
+  word-break: keep-all;
+}
+
+.activity-detail-content {
+  color: #4e5966;
+
+  font-size: 15px;
+  line-height: 1.9;
+
+  white-space: pre-wrap;
+
+  word-break: keep-all;
+}
+
+
+/* 닫기 */
+.activity-detail-close {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+
+  z-index: 10;
+
+  width: 42px;
+  height: 42px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(0,0,0,.55);
+
+  color: #fff;
+
+  font-size: 19px;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.activity-detail-close:hover {
+  transform: rotate(90deg);
+
+  background: rgba(0,0,0,.75);
+}
+
+
+/* =========================================================
+   태블릿
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  #page-activity .content-card {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+
+    grid-auto-rows: 95px;
+
+    gap: 14px;
+  }
+
+  #page-activity .activity-tile.featured {
+    grid-column: span 6 !important;
+    grid-row: span 3 !important;
+  }
+
+  #page-activity .activity-tile-info {
+    left: 18px;
+    right: 18px;
+    bottom: 17px;
+  }
+
+  .activity-detail-body {
+    padding: 28px 25px 32px;
+  }
+}
+
+
+/* =========================================================
+   모바일
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  #page-activity .content-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-auto-rows: 105px;
+
+    gap: 11px;
+  }
+
+  #page-activity .activity-tile.featured {
+    grid-column: span 2 !important;
+    grid-row: span 3 !important;
+  }
+
+  #page-activity .activity-tile-info {
+    left: 15px;
+    right: 15px;
+    bottom: 14px;
+  }
+
+  #page-activity .activity-tile-title {
+    font-size: 16px;
+  }
+
+  #page-activity .activity-tile.featured
+  .activity-tile-title {
+    font-size: 23px;
+  }
+
+  #page-activity .activity-tile-date {
+    font-size: 10px;
+  }
+
+  #page-activity .activity-new {
+    top: 12px;
+    left: 12px;
+
+    padding: 6px 9px;
+  }
+
+  .activity-detail-modal {
+    padding: 12px;
+  }
+
+  .activity-detail-window {
+    max-height: 92vh;
+
+    border-radius: 19px;
+  }
+
+  .activity-detail-body {
+    padding: 24px 20px 28px;
+  }
+
+  .activity-detail-title {
+    margin-bottom: 18px;
+
+    font-size: 25px;
+  }
+
+  .activity-detail-content {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .activity-detail-close {
+    top: 11px;
+    right: 11px;
+
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
+/* 터치 기기에서는 hover 확대 제거 */
+@media (hover: none) {
+
+  #page-activity .activity-tile {
+    transition: box-shadow .2s ease;
+  }
+
+  #page-activity .activity-tile:hover {
+    transform: none;
+  }
+
+  #page-activity .activity-tile:hover
+  .activity-tile-image {
+    transform: none;
+  }
+}
