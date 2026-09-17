@@ -1,670 +1,435 @@
 /* =========================================================
-   TURTLESS - 주요 활동 전용 JS
-   공통 firebase.js / common.js 수정 없이 동작
+   TURTLESS - 주요 활동 페이지 전용 JS
+   공통 JS / Firebase JS 수정 없음
    ========================================================= */
 
-(() => {
-  "use strict";
+(function () {
 
-  const CONTENT_SELECTOR = "#activity-page-content";
+  'use strict';
 
   let observer = null;
-  let enhancing = false;
+  let arrangeTimer = null;
+  let modal = null;
 
 
-  /* ---------------------------------------------------------
-     HTML 안전 처리
-     --------------------------------------------------------- */
-
-  function escapeHTML(value) {
-    if (value === null || value === undefined) return "";
-
-    const div = document.createElement("div");
-    div.textContent = String(value);
-
-    return div.innerHTML;
-  }
-
-
-  /* ---------------------------------------------------------
-     날짜 처리
-     --------------------------------------------------------- */
-
-  function getActivityDate(item) {
-    const dateElement =
-      item.querySelector(".activity-date") ||
-      item.querySelector(".act-date") ||
-      item.querySelector("time");
-
-    if (dateElement) {
-      return dateElement.textContent.trim();
-    }
-
-    return "";
-  }
-
-
-  /* ---------------------------------------------------------
-     기존 활동 하나를 전용 타일로 변환
-     --------------------------------------------------------- */
-
-  function enhanceActivity(item, index) {
-
-    if (!item || item.dataset.activityEnhanced === "true") {
-      return;
-    }
-
-    item.dataset.activityEnhanced = "true";
-
-    /*
-     * 공통 Firebase renderer에서 생성된 요소에서
-     * 필요한 데이터를 먼저 가져온다.
-     */
-
-    const titleElement =
-      item.querySelector("h3") ||
-      item.querySelector("h4") ||
-      item.querySelector(".act-title");
-
-    const contentElement =
-      item.querySelector(".act-content") ||
-      item.querySelector(".activity-content") ||
-      item.querySelector("p");
-
-    const imageElement = item.querySelector("img");
-
-    const deleteButton = item.querySelector(".delete-btn");
-
-    const title =
-      titleElement?.textContent?.trim() ||
-      "주요 활동";
-
-    const content =
-      contentElement?.textContent?.trim() ||
-      "";
-
-    const date = getActivityDate(item);
-
-    const imageURL =
-      imageElement?.getAttribute("src") ||
-      imageElement?.dataset?.src ||
-      "";
-
-
-    /*
-     * 기존 DOM에서 관리자 삭제 버튼은 잠시 분리한다.
-     */
-
-    if (deleteButton) {
-      deleteButton.remove();
-    }
-
-
-    /*
-     * 기존 내용은 새로운 타일로 교체한다.
-     * 단, 가장 중요한 ID는 유지한다.
-     */
-
-    const originalId = item.id;
-
-    item.className = "activity-tile";
-
-    if (originalId) {
-      item.id = originalId;
-    }
-
-
-    /*
-     * 최신 활동은 중앙의 큰 타일
-     */
-
-    if (index === 0) {
-      item.classList.add("featured");
-    }
-
-
-    /*
-     * 이미지가 있는지 여부
-     */
-
-    if (!imageURL) {
-      item.classList.add("no-image");
-    }
-
-
-    /*
-     * 다양한 Tetris 크기.
-     * 첫 번째는 항상 중앙의 메인 활동.
-     */
-
-    applyTileSize(item, index);
-
-
-    /*
-     * 내부 HTML 생성
-     */
-
-    const safeTitle = escapeHTML(title);
-    const safeDate = escapeHTML(date);
-
-    let imageHTML = "";
-
-    if (imageURL) {
-      imageHTML = `
-        <img
-          class="activity-tile-image"
-          src="${escapeHTML(imageURL)}"
-          alt="${safeTitle}"
-          loading="${index < 3 ? "eager" : "lazy"}"
-        >
-      `;
-    }
-
-
-    const newBadge =
-      index === 0
-        ? `<span class="activity-new">LATEST</span>`
-        : "";
-
-
-    item.innerHTML = `
-      ${imageHTML}
-
-      ${newBadge}
-
-      <div class="activity-tile-info">
-        ${
-          safeDate
-            ? `<span class="activity-tile-date">${safeDate}</span>`
-            : ""
-        }
-
-        <h3 class="activity-tile-title">
-          ${safeTitle}
-        </h3>
-      </div>
-    `;
-
-
-    /*
-     * 관리자 삭제 버튼이 있었다면 다시 추가.
-     * 공통 JS가 생성한 버튼 자체를 보존하기 위한 처리.
-     */
-
-    if (deleteButton) {
-      item.appendChild(deleteButton);
-    }
-
-
-    /*
-     * 상세보기 데이터 저장
-     */
-
-    item.dataset.activityTitle = title;
-    item.dataset.activityDate = date;
-    item.dataset.activityContent = content;
-    item.dataset.activityImage = imageURL;
-
-
-    /*
-     * 클릭 이벤트
-     */
-
-    item.addEventListener("click", event => {
-
-      /*
-       * 삭제 버튼을 누른 경우에는 상세보기 열지 않는다.
-       */
-
-      if (
-        event.target.closest(".delete-btn") ||
-        event.target.closest("button")
-      ) {
-        return;
-      }
-
-      openActivityDetail({
-        title,
-        date,
-        content,
-        image: imageURL
-      });
-
-    });
-
-  }
-
-
-  /* ---------------------------------------------------------
-     Tetris 배치
-     --------------------------------------------------------- */
-
-  function applyTileSize(item, index) {
-
-    /*
-     * CSS Grid의 column / row span을 직접 지정해서
-     * 각각 다른 크기의 블록을 만든다.
-     */
-
-    const layouts = [
-
-      /* 0 - 최신 / 중앙 */
-      {
-        col: "4 / span 6",
-        row: "span 3"
-      },
-
-      /* 1 */
-      {
-        col: "1 / span 3",
-        row: "span 2"
-      },
-
-      /* 2 */
-      {
-        col: "10 / span 3",
-        row: "span 2"
-      },
-
-      /* 3 */
-      {
-        col: "1 / span 4",
-        row: "span 2"
-      },
-
-      /* 4 */
-      {
-        col: "5 / span 4",
-        row: "span 2"
-      },
-
-      /* 5 */
-      {
-        col: "9 / span 4",
-        row: "span 2"
-      },
-
-      /* 6 */
-      {
-        col: "1 / span 3",
-        row: "span 2"
-      },
-
-      /* 7 */
-      {
-        col: "4 / span 5",
-        row: "span 2"
-      },
-
-      /* 8 */
-      {
-        col: "9 / span 4",
-        row: "span 2"
-      }
-
-    ];
-
-
-    /*
-     * 9개 이후 활동은 자동 dense 배치.
-     */
-
-    const layout = layouts[index];
-
-    if (!layout) {
-      item.style.gridColumn = "span 3";
-      item.style.gridRow = "span 2";
-      return;
-    }
-
-
-    item.style.gridColumn = layout.col;
-    item.style.gridRow = layout.row;
-  }
-
-
-  /* ---------------------------------------------------------
-     상세보기 모달 생성
-     --------------------------------------------------------- */
+  /* -------------------------------------------------------
+     상세 모달 생성
+     ------------------------------------------------------- */
 
   function createModal() {
 
-    if (document.querySelector(".activity-detail-modal")) {
+    if (document.querySelector('.activity-detail-modal')) {
+      modal = document.querySelector('.activity-detail-modal');
       return;
     }
 
+    modal = document.createElement('div');
 
-    const modal = document.createElement("div");
-
-    modal.className = "activity-detail-modal";
+    modal.className = 'activity-detail-modal';
 
     modal.innerHTML = `
-      <div
-        class="activity-detail-window"
-        role="dialog"
-        aria-modal="true"
-        aria-label="활동 상세보기"
-      >
+      <div class="activity-detail-window">
 
         <button
-          class="activity-detail-close"
           type="button"
+          class="activity-detail-close"
           aria-label="닫기"
-        >
-          ×
-        </button>
+        >×</button>
 
-        <div class="activity-detail-image-wrap">
-          <img
-            class="activity-detail-image"
-            src=""
-            alt=""
-          >
-        </div>
-
-        <div class="activity-detail-body">
-
-          <span class="activity-detail-date"></span>
-
-          <h2 class="activity-detail-title"></h2>
-
-          <div class="activity-detail-content"></div>
-
-        </div>
+        <div class="activity-detail-content"></div>
 
       </div>
     `;
 
-
     document.body.appendChild(modal);
 
+    modal.addEventListener('click', function (e) {
 
-    /*
-     * 닫기 버튼
-     */
-
-    modal
-      .querySelector(".activity-detail-close")
-      .addEventListener("click", closeActivityDetail);
-
-
-    /*
-     * 배경 클릭
-     */
-
-    modal.addEventListener("click", event => {
-
-      if (event.target === modal) {
-        closeActivityDetail();
+      if (
+        e.target === modal ||
+        e.target.closest('.activity-detail-close')
+      ) {
+        closeModal();
       }
 
     });
 
+    document.addEventListener('keydown', function (e) {
+
+      if (
+        e.key === 'Escape' &&
+        modal &&
+        modal.classList.contains('is-open')
+      ) {
+        closeModal();
+      }
+
+    });
   }
 
 
-  /* ---------------------------------------------------------
-     상세보기 열기
-     --------------------------------------------------------- */
+  /* -------------------------------------------------------
+     모달 열기
+     ------------------------------------------------------- */
 
-  function openActivityDetail(data) {
+  function openModal(item) {
 
     createModal();
 
-    const modal =
-      document.querySelector(".activity-detail-modal");
+    const titleEl = item.querySelector('h3');
+    const textEl = item.querySelector(':scope > p');
+    const imgEl = item.querySelector(
+      '.resizable-img-box img'
+    );
 
-    const imageWrap =
-      modal.querySelector(".activity-detail-image-wrap");
+    let title = titleEl
+      ? titleEl.cloneNode(true)
+      : null;
 
-    const image =
-      modal.querySelector(".activity-detail-image");
+    let date = '';
 
-    const date =
-      modal.querySelector(".activity-detail-date");
+    if (title) {
 
-    const title =
-      modal.querySelector(".activity-detail-title");
+      const dateEl = title.querySelector('.date');
 
-    const content =
-      modal.querySelector(".activity-detail-content");
+      if (dateEl) {
+        date = dateEl.textContent.trim();
+        dateEl.remove();
+      }
 
+      /* 최신 뱃지는 상세 제목에서 제거 */
+      title.querySelectorAll('span').forEach(function (span) {
+        span.remove();
+      });
 
-    title.textContent = data.title || "주요 활동";
-
-    date.textContent = data.date || "";
-
-    content.textContent = data.content || "";
-
-
-    if (data.image) {
-
-      imageWrap.classList.remove("no-image");
-
-      image.src = data.image;
-
-      image.alt = data.title || "활동 사진";
+      title = title.textContent.trim();
 
     } else {
+      title = '주요 활동';
+    }
 
-      imageWrap.classList.add("no-image");
 
-      image.removeAttribute("src");
+    const text = textEl
+      ? textEl.textContent.trim()
+      : '';
 
-      image.alt = "";
+
+    const content = modal.querySelector(
+      '.activity-detail-content'
+    );
+
+
+    content.innerHTML = '';
+
+
+    if (imgEl && imgEl.src) {
+
+      const img = document.createElement('img');
+
+      img.className = 'activity-detail-image';
+
+      img.src = imgEl.src;
+
+      img.alt = title;
+
+      img.loading = 'lazy';
+
+      content.appendChild(img);
 
     }
 
 
-    modal.classList.add("is-open");
+    const body = document.createElement('div');
 
-    document.body.style.overflow = "hidden";
+    body.className = 'activity-detail-body';
 
 
-    /*
-     * 닫기 버튼에 포커스
-     */
+    if (date) {
 
-    requestAnimationFrame(() => {
+      const dateDiv = document.createElement('div');
 
-      modal
-        .querySelector(".activity-detail-close")
-        ?.focus();
+      dateDiv.className = 'activity-detail-date';
 
-    });
+      dateDiv.textContent = date;
+
+      body.appendChild(dateDiv);
+
+    }
+
+
+    const titleDiv = document.createElement('h3');
+
+    titleDiv.className = 'activity-detail-title';
+
+    titleDiv.textContent = title;
+
+    body.appendChild(titleDiv);
+
+
+    if (text) {
+
+      const textDiv = document.createElement('p');
+
+      textDiv.className = 'activity-detail-text';
+
+      textDiv.textContent = text;
+
+      body.appendChild(textDiv);
+
+    }
+
+
+    content.appendChild(body);
+
+
+    modal.classList.add('is-open');
+
+    document.body.style.overflow = 'hidden';
 
   }
 
 
-  /* ---------------------------------------------------------
-     상세보기 닫기
-     --------------------------------------------------------- */
+  /* -------------------------------------------------------
+     모달 닫기
+     ------------------------------------------------------- */
 
-  function closeActivityDetail() {
-
-    const modal =
-      document.querySelector(".activity-detail-modal");
+  function closeModal() {
 
     if (!modal) return;
 
-    modal.classList.remove("is-open");
+    modal.classList.remove('is-open');
 
-    document.body.style.overflow = "";
+    document.body.style.overflow = '';
 
   }
 
 
-  /* ---------------------------------------------------------
-     ESC로 닫기
-     --------------------------------------------------------- */
+  /* -------------------------------------------------------
+     활동 아이템을 콜라주에 넣기
+     ------------------------------------------------------- */
 
-  document.addEventListener("keydown", event => {
+  function arrangeActivities() {
 
-    if (event.key !== "Escape") return;
-
-    const modal =
-      document.querySelector(".activity-detail-modal");
-
-    if (
-      modal &&
-      modal.classList.contains("is-open")
-    ) {
-      closeActivityDetail();
-    }
-
-  });
-
-
-  /* ---------------------------------------------------------
-     활동 목록 변환
-     --------------------------------------------------------- */
-
-  function enhanceActivities() {
-
-    if (enhancing) return;
-
-    const container =
-      document.querySelector(CONTENT_SELECTOR);
+    const container = document.getElementById(
+      'activity-page-content'
+    );
 
     if (!container) return;
 
 
-    const items = [
-      ...container.querySelectorAll(":scope > .act-list-item")
-    ];
+    const items = Array.from(
+      container.children
+    ).filter(function (el) {
 
+      return el.classList &&
+             el.classList.contains('act-list-item');
+
+    });
+
+
+    /*
+      Firebase가 아직 데이터를 넣기 전이면
+      아무것도 하지 않는다.
+    */
 
     if (!items.length) return;
 
 
-    enhancing = true;
+    let collage = container.querySelector(
+      ':scope > .activity-collage'
+    );
 
 
     /*
-     * 이미 변환된 항목은 제외하고
-     * 새로 들어온 항목만 처리한다.
-     */
+      Firebase loadActivities()가 다시 실행되면
+      기존 collage가 innerHTML로 지워진다.
 
-    items.forEach((item, index) => {
+      따라서 매번 새로 만들어도 안전하게 처리한다.
+    */
 
-      if (
-        item.dataset.activityEnhanced !== "true"
-      ) {
-        enhanceActivity(item, index);
+    if (!collage) {
+
+      collage = document.createElement('div');
+
+      collage.className = 'activity-collage';
+
+      container.appendChild(collage);
+
+    }
+
+
+    /*
+      act-list-item을 그대로 이동한다.
+      Firebase 데이터나 id는 건드리지 않는다.
+    */
+
+    items.forEach(function (item) {
+
+      if (item.parentElement !== collage) {
+        collage.appendChild(item);
       }
 
     });
 
 
     /*
-     * Firebase가 새 목록을 다시 렌더링했을 때
-     * index 기준 featured 상태를 다시 맞춘다.
-     */
+      사진이 있는 활동만 클릭 가능.
+      모든 활동은 상세 내용 확인 가능.
+    */
 
-    items.forEach((item, index) => {
+    collage.querySelectorAll(
+      '.act-list-item'
+    ).forEach(function (item) {
 
-      item.classList.toggle(
-        "featured",
-        index === 0
-      );
+      if (item.dataset.activityReady === '1') {
+        return;
+      }
 
-      applyTileSize(item, index);
-
-    });
-
-
-    enhancing = false;
-
-  }
+      item.dataset.activityReady = '1';
 
 
-  /* ---------------------------------------------------------
-     Firebase loadActivities() 감시
-     --------------------------------------------------------- */
+      item.addEventListener('click', function (e) {
 
-  function startObserver() {
+        /*
+          관리자 삭제 버튼을 누른 경우
+          상세 모달을 열지 않는다.
+        */
 
-    const container =
-      document.querySelector(CONTENT_SELECTOR);
+        if (
+          e.target.closest('.delete-btn')
+        ) {
+          return;
+        }
 
-    if (!container) {
-
-      /*
-       * 페이지 전환 후 DOM이 늦게 생기는 경우를 대비.
-       */
-
-      setTimeout(startObserver, 300);
-
-      return;
-    }
-
-
-    /*
-     * 이미 observer가 있으면 다시 만들지 않는다.
-     */
-
-    if (observer) {
-      return;
-    }
-
-
-    observer = new MutationObserver(() => {
-
-      /*
-       * Firebase가 innerHTML을 교체한 직후
-       * 다음 프레임에서 처리.
-       */
-
-      requestAnimationFrame(() => {
-
-        enhanceActivities();
+        openModal(item);
 
       });
 
     });
 
-
-    observer.observe(container, {
-
-      childList: true,
-      subtree: true
-
-    });
+  }
 
 
-    /*
-     * 처음 진입했을 때 이미 데이터가 존재하는 경우
-     */
+  /* -------------------------------------------------------
+     DOM 변화 감시
+     Firebase loadActivities()가 데이터를 넣는 시점이
+     정확히 언제인지 신경 쓰지 않아도 되도록 처리
+     ------------------------------------------------------- */
 
-    enhanceActivities();
+  function scheduleArrange() {
+
+    clearTimeout(arrangeTimer);
+
+    arrangeTimer = setTimeout(
+      arrangeActivities,
+      50
+    );
 
   }
 
 
-  /* ---------------------------------------------------------
-     페이지 초기화
-     --------------------------------------------------------- */
+  function startObserver() {
+
+    if (observer) return;
+
+    const target = document.getElementById(
+      'activity-page-content'
+    );
+
+    if (!target) {
+
+      /*
+        혹시 DOM 생성이 늦는 경우 재시도
+      */
+
+      setTimeout(
+        startObserver,
+        200
+      );
+
+      return;
+
+    }
+
+
+    observer = new MutationObserver(
+      function () {
+        scheduleArrange();
+      }
+    );
+
+
+    observer.observe(
+      target,
+      {
+        childList: true,
+        subtree: true
+      }
+    );
+
+
+    /*
+      이미 Firebase가 먼저 데이터를 불러온 경우
+      바로 처리
+    */
+
+    scheduleArrange();
+
+  }
+
+
+  /* -------------------------------------------------------
+     초기화
+     ------------------------------------------------------- */
 
   function init() {
+
+    /*
+      별도 페이지이므로 혹시 common.css에서 숨겨졌다면
+      페이지 전용 CSS가 표시하도록 보장.
+    */
+
+    const page = document.getElementById(
+      'page-activity'
+    );
+
+    if (page) {
+      page.style.display = 'block';
+    }
+
 
     createModal();
 
     startObserver();
 
+    /*
+      Firebase보다 먼저 실행되어도,
+      MutationObserver가 나중에 생성되는 활동을 잡는다.
+    */
+
+    setTimeout(
+      arrangeActivities,
+      100
+    );
+
+    setTimeout(
+      arrangeActivities,
+      500
+    );
+
+    setTimeout(
+      arrangeActivities,
+      1200
+    );
+
   }
 
 
-  /*
-   * 공통 common.js / firebase.js와 실행 순서를 고려해
-   * 여러 시점에서 초기화 확인.
-   */
-
-  if (document.readyState === "loading") {
+  if (document.readyState === 'loading') {
 
     document.addEventListener(
-      "DOMContentLoaded",
-      init,
-      { once: true }
+      'DOMContentLoaded',
+      init
     );
 
   } else {
@@ -675,11 +440,10 @@
 
 
   /*
-   * 페이지 전환형 구조에서도 작동하도록 한 번 더 확인.
-   */
+    전역에서 닫을 수 있도록 제공
+  */
 
-  setTimeout(enhanceActivities, 500);
-  setTimeout(enhanceActivities, 1200);
-  setTimeout(enhanceActivities, 2500);
+  window.closeActivityDetail = closeModal;
+
 
 })();
