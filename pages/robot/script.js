@@ -79,7 +79,7 @@ function renderRobotMessage(title, message) {
 
 
 /* ==========================================
-   로봇 높이 자동 계산
+   높이 자동 조절
    ========================================== */
 
 function fitRobotSliderHeight() {
@@ -90,101 +90,42 @@ function fitRobotSliderHeight() {
   const wrapper =
     document.getElementById('robot-slides-wrapper');
 
-  const slides =
-    [...document.querySelectorAll(
-      '#robot-slides-wrapper .sp-slide'
-    )];
+  if (!slider || !wrapper) return;
 
-  if (!slider || !wrapper || !slides.length) return;
+  const active =
+    wrapper.querySelector('.sp-slide.active');
 
-  let maxHeight = 0;
+  if (!active) return;
 
-  /*
-   * 각 슬라이드를 잠깐 일반 흐름으로 바꿔서
-   * 실제 내용 높이를 측정한다.
-   */
+  const height =
+    active.scrollHeight;
 
-  slides.forEach(slide => {
-
-    const info =
-      slide.querySelector('.robot-info');
-
-    if (!info) return;
-
-    const oldPosition = slide.style.position;
-    const oldHeight = slide.style.height;
-    const oldVisibility = slide.style.visibility;
-    const oldOpacity = slide.style.opacity;
-
-    slide.style.position = 'relative';
-    slide.style.height = 'auto';
-    slide.style.visibility = 'hidden';
-    slide.style.opacity = '1';
-
-    info.style.height = 'auto';
-
-    maxHeight = Math.max(
-      maxHeight,
-      info.scrollHeight + 110
-    );
-
-    slide.style.position = oldPosition;
-    slide.style.height = oldHeight;
-    slide.style.visibility = oldVisibility;
-    slide.style.opacity = oldOpacity;
-
-    info.style.height = '';
-  });
-
-  if (maxHeight < 520) {
-    maxHeight = 520;
+  if (height > 0) {
+    wrapper.style.minHeight =
+      height + 'px';
   }
-
-  if (window.innerWidth <= 768 && maxHeight < 560) {
-    maxHeight = 560;
-  }
-
-  if (window.innerWidth <= 480 && maxHeight < 600) {
-    maxHeight = 600;
-  }
-
-  slider.style.height = `${maxHeight}px`;
-  wrapper.style.height = `${maxHeight}px`;
-
-  slides.forEach(slide => {
-    slide.style.height = `${maxHeight}px`;
-  });
 }
 
 
 /* ==========================================
-   로봇 데이터 불러오기
+   로봇 데이터 로드
    ========================================== */
 
 async function loadRobotSlides() {
 
+  if (robotLoadInProgress) return;
+
   const wrapper =
     document.getElementById('robot-slides-wrapper');
 
-  const dotsContainer =
+  const dots =
     document.getElementById('robot-dots');
 
-  if (
-    !wrapper ||
-    !dotsContainer ||
-    robotLoadInProgress
-  ) {
-    return;
-  }
+  if (!wrapper || !dots) return;
 
   robotLoadInProgress = true;
 
   try {
-
-    renderRobotMessage(
-      'ROBOT GALLERY',
-      '로봇 데이터를 불러오는 중...'
-    );
 
     const snapshot =
       await getDocs(
@@ -195,198 +136,47 @@ async function loadRobotSlides() {
 
     snapshot.forEach(docSnap => {
 
-      const data = docSnap.data() || {};
-
-      const imgUrl =
-        String(data.imgUrl || '').trim();
-
-      const name =
-        String(data.name || '').trim();
-
-      const season =
-        String(data.season || '').trim();
-
-      if (!imgUrl || !name || !season) {
-        return;
-      }
-
       robotSlidesData.push({
         id: docSnap.id,
-        season,
-        name,
-        imgUrl,
-        description:
-          String(data.description || '').trim(),
-        createdAt:
-          data.createdAt || 0
+        ...docSnap.data()
       });
+
     });
 
 
-    /* 시즌 기준 정렬 */
-
-    robotSlidesData.sort((a, b) => {
-
-      const yearA =
-        parseInt(a.season.match(/\d{4}/)?.[0] || '0');
-
-      const yearB =
-        parseInt(b.season.match(/\d{4}/)?.[0] || '0');
-
-      return yearB - yearA;
-    });
+    robotSlidesData.sort(
+      (a, b) =>
+        (b.createdAt || 0) -
+        (a.createdAt || 0)
+    );
 
 
-    /* 등록된 로봇이 없을 때 */
+    currentRobotIndex = 0;
 
-    if (robotSlidesData.length === 0) {
+
+    if (!robotSlidesData.length) {
 
       renderRobotMessage(
-        'ROBOT GALLERY',
-        '등록된 로봇이 없습니다.'
+        '등록된 로봇이 없습니다.',
+        '관리자 패널에서 새로운 로봇을 등록해주세요.'
       );
 
       return;
     }
 
 
-    /* ==========================================
-       슬라이드 생성
-       ========================================== */
-
-    wrapper.innerHTML =
-      robotSlidesData.map((robot, index) => {
-
-        const seasonText = robot.season;
-
-        const match =
-          seasonText.match(/^(\d{4})\s*(.*)$/);
-
-        const year =
-          match ? match[1] : seasonText;
-
-        const game =
-          match && match[2]
-            ? match[2].trim()
-            : '';
-
-        const safeImgUrl =
-          robot.imgUrl
-            .replace(/\\/g, '\\\\')
-            .replace(/'/g, '%27')
-            .replace(/\)/g, '%29');
-
-        return `
-          <div
-            class="sp-slide ${index === 0 ? 'active' : ''}"
-            data-index="${index}"
-          >
-
-            <div
-              class="robot-bg"
-              style="background-image:url('${safeImgUrl}')"
-            ></div>
-
-            <div class="robot-info">
-
-              <div class="robot-year">
-                ${escapeRobotHtml(year)}
-              </div>
-
-              ${
-                game
-                  ? `
-                    <div class="robot-game">
-                      ${escapeRobotHtml(game)}
-                    </div>
-                  `
-                  : ''
-              }
-
-              <div class="robot-name">
-                ${escapeRobotHtml(robot.name)}
-              </div>
-
-              <div class="robot-line"></div>
-
-              <div class="robot-description">
-                ${escapeRobotHtml(robot.description)}
-              </div>
-
-              ${
-                window.isAdmin
-                  ? `
-                    <button
-                      type="button"
-                      class="dash-btn-sm robot-delete"
-                      onclick="deleteRobot('${escapeRobotHtml(robot.id)}')"
-                    >
-                      삭제
-                    </button>
-                  `
-                  : ''
-              }
-
-            </div>
-
-          </div>
-        `;
-
-      }).join('');
-
-
-    /* ==========================================
-       점 생성
-       ========================================== */
-
-    dotsContainer.innerHTML =
-      robotSlidesData.map((_, index) => `
-        <span
-          class="slider-dot ${index === 0 ? 'active' : ''}"
-          onclick="goToRobotSlide(${index})"
-        ></span>
-      `).join('');
-
-
-    currentRobotIndex = 0;
-
-    updateRobotSlideUI();
-
-
-    /*
-     * 이미지가 로딩된 뒤 실제 높이를 다시 계산
-     */
-
-    const images = [];
-
-    robotSlidesData.forEach(robot => {
-
-      const img = new Image();
-
-      img.onload = () => {
-        fitRobotSliderHeight();
-      };
-
-      img.src = robot.imgUrl;
-
-      images.push(img);
-    });
-
-
-    setTimeout(fitRobotSliderHeight, 50);
-    setTimeout(fitRobotSliderHeight, 300);
-    setTimeout(fitRobotSliderHeight, 800);
+    renderRobotSlides();
 
   } catch (error) {
 
     console.error(
-      '[TURTLESS] 로봇 불러오기 오류:',
+      '[TURTLESS] 로봇 데이터 로드 오류:',
       error
     );
 
     renderRobotMessage(
-      'ERROR',
-      '로봇 데이터를 불러오지 못했습니다.'
+      '로봇 데이터를 불러오지 못했습니다.',
+      error.message
     );
 
   } finally {
@@ -398,56 +188,215 @@ async function loadRobotSlides() {
 
 
 /* ==========================================
-   슬라이드 UI
+   로봇 슬라이드 렌더링
    ========================================== */
 
-function updateRobotSlideUI() {
+function renderRobotSlides() {
 
-  const slides =
-    document.querySelectorAll(
-      '#robot-slides-wrapper .sp-slide'
-    );
+  const wrapper =
+    document.getElementById('robot-slides-wrapper');
 
   const dots =
-    document.querySelectorAll(
-      '#robot-dots .slider-dot'
-    );
+    document.getElementById('robot-dots');
 
-  slides.forEach((slide, index) => {
+  if (!wrapper || !dots) return;
 
-    slide.classList.toggle(
-      'active',
-      index === currentRobotIndex
-    );
 
-  });
+  let slidesHtml = '';
+  let dotsHtml = '';
 
-  dots.forEach((dot, index) => {
 
-    dot.classList.toggle(
-      'active',
-      index === currentRobotIndex
-    );
+  robotSlidesData.forEach(
+    (robot, index) => {
 
-  });
+      const season =
+        escapeRobotHtml(
+          robot.season || ''
+        );
+
+      const name =
+        escapeRobotHtml(
+          robot.name || '이름 없음'
+        );
+
+      const description =
+        escapeRobotHtml(
+          robot.description || ''
+        ).replace(/\n/g, '<br>');
+
+      const image =
+        robot.imgUrl ||
+        robot.file ||
+        '';
+
+
+      slidesHtml += `
+        <div
+          class="sp-slide ${index === currentRobotIndex ? 'active' : ''}"
+          data-index="${index}"
+        >
+
+          <div class="sp-left">
+
+            ${
+              image
+                ? `
+                  <img
+                    src="${image}"
+                    alt="${name}"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  >
+                `
+                : `
+                  <div class="robot-no-image">
+                    ROBOT
+                  </div>
+                `
+            }
+
+          </div>
+
+
+          <div class="sp-right">
+
+            <div class="robot-info">
+
+              <div class="robot-year">
+                ${season}
+              </div>
+
+              <div class="robot-game">
+                ${name}
+              </div>
+
+              <div class="robot-line"></div>
+
+              <div class="robot-description">
+                ${description}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+
+      dotsHtml += `
+        <button
+          type="button"
+          class="slider-dot ${index === currentRobotIndex ? 'active' : ''}"
+          onclick="goToRobotSlide(${index})"
+          aria-label="${name} 보기"
+        ></button>
+      `;
+
+    }
+  );
+
+
+  wrapper.innerHTML =
+    slidesHtml;
+
+  dots.innerHTML =
+    dotsHtml;
+
+
+  updateRobotSlideUI();
+
+  setTimeout(
+    fitRobotSliderHeight,
+    50
+  );
 }
 
 
 /* ==========================================
-   이전 / 다음
+   슬라이드 UI 업데이트
    ========================================== */
 
-function moveRobotSlide(step) {
+function updateRobotSlideUI() {
+
+  const wrapper =
+    document.getElementById('robot-slides-wrapper');
+
+  const dots =
+    document.getElementById('robot-dots');
+
+  if (!wrapper || !dots) return;
+
+  const slides =
+    wrapper.querySelectorAll('.sp-slide');
+
+  const dotList =
+    dots.querySelectorAll('.slider-dot');
+
+
+  slides.forEach(
+    (slide, index) => {
+
+      slide.classList.toggle(
+        'active',
+        index === currentRobotIndex
+      );
+
+    }
+  );
+
+
+  dotList.forEach(
+    (dot, index) => {
+
+      dot.classList.toggle(
+        'active',
+        index === currentRobotIndex
+      );
+
+    }
+  );
+
+
+  setTimeout(
+    fitRobotSliderHeight,
+    50
+  );
+}
+
+
+/* ==========================================
+   이전 / 다음 슬라이드
+   ========================================== */
+
+function moveRobotSlide(direction) {
 
   if (!robotSlidesData.length) return;
 
-  currentRobotIndex =
-    (
-      currentRobotIndex +
-      step +
-      robotSlidesData.length
-    ) %
-    robotSlidesData.length;
+
+  currentRobotIndex += direction;
+
+
+  if (
+    currentRobotIndex <
+    0
+  ) {
+
+    currentRobotIndex =
+      robotSlidesData.length - 1;
+
+  }
+
+
+  if (
+    currentRobotIndex >=
+    robotSlidesData.length
+  ) {
+
+    currentRobotIndex = 0;
+
+  }
+
 
   updateRobotSlideUI();
 }
@@ -478,21 +427,44 @@ function goToRobotSlide(index) {
    관리자 모달
    ========================================== */
 
+/*
+ * 기존 코드의 문제:
+ *
+ * HTML에는
+ * id="robot-admin-modal"
+ *
+ * 로 되어 있는데 JS에서는
+ * id="robot-modal"
+ *
+ * 을 찾고 있었음.
+ *
+ * 따라서 버튼을 눌러도 실제 모달을 찾지 못했음.
+ */
+
 function openRobotModal() {
 
   const modal =
-    document.getElementById('robot-modal');
+    document.getElementById(
+      'robot-admin-modal'
+    );
 
-  if (modal) {
-    modal.style.display = 'flex';
+  if (!modal) {
+    console.error(
+      '[TURTLESS] robot-admin-modal을 찾을 수 없습니다.'
+    );
+    return;
   }
+
+  modal.style.display = 'flex';
 }
 
 
 function closeRobotModal() {
 
   const modal =
-    document.getElementById('robot-modal');
+    document.getElementById(
+      'robot-admin-modal'
+    );
 
   if (modal) {
     modal.style.display = 'none';
@@ -507,16 +479,24 @@ function closeRobotModal() {
 async function saveRobotToFirebase() {
 
   const season =
-    document.getElementById('rb-season')?.value.trim();
+    document.getElementById(
+      'rb-season'
+    )?.value.trim();
 
   const name =
-    document.getElementById('rb-name')?.value.trim();
+    document.getElementById(
+      'rb-name'
+    )?.value.trim();
 
   const description =
-    document.getElementById('rb-desc')?.value.trim();
+    document.getElementById(
+      'rb-desc'
+    )?.value.trim();
 
   const fileInput =
-    document.getElementById('rb-file');
+    document.getElementById(
+      'rb-file'
+    );
 
 
   if (
@@ -526,7 +506,9 @@ async function saveRobotToFirebase() {
     !fileInput?.files?.[0]
   ) {
 
-    alert('모든 항목을 입력해주세요.');
+    alert(
+      '모든 항목을 입력해주세요.'
+    );
 
     return;
   }
@@ -534,17 +516,24 @@ async function saveRobotToFirebase() {
 
   try {
 
-    alert('사진 업로드 중...');
+    alert(
+      '사진 업로드 중...'
+    );
 
 
-    /* Cloudinary 업로드 */
+    /* ======================================
+       Cloudinary 업로드
+       ====================================== */
 
-    const formData = new FormData();
+    const formData =
+      new FormData();
+
 
     formData.append(
       'upload_preset',
       'ml_default'
     );
+
 
     formData.append(
       'file',
@@ -572,49 +561,84 @@ async function saveRobotToFirebase() {
         data.error?.message ||
         'Cloudinary 사진 업로드에 실패했습니다.'
       );
+
     }
 
 
-    /* Firebase 저장 */
+    /* ======================================
+       Firebase 저장
+       ====================================== */
 
     await addDoc(
-      collection(robotDb, 'robots'),
+      collection(
+        robotDb,
+        'robots'
+      ),
       {
         season,
         name,
-        imgUrl: data.secure_url,
+        imgUrl:
+          data.secure_url,
         description,
-        createdAt: Date.now()
+        createdAt:
+          Date.now()
       }
     );
 
 
-    alert('성공적으로 등록되었습니다!');
+    alert(
+      '성공적으로 등록되었습니다!'
+    );
 
+
+    /* ======================================
+       모달 닫기
+       ====================================== */
 
     closeRobotModal();
 
 
-    /* 입력창 초기화 */
+    /* ======================================
+       입력창 초기화
+       ====================================== */
 
-    document.getElementById(
-      'rb-season'
-    ).value = '';
+    const seasonInput =
+      document.getElementById(
+        'rb-season'
+      );
 
-    document.getElementById(
-      'rb-name'
-    ).value = '';
+    const nameInput =
+      document.getElementById(
+        'rb-name'
+      );
 
-    document.getElementById(
-      'rb-desc'
-    ).value = '';
+    const descInput =
+      document.getElementById(
+        'rb-desc'
+      );
 
-    document.getElementById(
-      'rb-file'
-    ).value = '';
 
+    if (seasonInput)
+      seasonInput.value = '';
+
+
+    if (nameInput)
+      nameInput.value = '';
+
+
+    if (descInput)
+      descInput.value = '';
+
+
+    fileInput.value = '';
+
+
+    /* ======================================
+       로봇 목록 새로고침
+       ====================================== */
 
     await loadRobotSlides();
+
 
   } catch (error) {
 
@@ -623,10 +647,12 @@ async function saveRobotToFirebase() {
       error
     );
 
+
     alert(
       '등록 중 오류 발생: ' +
       error.message
     );
+
   }
 }
 
@@ -649,14 +675,21 @@ async function deleteRobot(docId) {
   try {
 
     await deleteDoc(
-      doc(robotDb, 'robots', docId)
+      doc(
+        robotDb,
+        'robots',
+        docId
+      )
     );
 
 
-    alert('삭제되었습니다.');
+    alert(
+      '삭제되었습니다.'
+    );
 
 
     await loadRobotSlides();
+
 
   } catch (error) {
 
@@ -665,10 +698,12 @@ async function deleteRobot(docId) {
       error
     );
 
+
     alert(
       '삭제 실패: ' +
       error.message
     );
+
   }
 }
 
@@ -700,53 +735,61 @@ window.deleteRobot =
 
 
 /* ==========================================
-   페이지 이동
+   기존 공통 navigate와 연결
    ========================================== */
 
 const originalNavigateForRobot =
   window.navigate;
+
 
 if (
   typeof originalNavigateForRobot ===
   'function'
 ) {
 
-  window.navigate = function (
-    pageId,
-    pushHistory = true
-  ) {
-
-    originalNavigateForRobot(
+  window.navigate =
+    function (
       pageId,
-      pushHistory
-    );
-
-
-    if (
-      pageId === 'intro_robot' ||
-      pageId === 'page-intro_robot'
+      pushHistory = true
     ) {
 
-      setTimeout(
-        () => loadRobotSlides(),
-        100
+      originalNavigateForRobot(
+        pageId,
+        pushHistory
       );
 
-      const adminTools =
-        document.getElementById(
-          'robot-admin-tools'
-        );
 
       if (
-        adminTools &&
-        window.isAdmin
+        pageId === 'intro_robot' ||
+        pageId === 'page-intro_robot'
       ) {
 
-        adminTools.style.display =
-          'block';
+        setTimeout(
+          () => loadRobotSlides(),
+          100
+        );
+
+
+        const adminTools =
+          document.getElementById(
+            'robot-admin-tools'
+          );
+
+
+        if (
+          adminTools &&
+          window.isAdmin
+        ) {
+
+          adminTools.style.display =
+            'block';
+
+        }
+
       }
-    }
-  };
+
+    };
+
 }
 
 
