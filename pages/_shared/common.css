@@ -1284,6 +1284,19 @@ footer * {
   #home-sponsor-slider .sp-right,#page-sponsor-slider .sp-right{padding:20px 18px 76px!important;}
   #home-sponsor-slider .sp-right h3,#page-sponsor-slider .sp-right h3{font-size:1.3rem!important;}
   #home-sponsor-slider .sp-right p,#page-sponsor-slider .sp-right p{font-size:.8rem!important;}
+
+  /* 팀원 로그인 비밀번호 입력창 */
+#login-modal #password {
+  font-family: Arial, sans-serif !important;
+  color: #000 !important;
+  -webkit-text-security: disc;
+}
+
+#login-modal #password::placeholder {
+  font-family: inherit;
+  color: #999;
+  -webkit-text-security: none;
+}
   #home-sponsor-slider .sp-nav,#page-sponsor-slider .sp-nav{left:8px!important;right:8px!important;}
   #home-sponsor-slider .sp-nav .slider-control-btn,#page-sponsor-slider .sp-nav .slider-control-btn{width:34px!important;height:34px!important;min-width:34px!important;flex-basis:34px!important;}
 }
