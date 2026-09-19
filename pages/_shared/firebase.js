@@ -320,27 +320,115 @@ alert("저장 실패: " + e.message);
 };
 
 window.uploadProfileImage = async (input, fieldName) => {
-if(!input.files || !input.files[0] || !currentUserId) return;
-try {
-alert("업로드 중...");
-const formData = new FormData(); 
-// 1. ImgBB의 key와 image 대신 Cloudinary의 upload_preset과 file을 사용합니다.
-formData.append("upload_preset", "ml_default"); 
-formData.append("file", input.files[0]);
+    if (!input || !input.files || !input.files[0]) return;
 
-// 2. Cloudinary API 주소로 요청을 보냅니다. (k8m3zaye 자리에 본인의 Cloud Name이 맞는지 확인하세요)
-const response = await fetch("https://api.cloudinary.com/v1_1/k8m3zaye/image/upload", { method: 'POST', body: formData });
-const data = await response.json();
+    if (!currentUserId) {
+        alert("로그인 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+        input.value = '';
+        return;
+    }
 
-// 3. ImgBB의 data.success 대신 Cloudinary의 data.secure_url(이미지 주소)이 있는지 확인합니다.
-if (data.secure_url) {
-let updateData = {}; 
-// 4. DB에 저장할 때 data.data.url 대신 data.secure_url을 저장합니다.
-updateData[fieldName] = data.secure_url;
-await updateDoc(doc(db, "users", currentUserId), updateData);
-alert("성공적으로 변경되었습니다!"); loadMembers();
-} else { alert("업로드 실패"); }
-} catch(e) { alert("오류: " + e.message); }
+    if (fieldName !== 'profileImage' && fieldName !== 'profileHoverImage') {
+        console.error('[TURTLESS] 잘못된 프로필 이미지 필드:', fieldName);
+        alert('프로필 이미지 저장 항목을 확인할 수 없습니다.');
+        input.value = '';
+        return;
+    }
+
+    try {
+        alert("업로드 중...");
+
+        const file = input.files[0];
+
+        const formData = new FormData();
+        formData.append("upload_preset", "ml_default");
+        formData.append("file", file);
+
+        const response = await fetch(
+            "https://api.cloudinary.com/v1_1/k8m3zaye/image/upload",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.secure_url) {
+            console.error("[TURTLESS] Cloudinary 업로드 실패:", data);
+            throw new Error(
+                data?.error?.message ||
+                "Cloudinary 업로드에 실패했습니다."
+            );
+        }
+
+        const imageUrl = data.secure_url;
+
+        const userRef = doc(db, "users", currentUserId);
+
+        // 현재 로그인한 본인의 Firebase 문서 확인
+        const beforeSnap = await getDoc(userRef);
+
+        if (!beforeSnap.exists()) {
+            throw new Error(
+                "현재 로그인한 팀원의 Firebase 문서를 찾을 수 없습니다. 다시 로그인해주세요."
+            );
+        }
+
+        console.log("[TURTLESS] 프로필 이미지 저장:", {
+            userId: currentUserId,
+            fieldName: fieldName,
+            imageUrl: imageUrl
+        });
+
+        // 본인 문서에만 이미지 URL 저장
+        await updateDoc(userRef, {
+            [fieldName]: imageUrl
+        });
+
+        // 실제 Firebase에 저장됐는지 다시 확인
+        const afterSnap = await getDoc(userRef);
+
+        if (!afterSnap.exists()) {
+            throw new Error(
+                "Firebase 사용자 문서를 다시 불러오지 못했습니다."
+            );
+        }
+
+        const afterData = afterSnap.data();
+
+        if (afterData[fieldName] !== imageUrl) {
+            console.error("[TURTLESS] Firebase 저장 검증 실패:", {
+                userId: currentUserId,
+                fieldName: fieldName,
+                expected: imageUrl,
+                actual: afterData[fieldName]
+            });
+
+            throw new Error(
+                "Firebase에 사진 주소가 정상적으로 저장되지 않았습니다."
+            );
+        }
+
+        // 현재 세션 데이터도 최신값으로 갱신
+        currentUserData = afterData;
+
+        input.value = "";
+
+        alert("성공적으로 변경되었습니다!");
+
+        await loadMembers();
+
+    } catch (e) {
+        console.error(
+            "[TURTLESS] 프로필 이미지 업로드 오류:",
+            e
+        );
+
+        input.value = "";
+
+        alert("오류: " + e.message);
+    }
 };
 
 window.resetProfileImage = async () => {
