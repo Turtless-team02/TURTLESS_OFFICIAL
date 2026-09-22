@@ -1,51 +1,25 @@
-/* =========================================================
-   TURTLESS Mobile Final Fix
-   기존 CSS를 건드리지 않고 마지막에 덮어쓰기
-   ========================================================= */
+/* TURTLESS Mobile Final Fix - minimal override */
 
 @media (max-width: 768px) {
-
-  /* =======================================================
-     1. HOME - YouTube
-     ======================================================= */
-
+  /* HOME - YouTube */
   #page-home .home-youtube-panel,
   .home-youtube-panel {
     width: 100% !important;
+    max-width: 100% !important;
     min-width: 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
+    box-sizing: border-box !important;
     overflow: hidden !important;
   }
 
   #page-home .home-youtube-panel iframe,
-  .home-youtube-panel iframe,
-  #page-home .home-youtube-panel video,
-  .home-youtube-panel video {
+  .home-youtube-panel iframe {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    aspect-ratio: 16 / 9 !important;
-    object-fit: cover !important;
+    box-sizing: border-box !important;
   }
 
-  /* iframe를 감싸는 영상 영역 */
-  #page-home .youtube-wrap,
-  #page-home .youtube-container,
-  #page-home .youtube-frame,
-  .home-youtube-panel > div {
-    max-width: 100% !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-  }
-
-
-  /* =======================================================
-     2. FOOTER - 새로 추가한 서울교육청 / 상상 이미지
-     ======================================================= */
-
+  /* FOOTER - 교육청 / 상상 이미지 */
   footer {
     overflow: hidden !important;
   }
@@ -62,51 +36,22 @@
   }
 
   footer > div[style*="position:absolute"][style*="bottom:45px"] img {
-    width: min(220px, 70vw) !important;
     max-width: 100% !important;
     height: auto !important;
-    object-fit: contain !important;
   }
 
-
-  /* =======================================================
-     3. TEAM INTRO - 모바일 노트북
-     ======================================================= */
+  /* TEAM INTRO - 기존 노트 디자인 유지 */
+  #page-intro_team,
+  #page-intro_team .team-notebook,
+  #page-intro_team .team-notebook-pages,
+  #page-intro_team .team-note-page {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
 
   #page-intro_team {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding: 34px 12px 55px !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-  }
-
-  #page-intro_team .team-notebook {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    margin: 0 auto !important;
-    padding-left: 8px !important;
-    box-sizing: border-box !important;
-  }
-
-  #page-intro_team .team-note-page {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    padding: 30px 22px 42px 42px !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-  }
-
-  #page-intro_team .team-notebook-binding {
-    left: -3px !important;
-    top: 20px !important;
-    width: 48px !important;
-    height: 44px !important;
+    overflow-x: hidden !important;
   }
 
   #page-intro_team .team-note-page img {
@@ -116,181 +61,71 @@
 
   #page-intro_team .team-note-page h1,
   #page-intro_team .team-note-page h2,
-  #page-intro_team .team-note-page h3 {
-    max-width: 100% !important;
-    overflow-wrap: break-word !important;
-    word-break: keep-all !important;
-  }
-
+  #page-intro_team .team-note-page h3,
   #page-intro_team .team-note-page p,
   #page-intro_team .team-note-page li {
-    overflow-wrap: break-word !important;
-    word-break: keep-all !important;
+    overflow-wrap: anywhere !important;
   }
 
-
-  /* =======================================================
-     4. LOGO PAGE
-     ======================================================= */
+  /* LOGO - 기존 모바일 1열 구조 유지 */
+  #page-intro_logo,
+  #page-intro_logo .logo-brand-board,
+  #page-intro_logo .logo-brand-main,
+  #page-intro_logo .logo-brand-side,
+  #page-intro_logo .editable-content {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
 
   #page-intro_logo {
-    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  #page-intro_logo .editable-content img {
     max-width: 100% !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-  }
-
-  #page-intro_logo .logo-brand-board {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    grid-template-columns: 1fr !important;
-    min-height: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  #page-intro_logo .logo-brand-main,
-  #page-intro_logo .logo-brand-side {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  #page-intro_logo .logo-brand-main {
-    min-height: 320px !important;
-    padding: 42px 20px 30px !important;
-  }
-
-  #page-intro_logo .logo-brand-side {
-    min-height: 260px !important;
-    padding: 38px 20px 30px !important;
-    border-left: 0 !important;
-    border-top: 1px solid #dfe6ec !important;
-  }
-
-  #page-intro_logo .logo-brand-main .editable-content {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 240px !important;
-    box-sizing: border-box !important;
-  }
-
-  #page-intro_logo .logo-brand-main .editable-content img {
-    display: block !important;
-    width: auto !important;
-    max-width: 88% !important;
-    max-height: 210px !important;
     height: auto !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
   }
 
-
-  /* =======================================================
-     5. ROBOT PAGE
-     ======================================================= */
-
-  #robot-slider {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-  }
-
-  #robot-slides-wrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-  }
-
+  /* ROBOT - 기존 슬라이더 유지 */
+  #page-intro_robot,
+  #intro_robot,
+  #robot-slider,
+  #robot-slides-wrapper,
   #robot-slider .sp-slide {
-    width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #page-intro_robot {
+    overflow-x: hidden !important;
+  }
+
+  #robot-slider img {
+    max-width: 100% !important;
     height: auto !important;
-    min-height: 0 !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
   }
 
-  #robot-slider .robot-info {
-    width: 100% !important;
+  #robot-slider .robot-description {
+    overflow-wrap: anywhere !important;
+  }
+
+  /* ENGINEERING NOTE */
+  #engineering_note,
+  #engineering_note > .inner,
+  #engineering_note .content-card,
+  #engineering_note #mhtml-viewer {
     max-width: 100% !important;
     min-width: 0 !important;
-    padding: 30px 22px 78px !important;
     box-sizing: border-box !important;
   }
-
-  #robot-slider .robot-game,
-  #robot-slider .robot-name,
-  #robot-slider .robot-description {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  #robot-slider .robot-game {
-    font-size: clamp(1.8rem, 9vw, 2.6rem) !important;
-    line-height: 1.05 !important;
-  }
-
-  #robot-slider .robot-name {
-    font-size: clamp(1.25rem, 6vw, 1.8rem) !important;
-    overflow-wrap: break-word !important;
-  }
-
-  #robot-slider .robot-description {
-    font-size: .86rem !important;
-    line-height: 1.7 !important;
-    overflow-wrap: break-word !important;
-    word-break: keep-all !important;
-  }
-
-  #robot-slider .sp-nav {
-    max-width: calc(100% - 28px) !important;
-  }
-
-
-  /* =======================================================
-     6. ENGINEERING NOTE
-     ======================================================= */
 
   #engineering_note {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
     overflow-x: hidden !important;
-    box-sizing: border-box !important;
-  }
-
-  #engineering_note > .inner {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-    box-sizing: border-box !important;
-  }
-
-  #engineering_note .content-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    overflow-x: auto !important;
   }
 
   #engineering_note #mhtml-viewer {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
     overflow-x: auto !important;
   }
 
@@ -299,158 +134,30 @@
     height: auto !important;
   }
 
-
-  /* =======================================================
-     7. SPONSOR SLIDER
-     ======================================================= */
-
+  /* SPONSOR SLIDER - 기존 모바일 배치 유지 */
   #home-sponsor-slider,
   #page-sponsor-slider {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    height: auto !important;
-    min-height: 470px !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
   }
 
   #home-sponsor-slider .sp-slide,
-  #page-sponsor-slider .sp-slide {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    height: auto !important;
-    min-height: 470px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-  }
-
+  #page-sponsor-slider .sp-slide,
   #home-sponsor-slider .sp-left,
-  #page-sponsor-slider .sp-left {
-    width: 100% !important;
+  #home-sponsor-slider .sp-right,
+  #page-sponsor-slider .sp-left,
+  #page-sponsor-slider .sp-right {
     max-width: 100% !important;
     min-width: 0 !important;
-    flex: 0 0 auto !important;
-    min-height: 185px !important;
-    padding: 28px 20px 12px !important;
     box-sizing: border-box !important;
   }
 
-  #home-sponsor-slider .sp-left img,
-  #page-sponsor-slider .sp-left img {
-    display: block !important;
-    width: auto !important;
-    max-width: 68% !important;
-    max-height: 125px !important;
+  #home-sponsor-slider img,
+  #page-sponsor-slider img {
+    max-width: 100% !important;
     height: auto !important;
-    margin: 0 auto !important;
-    object-fit: contain !important;
   }
-
-  #home-sponsor-slider .sp-right,
-  #page-sponsor-slider .sp-right {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    flex: 1 1 auto !important;
-    padding: 12px 24px 68px !important;
-    box-sizing: border-box !important;
-    text-align: center !important;
-  }
-
-  #home-sponsor-slider .sp-right h3,
-  #page-sponsor-slider .sp-right h3 {
-    font-size: clamp(1.7rem, 8vw, 2.2rem) !important;
-    line-height: 1.15 !important;
-    overflow-wrap: break-word !important;
-  }
-
-  #home-sponsor-slider .sp-right p,
-  #page-sponsor-slider .sp-right p {
-    font-size: .84rem !important;
-    line-height: 1.65 !important;
-    overflow-wrap: break-word !important;
-    word-break: keep-all !important;
-  }
-
-  #home-sponsor-slider .sp-nav,
-  #page-sponsor-slider .sp-nav {
-    left: 50% !important;
-    right: auto !important;
-    bottom: 18px !important;
-    transform: translateX(-50%) !important;
-    width: calc(100% - 32px) !important;
-    max-width: 320px !important;
-    box-sizing: border-box !important;
-  }
-}
-
-
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
-
-@media (max-width: 430px) {
-
-  #page-intro_team {
-    padding-left: 7px !important;
-    padding-right: 7px !important;
-  }
-
-  #page-intro_team .team-note-page {
-    padding: 25px 15px 38px 34px !important;
-  }
-
-  #page-intro_team .team-notebook-binding {
-    width: 40px !important;
-    height: 40px !important;
-    left: -2px !important;
-  }
-
-  #page-intro_logo .logo-brand-main {
-    padding: 34px 14px 25px !important;
-    min-height: 280px !important;
-  }
-
-  #page-intro_logo .logo-brand-side {
-    padding: 32px 14px 25px !important;
-  }
-
-  #page-intro_logo .logo-brand-main .editable-content img {
-    max-width: 94% !important;
-    max-height: 180px !important;
-  }
-
-  #robot-slider .robot-info {
-    padding-left: 17px !important;
-    padding-right: 17px !important;
-  }
-
-  #home-sponsor-slider,
-  #page-sponsor-slider,
-  #home-sponsor-slider .sp-slide,
-  #page-sponsor-slider .sp-slide {
-    min-height: 450px !important;
-  }
-
-  #home-sponsor-slider .sp-left,
-  #page-sponsor-slider .sp-left {
-    min-height: 160px !important;
-  }
-
-  #home-sponsor-slider .sp-left img,
-  #page-sponsor-slider .sp-left img {
-    max-width: 62% !important;
-    max-height: 105px !important;
-  }
-
-  #home-sponsor-slider .sp-right,
-  #page-sponsor-slider .sp-right {
-    padding-left: 17px !important;
-    padding-right: 17px !important;
-  }
-
 }
