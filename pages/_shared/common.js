@@ -350,12 +350,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const logoEl = document.querySelector('.logo');
 
   if (logoEl) {
-    logoEl.addEventListener('click', () => {
+    logoEl.addEventListener('click', (e) => {
+      // 홈 화면에서는 로고 클릭으로 페이지가 새로고침되지 않게 함
+      const isHome =
+        location.pathname === '/TURTLESS_OFFICIAL/' ||
+        location.pathname === '/TURTLESS_OFFICIAL/index.html' ||
+        location.pathname.endsWith('/TURTLESS_OFFICIAL');
+
+      if (!isHome) return;
+
+      e.preventDefault();
+
       logoClicks++;
 
       clearTimeout(logoTimer);
 
-      if (logoClicks === 7) {
+      if (logoClicks >= 7) {
         triggerSolitaireCascade();
         logoClicks = 0;
       }
