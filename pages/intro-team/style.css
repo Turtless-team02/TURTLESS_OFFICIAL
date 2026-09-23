@@ -483,3 +483,54 @@
   .team-notebook-pages{height:600px!important}
   .team-notebook-pages .team-note-page{-webkit-mask-image:radial-gradient(circle 6.5px at 11px 19px,transparent 0 4.5px,#000 5.5px);mask-image:radial-gradient(circle 6.5px at 11px 19px,transparent 0 4.5px,#000 5.5px)}
 }
+
+
+/* =========================================================
+   TEAM NOTE — PAGE 02
+   1페이지처럼 자유로운 줄글 입력 영역
+   ========================================================= */
+#page-intro_team .team-note-writing-content{
+  width:100%;
+  min-height:380px;
+  margin-top:28px;
+  padding:28px 34px;
+  box-sizing:border-box;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  color:#596774;
+  font-size:15px;
+  line-height:2;
+  letter-spacing:-.02em;
+  white-space:pre-wrap;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+  text-align:left;
+}
+
+#page-intro_team .team-note-writing-content:focus{
+  outline:none;
+}
+
+#page-intro_team .team-note-writing-content:empty::before{
+  content:'팀의 시작, 활동, 역할, 가치관, 목표 등을 자유롭게 작성해 주세요.';
+  color:#a4afb8;
+  pointer-events:none;
+}
+
+@media (max-width:800px){
+  #page-intro_team .team-note-writing-content{
+    min-height:360px;
+    padding:24px 22px;
+    font-size:14px;
+    line-height:1.9;
+  }
+}
+
+@media (max-width:520px){
+  #page-intro_team .team-note-writing-content{
+    min-height:340px;
+    padding:20px 16px;
+    font-size:13px;
+  }
+}
