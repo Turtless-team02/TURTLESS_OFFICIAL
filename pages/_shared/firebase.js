@@ -530,6 +530,7 @@ if (location.hash.startsWith('#act-')) { const targetEl = document.getElementByI
 loadYoutubeFallback();
 } catch(e){ loadYoutubeFallback(); }
 }
+window.loadActivities = loadActivities;
 window.toggleSocialContribution = async (id, current) => {
     try {
         await updateDoc(doc(db, "activities", id), {
