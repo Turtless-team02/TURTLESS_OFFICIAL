@@ -153,6 +153,90 @@
 <button class="action-btn" onclick="saveRobotToFirebase()">등록하기</button>
 </div>
 </div>
+
+<div class="modal-overlay" id="logo-admin-modal">
+  <div class="modal-content" style="max-width:520px; position:relative;">
+
+    <button
+      onclick="closeLogoAdminModal()"
+      style="
+        position:absolute;
+        top:18px;
+        right:18px;
+        border:none;
+        background:none;
+        font-size:25px;
+        cursor:pointer;
+      "
+    >×</button>
+
+    <h2 style="margin-bottom:8px; font-weight:900;">
+      🏷️ 팀 로고 관리
+    </h2>
+
+    <p style="
+      font-size:12px;
+      color:#777;
+      margin-bottom:24px;
+    ">
+      로고 1과 로고 2를 각각 업로드하거나 교체할 수 있습니다.
+    </p>
+
+    <div style="margin-bottom:20px;">
+      <label style="
+        display:block;
+        font-size:13px;
+        font-weight:800;
+        margin-bottom:8px;
+      ">
+        로고 1
+      </label>
+
+      <input
+        id="site-logo-file-1"
+        type="file"
+        accept="image/*"
+        style="width:100%;"
+      >
+    </div>
+
+    <div style="margin-bottom:25px;">
+      <label style="
+        display:block;
+        font-size:13px;
+        font-weight:800;
+        margin-bottom:8px;
+      ">
+        로고 2
+      </label>
+
+      <input
+        id="site-logo-file-2"
+        type="file"
+        accept="image/*"
+        style="width:100%;"
+      >
+    </div>
+
+    <button
+      onclick="saveSiteLogos()"
+      style="
+        width:100%;
+        padding:13px;
+        border:none;
+        border-radius:10px;
+        background:#111;
+        color:white;
+        font-weight:800;
+        cursor:pointer;
+      "
+    >
+      로고 변경사항 저장
+    </button>
+
+  </div>
+</div>
+
 <div id="member-actions">
 <h3 style="color: var(--primary-color); margin-bottom: 10px;">📋 팀원 대시보드</h3>
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
@@ -196,6 +280,7 @@
 <button onclick="openSponsorAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">후원사 슬라이더 관리</button>
 <button onclick="openCareerAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">💼 경력 사항 관리</button>
 <button onclick="openRobotModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🤖 로봇 소개 관리</button>
+<button onclick="openLogoAdminModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🏷️ 팀 로고 관리</button>
 <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
 </div>
 </div>
@@ -258,7 +343,45 @@
 <div class="logo-brand-board">
 <div class="logo-brand-main">
 <div class="logo-brand-eyebrow">TURTLESS / BRAND MARK</div>
-<div class="editable-content" id="b-logo">여기에 로고 설명 및 이미지를 입력하세요.</div>
+<div
+  id="team-logo-display"
+  style="
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:42px;
+    width:100%;
+    min-height:220px;
+  "
+>
+  <img
+    id="team-logo-1"
+    class="notranslate"
+    translate="no"
+    alt="TURTLESS 로고 1"
+    style="
+      display:none;
+      width:auto;
+      max-width:45%;
+      height:180px;
+      object-fit:contain;
+    "
+  >
+
+  <img
+    id="team-logo-2"
+    class="notranslate"
+    translate="no"
+    alt="TURTLESS 로고 2"
+    style="
+      display:none;
+      width:auto;
+      max-width:45%;
+      height:180px;
+      object-fit:contain;
+    "
+  >
+</div>
 </div>
 <div class="logo-brand-side">
 <span class="logo-side-index">01</span>

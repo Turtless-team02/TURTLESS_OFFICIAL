@@ -1475,6 +1475,168 @@ window.deleteCareer = async (id) => {
     }
 };
 
+
+// ============================================================
+// TURTLESS 팀 로고 관리
+// ============================================================
+
+window.loadSiteLogos = async () => {
+    const logo1 = document.getElementById('team-logo-1');
+    const logo2 = document.getElementById('team-logo-2');
+
+    if (!logo1 && !logo2) return;
+
+    try {
+        const snap = await getDoc(doc(db, "settings", "site_logos"));
+
+        if (!snap.exists()) {
+            if (logo1) logo1.style.display = 'none';
+            if (logo2) logo2.style.display = 'none';
+            return;
+        }
+
+        const data = snap.data() || {};
+
+        if (logo1) {
+            if (data.logo1) {
+                logo1.src = data.logo1;
+                logo1.style.display = 'block';
+            } else {
+                logo1.style.display = 'none';
+            }
+        }
+
+        if (logo2) {
+            if (data.logo2) {
+                logo2.src = data.logo2;
+                logo2.style.display = 'block';
+            } else {
+                logo2.style.display = 'none';
+            }
+        }
+
+    } catch (e) {
+        console.error("[TURTLESS] 로고 불러오기 실패:", e);
+    }
+};
+
+
+window.uploadSiteLogo = async (file) => {
+
+    if (!file) return '';
+
+    const formData = new FormData();
+
+    // 현재 TURTLESS에서 실제 사용 중인 Cloudinary 설정
+    formData.append("upload_preset", "ml_default");
+    formData.append("file", file);
+
+    const response = await fetch(
+        "https://api.cloudinary.com/v1_1/k8m3zaye/image/upload",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const data = await response.json();
+
+    if (!data.secure_url) {
+        throw new Error(
+            data.error?.message || "Cloudinary 업로드에 실패했습니다."
+        );
+    }
+
+    return data.secure_url;
+};
+
+
+window.openLogoAdminModal = () => {
+
+    if (currentUserData?.role !== 'admin') {
+        alert("관리자만 사용할 수 있습니다.");
+        return;
+    }
+
+    const modal = document.getElementById('logo-admin-modal');
+
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+};
+
+
+window.closeLogoAdminModal = () => {
+
+    const modal = document.getElementById('logo-admin-modal');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
+
+
+window.saveSiteLogos = async () => {
+
+    if (currentUserData?.role !== 'admin') {
+        alert("관리자만 사용할 수 있습니다.");
+        return;
+    }
+
+    const file1 = document.getElementById('site-logo-file-1');
+    const file2 = document.getElementById('site-logo-file-2');
+
+    try {
+
+        const oldSnap = await getDoc(
+            doc(db, "settings", "site_logos")
+        );
+
+        const oldData = oldSnap.exists()
+            ? oldSnap.data()
+            : {};
+
+        let logo1 = oldData.logo1 || '';
+        let logo2 = oldData.logo2 || '';
+
+        if (file1?.files?.[0]) {
+            alert("로고 1을 업로드하는 중입니다...");
+            logo1 = await window.uploadSiteLogo(file1.files[0]);
+        }
+
+        if (file2?.files?.[0]) {
+            alert("로고 2를 업로드하는 중입니다...");
+            logo2 = await window.uploadSiteLogo(file2.files[0]);
+        }
+
+        await setDoc(
+            doc(db, "settings", "site_logos"),
+            {
+                logo1: logo1,
+                logo2: logo2,
+                updatedAt: new Date().toISOString()
+            },
+            { merge: true }
+        );
+
+        await window.loadSiteLogos();
+
+        if (file1) file1.value = '';
+        if (file2) file2.value = '';
+
+        alert("팀 로고가 저장되었습니다.");
+
+        window.closeLogoAdminModal();
+
+    } catch (e) {
+
+        console.error("[TURTLESS] 팀 로고 저장 실패:", e);
+        alert("로고 저장 실패: " + e.message);
+
+    }
+};
+
+
 // --- 기타 네비게이션 ---
 window.toggleDrop = (id) => { document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('show'); }); document.getElementById(id).classList.toggle('show'); };
 window.openLoginModal = () => document.getElementById('login-modal').style.display='flex';
@@ -1486,6 +1648,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // ★ 페이지가 열릴 때 가장 먼저 로그인 상태 복구
   await restoreLoginSession();
+
+  // 팀 로고 불러오기
+  if (typeof window.loadSiteLogos === 'function') {
+    await window.loadSiteLogos();
+  }
 
 // 페이지를 새로 열거나 다른 페이지로 이동해도 편집모드 유지
 if (
