@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, query, where, orderBy, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -11,7 +12,8 @@ appId: "1:794305996729:web:cf7132e77cc5621c5bb868"
 };
 
 const app = initializeApp(firebaseConfig); 
-window.db = getFirestore(app); 
+window.db = getFirestore(app);
+window.auth = getAuth(app); 
 window.addDoc = addDoc;
 window.collection = collection;
 window.query = query;
@@ -760,71 +762,203 @@ function loadYoutubeFallback() {
     });
 }
 
+
+// --- Firebase Authentication 계정 전환 ---
+function getAuthEmail(userId) {
+  return `${userId}@turtless-web.firebaseapp.com`;
+}
+
+async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
+  if (!window.auth || !userId || !userData) return false;
+
+  const authEmail = getAuthEmail(userId);
+
+  // 이미 Auth UID가 연결되어 있으면 그대로 사용
+  if (userData.authUid) {
+    try {
+      await signInWithEmailAndPassword(window.auth, authEmail, oldPassword);
+      return true;
+    } catch (e) {
+      console.warn("[TURTLESS] 기존 Auth 로그인 실패:", e.code);
+      return false;
+    }
+  }
+
+  let authPassword = oldPassword;
+  let passwordChanged = false;
+
+  // Firebase Auth 최소 6자 정책 때문에 4~5자리만 새 비밀번호 설정
+  if (oldPassword.length < 6) {
+    const newPassword = prompt(
+      "보안 전환이 필요합니다.\n새 비밀번호를 6자 이상으로 설정해주세요."
+    );
+
+    if (newPassword === null) {
+      alert("보안 전환을 취소했습니다. 기존 방식으로 로그인합니다.");
+      return false;
+    }
+
+    if (newPassword.length < 6) {
+      alert("새 비밀번호는 6자 이상이어야 합니다.");
+      return false;
+    }
+
+    const confirmPassword = prompt("새 비밀번호를 한 번 더 입력해주세요.");
+
+    if (confirmPassword !== newPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return false;
+    }
+
+    authPassword = newPassword;
+    passwordChanged = true;
+  }
+
+  try {
+    const credential = await createUserWithEmailAndPassword(
+      window.auth,
+      authEmail,
+      authPassword
+    );
+
+    const authUid = credential.user.uid;
+
+    const updateData = {
+      authUid,
+      authMigrated: true,
+      authMigratedAt: Date.now()
+    };
+
+    // 4~5자리 사용자는 새 비밀번호를 임시로 기존 pass에도 반영
+    if (passwordChanged) {
+      updateData.pass = authPassword;
+    }
+
+    await updateDoc(doc(db, "users", userId), updateData);
+
+    currentUserData = {
+      ...userData,
+      ...updateData
+    };
+
+    alert(
+      passwordChanged
+        ? "보안 전환이 완료되었습니다. 새 비밀번호로 로그인하게 됩니다."
+        : "보안 전환이 완료되었습니다."
+    );
+
+    return true;
+
+  } catch (error) {
+    // 이미 같은 Auth 계정이 존재하는 경우
+    if (error.code === "auth/email-already-in-use") {
+      try {
+        const credential = await signInWithEmailAndPassword(
+          window.auth,
+          authEmail,
+          authPassword
+        );
+
+        await updateDoc(doc(db, "users", userId), {
+          authUid: credential.user.uid,
+          authMigrated: true,
+          authMigratedAt: Date.now(),
+          ...(passwordChanged ? { pass: authPassword } : {})
+        });
+
+        currentUserData = {
+          ...userData,
+          authUid: credential.user.uid,
+          authMigrated: true,
+          ...(passwordChanged ? { pass: authPassword } : {})
+        };
+
+        return true;
+      } catch (signInError) {
+        console.error("[TURTLESS] 기존 Auth 계정 연결 실패:", signInError);
+        alert("Firebase 계정 연결에 실패했습니다. 관리자에게 문의해주세요.");
+        return false;
+      }
+    }
+
+    console.error("[TURTLESS] Auth 계정 생성 실패:", error);
+    alert("보안 전환에 실패했습니다. 기존 로그인은 유지됩니다.");
+    return false;
+  }
+}
+
 // --- 로그인/로그아웃 및 기타 권한 ---
 
 window.firebaseLogin = async () => {
-const s = document.getElementById('school').value;
-const g = document.getElementById('grade').value;
-const n = document.getElementById('username').value.trim();
-const p = document.getElementById('password').value.trim();
+  try {
+    const s = document.getElementById('school').value;
+    const g = document.getElementById('grade').value;
+    const n = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value.trim();
 
-const snap = await getDocs(
-    query(
+    const snap = await getDocs(
+      query(
         collection(db, "users"),
-        where("school","==",s),
-        where("grade","==",g),
-        where("name","==",n),
-        where("pass","==",p)
-    )
-);
+        where("school", "==", s),
+        where("grade", "==", g),
+        where("name", "==", n),
+        where("pass", "==", p)
+      )
+    );
 
-if(!snap.empty) {
+    if (snap.empty) {
+      alert("인증 실패");
+      return;
+    }
 
-currentUserId = snap.docs[0].id;
-currentUserData = snap.docs[0].data();
-window.isAdmin = currentUserData?.role === 'admin';
+    currentUserId = snap.docs[0].id;
+    currentUserData = snap.docs[0].data();
+    window.isAdmin = currentUserData?.role === 'admin';
 
-// ★ 로그인 상태 저장
-sessionStorage.setItem('turtlessUserId', currentUserId);
+    // Firebase Authentication 계정 전환
+    await migrateUserToFirebaseAuth(currentUserId, currentUserData, p);
 
-alert(n + "님 인증 성공");
-closeLoginModal();
+    // 기존 로그인 상태 저장
+    sessionStorage.setItem('turtlessUserId', currentUserId);
 
-const welcomeMsg = document.getElementById('welcome-msg');
-if(welcomeMsg) {
-    welcomeMsg.innerText = `${s} ${g} [${n}]`;
-}
+    alert(n + "님 인증 성공");
+    closeLoginModal();
 
-const memberActions = document.getElementById('member-actions');
-if(memberActions) {
-    memberActions.style.display = 'block';
-}
+    const welcomeMsg = document.getElementById('welcome-msg');
+    if (welcomeMsg) {
+      welcomeMsg.innerText = `${s} ${g} [${n}]`;
+    }
 
-const adminPanel = document.getElementById('admin-panel');
-if(adminPanel && currentUserData?.role === 'admin') {
-    adminPanel.style.display = 'block';
-}
+    const memberActions = document.getElementById('member-actions');
+    if (memberActions) {
+      memberActions.style.display = 'block';
+    }
 
-const loginBtn = document.getElementById('main-login-btn');
-if(loginBtn) {
-    loginBtn.innerText = '로그아웃';
-    loginBtn.onclick = window.firebaseLogout;
-}
+    const adminPanel = document.getElementById('admin-panel');
+    if (adminPanel && currentUserData?.role === 'admin') {
+      adminPanel.style.display = 'block';
+    }
 
-const dateInput = document.getElementById('new-gal-date');
-if(dateInput) {
-    dateInput.valueAsDate = new Date();
-}
+    const loginBtn = document.getElementById('main-login-btn');
+    if (loginBtn) {
+      loginBtn.innerText = '로그아웃';
+      loginBtn.onclick = window.firebaseLogout;
+    }
 
-loadActivities();
-loadGallery();
-loadMembers();
+    const dateInput = document.getElementById('new-gal-date');
+    if (dateInput) {
+      dateInput.valueAsDate = new Date();
+    }
 
-} else {
-alert("인증 실패");
-}
+    loadActivities();
+    loadGallery();
+    loadMembers();
+
+  } catch (error) {
+    console.error("[TURTLESS] 로그인 오류:", error);
+    alert("로그인 중 오류가 발생했습니다.");
+  }
 };
-
 
 // ★ 페이지 이동 후 저장된 로그인 상태 복구
 async function restoreLoginSession() {
