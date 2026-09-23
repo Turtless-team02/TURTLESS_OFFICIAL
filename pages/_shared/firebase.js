@@ -851,6 +851,13 @@ loadActivities();
 loadGallery();
 loadMembers();
 
+// 페이지 이동 후에도 관리자 직접 편집 모드 복구
+setTimeout(() => {
+    if (typeof window.restoreEditMode === 'function') {
+        window.restoreEditMode();
+    }
+}, 0);
+
 } catch(error) {
 
 console.error('[TURTLESS] 로그인 세션 복구 실패:', error);
@@ -892,8 +899,12 @@ if(loginBtn) {
     loginBtn.onclick = openLoginModal;
 }
 
-if(isEditMode) {
-    window.toggleEditMode();
+// 로그아웃하면 직접 편집 모드도 완전히 종료
+isEditMode = false;
+sessionStorage.removeItem('turtlessEditMode');
+
+if (typeof applyEditModeState === 'function') {
+    applyEditModeState(false);
 }
 
 alert("로그아웃 되었습니다.");
@@ -905,20 +916,92 @@ loadMembers();
 }
 };
 
-window.toggleEditMode = () => { 
-isEditMode = !isEditMode; document.body.classList.toggle('edit-mode', isEditMode); 
-document.getElementById('edit-toolbar').classList.toggle('active', isEditMode);
-document.querySelectorAll('.editable-content').forEach(el => el.contentEditable = isEditMode); 
-document.getElementById('save-float-btn').style.display = isEditMode ? 'block' : 'none'; 
+function ensureEditSaveButton() {
+const oldBtn = document.getElementById('save-float-btn');
+if (oldBtn) return oldBtn;
+
+const btn = document.createElement('button');
+btn.id = 'save-float-btn';
+btn.type = 'button';
+btn.textContent = '💾 전체 변경사항 저장';
+btn.onclick = () => window.savePageContent();
+document.body.appendChild(btn);
+return btn;
+}
+
+function applyEditModeState(enabled) {
+isEditMode = !!enabled;
+
+document.body.classList.toggle('edit-mode', isEditMode);
+
+const toolbar = document.getElementById('edit-toolbar');
+if (toolbar) {
+    toolbar.classList.toggle('active', isEditMode);
+}
+
+document.querySelectorAll('.editable-content').forEach(el => {
+    el.contentEditable = isEditMode ? 'true' : 'false';
+});
+
+const saveBtn = ensureEditSaveButton();
+saveBtn.style.display = isEditMode ? 'block' : 'none';
+
+const toggleBtn = document.getElementById('toggle-edit-btn');
+if (toggleBtn) {
+    toggleBtn.textContent = isEditMode
+        ? '✏️ 직접 텍스트 수정 끄기'
+        : '📝 직접 텍스트 수정 켜기';
+}
+
+if (isEditMode) {
+    sessionStorage.setItem('turtlessEditMode', 'true');
+} else {
+    sessionStorage.removeItem('turtlessEditMode');
+}
+}
+
+window.toggleEditMode = () => {
+applyEditModeState(!isEditMode);
 };
 
-window.savePageContent = async () => { 
-let data = {}; document.querySelectorAll('.editable-content').forEach(el => data[el.id] = el.innerHTML); 
-document.querySelectorAll('.team-color-hex').forEach(el => {
-  data[el.id] = el.value;
-});
-await setDoc(doc(db, "settings", "page_content"), data, {merge:true}); 
-alert("전체 변경사항 저장 완료"); window.toggleEditMode(); 
+window.restoreEditMode = () => {
+if (
+    sessionStorage.getItem('turtlessEditMode') === 'true' &&
+    currentUserData?.role === 'admin'
+) {
+    applyEditModeState(true);
+} else {
+    applyEditModeState(false);
+}
+};
+
+window.savePageContent = async () => {
+try {
+    let data = {};
+
+    document.querySelectorAll('.editable-content').forEach(el => {
+        if (el.id) data[el.id] = el.innerHTML;
+    });
+
+    document.querySelectorAll('.team-color-hex').forEach(el => {
+        if (el.id) data[el.id] = el.value;
+    });
+
+    await setDoc(
+        doc(db, "settings", "page_content"),
+        data,
+        { merge: true }
+    );
+
+    alert("전체 변경사항 저장 완료");
+
+    // 저장 후에도 편집모드는 유지
+    applyEditModeState(true);
+
+} catch (error) {
+    console.error("[TURTLESS] 전체 변경사항 저장 실패:", error);
+    alert("저장 실패: " + error.message);
+}
 };
 
 // --- 메인 슬라이더 ---
@@ -1403,6 +1486,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // ★ 페이지가 열릴 때 가장 먼저 로그인 상태 복구
   await restoreLoginSession();
+
+// 페이지를 새로 열거나 다른 페이지로 이동해도 편집모드 유지
+if (
+    sessionStorage.getItem('turtlessEditMode') === 'true' &&
+    currentUserData?.role === 'admin'
+) {
+    setTimeout(() => {
+        if (typeof window.restoreEditMode === 'function') {
+            window.restoreEditMode();
+        }
+    }, 50);
+}
 
   loadSlider().then(() => {
     loadMembers(); loadActivities(); loadGallery(); loadSponsors(); window.loadCareers();
