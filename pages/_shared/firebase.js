@@ -526,6 +526,18 @@ if (location.hash.startsWith('#act-')) { const targetEl = document.getElementByI
 loadYoutubeFallback();
 } catch(e){ loadYoutubeFallback(); }
 }
+window.toggleSocialContribution = async (id, current) => {
+    try {
+        await updateDoc(doc(db, "activities", id), {
+            socialContribution: !current
+        });
+        await loadActivities();
+    } catch (e) {
+        console.error("사회공헌 표시 변경 실패:", e);
+        alert("사회공헌 표시 변경에 실패했습니다.");
+    }
+};
+
 window.deleteActivity = async (id) => { if(confirm("삭제하시겠습니까?")) { await deleteDoc(doc(db, "activities", id)); loadActivities(); } };
 window.goAct = (id) => {
   const el = document.getElementById('act-' + id);
