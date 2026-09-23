@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, query, where, orderBy, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -999,85 +999,115 @@ window.firebaseLogin = async () => {
 
 // ★ 페이지 이동 후 저장된 로그인 상태 복구
 async function restoreLoginSession() {
+  try {
+    // Firebase Authentication 세션이 완전히 초기화될 때까지 기다림
+    const authUser = await new Promise((resolve) => {
+      let unsubscribe = null;
 
-const savedUserId = sessionStorage.getItem('turtlessUserId');
+      unsubscribe = onAuthStateChanged(window.auth, (user) => {
+        if (unsubscribe) unsubscribe();
+        resolve(user);
+      });
+    });
 
-if(!savedUserId) return;
-
-try {
-
-const userSnap = await getDoc(doc(db, "users", savedUserId));
-
-if(!userSnap.exists()) {
-
-sessionStorage.removeItem('turtlessUserId');
-currentUserId = null;
-currentUserData = null;
-window.isAdmin = false;
-
-return;
-}
-
-currentUserId = savedUserId;
-currentUserData = userSnap.data();
-window.isAdmin = currentUserData?.role === 'admin';
-
-const welcomeMsg = document.getElementById('welcome-msg');
-if(welcomeMsg) {
-    welcomeMsg.innerText =
-        `${currentUserData.school || ''} ${currentUserData.grade || ''} [${currentUserData.name || ''}]`;
-}
-
-const memberActions = document.getElementById('member-actions');
-if(memberActions) {
-    memberActions.style.display = 'block';
-}
-
-const adminPanel = document.getElementById('admin-panel');
-
-if(adminPanel && currentUserData?.role === 'admin') {
-    adminPanel.style.display = 'block';
-}
-
-const loginBtn = document.getElementById('main-login-btn');
-
-if(loginBtn) {
-    loginBtn.innerText = '로그아웃';
-    loginBtn.onclick = window.firebaseLogout;
-}
-
-const dateInput = document.getElementById('new-gal-date');
-if(dateInput) {
-    dateInput.valueAsDate = new Date();
-}
-
-loadActivities();
-loadGallery();
-loadMembers();
-
-// 페이지 이동 후에도 관리자 직접 편집 모드 복구
-setTimeout(() => {
-    if (typeof window.restoreEditMode === 'function') {
-        window.restoreEditMode();
+    // Firebase Auth에 로그인되어 있지 않으면 기존 세션도 제거
+    if (!authUser) {
+      sessionStorage.removeItem('turtlessUserId');
+      currentUserId = null;
+      currentUserData = null;
+      window.isAdmin = false;
+      return;
     }
-}, 0);
 
-} catch(error) {
+    // Auth UID로 실제 팀원 데이터 확인
+    const userSnap = await getDocs(
+      query(
+        collection(db, "users"),
+        where("authUid", "==", authUser.uid)
+      )
+    );
 
-console.error('[TURTLESS] 로그인 세션 복구 실패:', error);
+    if (userSnap.empty) {
+      sessionStorage.removeItem('turtlessUserId');
+      currentUserId = null;
+      currentUserData = null;
+      window.isAdmin = false;
+      await signOut(window.auth);
+      return;
+    }
 
-sessionStorage.removeItem('turtlessUserId');
+    const userDoc = userSnap.docs[0];
 
-currentUserId = null;
-currentUserData = null;
+    currentUserId = userDoc.id;
+    currentUserData = userDoc.data();
 
+    // 기존 세션 ID는 UI/페이지 이동 호환용으로만 유지
+    sessionStorage.setItem('turtlessUserId', currentUserId);
+
+    window.isAdmin = currentUserData?.role === 'admin';
+
+    const welcomeMsg = document.getElementById('welcome-msg');
+    if (welcomeMsg) {
+      welcomeMsg.innerText =
+        `${currentUserData.school || ''} ${currentUserData.grade || ''} [${currentUserData.name || ''}]`;
+    }
+
+    const memberActions = document.getElementById('member-actions');
+    if (memberActions) {
+      memberActions.style.display = 'block';
+    }
+
+    const adminPanel = document.getElementById('admin-panel');
+
+    if (adminPanel && currentUserData?.role === 'admin') {
+      adminPanel.style.display = 'block';
+    }
+
+    const loginBtn = document.getElementById('main-login-btn');
+
+    if (loginBtn) {
+      loginBtn.innerText = '로그아웃';
+      loginBtn.onclick = window.firebaseLogout;
+    }
+
+    const dateInput = document.getElementById('new-gal-date');
+    if (dateInput) {
+      dateInput.valueAsDate = new Date();
+    }
+
+    loadActivities();
+    loadGallery();
+    loadMembers();
+
+    // 페이지 이동 후에도 관리자 직접 편집 모드 복구
+    setTimeout(() => {
+      if (typeof window.restoreEditMode === 'function') {
+        window.restoreEditMode();
+      }
+    }, 0);
+
+  } catch (error) {
+    console.error('[TURTLESS] 로그인 세션 복구 실패:', error);
+
+    sessionStorage.removeItem('turtlessUserId');
+    currentUserId = null;
+    currentUserData = null;
+    window.isAdmin = false;
+  }
 }
-}
 
 
-window.firebaseLogout = () => {
+window.firebaseLogout = async () => {
 
 if(confirm("로그아웃 하시겠습니까?")) {
+
+try {
+  if (window.auth?.currentUser) {
+    await signOut(window.auth);
+  }
+} catch (error) {
+  console.error('[TURTLESS] Firebase Auth 로그아웃 실패:', error);
+}
 
 // ★ 실제 로그아웃할 때만 저장된 로그인 정보 삭제
 sessionStorage.removeItem('turtlessUserId');
