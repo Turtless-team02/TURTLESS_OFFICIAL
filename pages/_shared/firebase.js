@@ -508,6 +508,7 @@ ah += `<div class="act-list-item" id="act-${i.id}">
                        </div>`; 
 });
 actPageContent.innerHTML = ah || '<p>등록된 활동 없음</p>';
+  }
 
 if (socialPageContent) {
   let sh = '';
@@ -524,7 +525,6 @@ if (socialPageContent) {
 
   socialPageContent.innerHTML = sh;
   socialPageContent.style.display = socialItems.length ? 'block' : 'none';
-}
 if (location.hash.startsWith('#act-')) { const targetEl = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (targetEl) setTimeout(() => targetEl.scrollIntoView({behavior:'smooth', block:'center'}), 50); }
 }
 loadYoutubeFallback();
