@@ -1053,3 +1053,16 @@
 #t-next-challenge .t-status{
   letter-spacing:-.01em!important;
 }
+
+/* SNS 브랜드 아이콘 색상 - 최종 */
+#page-home .home-sns-card i.fa-instagram{
+  background:linear-gradient(135deg,#833AB4 0%,#C13584 25%,#E1306C 50%,#FD1D1D 72%,#FCAF45 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  color:transparent!important;
+}
+
+#page-home .home-sns-card i.fa-youtube{
+  color:#FF0000!important;
+}
