@@ -494,7 +494,7 @@ let ah = ''; const isAdmin = currentUserData?.role === 'admin';
 const now = Date.now(); 
 items.forEach(i => { 
 const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteActivity('${i.id}')">🗑️ 삭제</button>` : '';
-const socialBtn = isAdmin ? `<button onclick="window.toggleSocialContribution('${i.id}', ${i.socialContribution === true})" style="display:block; margin:8px 0; padding:7px 12px; border:0; border-radius:8px; cursor:pointer; background:${i.socialContribution === true ? '#1769e0' : '#777'}; color:white; font-weight:800;">${i.socialContribution === true ? '🌊 사회공헌 표시 ON' : '🌊 사회공헌 표시 OFF'}</button>` : '';
+const socialBtn = isAdmin ? `<button class="social-toggle-btn" onclick="window.toggleSocialContribution('${i.id}', ${i.socialContribution === true})">${i.socialContribution === true ? '🌊 사회공헌 ON' : '🌊 사회공헌 OFF'}</button>` : '';
 const isNew = (now - (i.createdAt || 0)) <= 86400000;
 const newBadge = isNew ? `<span style="background:var(--primary-color); color:white; font-size:11px; padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; font-weight:900;">최신</span>` : '';
 const imgTag = i.imageUrl ? `<div class="resizable-img-box" style="margin-top:15px; width:100%; max-width:400px;"><img src="${i.imageUrl}" style="width:100%; display:block; pointer-events:none;"></div>` : '';

@@ -1300,3 +1300,22 @@ footer * {
   #home-sponsor-slider .sp-nav,#page-sponsor-slider .sp-nav{left:8px!important;right:8px!important;}
   #home-sponsor-slider .sp-nav .slider-control-btn,#page-sponsor-slider .sp-nav .slider-control-btn{width:34px!important;height:34px!important;min-width:34px!important;flex-basis:34px!important;}
 }
+
+/* 주요 활동 관리자용 사회공헌 토글 */
+#page-activity .act-list-item .social-toggle-btn{
+  position:absolute;
+  right:0;
+  top:25px;
+  padding:5px 10px;
+  border:1px solid #d7e5f2;
+  border-radius:6px;
+  background:#fff;
+  color:var(--primary-color);
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  z-index:3;
+}
+#page-activity .act-list-item .social-toggle-btn:hover{
+  background:#f1f7fd;
+}
