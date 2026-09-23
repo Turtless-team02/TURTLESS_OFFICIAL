@@ -1319,3 +1319,46 @@ footer * {
 #page-activity .act-list-item .social-toggle-btn:hover{
   background:#f1f7fd;
 }
+
+/* 사회공헌 토글 버튼 클릭 영역 */
+#page-activity .act-list-item .social-toggle-btn {
+  position: absolute !important;
+  right: 0 !important;
+  top: 25px !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
+
+/* 사회공헌 토글 버튼 클릭 영역 */
+#page-activity .act-list-item .social-toggle-btn {
+  position: absolute !important;
+  right: 0 !important;
+  top: 25px !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
+
+/* 주요 활동 관리자 버튼 터치 영역 */
+#page-activity .act-list-item .activity-admin-controls {
+  position:absolute;
+  right:0;
+  top:25px;
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+  pointer-events:auto;
+  touch-action:manipulation;
+}
+
+#page-activity .act-list-item .activity-admin-controls .delete-btn,
+#page-activity .act-list-item .activity-admin-controls .social-toggle-btn {
+  position:static !important;
+  display:block !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+}
+

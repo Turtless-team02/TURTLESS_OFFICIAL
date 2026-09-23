@@ -495,13 +495,13 @@ const now = Date.now();
 items.forEach(i => { 
 const delBtn = isAdmin ? `<button class="delete-btn" style="display:block" onclick="window.deleteActivity('${i.id}')">🗑️ 삭제</button>` : '';
 const socialBtn = isAdmin ? `<button class="social-toggle-btn" onclick="window.toggleSocialContribution('${i.id}', ${i.socialContribution === true})">${i.socialContribution === true ? '🌊 사회공헌 ON' : '🌊 사회공헌 OFF'}</button>` : '';
+const adminBtns = isAdmin ? `<div class="activity-admin-controls">${delBtn}${socialBtn}</div>` : '';
 const isNew = (now - (i.createdAt || 0)) <= 86400000;
 const newBadge = isNew ? `<span style="background:var(--primary-color); color:white; font-size:11px; padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; font-weight:900;">최신</span>` : '';
 const imgTag = i.imageUrl ? `<div class="resizable-img-box" style="margin-top:15px; width:100%; max-width:400px;"><img src="${i.imageUrl}" style="width:100%; display:block; pointer-events:none;"></div>` : '';
 
 ah += `<div class="act-list-item" id="act-${i.id}">
-                           ${delBtn}
-                           ${socialBtn}
+                           ${adminBtns}
                            <h3>${i.title} <span class="date" style="font-size:13px; color:#777; margin-left:10px; font-weight:500;">${new Date(i.createdAt).toLocaleDateString()}</span>${newBadge}</h3>
                            <p style="white-space:pre-wrap;">${i.content}</p>
                            ${imgTag}
@@ -511,7 +511,9 @@ actPageContent.innerHTML = ah || '<p>등록된 활동 없음</p>';
 
 if (socialPageContent) {
   let sh = '';
-  items.filter(i => i.socialContribution === true).forEach(i => {
+  const socialItems = items.filter(i => i.socialContribution === true);
+
+  socialItems.forEach(i => {
     const imgTag = i.imageUrl ? `<div class="resizable-img-box" style="margin-top:15px; width:100%; max-width:400px;"><img src="${i.imageUrl}" style="width:100%; display:block; pointer-events:none;"></div>` : '';
     sh += `<div class="act-list-item" id="social-act-${i.id}">
       <h3>${i.title} <span class="date" style="font-size:13px; color:#777; margin-left:10px; font-weight:500;">${new Date(i.createdAt).toLocaleDateString()}</span></h3>
@@ -519,7 +521,9 @@ if (socialPageContent) {
       ${imgTag}
     </div>`;
   });
-  socialPageContent.innerHTML = sh || '<p>등록된 사회공헌 활동 없음</p>';
+
+  socialPageContent.innerHTML = sh;
+  socialPageContent.style.display = socialItems.length ? 'block' : 'none';
 }
 if (location.hash.startsWith('#act-')) { const targetEl = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (targetEl) setTimeout(() => targetEl.scrollIntoView({behavior:'smooth', block:'center'}), 50); }
 }
