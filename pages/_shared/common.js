@@ -650,32 +650,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==========================================
 // 팀원 대시보드 / 관리자 패널
-// 메인 페이지에서만 표시
+// 팀원 대시보드는 서브페이지에서 숨김
+// 관리자 패널은 Firebase의 관리자 권한 처리에 맡김
 // ==========================================
 (function () {
 
-  function hideMemberAdminOnSubpages() {
+  function hideMemberActionsOnSubpages() {
 
     const isSubPage =
       window.location.pathname.includes('/pages/');
 
     if (!isSubPage) return;
 
-
     const memberActions =
       document.getElementById('member-actions');
 
-    const adminPanel =
-      document.getElementById('admin-panel');
-
-
     if (memberActions) {
       memberActions.style.display = 'none';
-    }
-
-
-    if (adminPanel) {
-      adminPanel.style.display = 'none';
     }
 
   }
@@ -684,26 +675,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // 처음 로드될 때
   document.addEventListener(
     'DOMContentLoaded',
-    hideMemberAdminOnSubpages
+    hideMemberActionsOnSubpages
   );
 
 
-  // Firebase가 로그인 복구 후
-  // 다시 display:block으로 바꾸는 경우까지 방지
+  // 페이지 구조 변경 시 팀원 대시보드만 다시 숨김
   const observer =
     new MutationObserver(
-      hideMemberAdminOnSubpages
+      hideMemberActionsOnSubpages
     );
 
 
   observer.observe(document.body, {
     childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: [
-      'style',
-      'class'
-    ]
+    subtree: true
   });
 
 })();
