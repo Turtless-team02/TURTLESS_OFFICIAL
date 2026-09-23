@@ -1362,3 +1362,16 @@ footer * {
   touch-action:manipulation !important;
 }
 
+
+/* 팀원 로그인 비밀번호 표시 */
+#login-modal input#password{
+  color:#000!important;
+  -webkit-text-fill-color:#000!important;
+  caret-color:#000!important;
+  font-family:Arial,sans-serif!important;
+}
+
+#login-modal input#password::placeholder{
+  color:#999!important;
+  -webkit-text-fill-color:#999!important;
+}
