@@ -896,27 +896,64 @@ window.firebaseLogin = async () => {
     const n = document.getElementById('username').value.trim();
     const p = document.getElementById('password').value.trim();
 
-    const snap = await getDocs(
+    // 1. 학교 + 학년 + 이름만으로 사용자 확인
+    const userSnap = await getDocs(
       query(
         collection(db, "users"),
         where("school", "==", s),
         where("grade", "==", g),
-        where("name", "==", n),
-        where("pass", "==", p)
+        where("name", "==", n)
       )
     );
 
-    if (snap.empty) {
+    if (userSnap.empty) {
       alert("인증 실패");
       return;
     }
 
-    currentUserId = snap.docs[0].id;
-    currentUserData = snap.docs[0].data();
-    window.isAdmin = currentUserData?.role === 'admin';
+    const userDoc = userSnap.docs[0];
+    currentUserId = userDoc.id;
+    currentUserData = userDoc.data();
 
-    // Firebase Authentication 계정 전환
-    await migrateUserToFirebaseAuth(currentUserId, currentUserData, p);
+    // 2. 이미 Firebase Authentication으로 전환된 계정
+    if (currentUserData.authUid) {
+      try {
+        await signInWithEmailAndPassword(
+          window.auth,
+          getAuthEmail(currentUserId),
+          p
+        );
+      } catch (authError) {
+        console.error("[TURTLESS] Firebase Auth 로그인 실패:", authError);
+        alert("비밀번호가 올바르지 않습니다.");
+        return;
+      }
+    }
+
+    // 3. 아직 전환되지 않은 기존 계정
+    else {
+      if (currentUserData.pass !== p) {
+        alert("인증 실패");
+        return;
+      }
+
+      const migrated = await migrateUserToFirebaseAuth(
+        currentUserId,
+        currentUserData,
+        p
+      );
+
+      // 마이그레이션이 성공하면 최신 데이터 다시 반영
+      if (migrated) {
+        const refreshed = await getDoc(doc(db, "users", currentUserId));
+
+        if (refreshed.exists()) {
+          currentUserData = refreshed.data();
+        }
+      }
+    }
+
+    window.isAdmin = currentUserData?.role === 'admin';
 
     // 기존 로그인 상태 저장
     sessionStorage.setItem('turtlessUserId', currentUserId);
