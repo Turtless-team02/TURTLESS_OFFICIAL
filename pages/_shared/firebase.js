@@ -22,7 +22,6 @@ window.getDocs = getDocs;
 window.doc = doc;
 window.deleteDoc = deleteDoc;
 
-const IMGBB_API_KEY = "Ffc86d1890f11e1bb04886dd9c10ecbc";
 
 let currentUserId = sessionStorage.getItem('turtlessUserId');
 let currentUserData = null;
@@ -923,7 +922,41 @@ window.firebaseLogin = async () => {
   try {
     const s = document.getElementById('school').value;
     const g = document.getElementById('grade').value;
-    const n = document.getElementById('username').value.trim();
+    const loginInput = document.getElementById('username').value.trim();
+
+let n = loginInput;
+
+// 이름 대신 TURTLESS ID를 입력해도 기존 로그인 로직을 그대로 사용할 수 있도록
+// ID → 이름으로 먼저 변환한다.
+const loginIdMap = {
+    "parkwooyoung02": "박우영",
+    "janghyena02": "장혜나",
+    "songjuwon02": "송주원",
+    "kimain02": "김아인",
+    "kangyoona02": "강윤아",
+    "jangdongjun02": "장동준",
+    "ryukyungwon02": "류경원",
+    "kimtaegyun02": "김태균",
+    "leeyoungjin02": "이영진",
+    "kimjunghan02": "김정한",
+    "kimseunghyuk02": "김승혁",
+    "kimsiwoo02": "김시우",
+    "kwonwoojin02": "권우진",
+    "leejaemin02": "이재민",
+    "jungjiwoo02": "정지우",
+    "choiwonjeong02": "최원정",
+    "cheongangsuk02": "천강숙",
+    "hongwoojin02": "홍우진",
+    "chaejunhyun02": "채준현"
+};
+
+const normalizedLoginId = loginInput
+    .toLowerCase()
+    .replace(/@turtless\.com$/i, "");
+
+if (loginIdMap[normalizedLoginId]) {
+    n = loginIdMap[normalizedLoginId];
+}
     const p = document.getElementById('password').value.trim();
 
     // 1. 학교 + 학년 + 이름만으로 사용자 확인
