@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, query, where, orderBy, getDoc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyAyhSEWtN-y6o9Myt-cDe9193QWv11rbTU",
@@ -919,6 +919,102 @@ async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
     return false;
   }
 }
+
+
+// ============================================================
+// Firebase Auth 비밀번호 변경
+// ============================================================
+window.changeFirebasePassword = async () => {
+  try {
+    const authUser = window.auth?.currentUser;
+
+    if (!authUser) {
+      alert("로그인 상태를 확인할 수 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    const newPassword = prompt(
+      "새 비밀번호를 입력해주세요.\n\n" +
+      "6자 이상으로 설정해주세요."
+    );
+
+    if (newPassword === null) return;
+
+    if (newPassword.length < 6) {
+      alert("새 비밀번호는 6자 이상이어야 합니다.");
+      return;
+    }
+
+    const confirmPassword = prompt("새 비밀번호를 한 번 더 입력해주세요.");
+
+    if (confirmPassword === null) return;
+
+    if (newPassword !== confirmPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    if (newPassword === authUser.email) {
+      alert("이메일 주소와 다른 비밀번호를 사용해주세요.");
+      return;
+    }
+
+    try {
+      await updatePassword(authUser, newPassword);
+
+      alert("비밀번호가 변경되었습니다.");
+      return;
+    } catch (error) {
+      // Firebase는 최근 로그인하지 않은 계정의 비밀번호 변경을
+      // 보안상 막을 수 있음. 이 경우 현재 비밀번호로 재인증한다.
+      if (error.code !== "auth/requires-recent-login") {
+        console.error("[TURTLESS] 비밀번호 변경 실패:", error);
+        alert(
+          "비밀번호 변경에 실패했습니다.\n\n" +
+          "오류 코드: " + (error?.code || "없음")
+        );
+        return;
+      }
+    }
+
+    const currentPassword = prompt(
+      "보안을 위해 현재 비밀번호를 입력해주세요."
+    );
+
+    if (currentPassword === null) return;
+
+    if (!currentPassword) {
+      alert("현재 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    const credential = EmailAuthProvider.credential(
+      authUser.email,
+      currentPassword
+    );
+
+    await reauthenticateWithCredential(authUser, credential);
+    await updatePassword(authUser, newPassword);
+
+    alert("비밀번호가 변경되었습니다.");
+  } catch (error) {
+    console.error("[TURTLESS] 비밀번호 변경 처리 실패:", error);
+
+    let message = "비밀번호 변경에 실패했습니다.";
+
+    if (error?.code === "auth/wrong-password") {
+      message = "현재 비밀번호가 올바르지 않습니다.";
+    } else if (error?.code === "auth/invalid-credential") {
+      message = "현재 비밀번호가 올바르지 않습니다.";
+    } else if (error?.code === "auth/weak-password") {
+      message = "비밀번호가 너무 약합니다. 6자 이상으로 설정해주세요.";
+    } else if (error?.code === "auth/requires-recent-login") {
+      message = "보안을 위해 다시 로그인한 후 비밀번호를 변경해주세요.";
+    }
+
+    alert(message);
+  }
+};
 
 // --- 로그인/로그아웃 및 기타 권한 ---
 
