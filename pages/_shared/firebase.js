@@ -905,7 +905,11 @@ async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
         return true;
       } catch (signInError) {
         console.error("[TURTLESS] 기존 Auth 계정 연결 실패:", signInError);
-        alert("Firebase 계정 연결에 실패했습니다. 관리자에게 문의해주세요.");
+        alert(
+          "Firebase 계정 연결에 실패했습니다.\n\n" +
+          "오류 코드: " + (signInError?.code || "없음") + "\n" +
+          "오류 내용: " + (signInError?.message || "없음")
+        );
         return false;
       }
     }
