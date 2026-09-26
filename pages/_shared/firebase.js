@@ -764,7 +764,37 @@ function loadYoutubeFallback() {
 
 
 // --- Firebase Authentication 계정 전환 ---
-function getAuthEmail(userId) {
+function getAuthEmail(userId, userData = currentUserData) {
+  const emailMap = {
+    "박우영": "parkwooyoung02@turtless.com",
+    "장혜나": "janghyena02@turtless.com",
+    "송주원": "songjuwon02@turtless.com",
+    "김아인": "kimain02@turtless.com",
+    "강윤아": "kangyoona02@turtless.com",
+    "장동준": "jangdongjun02@turtless.com",
+    "류경원": "ryukyungwon02@turtless.com",
+    "김태균": "kimtaegyun02@turtless.com",
+    "이영진": "leeyoungjin02@turtless.com",
+    "김정한": "kimjunghan02@turtless.com",
+    "김승혁": "kimseunghyuk02@turtless.com",
+    "김시우": "kimsiwoo02@turtless.com",
+    "권우진": "kwonwoojin02@turtless.com",
+    "이재민": "leejaemin02@turtless.com",
+    "정지우": "jungjiwoo02@turtless.com",
+    "최원정": "choiwonjeong02@turtless.com",
+    "천강숙": "cheongangsuk02@turtless.com",
+    "홍우진": "hongwoojin02@turtless.com",
+    "채준현": "chaejunhyun02@turtless.com"
+  };
+
+  if (userData?.authEmail) {
+    return userData.authEmail;
+  }
+
+  if (userData?.name && emailMap[userData.name]) {
+    return emailMap[userData.name];
+  }
+
   return `${userId}@turtless-web.firebaseapp.com`;
 }
 
@@ -920,7 +950,7 @@ window.firebaseLogin = async () => {
       try {
         await signInWithEmailAndPassword(
           window.auth,
-          getAuthEmail(currentUserId),
+          getAuthEmail(currentUserId, currentUserData),
           p
         );
       } catch (authError) {
