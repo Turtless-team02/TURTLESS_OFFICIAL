@@ -288,7 +288,7 @@ document.getElementById('member-detail-view').innerHTML = html;
 
 const editSection = document.getElementById('member-detail-edit');
 
-if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
+if(currentUserId === id) {
 editSection.style.display = 'block';
 document.getElementById('edit-bio').value = m.bio || '';
 document.getElementById('edit-contact').value = m.contact || '';
@@ -2087,4 +2087,440 @@ if (
       } 
     });
   });
+});
+
+/* =========================================================
+   팀원 계정·프로필 관리자
+   ========================================================= */
+
+let teamAccountAdminMembers = [];
+let teamAccountAdminFiltered = [];
+
+function getTeamAccountAdminId(member) {
+    /*
+     * 기존 로그인 구조와 동일하게 TURTLESS ID를 계산합니다.
+     * authEmail이 있으면 @turtless.com 앞부분을 사용합니다.
+     */
+    if (member.authEmail) {
+        return String(member.authEmail)
+            .replace(/@turtless\.com$/i, '')
+            .trim();
+    }
+
+    const emailMap = {
+        "박우영": "parkwooyoung02",
+        "장혜나": "janghyena02",
+        "송주원": "songjuwon02",
+        "김아인": "kimain02",
+        "강윤아": "kangyoona02",
+        "장동준": "jangdongjun02",
+        "류경원": "ryukyungwon02",
+        "김태균": "kimtaegyun02",
+        "이영진": "leeyoungjin02",
+        "김정한": "kimjunghan02",
+        "김승혁": "kimseunghyuk02",
+        "김시우": "kimsiwoo02",
+        "권우진": "kwonwoojin02",
+        "이재민": "leejaemin02",
+        "정지우": "jungjiwoo02",
+        "최원정": "choiwonjeong02",
+        "천강숙": "cheongangsuk02",
+        "홍우진": "hongwoojin02",
+        "채준현": "chaejunhyun02"
+    };
+
+    if (member.name && emailMap[member.name]) {
+        return emailMap[member.name];
+    }
+
+    return member.id || "-";
+}
+
+function escapeTeamAccountAdminHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+window.openTeamAccountAdminModal = async () => {
+    if (!currentUserData || currentUserData.role !== "admin") {
+        alert("관리자만 사용할 수 있습니다.");
+        return;
+    }
+
+    const modal = document.getElementById("team-account-admin-modal");
+    if (!modal) return;
+
+    modal.style.display = "flex";
+
+    const search = document.getElementById("team-account-admin-search");
+    if (search) search.value = "";
+
+    await window.loadTeamAccountAdmin();
+};
+
+window.closeTeamAccountAdminModal = () => {
+    const modal = document.getElementById("team-account-admin-modal");
+    if (modal) modal.style.display = "none";
+};
+
+window.loadTeamAccountAdmin = async () => {
+    const list = document.getElementById("team-account-admin-list");
+    const summary = document.getElementById("team-account-admin-summary");
+
+    if (!list) return;
+
+    list.innerHTML = `
+        <div style="padding:40px;text-align:center;color:#777;">
+            팀원 정보를 불러오는 중...
+        </div>
+    `;
+
+    try {
+        const snap = await getDocs(collection(db, "users"));
+
+        const uniqueMap = new Map();
+
+        snap.forEach(d => {
+            const data = d.data();
+
+            if (!data.name) return;
+
+            const key = `${data.school || ""}_${data.grade || ""}_${data.name || ""}`;
+
+            if (!uniqueMap.has(key)) {
+                uniqueMap.set(key, {
+                    id: d.id,
+                    ...data
+                });
+            }
+        });
+
+        teamAccountAdminMembers = Array.from(uniqueMap.values());
+
+        teamAccountAdminMembers.sort((a, b) => {
+            const schoolA = String(a.school || "");
+            const schoolB = String(b.school || "");
+
+            if (schoolA !== schoolB) {
+                return schoolA.localeCompare(schoolB, "ko");
+            }
+
+            return String(a.name || "").localeCompare(
+                String(b.name || ""),
+                "ko"
+            );
+        });
+
+        teamAccountAdminFiltered = [...teamAccountAdminMembers];
+
+        window.renderTeamAccountAdmin();
+
+    } catch (e) {
+        console.error("[TURTLESS] 팀원 계정 목록 로딩 실패:", e);
+
+        list.innerHTML = `
+            <div style="padding:35px;text-align:center;color:#dc3545;">
+                팀원 정보를 불러오지 못했습니다.<br>
+                <small>${escapeTeamAccountAdminHtml(e.message)}</small>
+            </div>
+        `;
+    }
+};
+
+window.filterTeamAccountAdmin = () => {
+    const input = document.getElementById("team-account-admin-search");
+    const keyword = String(input?.value || "").trim().toLowerCase();
+
+    if (!keyword) {
+        teamAccountAdminFiltered = [...teamAccountAdminMembers];
+    } else {
+        teamAccountAdminFiltered = teamAccountAdminMembers.filter(member => {
+            const text = [
+                member.name,
+                member.school,
+                member.grade,
+                member.id,
+                getTeamAccountAdminId(member),
+                member.role,
+                member.authEmail
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+            return text.includes(keyword);
+        });
+    }
+
+    window.renderTeamAccountAdmin();
+};
+
+window.renderTeamAccountAdmin = () => {
+    const list = document.getElementById("team-account-admin-list");
+    const summary = document.getElementById("team-account-admin-summary");
+
+    if (!list) return;
+
+    const total = teamAccountAdminMembers.length;
+
+    const migrated = teamAccountAdminMembers.filter(
+        m => m.authMigrated === true && m.authUid
+    ).length;
+
+    const authLinked = teamAccountAdminMembers.filter(
+        m => !!m.authUid
+    ).length;
+
+    const admins = teamAccountAdminMembers.filter(
+        m => m.role === "admin"
+    ).length;
+
+    if (summary) {
+        summary.innerHTML = `
+            <span style="padding:8px 12px;border-radius:999px;background:#f1f5f9;font-size:13px;font-weight:800;">
+                전체 ${total}명
+            </span>
+
+            <span style="padding:8px 12px;border-radius:999px;background:#e8f7ee;color:#16834b;font-size:13px;font-weight:800;">
+                Auth 연결 ${authLinked}명
+            </span>
+
+            <span style="padding:8px 12px;border-radius:999px;background:#e8f1ff;color:#2463c7;font-size:13px;font-weight:800;">
+                마이그레이션 ${migrated}명
+            </span>
+
+            <span style="padding:8px 12px;border-radius:999px;background:#fff4db;color:#9a6500;font-size:13px;font-weight:800;">
+                관리자 ${admins}명
+            </span>
+        `;
+    }
+
+    if (!teamAccountAdminFiltered.length) {
+        list.innerHTML = `
+            <div style="padding:40px;text-align:center;color:#777;">
+                검색 결과가 없습니다.
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = teamAccountAdminFiltered.map(member => {
+
+        const img = member.profileImage ||
+            "https://dummyimage.com/160x160/e9ecef/777777&text=NO+IMAGE";
+
+        const id = getTeamAccountAdminId(member);
+
+        const authStatus = member.authUid
+            ? `<span style="color:#16834b;background:#e8f7ee;">● Auth 연결</span>`
+            : `<span style="color:#888;background:#f1f3f5;">○ 미연결</span>`;
+
+        const migrationStatus = member.authMigrated === true
+            ? `<span style="color:#2463c7;background:#e8f1ff;">마이그레이션 완료</span>`
+            : `<span style="color:#9a6500;background:#fff4db;">기존 계정</span>`;
+
+        const roleStatus = member.role === "admin"
+            ? `<span style="color:#8a4b00;background:#fff0d0;">👑 관리자</span>`
+            : `<span style="color:#666;background:#f3f4f6;">팀원</span>`;
+
+        return `
+            <div class="team-account-admin-row"
+                 style="display:grid;grid-template-columns:60px minmax(170px,1fr) minmax(150px,1fr) minmax(190px,1fr) auto;gap:14px;align-items:center;padding:13px 4px;border-bottom:1px solid #eee;">
+
+                <img src="${escapeTeamAccountAdminHtml(img)}"
+                     alt="${escapeTeamAccountAdminHtml(member.name)}"
+                     style="width:52px;height:52px;border-radius:12px;object-fit:cover;background:#f1f3f5;">
+
+                <div style="min-width:0;">
+                    <div style="font-weight:900;font-size:15px;">
+                        ${escapeTeamAccountAdminHtml(member.name)}
+                    </div>
+                    <div style="margin-top:4px;color:#777;font-size:12px;">
+                        ${escapeTeamAccountAdminHtml(member.school || "")}
+                        ${escapeTeamAccountAdminHtml(member.grade || "")}
+                    </div>
+                </div>
+
+                <div style="min-width:0;">
+                    <div style="font-size:11px;color:#999;font-weight:700;">TURTLESS ID</div>
+                    <div style="font-size:13px;font-weight:800;word-break:break-all;">
+                        ${escapeTeamAccountAdminHtml(id)}
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:5px;flex-wrap:wrap;font-size:11px;font-weight:800;">
+                    ${authStatus}
+                    ${migrationStatus}
+                    ${roleStatus}
+                    <span style="padding:5px 7px;border-radius:6px;">
+                        ${member.profileImage ? "📷 기본사진" : "📷 기본사진 없음"}
+                    </span>
+                    <span style="padding:5px 7px;border-radius:6px;">
+                        ${member.profileHoverImage ? "✨ 호버사진" : "✨ 호버사진 없음"}
+                    </span>
+                </div>
+
+                <button onclick="window.openTeamAccountDetail('${String(member.id).replace(/'/g, "\\'")}')"
+                        style="padding:9px 13px;border:0;border-radius:9px;background:#111;color:#fff;font-weight:800;cursor:pointer;white-space:nowrap;">
+                    상세
+                </button>
+            </div>
+        `;
+    }).join("");
+};
+
+window.openTeamAccountDetail = (id) => {
+    if (!currentUserData || currentUserData.role !== "admin") {
+        alert("관리자만 사용할 수 있습니다.");
+        return;
+    }
+
+    const member = teamAccountAdminMembers.find(m => m.id === id);
+
+    if (!member) {
+        alert("팀원 정보를 찾을 수 없습니다.");
+        return;
+    }
+
+    const modal = document.getElementById("team-account-detail-modal");
+    const title = document.getElementById("team-account-detail-title");
+    const content = document.getElementById("team-account-detail-content");
+
+    if (!modal || !content) return;
+
+    if (title) {
+        title.innerText = `👤 ${member.name} 계정·프로필`;
+    }
+
+    const img = member.profileImage ||
+        "https://dummyimage.com/400x400/e9ecef/777777&text=NO+IMAGE";
+
+    const hover = member.profileHoverImage ||
+        "https://dummyimage.com/400x400/e9ecef/777777&text=NO+HOVER";
+
+    const idValue = getTeamAccountAdminId(member);
+
+    content.innerHTML = `
+        <div style="display:flex;gap:18px;align-items:center;margin-bottom:22px;">
+            <img src="${escapeTeamAccountAdminHtml(img)}"
+                 style="width:100px;height:100px;object-fit:cover;border-radius:16px;background:#f1f3f5;">
+
+            <div>
+                <h3 style="margin:0 0 7px;font-size:20px;">
+                    ${escapeTeamAccountAdminHtml(member.name)}
+                </h3>
+
+                <div style="color:#666;font-size:13px;">
+                    ${escapeTeamAccountAdminHtml(member.school || "")}
+                    ${escapeTeamAccountAdminHtml(member.grade || "")}
+                </div>
+
+                <div style="margin-top:7px;font-size:13px;font-weight:800;">
+                    ${escapeTeamAccountAdminHtml(idValue)}
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;gap:10px;">
+
+            <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                <div style="font-size:11px;color:#888;font-weight:800;">AUTH UID</div>
+                <div style="margin-top:5px;font-size:13px;word-break:break-all;">
+                    ${escapeTeamAccountAdminHtml(member.authUid || "아직 연결되지 않음")}
+                </div>
+            </div>
+
+            <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                <div style="font-size:11px;color:#888;font-weight:800;">AUTH EMAIL</div>
+                <div style="margin-top:5px;font-size:13px;word-break:break-all;">
+                    ${escapeTeamAccountAdminHtml(member.authEmail || idValue + "@turtless.com")}
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                    <div style="font-size:11px;color:#888;font-weight:800;">계정 상태</div>
+                    <div style="margin-top:5px;font-weight:900;">
+                        ${member.authUid ? "Firebase Auth 연결됨" : "기존 계정"}
+                    </div>
+                </div>
+
+                <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                    <div style="font-size:11px;color:#888;font-weight:800;">권한</div>
+                    <div style="margin-top:5px;font-weight:900;">
+                        ${member.role === "admin" ? "👑 관리자" : "팀원"}
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                <div style="font-size:11px;color:#888;font-weight:800;">소개</div>
+                <div style="margin-top:6px;white-space:pre-wrap;line-height:1.6;">
+                    ${escapeTeamAccountAdminHtml(member.bio || "등록된 소개 없음")}
+                </div>
+            </div>
+
+            <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                <div style="font-size:11px;color:#888;font-weight:800;">연락처 / SNS</div>
+                <div style="margin-top:6px;word-break:break-word;">
+                    ${escapeTeamAccountAdminHtml(member.contact || "등록된 연락처 없음")}
+                </div>
+            </div>
+
+            <div style="padding:13px;background:#f8f9fa;border-radius:10px;">
+                <div style="font-size:11px;color:#888;font-weight:800;">프로필 이미지</div>
+
+                <div style="display:flex;gap:10px;margin-top:10px;">
+                    <div>
+                        <img src="${escapeTeamAccountAdminHtml(img)}"
+                             style="width:110px;height:110px;object-fit:cover;border-radius:12px;">
+                        <div style="font-size:11px;color:#777;margin-top:5px;text-align:center;">
+                            기본
+                        </div>
+                    </div>
+
+                    <div>
+                        <img src="${escapeTeamAccountAdminHtml(hover)}"
+                             style="width:110px;height:110px;object-fit:cover;border-radius:12px;">
+                        <div style="font-size:11px;color:#777;margin-top:5px;text-align:center;">
+                            호버
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:22px;">
+            <button onclick="window.closeTeamAccountDetailModal()"
+                    style="padding:11px 18px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:800;cursor:pointer;">
+                닫기
+            </button>
+        </div>
+    `;
+
+    modal.style.display = "flex";
+};
+
+window.closeTeamAccountDetailModal = () => {
+    const modal = document.getElementById("team-account-detail-modal");
+    if (modal) modal.style.display = "none";
+};
+
+// 팝업 바깥 클릭으로 닫기
+document.addEventListener("click", (e) => {
+    const listModal = document.getElementById("team-account-admin-modal");
+    const detailModal = document.getElementById("team-account-detail-modal");
+
+    if (e.target === listModal) {
+        window.closeTeamAccountAdminModal();
+    }
+
+    if (e.target === detailModal) {
+        window.closeTeamAccountDetailModal();
+    }
 });

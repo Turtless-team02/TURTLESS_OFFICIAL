@@ -315,6 +315,11 @@
 <button onclick="openRobotModal()" style="padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🤖 로봇 소개 관리</button>
 <button onclick="openLogoAdminModal()" style="padding:10px 20px; cursor:pointer; background:#1769e0; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">🏷️ 팀 로고 관리</button>
 <button id="toggle-edit-btn" onclick="window.toggleEditMode()" style="padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">📝 직접 텍스트 수정 켜기</button>
+<button id="team-account-admin-btn"
+        onclick="window.openTeamAccountAdminModal()"
+        style="padding:10px 20px; cursor:pointer; background:#2c91f9; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;">
+    👥 팀원 계정·프로필 관리
+</button>
 </div>
 </div></div></div><section class="section home-sponsor-section"><div class="inner"><div class="home-section-head"><div><span class="home-kicker">후원</span><h2 class="home-section-title">후원사</h2></div><button class="home-text-link" onclick="location.href='./pages/sponsors/'">후원사 보기 →</button></div><div class="sponsor-slider" id="home-sponsor-slider"></div></div></section>
 </main>
@@ -456,5 +461,77 @@
 <script type="module" src="./pages/_shared/firebase.js"></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script src="./pages/home/script.js"></script>
+
+<!-- =========================================================
+     팀원 계정·프로필 관리자 팝업
+     ========================================================= -->
+<div class="modal-overlay" id="team-account-admin-modal"
+     style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,.58); align-items:center; justify-content:center; padding:20px;">
+
+    <div id="team-account-admin-box"
+         style="width:min(1100px,96vw); max-height:90vh; overflow:auto; background:#fff; border-radius:20px; padding:24px; box-shadow:0 20px 70px rgba(0,0,0,.25);">
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:18px;">
+            <div>
+                <h2 style="margin:0; font-size:22px; font-weight:900;">👥 팀원 계정·프로필 관리</h2>
+                <p style="margin:6px 0 0; color:#777; font-size:13px;">
+                    팀원 계정과 프로필 연결 상태를 확인합니다.
+                </p>
+            </div>
+
+            <button onclick="window.closeTeamAccountAdminModal()"
+                    style="width:38px; height:38px; border:0; border-radius:50%; background:#f1f3f5; cursor:pointer; font-size:20px; font-weight:900;">
+                ×
+            </button>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
+            <input id="team-account-admin-search"
+                   type="text"
+                   placeholder="이름 / 학교 / TURTLESS ID 검색"
+                   oninput="window.filterTeamAccountAdmin()"
+                   style="flex:1; min-width:240px; padding:12px 14px; border:1px solid #ddd; border-radius:10px; font-size:14px; box-sizing:border-box;">
+
+            <button onclick="window.loadTeamAccountAdmin()"
+                    style="padding:11px 16px; border:0; border-radius:10px; background:#111; color:#fff; font-weight:800; cursor:pointer;">
+                ↻ 새로고침
+            </button>
+        </div>
+
+        <div id="team-account-admin-summary"
+             style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+        </div>
+
+        <div id="team-account-admin-list">
+            <div style="padding:40px; text-align:center; color:#777;">
+                불러오는 중...
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 팀원 계정·프로필 상세 팝업 -->
+<div class="modal-overlay" id="team-account-detail-modal"
+     style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(0,0,0,.62); align-items:center; justify-content:center; padding:20px;">
+
+    <div style="width:min(650px,94vw); max-height:90vh; overflow:auto; background:#fff; border-radius:20px; padding:24px; box-shadow:0 20px 70px rgba(0,0,0,.3);">
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+            <h2 id="team-account-detail-title" style="margin:0; font-size:21px; font-weight:900;">
+                팀원 상세
+            </h2>
+
+            <button onclick="window.closeTeamAccountDetailModal()"
+                    style="width:38px; height:38px; border:0; border-radius:50%; background:#f1f3f5; cursor:pointer; font-size:20px; font-weight:900;">
+                ×
+            </button>
+        </div>
+
+        <div id="team-account-detail-content"></div>
+
+    </div>
+</div>
+
 </body>
 </html>
