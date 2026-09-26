@@ -1006,13 +1006,17 @@ if (loginIdMap[normalizedLoginId]) {
         p
       );
 
-      // 마이그레이션이 성공하면 최신 데이터 다시 반영
-      if (migrated) {
-        const refreshed = await getDoc(doc(db, "users", currentUserId));
+      // 마이그레이션이 실패하거나 취소되면 로그인도 완료하지 않는다.
+      // 각 팀원이 자신의 새 비밀번호를 설정해야 Auth 전환이 완료된다.
+      if (!migrated) {
+        return;
+      }
 
-        if (refreshed.exists()) {
-          currentUserData = refreshed.data();
-        }
+      // 마이그레이션이 성공하면 최신 데이터 다시 반영
+      const refreshed = await getDoc(doc(db, "users", currentUserId));
+
+      if (refreshed.exists()) {
+        currentUserData = refreshed.data();
       }
     }
 
