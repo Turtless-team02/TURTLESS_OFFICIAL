@@ -288,7 +288,7 @@ document.getElementById('member-detail-view').innerHTML = html;
 
 const editSection = document.getElementById('member-detail-edit');
 
-if(currentUserId === id) {
+if(currentUserId === id || (currentUserData && currentUserData.role === 'admin')) {
 editSection.style.display = 'block';
 document.getElementById('edit-bio').value = m.bio || '';
 document.getElementById('edit-contact').value = m.contact || '';
