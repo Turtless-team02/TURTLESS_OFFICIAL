@@ -913,6 +913,243 @@ function initTurtlessMessenger() {
     menu.style.display = 'none';
   }
 
+
+  async function openDirectChatUI(chatId, user) {
+    menu.style.display = 'none';
+    panel.style.display = 'block';
+
+    const title = document.getElementById('turtless-chat-title');
+    title.textContent = user.name || '개인채팅';
+
+    content.innerHTML = `
+      <div id="turtless-direct-chat" style="
+        display:flex;
+        flex-direction:column;
+        height:430px;
+        background:#f7f9fc;
+      ">
+        <div id="turtless-message-list" style="
+          flex:1;
+          overflow-y:auto;
+          padding:14px 12px;
+          display:flex;
+          flex-direction:column;
+          gap:7px;
+        ">
+          <div style="
+            text-align:center;
+            color:#999;
+            font-size:12px;
+            padding:30px 0;
+          ">
+            메시지를 불러오는 중...
+          </div>
+        </div>
+
+        <div style="
+          display:flex;
+          gap:7px;
+          padding:10px;
+          background:#fff;
+          border-top:1px solid #e8ebf0;
+        ">
+          <input
+            id="turtless-message-input"
+            type="text"
+            maxlength="2000"
+            placeholder="메시지를 입력하세요"
+            autocomplete="off"
+            style="
+              flex:1;
+              min-width:0;
+              border:1px solid #dfe4eb;
+              border-radius:20px;
+              padding:9px 13px;
+              outline:none;
+              font-size:13px;
+            "
+          >
+          <button
+            id="turtless-message-send"
+            type="button"
+            style="
+              border:0;
+              border-radius:50%;
+              width:38px;
+              height:38px;
+              background:#2563eb;
+              color:#fff;
+              cursor:pointer;
+              font-size:15px;
+            "
+          >➤</button>
+        </div>
+      </div>
+    `;
+
+    const messageList = document.getElementById('turtless-message-list');
+    const input = document.getElementById('turtless-message-input');
+    const sendButton = document.getElementById('turtless-message-send');
+
+    let unsubscribe = null;
+
+    const renderMessages = messages => {
+      if (!messages.length) {
+        messageList.innerHTML = `
+          <div style="
+            text-align:center;
+            color:#aaa;
+            font-size:12px;
+            padding:45px 10px;
+          ">
+            아직 메시지가 없습니다.
+          </div>
+        `;
+        return;
+      }
+
+      const myUid = window.auth?.currentUser?.uid;
+
+      messageList.innerHTML = messages.map(message => {
+        const mine = message.senderAuthUid === myUid;
+        const time = message.timestamp
+          ? new Date(message.timestamp).toLocaleTimeString('ko-KR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          : '';
+
+        return `
+          <div style="
+            display:flex;
+            justify-content:${mine ? 'flex-end' : 'flex-start'};
+            width:100%;
+          ">
+            <div style="
+              max-width:75%;
+              display:flex;
+              flex-direction:column;
+              align-items:${mine ? 'flex-end' : 'flex-start'};
+            ">
+              ${!mine ? `
+                <div style="
+                  font-size:10px;
+                  color:#888;
+                  margin:0 5px 3px;
+                ">
+                  ${message.senderName || user.name || ''}
+                </div>
+              ` : ''}
+
+              <div style="
+                padding:8px 11px;
+                border-radius:${mine
+                  ? '16px 16px 4px 16px'
+                  : '16px 16px 16px 4px'};
+                background:${mine ? '#2563eb' : '#fff'};
+                color:${mine ? '#fff' : '#222'};
+                font-size:13px;
+                line-height:1.45;
+                word-break:break-word;
+                box-shadow:0 1px 2px rgba(0,0,0,.06);
+              ">
+                ${String(message.text || '')
+                  .replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/\n/g, '<br>')}
+              </div>
+
+              <div style="
+                font-size:9px;
+                color:#aaa;
+                margin:2px 5px 0;
+              ">
+                ${time}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      messageList.scrollTop = messageList.scrollHeight;
+    };
+
+    try {
+      unsubscribe = window.turtlessListenChatMessages(
+        chatId,
+        (messages, error) => {
+          if (error) {
+            messageList.innerHTML = `
+              <div style="
+                text-align:center;
+                color:#d33;
+                padding:40px 15px;
+                font-size:12px;
+              ">
+                메시지를 불러오지 못했습니다.
+              </div>
+            `;
+            return;
+          }
+
+          renderMessages(messages);
+        }
+      );
+    } catch (error) {
+      console.error('[TURTLESS] 실시간 채팅 연결 실패:', error);
+    }
+
+    const sendMessage = async () => {
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      sendButton.disabled = true;
+      input.disabled = true;
+
+      try {
+        await window.turtlessSendChatMessage(chatId, text);
+        input.value = '';
+        input.focus();
+      } catch (error) {
+        console.error('[TURTLESS] 메시지 전송 실패:', error);
+        alert(error.message || '메시지를 전송하지 못했습니다.');
+      } finally {
+        sendButton.disabled = false;
+        input.disabled = false;
+        input.focus();
+      }
+    };
+
+    sendButton.addEventListener('click', sendMessage);
+
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    input.focus();
+
+    // 패널이 닫힐 때 실시간 listener 정리
+    const closeObserver = new MutationObserver(() => {
+      if (panel.style.display === 'none') {
+        if (unsubscribe) {
+          unsubscribe();
+          unsubscribe = null;
+        }
+        closeObserver.disconnect();
+      }
+    });
+
+    closeObserver.observe(panel, {
+      attributes: true,
+      attributeFilter: ['style']
+    });
+  }
+
   async function openPanel(tab) {
     menu.style.display = 'none';
     panel.style.display = 'block';
@@ -1054,6 +1291,25 @@ function initTurtlessMessenger() {
           }).join('')}
         </div>
       `;
+
+      content.querySelectorAll('[data-contact-user]').forEach(item => {
+        item.addEventListener('click', async () => {
+          const otherUserId = item.dataset.contactUser;
+
+          try {
+            const result = await window.turtlessOpenDirectChat(otherUserId);
+
+            const user = users.find(u => u.id === otherUserId);
+            await openDirectChatUI(
+              result.chatId,
+              user || { name: '개인채팅', profileImage: '' }
+            );
+          } catch (error) {
+            console.error('[TURTLESS] 개인채팅 열기 실패:', error);
+            alert(error.message || '개인채팅을 열 수 없습니다.');
+          }
+        });
+      });
     } catch (error) {
       console.error('TURTLESS 연락처 불러오기 실패:', error);
 
