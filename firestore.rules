@@ -96,6 +96,43 @@ service cloud.firestore {
     }
 
     match /chats/{chatId} {
+      allow read: if signedIn()
+        && resource.data.type == "team";
+
+      allow create: if signedIn()
+        && request.resource.data.type == "team"
+        && request.resource.data.chatId == chatId
+        && request.resource.data.name == "팀채팅";
+
+      allow update: if signedIn()
+        && resource.data.type == "team"
+        && request.resource.data.type == "team"
+        && request.resource.data.chatId == chatId
+        && request.resource.data.name == "팀채팅";
+
+      match /messages/{messageId} {
+        allow read: if signedIn()
+          && get(
+            /databases/$(database)/documents/chats/$(chatId)
+          ).data.type == "team";
+
+        allow create: if signedIn()
+          && get(
+            /databases/$(database)/documents/chats/$(chatId)
+          ).data.type == "team"
+          && request.resource.data.senderUserId is string
+          && isOwner(request.resource.data.senderUserId)
+          && request.resource.data.senderAuthUid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000;
+
+        allow update: if false;
+        allow delete: if false;
+      }
+    }
+
+    match /chats/{chatId} {
       allow read: if isChatMember(resource.data);
 
       allow create: if signedIn()

@@ -166,6 +166,29 @@ window.turtlessSendChatMessage = async function (chatId, text) {
 };
 
 
+
+window.turtlessOpenTeamChat = async function () {
+  if (!window.auth?.currentUser || !currentUserId) {
+    throw new Error("팀채팅을 이용하려면 로그인이 필요합니다.");
+  }
+
+  const chatId = "team-main";
+  const chatRef = doc(db, "chats", chatId);
+
+  await setDoc(chatRef, {
+    type: "team",
+    name: "팀채팅",
+    chatId,
+    createdAt: Date.now()
+  }, { merge: true });
+
+  return {
+    id: chatId,
+    type: "team",
+    name: "팀채팅"
+  };
+};
+
 window.turtlessGetMyChats = async function () {
   if (!currentUserId || !window.auth?.currentUser) {
     throw new Error("로그인이 필요합니다.");
