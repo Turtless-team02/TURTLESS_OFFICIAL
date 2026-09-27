@@ -702,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
    TURTLESS Messenger UI
    ============================================================ */
 
-(function initTurtlessMessenger() {
+function initTurtlessMessenger() {
   if (document.getElementById('turtless-messenger')) return;
 
   const wrap = document.createElement('div');
@@ -966,4 +966,4 @@ document.addEventListener('DOMContentLoaded', () => {
       openPanel(btn.dataset.messengerTab);
     });
   });
-})();
+};

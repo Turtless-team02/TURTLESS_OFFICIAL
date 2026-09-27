@@ -1082,6 +1082,7 @@ if (loginIdMap[normalizedLoginId]) {
     }
 
     window.ensureProtectedHomeUI(currentUserData?.role === 'admin');
+    if (typeof initTurtlessMessenger === 'function') initTurtlessMessenger();
 
     const loginBtn = document.getElementById('main-login-btn');
     if (loginBtn) {
@@ -1185,6 +1186,7 @@ async function restoreLoginSession() {
     }
 
     window.ensureProtectedHomeUI(currentUserData?.role === 'admin');
+    if (typeof initTurtlessMessenger === 'function') initTurtlessMessenger();
 
     const loginBtn = document.getElementById('main-login-btn');
 
@@ -1240,6 +1242,8 @@ currentUserData = null;
 window.isAdmin = false;
 
 window.removeProtectedHomeUI();
+  const messenger = document.getElementById('turtless-messenger');
+  if (messenger) messenger.remove();
 
 const loginBtn = document.getElementById('main-login-btn');
 
