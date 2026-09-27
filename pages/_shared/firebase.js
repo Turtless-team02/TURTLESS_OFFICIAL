@@ -58,18 +58,33 @@ window.turtlessOpenDirectChat = async function (otherUserId) {
 
   // getDoc()으로 존재 여부를 먼저 확인하지 않는다.
   // 문서가 없으면 create, 이미 있으면 update(merge)로 처리한다.
-  await setDoc(
-    chatRef,
-    {
-      type: "direct",
-      name: otherPublicData.name || "개인채팅",
-      memberUserIds: memberUserIds,
-      createdByUserId: myUserId,
-      createdByAuthUid: myAuthUid,
-      createdAt: Date.now()
-    },
-    { merge: true }
-  );
+  const chatData = {
+    type: "direct",
+    name: otherPublicData.name || "개인채팅",
+    memberUserIds: memberUserIds,
+    createdByUserId: myUserId,
+    createdByAuthUid: myAuthUid,
+    createdAt: Date.now()
+  };
+
+  await setDoc(chatRef, chatData, { merge: true });
+
+  // 각 사용자별 채팅 목록 인덱스도 함께 만든다.
+  for (const userId of memberUserIds) {
+    await setDoc(
+      doc(db, "userChats", userId, "chats", chatId),
+      {
+        chatId: chatId,
+        type: "direct",
+        name: userId === myUserId
+          ? (otherPublicData.name || "개인채팅")
+          : (currentUserData?.name || "개인채팅"),
+        memberUserIds: memberUserIds,
+        createdAt: chatData.createdAt
+      },
+      { merge: true }
+    );
+  }
 
   return {
     chatId,
@@ -156,23 +171,21 @@ window.turtlessGetMyChats = async function () {
     throw new Error("로그인이 필요합니다.");
   }
 
-  const chatsQuery = query(
-    collection(db, "chats"),
-    where("memberUserIds", "array-contains", currentUserId)
+  const chatsRef = collection(
+    db,
+    "userChats",
+    currentUserId,
+    "chats"
   );
 
-  const snap = await getDocs(chatsQuery);
+  const snap = await getDocs(chatsRef);
 
   return snap.docs
     .map(d => ({
       id: d.id,
       ...d.data()
     }))
-    .filter(chat =>
-      chat.type === "direct" &&
-      Array.isArray(chat.memberUserIds) &&
-      chat.memberUserIds.includes(currentUserId)
-    )
+    .filter(chat => chat.type === "direct")
     .sort((a, b) => {
       const aTime = Number(a.lastMessageAt || a.createdAt || 0);
       const bTime = Number(b.lastMessageAt || b.createdAt || 0);

@@ -1,0 +1,150 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.admin == true;
+    }
+
+    function isOwner(userId) {
+      return signedIn()
+        && exists(
+          /databases/$(database)/documents/usersPrivate/$(userId)
+        )
+        && get(
+          /databases/$(database)/documents/usersPrivate/$(userId)
+        ).data.authUid == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin();
+
+      allow update: if isOwner(userId)
+        && request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly([
+            "bio",
+            "contact",
+            "profileImage",
+            "profileHoverImage"
+          ]);
+    }
+
+    match /usersPrivate/{userId} {
+      allow read: if isAdmin() || isOwner(userId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /activities/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /robots/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /careers/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    function isChatMember(chatData) {
+      return signedIn()
+        && chatData.memberUserIds is list
+        && chatData.memberUserIds.size() == 2
+        && (
+          isOwner(chatData.memberUserIds[0])
+          || isOwner(chatData.memberUserIds[1])
+        );
+    }
+
+    match /userChats/{userId}/chats/{chatId} {
+      allow read: if isOwner(userId);
+
+      allow create, update: if signedIn()
+        && request.resource.data.chatId == chatId
+        && request.resource.data.type == "direct"
+        && request.resource.data.memberUserIds is list
+        && request.resource.data.memberUserIds.size() == 2
+        && userId in request.resource.data.memberUserIds
+        && (
+          isOwner(request.resource.data.memberUserIds[0])
+          || isOwner(request.resource.data.memberUserIds[1])
+        );
+
+      allow delete: if isOwner(userId);
+    }
+
+    match /chats/{chatId} {
+      allow read: if isChatMember(resource.data);
+
+      allow create: if signedIn()
+        && request.resource.data.type == "direct"
+        && request.resource.data.memberUserIds is list
+        && request.resource.data.memberUserIds.size() == 2
+        && request.resource.data.createdByUserId is string
+        && isOwner(request.resource.data.createdByUserId)
+        && request.resource.data.createdByAuthUid == request.auth.uid
+        && request.resource.data.createdByUserId in request.resource.data.memberUserIds;
+
+      allow update: if isChatMember(resource.data);
+
+      allow delete: if signedIn()
+        && (
+          (
+            resource.data.createdByUserId is string
+            && isOwner(resource.data.createdByUserId)
+          )
+          || isAdmin()
+        );
+
+      match /messages/{messageId} {
+        allow read: if isChatMember(
+          get(
+            /databases/$(database)/documents/chats/$(chatId)
+          ).data
+        );
+
+        allow create: if isChatMember(
+            get(
+              /databases/$(database)/documents/chats/$(chatId)
+            ).data
+          )
+          && request.resource.data.senderUserId is string
+          && isOwner(request.resource.data.senderUserId)
+          && request.resource.data.senderAuthUid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000;
+
+        allow update: if isChatMember(
+          get(
+            /databases/$(database)/documents/chats/$(chatId)
+          ).data
+        );
+
+        allow delete: if false;
+      }
+    }
+  }
+}
