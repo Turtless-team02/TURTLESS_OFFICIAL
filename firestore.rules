@@ -95,93 +95,279 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    function isGroupMember(chatData) {
+      return signedIn()
+        && chatData.memberUserIds is list
+        && chatData.memberUserIds.size() >= 3
+        && request.auth.uid != null
+        && (
+          isOwner(chatData.memberUserIds[0])
+          || (chatData.memberUserIds.size() > 1
+              && isOwner(chatData.memberUserIds[1]))
+          || (chatData.memberUserIds.size() > 2
+              && isOwner(chatData.memberUserIds[2]))
+          || (chatData.memberUserIds.size() > 3
+              && isOwner(chatData.memberUserIds[3]))
+          || (chatData.memberUserIds.size() > 4
+              && isOwner(chatData.memberUserIds[4]))
+          || (chatData.memberUserIds.size() > 5
+              && isOwner(chatData.memberUserIds[5]))
+          || (chatData.memberUserIds.size() > 6
+              && isOwner(chatData.memberUserIds[6]))
+          || (chatData.memberUserIds.size() > 7
+              && isOwner(chatData.memberUserIds[7]))
+          || (chatData.memberUserIds.size() > 8
+              && isOwner(chatData.memberUserIds[8]))
+          || (chatData.memberUserIds.size() > 9
+              && isOwner(chatData.memberUserIds[9]))
+          || (chatData.memberUserIds.size() > 10
+              && isOwner(chatData.memberUserIds[10]))
+          || (chatData.memberUserIds.size() > 11
+              && isOwner(chatData.memberUserIds[11]))
+          || (chatData.memberUserIds.size() > 12
+              && isOwner(chatData.memberUserIds[12]))
+          || (chatData.memberUserIds.size() > 13
+              && isOwner(chatData.memberUserIds[13]))
+          || (chatData.memberUserIds.size() > 14
+              && isOwner(chatData.memberUserIds[14]))
+          || (chatData.memberUserIds.size() > 15
+              && isOwner(chatData.memberUserIds[15]))
+          || (chatData.memberUserIds.size() > 16
+              && isOwner(chatData.memberUserIds[16]))
+          || (chatData.memberUserIds.size() > 17
+              && isOwner(chatData.memberUserIds[17]))
+          || (chatData.memberUserIds.size() > 18
+              && isOwner(chatData.memberUserIds[18]))
+          || (chatData.memberUserIds.size() > 19
+              && isOwner(chatData.memberUserIds[19]))
+          || (chatData.memberUserIds.size() > 20
+              && isOwner(chatData.memberUserIds[20]))
+          || (chatData.memberUserIds.size() > 21
+              && isOwner(chatData.memberUserIds[21]))
+          || (chatData.memberUserIds.size() > 22
+              && isOwner(chatData.memberUserIds[22]))
+          || (chatData.memberUserIds.size() > 23
+              && isOwner(chatData.memberUserIds[23]))
+          || (chatData.memberUserIds.size() > 24
+              && isOwner(chatData.memberUserIds[24]))
+          || (chatData.memberUserIds.size() > 25
+              && isOwner(chatData.memberUserIds[25]))
+        );
+    }
+
+    match /userChats/{userId}/chats/{chatId} {
+      allow read: if isOwner(userId);
+
+      allow create, update: if signedIn()
+        && request.resource.data.chatId == chatId
+        && request.resource.data.memberUserIds is list
+        && userId in request.resource.data.memberUserIds
+        && (
+          (
+            request.resource.data.type == "direct"
+            && request.resource.data.memberUserIds.size() == 2
+          )
+          ||
+          (
+            request.resource.data.type == "group"
+            && request.resource.data.memberUserIds.size() >= 3
+          )
+        )
+        && (
+          isOwner(request.resource.data.memberUserIds[0])
+          || (request.resource.data.memberUserIds.size() > 1
+              && isOwner(request.resource.data.memberUserIds[1]))
+          || (request.resource.data.memberUserIds.size() > 2
+              && isOwner(request.resource.data.memberUserIds[2]))
+          || (request.resource.data.memberUserIds.size() > 3
+              && isOwner(request.resource.data.memberUserIds[3]))
+          || (request.resource.data.memberUserIds.size() > 4
+              && isOwner(request.resource.data.memberUserIds[4]))
+          || (request.resource.data.memberUserIds.size() > 5
+              && isOwner(request.resource.data.memberUserIds[5]))
+          || (request.resource.data.memberUserIds.size() > 6
+              && isOwner(request.resource.data.memberUserIds[6]))
+          || (request.resource.data.memberUserIds.size() > 7
+              && isOwner(request.resource.data.memberUserIds[7]))
+          || (request.resource.data.memberUserIds.size() > 8
+              && isOwner(request.resource.data.memberUserIds[8]))
+          || (request.resource.data.memberUserIds.size() > 9
+              && isOwner(request.resource.data.memberUserIds[9]))
+          || (request.resource.data.memberUserIds.size() > 10
+              && isOwner(request.resource.data.memberUserIds[10]))
+          || (request.resource.data.memberUserIds.size() > 11
+              && isOwner(request.resource.data.memberUserIds[11]))
+          || (request.resource.data.memberUserIds.size() > 12
+              && isOwner(request.resource.data.memberUserIds[12]))
+          || (request.resource.data.memberUserIds.size() > 13
+              && isOwner(request.resource.data.memberUserIds[13]))
+          || (request.resource.data.memberUserIds.size() > 14
+              && isOwner(request.resource.data.memberUserIds[14]))
+          || (request.resource.data.memberUserIds.size() > 15
+              && isOwner(request.resource.data.memberUserIds[15]))
+          || (request.resource.data.memberUserIds.size() > 16
+              && isOwner(request.resource.data.memberUserIds[16]))
+          || (request.resource.data.memberUserIds.size() > 17
+              && isOwner(request.resource.data.memberUserIds[17]))
+          || (request.resource.data.memberUserIds.size() > 18
+              && isOwner(request.resource.data.memberUserIds[18]))
+          || (request.resource.data.memberUserIds.size() > 19
+              && isOwner(request.resource.data.memberUserIds[19]))
+          || (request.resource.data.memberUserIds.size() > 20
+              && isOwner(request.resource.data.memberUserIds[20]))
+          || (request.resource.data.memberUserIds.size() > 21
+              && isOwner(request.resource.data.memberUserIds[21]))
+          || (request.resource.data.memberUserIds.size() > 22
+              && isOwner(request.resource.data.memberUserIds[22]))
+          || (request.resource.data.memberUserIds.size() > 23
+              && isOwner(request.resource.data.memberUserIds[23]))
+          || (request.resource.data.memberUserIds.size() > 24
+              && isOwner(request.resource.data.memberUserIds[24]))
+          || (request.resource.data.memberUserIds.size() > 25
+              && isOwner(request.resource.data.memberUserIds[25]))
+        );
+
+      allow delete: if isOwner(userId);
+    }
+
     match /chats/{chatId} {
-      allow read: if signedIn()
-        && resource.data.type == "team";
+      allow read: if
+        (
+          signedIn()
+          && resource.data.type == "team"
+        )
+        ||
+        isChatMember(resource.data)
+        ||
+        isGroupMember(resource.data);
 
-      allow create: if signedIn()
-        && request.resource.data.type == "team"
-        && request.resource.data.chatId == chatId
-        && request.resource.data.name == "팀채팅";
+      allow create: if
+        (
+          signedIn()
+          && request.resource.data.type == "team"
+          && request.resource.data.chatId == chatId
+          && request.resource.data.name == "팀채팅"
+        )
+        ||
+        (
+          signedIn()
+          && request.resource.data.type == "direct"
+          && request.resource.data.memberUserIds is list
+          && request.resource.data.memberUserIds.size() == 2
+          && request.resource.data.createdByUserId is string
+          && isOwner(request.resource.data.createdByUserId)
+          && request.resource.data.createdByAuthUid == request.auth.uid
+          && request.resource.data.createdByUserId in request.resource.data.memberUserIds
+        )
+        ||
+        (
+          signedIn()
+          && request.resource.data.type == "group"
+          && request.resource.data.memberUserIds is list
+          && request.resource.data.memberUserIds.size() >= 3
+          && request.resource.data.createdByUserId is string
+          && isOwner(request.resource.data.createdByUserId)
+          && request.resource.data.createdByAuthUid == request.auth.uid
+          && request.resource.data.createdByUserId in request.resource.data.memberUserIds
+        );
 
-      allow update: if signedIn()
-        && resource.data.type == "team"
-        && request.resource.data.type == "team"
-        && request.resource.data.chatId == chatId
-        && request.resource.data.name == "팀채팅";
+      allow update: if
+        (
+          signedIn()
+          && resource.data.type == "team"
+          && request.resource.data.type == "team"
+          && request.resource.data.chatId == chatId
+          && request.resource.data.name == "팀채팅"
+        )
+        ||
+        isChatMember(resource.data)
+        ||
+        isGroupMember(resource.data);
+
+      allow delete: if
+        (
+          resource.data.type == "group"
+          && isGroupMember(resource.data)
+        )
+        ||
+        (
+          signedIn()
+          && (
+            (
+              resource.data.createdByUserId is string
+              && isOwner(resource.data.createdByUserId)
+            )
+            || isAdmin()
+          )
+        );
 
       match /messages/{messageId} {
-        allow read: if signedIn()
-          && get(
-            /databases/$(database)/documents/chats/$(chatId)
-          ).data.type == "team";
+        allow read: if
+          (
+            signedIn()
+            && get(
+              /databases/$(database)/documents/chats/$(chatId)
+            ).data.type == "team"
+          )
+          ||
+          isChatMember(
+            get(
+              /databases/$(database)/documents/chats/$(chatId)
+            ).data
+          )
+          ||
+          isGroupMember(
+            get(
+              /databases/$(database)/documents/chats/$(chatId)
+            ).data
+          );
 
-        allow create: if signedIn()
-          && get(
-            /databases/$(database)/documents/chats/$(chatId)
-          ).data.type == "team"
-          && request.resource.data.senderUserId is string
-          && isOwner(request.resource.data.senderUserId)
-          && request.resource.data.senderAuthUid == request.auth.uid
-          && request.resource.data.text is string
-          && request.resource.data.text.size() > 0
-          && request.resource.data.text.size() <= 2000;
+        allow create: if
+          (
+            signedIn()
+            && get(
+              /databases/$(database)/documents/chats/$(chatId)
+            ).data.type == "team"
+            && request.resource.data.senderUserId is string
+            && isOwner(request.resource.data.senderUserId)
+            && request.resource.data.senderAuthUid == request.auth.uid
+            && request.resource.data.text is string
+            && request.resource.data.text.size() > 0
+            && request.resource.data.text.size() <= 2000
+          )
+          ||
+          (
+            isChatMember(
+              get(
+                /databases/$(database)/documents/chats/$(chatId)
+              ).data
+            )
+            && request.resource.data.senderUserId is string
+            && isOwner(request.resource.data.senderUserId)
+            && request.resource.data.senderAuthUid == request.auth.uid
+            && request.resource.data.text is string
+            && request.resource.data.text.size() > 0
+            && request.resource.data.text.size() <= 2000
+          )
+          ||
+          (
+            isGroupMember(
+              get(
+                /databases/$(database)/documents/chats/$(chatId)
+              ).data
+            )
+            && request.resource.data.senderUserId is string
+            && isOwner(request.resource.data.senderUserId)
+            && request.resource.data.senderAuthUid == request.auth.uid
+            && request.resource.data.text is string
+            && request.resource.data.text.size() > 0
+            && request.resource.data.text.size() <= 2000
+          );
 
         allow update: if false;
         allow delete: if false;
       }
     }
 
-    match /chats/{chatId} {
-      allow read: if isChatMember(resource.data);
-
-      allow create: if signedIn()
-        && request.resource.data.type == "direct"
-        && request.resource.data.memberUserIds is list
-        && request.resource.data.memberUserIds.size() == 2
-        && request.resource.data.createdByUserId is string
-        && isOwner(request.resource.data.createdByUserId)
-        && request.resource.data.createdByAuthUid == request.auth.uid
-        && request.resource.data.createdByUserId in request.resource.data.memberUserIds;
-
-      allow update: if isChatMember(resource.data);
-
-      allow delete: if signedIn()
-        && (
-          (
-            resource.data.createdByUserId is string
-            && isOwner(resource.data.createdByUserId)
-          )
-          || isAdmin()
-        );
-
-      match /messages/{messageId} {
-        allow read: if isChatMember(
-          get(
-            /databases/$(database)/documents/chats/$(chatId)
-          ).data
-        );
-
-        allow create: if isChatMember(
-            get(
-              /databases/$(database)/documents/chats/$(chatId)
-            ).data
-          )
-          && request.resource.data.senderUserId is string
-          && isOwner(request.resource.data.senderUserId)
-          && request.resource.data.senderAuthUid == request.auth.uid
-          && request.resource.data.text is string
-          && request.resource.data.text.size() > 0
-          && request.resource.data.text.size() <= 2000;
-
-        allow update: if isChatMember(
-          get(
-            /databases/$(database)/documents/chats/$(chatId)
-          ).data
-        );
-
-        allow delete: if false;
-      }
-    }
   }
 }

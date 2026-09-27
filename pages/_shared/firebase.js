@@ -189,6 +189,110 @@ window.turtlessOpenTeamChat = async function () {
   };
 };
 
+
+window.turtlessCreateGroupChat = async function (name, memberUserIds) {
+  if (!currentUserId || !window.auth?.currentUser) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const cleanName = String(name || "").trim();
+
+  if (!cleanName) {
+    throw new Error("단체채팅방 이름을 입력해주세요.");
+  }
+
+  if (cleanName.length > 40) {
+    throw new Error("단체채팅방 이름은 40자 이하로 입력해주세요.");
+  }
+
+  const selectedIds = Array.isArray(memberUserIds)
+    ? memberUserIds
+        .map(id => String(id))
+        .filter(Boolean)
+    : [];
+
+  const uniqueIds = [...new Set([
+    currentUserId,
+    ...selectedIds
+  ])];
+
+  if (uniqueIds.length < 3) {
+    throw new Error("단체채팅은 본인을 포함해 3명 이상이어야 합니다.");
+  }
+
+  const chatId =
+    `group_${crypto.randomUUID().replace(/-/g, '')}`;
+
+  const createdAt = Date.now();
+
+  const chatData = {
+    type: "group",
+    name: cleanName,
+    chatId,
+    memberUserIds: uniqueIds,
+    createdByUserId: currentUserId,
+    createdByAuthUid: window.auth.currentUser.uid,
+    createdAt
+  };
+
+  await setDoc(
+    doc(db, "chats", chatId),
+    chatData
+  );
+
+  // 참여자별 단체채팅 목록 인덱스 생성
+  for (const userId of uniqueIds) {
+    await setDoc(
+      doc(db, "userChats", userId, "chats", chatId),
+      {
+        chatId,
+        type: "group",
+        name: cleanName,
+        memberUserIds: uniqueIds,
+        createdAt
+      },
+      { merge: true }
+    );
+  }
+
+  return {
+    id: chatId,
+    ...chatData
+  };
+};
+
+
+window.turtlessGetMyGroupChats = async function () {
+  if (!currentUserId || !window.auth?.currentUser) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const chatsRef = collection(
+    db,
+    "userChats",
+    currentUserId,
+    "chats"
+  );
+
+  const snap = await getDocs(chatsRef);
+
+  return snap.docs
+    .map(d => ({
+      id: d.id,
+      ...d.data()
+    }))
+    .filter(chat => chat.type === "group")
+    .sort((a, b) => {
+      const aTime =
+        Number(a.lastMessageAt || a.createdAt || 0);
+      const bTime =
+        Number(b.lastMessageAt || b.createdAt || 0);
+
+      return bTime - aTime;
+    });
+};
+
+
 window.turtlessGetMyChats = async function () {
   if (!currentUserId || !window.auth?.currentUser) {
     throw new Error("로그인이 필요합니다.");

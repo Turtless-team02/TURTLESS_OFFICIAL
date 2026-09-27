@@ -736,6 +736,14 @@ function initTurtlessMessenger() {
         </div>
       </button>
 
+      <button class="turtless-messenger-item" data-messenger-tab="group">
+        <span>👨‍👩‍👧‍👦</span>
+        <div>
+          <strong>단체채팅</strong>
+          <small>여러 팀원과 함께 대화</small>
+        </div>
+      </button>
+
       <button class="turtless-messenger-item" data-messenger-tab="contacts">
         <span>📇</span>
         <div>
@@ -1339,6 +1347,7 @@ function initTurtlessMessenger() {
     const titles = {
       personal: '개인채팅',
       team: '팀채팅',
+      group: '단체채팅',
       contacts: '연락처'
     };
 
@@ -1781,6 +1790,639 @@ function initTurtlessMessenger() {
         `;
       }
 
+      return;
+    }
+
+
+    // 단체채팅
+    if (tab === 'group') {
+      content.innerHTML = `
+        <div style="padding:14px 14px 0;">
+          <button
+            id="turtless-create-group-chat"
+            type="button"
+            style="
+              width:100%;
+              border:0;
+              border-radius:12px;
+              padding:12px;
+              background:#1769ff;
+              color:#fff;
+              font-weight:700;
+              cursor:pointer;
+            "
+          >
+            ＋ 새 단체채팅 만들기
+          </button>
+        </div>
+
+        <div
+          id="turtless-group-chat-list"
+          style="padding:8px 0;"
+        >
+          <div style="
+            padding:28px 20px;
+            text-align:center;
+            color:#888;
+          ">
+            단체채팅을 불러오는 중...
+          </div>
+        </div>
+      `;
+
+      const list =
+        document.getElementById(
+          'turtless-group-chat-list'
+        );
+
+      const createButton =
+        document.getElementById(
+          'turtless-create-group-chat'
+        );
+
+      async function loadGroupChats() {
+        try {
+          const chats =
+            await window.turtlessGetMyGroupChats();
+
+          if (!Array.isArray(chats) || chats.length === 0) {
+            list.innerHTML = `
+              <div style="
+                padding:45px 20px;
+                text-align:center;
+                color:#888;
+              ">
+                <div style="
+                  font-size:34px;
+                  margin-bottom:10px;
+                ">👨‍👩‍👧‍👦</div>
+
+                <strong>단체채팅이 없습니다.</strong>
+
+                <p style="
+                  font-size:13px;
+                  margin-top:8px;
+                ">
+                  여러 팀원을 선택해 새로운 대화방을 만들어보세요.
+                </p>
+              </div>
+            `;
+
+            return;
+          }
+
+          const users =
+            await window.turtlessGetPublicMembers();
+
+          const userMap =
+            new Map(users.map(user => [user.id, user]));
+
+          list.innerHTML = `
+            ${chats.map(chat => {
+              const memberIds =
+                Array.isArray(chat.memberUserIds)
+                  ? chat.memberUserIds
+                  : [];
+
+              const names =
+                memberIds
+                  .map(id => userMap.get(id)?.name)
+                  .filter(Boolean);
+
+              return `
+                <div
+                  data-group-chat="${chat.id}"
+                  style="
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                    padding:13px 16px;
+                    cursor:pointer;
+                    border-bottom:1px solid #eee;
+                  "
+                >
+                  <div style="
+                    width:44px;
+                    height:44px;
+                    border-radius:14px;
+                    background:#edf4ff;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:21px;
+                    flex:none;
+                  ">👥</div>
+
+                  <div style="
+                    min-width:0;
+                    flex:1;
+                    text-align:left;
+                  ">
+                    <div style="
+                      font-weight:700;
+                      color:#222;
+                    ">
+                      ${String(chat.name || '단체채팅')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')}
+                    </div>
+
+                    <div style="
+                      color:#999;
+                      font-size:11px;
+                      margin-top:4px;
+                      overflow:hidden;
+                      text-overflow:ellipsis;
+                      white-space:nowrap;
+                    ">
+                      ${names.join(', ') || '팀원'} · ${memberIds.length}명
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          `;
+
+          list
+            .querySelectorAll('[data-group-chat]')
+            .forEach(item => {
+              item.addEventListener('click', async () => {
+                const chatId =
+                  item.dataset.groupChat;
+
+                const chat =
+                  chats.find(value =>
+                    value.id === chatId
+                  );
+
+                if (!chat) return;
+
+                await openGroupChatUI(chat);
+              });
+            });
+
+        } catch (error) {
+          console.error(
+            '[TURTLESS] 단체채팅 목록 불러오기 실패:',
+            error
+          );
+
+          list.innerHTML = `
+            <div style="
+              padding:40px 20px;
+              text-align:center;
+              color:#888;
+            ">
+              <div style="
+                font-size:32px;
+                margin-bottom:10px;
+              ">⚠️</div>
+
+              <strong>단체채팅을 불러오지 못했습니다.</strong>
+
+              <p style="
+                font-size:13px;
+                margin-top:8px;
+              ">
+                ${error.message || '잠시 후 다시 시도해주세요.'}
+              </p>
+            </div>
+          `;
+        }
+      }
+
+      createButton.addEventListener(
+        'click',
+        async () => {
+          try {
+            const users =
+              await window.turtlessGetPublicMembers();
+
+            const myUserId =
+              typeof window.turtlessGetCurrentUserId === 'function'
+                ? window.turtlessGetCurrentUserId()
+                : null;
+
+            const members =
+              users.filter(user =>
+                user.id !== myUserId
+              );
+
+            content.innerHTML = `
+              <div style="
+                padding:16px;
+                text-align:left;
+              ">
+                <div style="
+                  font-size:16px;
+                  font-weight:700;
+                  margin-bottom:5px;
+                ">
+                  새 단체채팅
+                </div>
+
+                <div style="
+                  font-size:12px;
+                  color:#888;
+                  margin-bottom:14px;
+                ">
+                  본인을 포함해 3명 이상을 선택하세요.
+                </div>
+
+                <input
+                  id="turtless-group-name"
+                  type="text"
+                  maxlength="40"
+                  placeholder="채팅방 이름"
+                  style="
+                    width:100%;
+                    box-sizing:border-box;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    padding:11px 12px;
+                    margin-bottom:12px;
+                    outline:none;
+                  "
+                >
+
+                <div style="
+                  max-height:290px;
+                  overflow-y:auto;
+                  border:1px solid #eee;
+                  border-radius:12px;
+                ">
+                  ${members.map(user => `
+                    <label style="
+                      display:flex;
+                      align-items:center;
+                      gap:10px;
+                      padding:10px 12px;
+                      border-bottom:1px solid #f2f2f2;
+                      cursor:pointer;
+                    ">
+                      <input
+                        type="checkbox"
+                        value="${user.id}"
+                        data-group-member
+                      >
+
+                      <div style="
+                        width:34px;
+                        height:34px;
+                        border-radius:50%;
+                        overflow:hidden;
+                        background:#edf4ff;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        flex:none;
+                      ">
+                        ${
+                          user.profileImage
+                            ? `<img src="${user.profileImage}"
+                                style="width:100%;height:100%;object-fit:cover;">`
+                            : '👤'
+                        }
+                      </div>
+
+                      <div style="min-width:0;">
+                        <div style="
+                          font-weight:700;
+                          font-size:13px;
+                        ">
+                          ${String(user.name || '')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')}
+                        </div>
+
+                        <div style="
+                          color:#999;
+                          font-size:10px;
+                          margin-top:2px;
+                        ">
+                          ${String(user.school || '')
+                            .replace(/</g, '&lt;')}
+                        </div>
+                      </div>
+                    </label>
+                  `).join('')}
+                </div>
+
+                <button
+                  id="turtless-group-create-submit"
+                  type="button"
+                  style="
+                    width:100%;
+                    margin-top:12px;
+                    border:0;
+                    border-radius:10px;
+                    padding:12px;
+                    background:#1769ff;
+                    color:#fff;
+                    font-weight:700;
+                    cursor:pointer;
+                  "
+                >
+                  단체채팅 만들기
+                </button>
+              </div>
+            `;
+
+            const submit =
+              document.getElementById(
+                'turtless-group-create-submit'
+              );
+
+            submit.addEventListener(
+              'click',
+              async () => {
+                const name =
+                  document.getElementById(
+                    'turtless-group-name'
+                  )?.value?.trim();
+
+                const selected =
+                  [...content.querySelectorAll(
+                    '[data-group-member]:checked'
+                  )].map(input => input.value);
+
+                if (!name) {
+                  alert('채팅방 이름을 입력해주세요.');
+                  return;
+                }
+
+                if (selected.length < 2) {
+                  alert(
+                    '본인을 제외하고 최소 2명을 선택해주세요.'
+                  );
+                  return;
+                }
+
+                try {
+                  submit.disabled = true;
+                  submit.textContent = '만드는 중...';
+
+                  const chat =
+                    await window.turtlessCreateGroupChat(
+                      name,
+                      selected
+                    );
+
+                  await openGroupChatUI(chat);
+
+                } catch (error) {
+                  console.error(
+                    '[TURTLESS] 단체채팅 생성 실패:',
+                    error
+                  );
+
+                  alert(
+                    error.message ||
+                    '단체채팅을 만들지 못했습니다.'
+                  );
+
+                  submit.disabled = false;
+                  submit.textContent =
+                    '단체채팅 만들기';
+                }
+              }
+            );
+
+          } catch (error) {
+            console.error(
+              '[TURTLESS] 단체채팅 생성 화면 실패:',
+              error
+            );
+
+            alert(
+              error.message ||
+              '팀원 목록을 불러오지 못했습니다.'
+            );
+          }
+        }
+      );
+
+      async function openGroupChatUI(chat) {
+        content.innerHTML = `
+          <div style="
+            display:flex;
+            flex-direction:column;
+            height:100%;
+            min-height:420px;
+          ">
+            <div style="
+              padding:12px 16px;
+              border-bottom:1px solid #eee;
+              font-weight:700;
+              color:#222;
+              flex:none;
+            ">
+              👥 ${String(chat.name || '단체채팅')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')}
+            </div>
+
+            <div
+              id="turtless-group-messages"
+              style="
+                flex:1;
+                overflow-y:auto;
+                padding:14px;
+                background:#f7f9fc;
+              "
+            ></div>
+
+            <div style="
+              display:flex;
+              gap:8px;
+              padding:10px;
+              border-top:1px solid #eee;
+              background:#fff;
+              flex:none;
+            ">
+              <input
+                id="turtless-group-input"
+                type="text"
+                maxlength="2000"
+                placeholder="메시지 보내기"
+                style="
+                  flex:1;
+                  min-width:0;
+                  border:1px solid #ddd;
+                  border-radius:10px;
+                  padding:10px 12px;
+                  outline:none;
+                "
+              >
+
+              <button
+                id="turtless-group-send"
+                type="button"
+                style="
+                  border:0;
+                  border-radius:10px;
+                  padding:0 15px;
+                  background:#1769ff;
+                  color:#fff;
+                  font-weight:700;
+                  cursor:pointer;
+                "
+              >
+                전송
+              </button>
+            </div>
+          </div>
+        `;
+
+        const messageBox =
+          document.getElementById(
+            'turtless-group-messages'
+          );
+
+        const input =
+          document.getElementById(
+            'turtless-group-input'
+          );
+
+        const sendButton =
+          document.getElementById(
+            'turtless-group-send'
+          );
+
+        function escapeHtml(value) {
+          return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+        }
+
+        function renderMessages(messages) {
+          const myUid =
+            window.auth?.currentUser?.uid || '';
+
+          messageBox.innerHTML =
+            messages.map(message => {
+              const mine =
+                message.senderAuthUid === myUid;
+
+              return `
+                <div style="
+                  display:flex;
+                  justify-content:${mine ? 'flex-end' : 'flex-start'};
+                  margin:6px 0;
+                ">
+                  <div style="
+                    max-width:78%;
+                    text-align:${mine ? 'right' : 'left'};
+                  ">
+                    ${
+                      mine
+                        ? ''
+                        : `<div style="
+                            font-size:11px;
+                            color:#777;
+                            margin:0 4px 3px;
+                          ">
+                            ${escapeHtml(
+                              message.senderName || '팀원'
+                            )}
+                          </div>`
+                    }
+
+                    <div style="
+                      display:inline-block;
+                      padding:9px 12px;
+                      border-radius:12px;
+                      background:${mine ? '#1769ff' : '#fff'};
+                      color:${mine ? '#fff' : '#222'};
+                      border:${mine ? '0' : '1px solid #e8e8e8'};
+                      word-break:break-word;
+                      white-space:pre-wrap;
+                    ">
+                      ${escapeHtml(message.text)}
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+          messageBox.scrollTop =
+            messageBox.scrollHeight;
+        }
+
+        const unsubscribe =
+          window.turtlessListenChatMessages(
+            chat.id,
+            renderMessages
+          );
+
+        async function sendMessage() {
+          const text =
+            String(input.value || '').trim();
+
+          if (!text) return;
+
+          try {
+            sendButton.disabled = true;
+
+            await window.turtlessSendChatMessage(
+              chat.id,
+              text
+            );
+
+            input.value = '';
+            input.focus();
+
+          } catch (error) {
+            alert(
+              error.message ||
+              '메시지를 보내지 못했습니다.'
+            );
+          } finally {
+            sendButton.disabled = false;
+          }
+        }
+
+        sendButton.addEventListener(
+          'click',
+          sendMessage
+        );
+
+        input.addEventListener(
+          'keydown',
+          event => {
+            if (
+              event.key === 'Enter' &&
+              !event.shiftKey
+            ) {
+              event.preventDefault();
+              sendMessage();
+            }
+          }
+        );
+
+        input.focus();
+
+        const closeObserver =
+          new MutationObserver(() => {
+            if (panel.style.display === 'none') {
+              if (unsubscribe) {
+                unsubscribe();
+              }
+
+              closeObserver.disconnect();
+            }
+          });
+
+        closeObserver.observe(panel, {
+          attributes: true,
+          attributeFilter: ['style']
+        });
+      }
+
+      await loadGroupChats();
       return;
     }
 
