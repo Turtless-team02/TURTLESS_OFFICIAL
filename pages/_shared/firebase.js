@@ -968,6 +968,15 @@ let n = loginInput;
 
 // 이름 대신 TURTLESS ID를 입력해도 기존 로그인 로직을 그대로 사용할 수 있도록
 // ID → 이름으로 먼저 변환한다.
+window.turtlessGetDisplayLoginId = function(userId, userName) {
+  const map = typeof loginIdMap !== 'undefined' ? loginIdMap : {};
+  const found = Object.entries(map).find(([id, name]) => {
+    return name === userName || id === userId;
+  });
+
+  return found ? found[0] : '';
+};
+
 const loginIdMap = {
     "parkwooyoung02": "박우영",
     "janghyena02": "장혜나",

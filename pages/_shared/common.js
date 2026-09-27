@@ -969,7 +969,11 @@ function initTurtlessMessenger() {
             const grade = user.grade ? `${user.grade}학년` : '';
             const role = user.role || '';
             const id = user.id || '';
-            const fakeEmail = id ? `${id}@turtless.com` : '';
+            const displayId =
+              typeof window.turtlessGetDisplayLoginId === 'function'
+                ? window.turtlessGetDisplayLoginId(id, name)
+                : '';
+            const fakeEmail = displayId ? `${displayId}@turtless.com` : '';
 
             const profile =
               user.profileImage ||
