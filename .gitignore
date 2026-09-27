@@ -5,3 +5,6 @@ package.json
 package-lock.json
 *.backup-auth-*
 turtless-web-firebase-adminsdk-*.json
+
+# Local Firebase security backups
+*.backup-security-*

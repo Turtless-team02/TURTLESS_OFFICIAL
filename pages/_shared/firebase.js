@@ -764,21 +764,20 @@ function loadYoutubeFallback() {
 
 // --- Firebase Authentication 계정 전환 ---
 function getAuthEmail(userId, userData = currentUserData) {
-  // 1순위: Firestore에 저장된 실제 Auth 이메일
-  if (userData?.authEmail) {
-    return userData.authEmail;
-  }
-
-  // 기존에 이미 사용 중인 이메일 매핑은 호환용으로 유지
+  // 공개 users 문서의 authEmail에는 의존하지 않는다.
+  // Firebase Auth 계정 이메일은 이름 기반의 고정 매핑으로 확인한다.
   const emailMap = {
     "박우영": "parkwooyoung02@turtless.com",
     "장혜나": "janghyena02@turtless.com",
     "송주원": "songjuwon02@turtless.com",
     "김아인": "kimain02@turtless.com",
     "강윤아": "kangyoona02@turtless.com",
+    "천강숙": "cheongangsuk02@turtless.com",
     "장동준": "jangdongjun02@turtless.com",
     "류경원": "ryukyungwon02@turtless.com",
     "김태균": "kimtaegyun02@turtless.com",
+    "홍우진": "hongwoojin02@turtless.com",
+    "채준영": "chaejunyoung02@turtless.com",
     "이영진": "leeyoungjin02@turtless.com",
     "김정한": "kimjunghan02@turtless.com",
     "김승혁": "kimseunghyuk02@turtless.com",
@@ -787,181 +786,21 @@ function getAuthEmail(userId, userData = currentUserData) {
     "이재민": "leejaemin02@turtless.com",
     "정지우": "jungjiwoo02@turtless.com",
     "최원정": "choiwonjeong02@turtless.com",
-    "천강숙": "cheongangsuk02@turtless.com",
-    "홍우진": "hongwoojin02@turtless.com",
-    "채준현": "giea7ms7o2swbbdlmebz@turtless-web.firebaseapp.com"
+    "채준현": "chaejunhyun02@turtless.com",
+    "김윤상": "kimyunsang02@turtless.com",
+    "이준범": "leejunbeom02@turtless.com",
+    "이희담": "leeheedam02@turtless.com",
+    "강석주": "gangseokju02@turtless.com",
+    "김기율": "kimgiyul02@turtless.com",
+    "김도윤": "kimdoyun02@turtless.com"
   };
 
   if (userData?.name && emailMap[userData.name]) {
     return emailMap[userData.name];
   }
 
-  /*
-   * 아직 Auth로 전환되지 않은 회원은
-   * Firestore 문서 ID 기반의 고유 이메일을 사용한다.
-   *
-   * 임의의 이름 이메일을 만들지 않기 때문에
-   * 영문 이름 표기 오류나 중복 문제가 없다.
-   */
-  if (userId) {
-    return `member-${userId}@turtless-web.firebaseapp.com`;
-  }
-
   return null;
 }
-
-async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
-  if (!window.auth || !userId || !userData) return false;
-
-  const authEmail = getAuthEmail(userId, userData);
-
-  if (!authEmail) {
-    alert(
-      "Firebase 계정 이메일을 확인할 수 없습니다.\\n" +
-      "관리자에게 문의해주세요."
-    );
-    return false;
-  }
-
-  // 이미 Auth UID가 연결된 회원
-  if (userData.authUid) {
-    try {
-      await signInWithEmailAndPassword(
-        window.auth,
-        authEmail,
-        oldPassword
-      );
-
-      // authEmail이 아직 없던 기존 회원도 보완
-      if (userData.authEmail !== authEmail) {
-        await updateDoc(doc(db, "users", userId), {
-          authEmail
-        });
-
-        currentUserData = {
-          ...currentUserData,
-          authEmail
-        };
-      }
-
-      return true;
-
-    } catch (error) {
-      console.warn(
-        "[TURTLESS] 기존 Auth 로그인 실패:",
-        error.code
-      );
-
-      alert("비밀번호가 올바르지 않습니다.");
-      return false;
-    }
-  }
-
-  let authPassword = oldPassword;
-  let passwordChanged = false;
-
-  // Firebase Auth는 최소 6자 비밀번호 필요
-  if (oldPassword.length < 6) {
-    const newPassword = prompt(
-      "보안 전환이 필요합니다.\\n새 비밀번호를 6자 이상으로 설정해주세요."
-    );
-
-    if (newPassword === null) {
-      alert("보안 전환을 취소했습니다.");
-      return false;
-    }
-
-    if (newPassword.length < 6) {
-      alert("새 비밀번호는 6자 이상이어야 합니다.");
-      return false;
-    }
-
-    const confirmPassword = prompt(
-      "새 비밀번호를 한 번 더 입력해주세요."
-    );
-
-    if (confirmPassword !== newPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return false;
-    }
-
-    authPassword = newPassword;
-    passwordChanged = true;
-  }
-
-  try {
-    const credential = await createUserWithEmailAndPassword(
-      window.auth,
-      authEmail,
-      authPassword
-    );
-
-    const authUid = credential.user.uid;
-
-    const updateData = {
-      authUid,
-      authEmail,
-      authMigrated: true,
-      authMigratedAt: Date.now()
-    };
-
-    if (passwordChanged) {
-      updateData.pass = authPassword;
-    }
-
-    await updateDoc(
-      doc(db, "users", userId),
-      updateData
-    );
-
-    currentUserData = {
-      ...userData,
-      ...updateData
-    };
-
-    alert(
-      passwordChanged
-        ? "보안 전환이 완료되었습니다. 새 비밀번호로 로그인하게 됩니다."
-        : "보안 전환이 완료되었습니다."
-    );
-
-    return true;
-
-  } catch (error) {
-
-    /*
-     * 이미 존재하는 이메일이라고 해서
-     * 다른 Auth 계정을 자동으로 가져오지 않는다.
-     */
-    if (error.code === "auth/email-already-in-use") {
-      console.warn(
-        "[TURTLESS] 이미 존재하는 Auth 이메일:",
-        authEmail
-      );
-
-      alert(
-        "이 Firebase 계정은 이미 존재합니다.\\n\\n" +
-        "기존 계정과 자동으로 연결하지 않았습니다.\\n" +
-        "관리자 확인이 필요합니다."
-      );
-
-      return false;
-    }
-
-    console.error(
-      "[TURTLESS] Auth 계정 생성 실패:",
-      error
-    );
-
-    alert(
-      "Firebase 계정 생성에 실패했습니다.\\n\\n" +
-      "오류 코드: " + (error?.code || "없음")
-    );
-
-    return false;
-  }
-}
-
 
 // ============================================================
 // Firebase Auth 비밀번호 변경
@@ -1076,9 +915,12 @@ const loginIdMap = {
     "songjuwon02": "송주원",
     "kimain02": "김아인",
     "kangyoona02": "강윤아",
+    "cheongangsuk02": "천강숙",
     "jangdongjun02": "장동준",
     "ryukyungwon02": "류경원",
     "kimtaegyun02": "김태균",
+    "hongwoojin02": "홍우진",
+    "chaejunyoung02": "채준영",
     "leeyoungjin02": "이영진",
     "kimjunghan02": "김정한",
     "kimseunghyuk02": "김승혁",
@@ -1087,9 +929,13 @@ const loginIdMap = {
     "leejaemin02": "이재민",
     "jungjiwoo02": "정지우",
     "choiwonjeong02": "최원정",
-    "cheongangsuk02": "천강숙",
-    "hongwoojin02": "홍우진",
-    "chaejunhyun02": "채준현"
+    "chaejunhyun02": "채준현",
+    "kimyunsang02": "김윤상",
+    "leejunbeom02": "이준범",
+    "leeheedam02": "이희담",
+    "gangseokju02": "강석주",
+    "kimgiyul02": "김기율",
+    "kimdoyun02": "김도윤"
 };
 
 const normalizedLoginId = loginInput
@@ -1118,48 +964,69 @@ if (loginIdMap[normalizedLoginId]) {
 
     const userDoc = userSnap.docs[0];
     currentUserId = userDoc.id;
-    currentUserData = userDoc.data();
 
-    // 2. 이미 Firebase Authentication으로 전환된 계정
-    if (currentUserData.authUid) {
-      try {
-        await signInWithEmailAndPassword(
-          window.auth,
-          getAuthEmail(currentUserId, currentUserData),
-          p
-        );
-      } catch (authError) {
-        console.error("[TURTLESS] Firebase Auth 로그인 실패:", authError);
-        alert("비밀번호가 올바르지 않습니다.");
-        return;
-      }
+    // 공개 users 문서에는 인증정보를 의존하지 않는다.
+    const publicUserData = userDoc.data();
+
+    // 로그인 전에는 공개 팀원 정보로 문서 ID만 확인하고,
+    // 실제 비밀번호 검증은 Firebase Authentication에서 처리한다.
+    const authEmail = getAuthEmail(currentUserId, publicUserData);
+
+    if (!authEmail) {
+      alert("Firebase 계정 정보를 확인할 수 없습니다.\n관리자에게 문의해주세요.");
+      return;
     }
 
-    // 3. 아직 전환되지 않은 기존 계정
-    else {
-      if (currentUserData.pass !== p) {
-        alert("인증 실패");
-        return;
-      }
-
-      const migrated = await migrateUserToFirebaseAuth(
-        currentUserId,
-        currentUserData,
+    try {
+      await signInWithEmailAndPassword(
+        window.auth,
+        authEmail,
         p
       );
+    } catch (authError) {
+      console.error("[TURTLESS] Firebase Auth 로그인 실패:", authError);
 
-      // 마이그레이션이 실패하거나 취소되면 로그인도 완료하지 않는다.
-      // 각 팀원이 자신의 새 비밀번호를 설정해야 Auth 전환이 완료된다.
-      if (!migrated) {
-        return;
+      if (
+        authError.code === "auth/invalid-credential" ||
+        authError.code === "auth/wrong-password" ||
+        authError.code === "auth/user-not-found"
+      ) {
+        alert("비밀번호가 올바르지 않습니다.");
+      } else {
+        alert("로그인에 실패했습니다.\n잠시 후 다시 시도해주세요.");
       }
 
-      // 마이그레이션이 성공하면 최신 데이터 다시 반영
-      const refreshed = await getDoc(doc(db, "users", currentUserId));
+      return;
+    }
 
-      if (refreshed.exists()) {
-        currentUserData = refreshed.data();
-      }
+    // Auth 로그인 성공 후에만 보호된 usersPrivate 문서를 읽는다.
+    const privateSnap = await getDoc(
+      doc(db, "usersPrivate", currentUserId)
+    );
+
+    if (!privateSnap.exists()) {
+      await signOut(window.auth);
+      currentUserId = null;
+      currentUserData = null;
+      alert("계정 정보를 확인할 수 없습니다.\n관리자에게 문의해주세요.");
+      return;
+    }
+
+    const privateData = privateSnap.data();
+
+    // 공개 정보 + 보호된 인증정보를 화면용 객체로 결합한다.
+    currentUserData = {
+      ...publicUserData,
+      ...privateData
+    };
+
+    // Auth UID가 실제 로그인 사용자와 일치하는지 확인
+    if (privateData.authUid !== window.auth.currentUser?.uid) {
+      await signOut(window.auth);
+      currentUserId = null;
+      currentUserData = null;
+      alert("계정 인증 정보가 일치하지 않습니다.");
+      return;
     }
 
     window.isAdmin = currentUserData?.role === 'admin';
@@ -1228,15 +1095,26 @@ async function restoreLoginSession() {
       return;
     }
 
-    // Auth UID로 실제 팀원 데이터 확인
-    const userSnap = await getDocs(
-      query(
-        collection(db, "users"),
-        where("authUid", "==", authUser.uid)
-      )
+    // 기존 세션 ID를 이용해 보호된 usersPrivate 문서를 직접 확인한다.
+    const savedUserId = sessionStorage.getItem('turtlessUserId');
+
+    if (!savedUserId) {
+      await signOut(window.auth);
+      currentUserId = null;
+      currentUserData = null;
+      window.isAdmin = false;
+      return;
+    }
+
+    const publicSnap = await getDoc(
+      doc(db, "users", savedUserId)
     );
 
-    if (userSnap.empty) {
+    const privateSnap = await getDoc(
+      doc(db, "usersPrivate", savedUserId)
+    );
+
+    if (!publicSnap.exists() || !privateSnap.exists()) {
       sessionStorage.removeItem('turtlessUserId');
       currentUserId = null;
       currentUserData = null;
@@ -1245,12 +1123,26 @@ async function restoreLoginSession() {
       return;
     }
 
-    const userDoc = userSnap.docs[0];
+    const publicUserData = publicSnap.data();
+    const privateUserData = privateSnap.data();
 
-    currentUserId = userDoc.id;
-    currentUserData = userDoc.data();
+    // 보호된 문서가 현재 Firebase Auth 사용자와 연결되어 있는지 확인
+    if (privateUserData.authUid !== authUser.uid) {
+      sessionStorage.removeItem('turtlessUserId');
+      currentUserId = null;
+      currentUserData = null;
+      window.isAdmin = false;
+      await signOut(window.auth);
+      return;
+    }
 
-    // 기존 세션 ID는 UI/페이지 이동 호환용으로만 유지
+    currentUserId = savedUserId;
+    currentUserData = {
+      ...publicUserData,
+      ...privateUserData
+    };
+
+    // 기존 세션 ID는 UI/페이지 이동 호환용으로 유지
     sessionStorage.setItem('turtlessUserId', currentUserId);
 
     window.isAdmin = currentUserData?.role === 'admin';
@@ -2139,40 +2031,13 @@ let teamAccountAdminMembers = [];
 let teamAccountAdminFiltered = [];
 
 function getTeamAccountAdminId(member) {
-    /*
-     * 기존 로그인 구조와 동일하게 TURTLESS ID를 계산합니다.
-     * authEmail이 있으면 @turtless.com 앞부분을 사용합니다.
-     */
-    if (member.authEmail) {
-        return String(member.authEmail)
-            .replace(/@turtless\.com$/i, '')
+    // 공개 users 문서의 authEmail에는 의존하지 않는다.
+    const email = getAuthEmail(member.id, member);
+
+    if (email) {
+        return String(email)
+            .replace(/@turtless\\.com$/i, '')
             .trim();
-    }
-
-    const emailMap = {
-        "박우영": "parkwooyoung02",
-        "장혜나": "janghyena02",
-        "송주원": "songjuwon02",
-        "김아인": "kimain02",
-        "강윤아": "kangyoona02",
-        "장동준": "jangdongjun02",
-        "류경원": "ryukyungwon02",
-        "김태균": "kimtaegyun02",
-        "이영진": "leeyoungjin02",
-        "김정한": "kimjunghan02",
-        "김승혁": "kimseunghyuk02",
-        "김시우": "kimsiwoo02",
-        "권우진": "kwonwoojin02",
-        "이재민": "leejaemin02",
-        "정지우": "jungjiwoo02",
-        "최원정": "choiwonjeong02",
-        "천강숙": "cheongangsuk02",
-        "홍우진": "hongwoojin02",
-        "채준현": "chaejunhyun02"
-    };
-
-    if (member.name && emailMap[member.name]) {
-        return emailMap[member.name];
     }
 
     return member.id || "-";
@@ -2222,11 +2087,12 @@ window.loadTeamAccountAdmin = async () => {
     `;
 
     try {
-        const snap = await getDocs(collection(db, "users"));
+        // 공개 팀원 정보
+        const publicSnap = await getDocs(collection(db, "users"));
 
         const uniqueMap = new Map();
 
-        snap.forEach(d => {
+        publicSnap.forEach(d => {
             const data = d.data();
 
             if (!data.name) return;
@@ -2241,7 +2107,51 @@ window.loadTeamAccountAdmin = async () => {
             }
         });
 
-        teamAccountAdminMembers = Array.from(uniqueMap.values());
+        const publicMembers = Array.from(uniqueMap.values());
+
+        // 관리자만 접근 가능한 usersPrivate에서 인증/권한 정보를 가져온다.
+        const privateMembers = await Promise.all(
+            publicMembers.map(async member => {
+                try {
+                    const privateSnap = await getDoc(
+                        doc(db, "usersPrivate", member.id)
+                    );
+
+                    if (!privateSnap.exists()) {
+                        return {
+                            ...member,
+                            authUid: null,
+                            authEmail: null,
+                            authMigrated: false,
+                            authMigratedAt: null,
+                            role: "member"
+                        };
+                    }
+
+                    return {
+                        ...member,
+                        ...privateSnap.data()
+                    };
+                } catch (privateError) {
+                    console.warn(
+                        "[TURTLESS] private 계정정보 로딩 실패:",
+                        member.id,
+                        privateError
+                    );
+
+                    return {
+                        ...member,
+                        authUid: null,
+                        authEmail: null,
+                        authMigrated: false,
+                        authMigratedAt: null,
+                        role: "member"
+                    };
+                }
+            })
+        );
+
+        teamAccountAdminMembers = privateMembers;
 
         teamAccountAdminMembers.sort((a, b) => {
             const schoolA = String(a.school || "");
