@@ -1744,7 +1744,16 @@ function initTurtlessMessenger() {
         const unsubscribe =
           window.turtlessListenChatMessages(
             chatId,
-            renderTeamMessages
+            (messages, error) => {
+              if (error || !Array.isArray(messages)) {
+                return;
+              }
+
+              renderTeamMessages(messages);
+
+              // 현재 열려 있는 팀채팅은 자동으로 읽음 처리
+              markChatAsRead(chatId, messages);
+            }
           );
 
         async function sendTeamMessage() {
@@ -2419,7 +2428,16 @@ function initTurtlessMessenger() {
         const unsubscribe =
           window.turtlessListenChatMessages(
             chat.id,
-            renderMessages
+            (messages, error) => {
+              if (error || !Array.isArray(messages)) {
+                return;
+              }
+
+              renderMessages(messages);
+
+              // 현재 열려 있는 단체채팅은 자동으로 읽음 처리
+              markChatAsRead(chat.id, messages);
+            }
           );
 
         async function sendMessage() {
