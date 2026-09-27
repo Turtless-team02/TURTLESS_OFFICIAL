@@ -1,0 +1,7 @@
+
+# Firebase Admin SDK local files
+node_modules/
+package.json
+package-lock.json
+*.backup-auth-*
+turtless-web-firebase-adminsdk-*.json
