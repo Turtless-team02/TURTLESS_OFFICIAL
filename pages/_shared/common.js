@@ -1024,48 +1024,107 @@ function initTurtlessMessenger() {
       return;
     }
 
-    let chats;
+    let personalChats = [];
+    let groupChats = [];
 
     try {
-      chats = await window.turtlessGetMyChats();
+      personalChats =
+        await window.turtlessGetMyChats();
+
+      if (
+        typeof window.turtlessGetMyGroupChats === 'function'
+      ) {
+        groupChats =
+          await window.turtlessGetMyGroupChats();
+      }
     } catch (error) {
       return;
     }
 
-    if (!Array.isArray(chats)) return;
+    if (!Array.isArray(personalChats)) {
+      personalChats = [];
+    }
 
-    const activeChatIds = new Set(chats.map(chat => chat.id));
+    if (!Array.isArray(groupChats)) {
+      groupChats = [];
+    }
 
-    // 더 이상 존재하지 않는 채팅의 listener 정리
+    // 개인채팅 + 단체채팅 + 전체 팀채팅
+    const chats = [
+      ...personalChats,
+      ...groupChats,
+      {
+        id: 'team-main',
+        type: 'team',
+        name: '팀채팅'
+      }
+    ];
+
+    // 중복 chatId 제거
+    const uniqueChats = [
+      ...new Map(
+        chats
+          .filter(chat => chat?.id)
+          .map(chat => [chat.id, chat])
+      ).values()
+    ];
+
+    const activeChatIds =
+      new Set(uniqueChats.map(chat => chat.id));
+
+    // 더 이상 감시할 필요가 없는 채팅 listener 정리
     chatListeners.forEach((unsubscribe, chatId) => {
       if (!activeChatIds.has(chatId)) {
         try {
           unsubscribe();
         } catch {}
+
         chatListeners.delete(chatId);
         unreadByChat.delete(chatId);
       }
     });
 
-    // 각 개인채팅의 실시간 메시지 감시
-    chats.forEach(chat => {
-      if (!chat?.id || chatListeners.has(chat.id)) return;
+    // 개인채팅 / 단체채팅 / 전체 팀채팅 실시간 감시
+    uniqueChats.forEach(chat => {
+      if (
+        !chat?.id ||
+        chatListeners.has(chat.id)
+      ) {
+        return;
+      }
 
       try {
-        const unsubscribe = window.turtlessListenChatMessages(
-          chat.id,
-          (messages, error) => {
-            if (error || !Array.isArray(messages)) return;
+        const unsubscribe =
+          window.turtlessListenChatMessages(
+            chat.id,
+            (messages, error) => {
+              if (
+                error ||
+                !Array.isArray(messages)
+              ) {
+                return;
+              }
 
-            const count = getUnreadCount(messages, chat.id);
-            unreadByChat.set(chat.id, count);
+              const count =
+                getUnreadCount(
+                  messages,
+                  chat.id
+                );
 
-            updateMessengerUnreadBadge();
-          }
-        );
+              unreadByChat.set(
+                chat.id,
+                count
+              );
+
+              updateMessengerUnreadBadge();
+            }
+          );
 
         if (typeof unsubscribe === 'function') {
-          chatListeners.set(chat.id, unsubscribe);
+          chatListeners.set(
+            chat.id,
+            unsubscribe
+          );
         }
       } catch (error) {
         console.error(
