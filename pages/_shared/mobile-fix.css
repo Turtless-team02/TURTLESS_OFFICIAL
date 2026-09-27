@@ -161,3 +161,272 @@
     height: auto !important;
   }
 }
+
+/* =========================================================
+   TURTLESS MOBILE FINAL V22
+   후원사 / 로봇 모바일 최종 보정
+   PC / TABLET 영향 없음
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /* =====================================================
+     SPONSOR
+     ===================================================== */
+
+  #home-sponsor-slider,
+  #page-sponsor-slider {
+    height: 640px !important;
+    min-height: 640px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+  }
+
+  #home-sponsor-slider .sp-slide,
+  #page-sponsor-slider .sp-slide {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  /* 로고 영역 */
+  #home-sponsor-slider .sp-left,
+  #page-sponsor-slider .sp-left {
+    flex: 0 0 40% !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 18px 20px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid #e2e8ed !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  #home-sponsor-slider .sp-left img,
+  #page-sponsor-slider .sp-left img {
+    width: auto !important;
+    max-width: 78% !important;
+    max-height: 150px !important;
+    object-fit: contain !important;
+  }
+
+  /* 설명 영역 */
+  #home-sponsor-slider .sp-right,
+  #page-sponsor-slider .sp-right {
+    flex: 1 1 60% !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 24px 22px 92px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  #home-sponsor-slider .sp-right h3,
+  #page-sponsor-slider .sp-right h3 {
+    max-width: 100% !important;
+    font-size: 1.3rem !important;
+    line-height: 1.25 !important;
+    margin: 0 0 12px !important;
+    padding-bottom: 9px !important;
+    overflow-wrap: anywhere !important;
+    word-break: keep-all !important;
+  }
+
+  #home-sponsor-slider .sp-right p,
+  #page-sponsor-slider .sp-right p {
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: .82rem !important;
+    line-height: 1.65 !important;
+    overflow-wrap: anywhere !important;
+    word-break: keep-all !important;
+  }
+
+  /* 하단 컨트롤 */
+  #home-sponsor-slider .sp-nav,
+  #page-sponsor-slider .sp-nav {
+    height: 64px !important;
+    min-height: 64px !important;
+    padding: 10px 12px !important;
+    gap: 9px !important;
+    box-sizing: border-box !important;
+    z-index: 20 !important;
+  }
+
+  #home-sponsor-slider .sp-nav .slider-control-btn,
+  #page-sponsor-slider .sp-nav .slider-control-btn {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    flex: 0 0 42px !important;
+  }
+
+  #home-sponsor-slider .sp-nav .slider-dot,
+  #page-sponsor-slider .sp-nav .slider-dot {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  #home-sponsor-slider .sp-nav .slider-dot.active,
+  #page-sponsor-slider .sp-nav .slider-dot.active {
+    width: 28px !important;
+  }
+
+
+  /* =====================================================
+     ROBOT
+     ===================================================== */
+
+  #robot-slider {
+    width: 100% !important;
+    height: 650px !important;
+    min-height: 650px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+  }
+
+  #robot-slides-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 650px !important;
+  }
+
+  #robot-slider .sp-slide {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 650px !important;
+  }
+
+  #robot-slider .robot-info {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    padding: 32px 22px 92px !important;
+    box-sizing: border-box !important;
+    justify-content: flex-end !important;
+    overflow: hidden !important;
+  }
+
+  #robot-slider .robot-year {
+    font-size: .78rem !important;
+    letter-spacing: 3px !important;
+    margin-bottom: 5px !important;
+  }
+
+  #robot-slider .robot-game {
+    max-width: 100% !important;
+    font-size: clamp(1.65rem, 8vw, 2.05rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -.8px !important;
+    margin-bottom: 12px !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  #robot-slider .robot-name {
+    max-width: 100% !important;
+    font-size: 1.15rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 12px !important;
+    overflow-wrap: anywhere !important;
+    word-break: keep-all !important;
+  }
+
+  #robot-slider .robot-line {
+    width: 42px !important;
+    height: 3px !important;
+    margin-bottom: 13px !important;
+  }
+
+  #robot-slider .robot-description {
+    max-width: 100% !important;
+    font-size: .78rem !important;
+    line-height: 1.58 !important;
+    overflow-wrap: anywhere !important;
+    word-break: keep-all !important;
+  }
+
+  #robot-slider .sp-nav {
+    height: 64px !important;
+    min-height: 64px !important;
+    z-index: 20 !important;
+  }
+
+  #robot-slider .sp-nav .slider-control-btn {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+  }
+}
+
+
+/* 작은 스마트폰 */
+@media (max-width: 430px) {
+
+  #home-sponsor-slider,
+  #page-sponsor-slider {
+    height: 610px !important;
+    min-height: 610px !important;
+  }
+
+  #home-sponsor-slider .sp-left,
+  #page-sponsor-slider .sp-left {
+    flex-basis: 38% !important;
+    padding: 14px 18px !important;
+  }
+
+  #home-sponsor-slider .sp-left img,
+  #page-sponsor-slider .sp-left img {
+    max-width: 76% !important;
+    max-height: 125px !important;
+  }
+
+  #home-sponsor-slider .sp-right,
+  #page-sponsor-slider .sp-right {
+    padding: 20px 18px 88px !important;
+  }
+
+  #home-sponsor-slider .sp-right h3,
+  #page-sponsor-slider .sp-right h3 {
+    font-size: 1.18rem !important;
+  }
+
+  #home-sponsor-slider .sp-right p,
+  #page-sponsor-slider .sp-right p {
+    font-size: .76rem !important;
+    line-height: 1.58 !important;
+  }
+
+
+  #robot-slider,
+  #robot-slides-wrapper,
+  #robot-slider .sp-slide {
+    height: 630px !important;
+    min-height: 630px !important;
+  }
+
+  #robot-slider .robot-info {
+    padding: 28px 18px 88px !important;
+  }
+
+  #robot-slider .robot-game {
+    font-size: 1.65rem !important;
+  }
+
+  #robot-slider .robot-name {
+    font-size: 1.08rem !important;
+  }
+
+  #robot-slider .robot-description {
+    font-size: .74rem !important;
+    line-height: 1.55 !important;
+  }
+}
