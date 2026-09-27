@@ -914,6 +914,185 @@ function initTurtlessMessenger() {
   }
 
 
+
+  // ============================================================
+  // TURTLESS Messenger - 사이트 내 읽지 않은 메시지 알림
+  // ============================================================
+
+  const unreadStorageKey = 'turtlessChatReadAt';
+  const unreadByChat = new Map();
+  const chatListeners = new Map();
+  let unreadWatcherStarted = false;
+
+  function getReadAtMap() {
+    try {
+      return JSON.parse(localStorage.getItem(unreadStorageKey) || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function saveReadAt(chatId, timestamp) {
+    if (!chatId || !timestamp) return;
+
+    const map = getReadAtMap();
+    const current = Number(map[chatId] || 0);
+    const next = Number(timestamp || 0);
+
+    if (next > current) {
+      map[chatId] = next;
+      localStorage.setItem(unreadStorageKey, JSON.stringify(map));
+    }
+  }
+
+  function getUnreadCount(messages, chatId) {
+    const readAt = Number(getReadAtMap()[chatId] || 0);
+    const myUid = window.auth?.currentUser?.uid;
+
+    return messages.filter(message => {
+      const timestamp = Number(message.timestamp || 0);
+
+      return (
+        timestamp > readAt &&
+        message.senderAuthUid !== myUid
+      );
+    }).length;
+  }
+
+  function updateMessengerUnreadBadge() {
+    const badge = document.getElementById('turtless-messenger-unread');
+    if (!badge) return;
+
+    let total = 0;
+
+    unreadByChat.forEach(count => {
+      total += Number(count || 0);
+    });
+
+    if (total > 0) {
+      badge.textContent = total > 99 ? '99+' : String(total);
+      badge.style.display = 'block';
+    } else {
+      badge.textContent = '0';
+      badge.style.display = 'none';
+    }
+
+    document.querySelectorAll('[data-unread-badge]').forEach(el => {
+      const chatId = el.dataset.unreadBadge;
+      const count = Number(unreadByChat.get(chatId) || 0);
+
+      if (count > 0) {
+        el.textContent = count > 99 ? '99+' : String(count);
+        el.style.display = 'inline-flex';
+      } else {
+        el.textContent = '';
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  function markChatAsRead(chatId, messages = []) {
+    if (!chatId) return;
+
+    const latest = messages.reduce(
+      (max, message) =>
+        Math.max(max, Number(message.timestamp || 0)),
+      0
+    );
+
+    if (latest > 0) {
+      saveReadAt(chatId, latest);
+    }
+
+    unreadByChat.set(chatId, 0);
+    updateMessengerUnreadBadge();
+  }
+
+  async function refreshUnreadChats() {
+    if (
+      !window.auth?.currentUser ||
+      typeof window.turtlessGetMyChats !== 'function'
+    ) {
+      return;
+    }
+
+    let chats;
+
+    try {
+      chats = await window.turtlessGetMyChats();
+    } catch (error) {
+      return;
+    }
+
+    if (!Array.isArray(chats)) return;
+
+    const activeChatIds = new Set(chats.map(chat => chat.id));
+
+    // 더 이상 존재하지 않는 채팅의 listener 정리
+    chatListeners.forEach((unsubscribe, chatId) => {
+      if (!activeChatIds.has(chatId)) {
+        try {
+          unsubscribe();
+        } catch {}
+        chatListeners.delete(chatId);
+        unreadByChat.delete(chatId);
+      }
+    });
+
+    // 각 개인채팅의 실시간 메시지 감시
+    chats.forEach(chat => {
+      if (!chat?.id || chatListeners.has(chat.id)) return;
+
+      try {
+        const unsubscribe = window.turtlessListenChatMessages(
+          chat.id,
+          (messages, error) => {
+            if (error || !Array.isArray(messages)) return;
+
+            const count = getUnreadCount(messages, chat.id);
+            unreadByChat.set(chat.id, count);
+
+            updateMessengerUnreadBadge();
+          }
+        );
+
+        if (typeof unsubscribe === 'function') {
+          chatListeners.set(chat.id, unsubscribe);
+        }
+      } catch (error) {
+        console.error(
+          '[TURTLESS] 알림 listener 연결 실패:',
+          chat.id,
+          error
+        );
+      }
+    });
+
+    updateMessengerUnreadBadge();
+  }
+
+  function startUnreadWatcher() {
+    if (unreadWatcherStarted) return;
+    unreadWatcherStarted = true;
+
+    const tryStart = () => {
+      if (
+        window.auth?.currentUser &&
+        typeof window.turtlessGetMyChats === 'function'
+      ) {
+        refreshUnreadChats();
+      }
+    };
+
+    tryStart();
+
+    setInterval(() => {
+      tryStart();
+    }, 5000);
+  }
+
+  startUnreadWatcher();
+
   async function openDirectChatUI(chatId, user) {
     menu.style.display = 'none';
     panel.style.display = 'block';
@@ -1094,6 +1273,9 @@ function initTurtlessMessenger() {
           }
 
           renderMessages(messages);
+
+          // 현재 열려 있는 채팅은 자동으로 읽음 처리
+          markChatAsRead(chatId, messages);
         }
       );
     } catch (error) {
@@ -1278,10 +1460,30 @@ function initTurtlessMessenger() {
                     개인채팅
                   </div>
                 </div>
+
+                <span
+                  data-unread-badge="${item.chat.id}"
+                  style="
+                    display:none;
+                    min-width:20px;
+                    height:20px;
+                    padding:0 6px;
+                    border-radius:999px;
+                    align-items:center;
+                    justify-content:center;
+                    background:#ff3b30;
+                    color:#fff;
+                    font-size:10px;
+                    font-weight:700;
+                    flex:none;
+                  "
+                ></span>
               </div>
             `).join('')}
           </div>
         `;
+
+        updateMessengerUnreadBadge();
 
         content.querySelectorAll('[data-personal-chat]').forEach(item => {
           item.addEventListener('click', async () => {
