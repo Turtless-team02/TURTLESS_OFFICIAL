@@ -697,3 +697,273 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 })();
+
+/* ============================================================
+   TURTLESS Messenger UI
+   ============================================================ */
+
+(function initTurtlessMessenger() {
+  if (document.getElementById('turtless-messenger')) return;
+
+  const wrap = document.createElement('div');
+  wrap.id = 'turtless-messenger';
+
+  wrap.innerHTML = `
+    <button id="turtless-messenger-button" aria-label="메신저 열기">
+      <span>💬</span>
+      <b id="turtless-messenger-unread">0</b>
+    </button>
+
+    <div id="turtless-messenger-menu" aria-hidden="true">
+      <div class="turtless-messenger-head">
+        <strong>메신저</strong>
+        <button id="turtless-messenger-close">×</button>
+      </div>
+
+      <button class="turtless-messenger-item" data-messenger-tab="personal">
+        <span>👤</span>
+        <div>
+          <strong>개인채팅</strong>
+          <small>팀원과 1:1로 대화</small>
+        </div>
+      </button>
+
+      <button class="turtless-messenger-item" data-messenger-tab="team">
+        <span>👥</span>
+        <div>
+          <strong>팀채팅</strong>
+          <small>팀원들과 함께 대화</small>
+        </div>
+      </button>
+
+      <button class="turtless-messenger-item" data-messenger-tab="contacts">
+        <span>📇</span>
+        <div>
+          <strong>연락처</strong>
+          <small>터틀리스 팀원 목록</small>
+        </div>
+      </button>
+    </div>
+
+    <div id="turtless-messenger-panel" aria-hidden="true">
+      <div class="turtless-chat-head">
+        <button id="turtless-chat-back">‹</button>
+        <strong id="turtless-chat-title">메신저</strong>
+        <button id="turtless-chat-close">×</button>
+      </div>
+
+      <div id="turtless-chat-content"></div>
+    </div>
+  `;
+
+  document.body.appendChild(wrap);
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #turtless-messenger {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 99999;
+      font-family: inherit;
+    }
+
+    #turtless-messenger-button {
+      width: 58px;
+      height: 58px;
+      border: 0;
+      border-radius: 50%;
+      background: #1769ff;
+      color: white;
+      font-size: 25px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0,0,0,.2);
+      position: relative;
+      transition: .2s;
+    }
+
+    #turtless-messenger-button:hover {
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    #turtless-messenger-unread {
+      display: none;
+      position: absolute;
+      right: -2px;
+      top: -2px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 4px;
+      border-radius: 20px;
+      background: #ff3b30;
+      color: white;
+      font-size: 11px;
+      line-height: 18px;
+    }
+
+    #turtless-messenger-menu,
+    #turtless-messenger-panel {
+      display: none;
+      position: absolute;
+      right: 0;
+      bottom: 72px;
+      width: 320px;
+      overflow: hidden;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 15px 50px rgba(0,0,0,.2);
+      border: 1px solid rgba(0,0,0,.08);
+    }
+
+    .turtless-messenger-head,
+    .turtless-chat-head {
+      height: 58px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+    }
+
+    .turtless-messenger-head strong,
+    .turtless-chat-head strong {
+      font-size: 16px;
+    }
+
+    .turtless-messenger-head button,
+    .turtless-chat-head button {
+      border: 0;
+      background: none;
+      cursor: pointer;
+      font-size: 24px;
+      color: #777;
+    }
+
+    .turtless-messenger-item {
+      width: 100%;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      border: 0;
+      border-bottom: 1px solid #f1f1f1;
+      background: white;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .turtless-messenger-item:hover {
+      background: #f6f9ff;
+    }
+
+    .turtless-messenger-item > span {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #eef4ff;
+      font-size: 20px;
+    }
+
+    .turtless-messenger-item div {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .turtless-messenger-item small {
+      color: #888;
+      font-size: 12px;
+    }
+
+    #turtless-chat-content {
+      min-height: 300px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 600px) {
+      #turtless-messenger {
+        right: 15px;
+        bottom: 15px;
+      }
+
+      #turtless-messenger-menu,
+      #turtless-messenger-panel {
+        width: calc(100vw - 30px);
+        right: -1px;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const button = document.getElementById('turtless-messenger-button');
+  const menu = document.getElementById('turtless-messenger-menu');
+  const panel = document.getElementById('turtless-messenger-panel');
+  const content = document.getElementById('turtless-chat-content');
+
+  function openMenu() {
+    menu.style.display = 'block';
+    panel.style.display = 'none';
+  }
+
+  function closeMenu() {
+    menu.style.display = 'none';
+  }
+
+  function openPanel(tab) {
+    menu.style.display = 'none';
+    panel.style.display = 'block';
+
+    const titles = {
+      personal: '개인채팅',
+      team: '팀채팅',
+      contacts: '연락처'
+    };
+
+    document.getElementById('turtless-chat-title').textContent =
+      titles[tab] || '메신저';
+
+    content.innerHTML = `
+      <div style="
+        padding:40px 20px;
+        text-align:center;
+        color:#888;
+      ">
+        <div style="font-size:35px;margin-bottom:10px;">💬</div>
+        <strong>${titles[tab] || '메신저'}</strong>
+        <p style="font-size:13px;margin-top:8px;">
+          채팅 기능을 연결하는 중입니다.
+        </p>
+      </div>
+    `;
+  }
+
+  button.addEventListener('click', () => {
+    if (menu.style.display === 'block' || panel.style.display === 'block') {
+      closeMenu();
+      panel.style.display = 'none';
+    } else {
+      openMenu();
+    }
+  });
+
+  document.getElementById('turtless-messenger-close')
+    .addEventListener('click', closeMenu);
+
+  document.getElementById('turtless-chat-close')
+    .addEventListener('click', () => {
+      panel.style.display = 'none';
+    });
+
+  document.getElementById('turtless-chat-back')
+    .addEventListener('click', openMenu);
+
+  document.querySelectorAll('[data-messenger-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openPanel(btn.dataset.messengerTab);
+    });
+  });
+})();
