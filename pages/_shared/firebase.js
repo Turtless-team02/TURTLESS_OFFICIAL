@@ -17,8 +17,14 @@ window.auth = getAuth(app);
 window.addDoc = addDoc;
 window.collection = collection;
 window.query = query;
+window.where = where;
 window.orderBy = orderBy;
 window.getDocs = getDocs;
+
+
+window.turtlessGetCurrentUserId = function () {
+  return currentUserId || sessionStorage.getItem("turtlessUserId") || null;
+};
 
 
 window.turtlessOpenDirectChat = async function (otherUserId) {
@@ -142,6 +148,36 @@ window.turtlessSendChatMessage = async function (chatId, text) {
       readBy: [authUid]
     }
   );
+};
+
+
+window.turtlessGetMyChats = async function () {
+  if (!currentUserId || !window.auth?.currentUser) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const chatsQuery = query(
+    collection(db, "chats"),
+    where("memberUserIds", "array-contains", currentUserId)
+  );
+
+  const snap = await getDocs(chatsQuery);
+
+  return snap.docs
+    .map(d => ({
+      id: d.id,
+      ...d.data()
+    }))
+    .filter(chat =>
+      chat.type === "direct" &&
+      Array.isArray(chat.memberUserIds) &&
+      chat.memberUserIds.includes(currentUserId)
+    )
+    .sort((a, b) => {
+      const aTime = Number(a.lastMessageAt || a.createdAt || 0);
+      const bTime = Number(b.lastMessageAt || b.createdAt || 0);
+      return bTime - aTime;
+    });
 };
 
 
