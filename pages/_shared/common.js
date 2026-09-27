@@ -913,7 +913,7 @@ function initTurtlessMessenger() {
     menu.style.display = 'none';
   }
 
-  function openPanel(tab) {
+  async function openPanel(tab) {
     menu.style.display = 'none';
     panel.style.display = 'block';
 
@@ -926,19 +926,139 @@ function initTurtlessMessenger() {
     document.getElementById('turtless-chat-title').textContent =
       titles[tab] || '메신저';
 
+    if (tab !== 'contacts') {
+      content.innerHTML = `
+        <div style="
+          padding:40px 20px;
+          text-align:center;
+          color:#888;
+        ">
+          <div style="font-size:35px;margin-bottom:10px;">💬</div>
+          <strong>${titles[tab] || '메신저'}</strong>
+          <p style="font-size:13px;margin-top:8px;">
+            채팅 기능을 연결하는 중입니다.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
     content.innerHTML = `
-      <div style="
-        padding:40px 20px;
-        text-align:center;
-        color:#888;
-      ">
-        <div style="font-size:35px;margin-bottom:10px;">💬</div>
-        <strong>${titles[tab] || '메신저'}</strong>
-        <p style="font-size:13px;margin-top:8px;">
-          채팅 기능을 연결하는 중입니다.
-        </p>
+      <div style="padding:18px 16px;color:#777;text-align:center;">
+        연락처를 불러오는 중...
       </div>
     `;
+
+    try {
+      const users = await window.turtlessGetPublicMembers();
+
+      if (!Array.isArray(users) || users.length === 0) {
+        content.innerHTML = `
+          <div style="padding:40px 20px;text-align:center;color:#888;">
+            등록된 팀원이 없습니다.
+          </div>
+        `;
+        return;
+      }
+
+      content.innerHTML = `
+        <div style="padding:8px 0;">
+          ${users.map(user => {
+            const name = user.name || '이름 없음';
+            const school = user.school || '';
+            const grade = user.grade ? `${user.grade}학년` : '';
+            const role = user.role || '';
+            const id = user.id || '';
+            const fakeEmail = id ? `${id}@turtless.com` : '';
+
+            const profile =
+              user.profileImage ||
+              'https://ui-avatars.com/api/?name=' +
+              encodeURIComponent(name) +
+              '&background=edf4ff&color=2563eb';
+
+            return `
+              <div
+                data-contact-user="${id}"
+                style="
+                  display:flex;
+                  align-items:center;
+                  gap:12px;
+                  padding:11px 14px;
+                  cursor:pointer;
+                  border-bottom:1px solid #f0f2f5;
+                "
+              >
+                <img
+                  src="${profile}"
+                  alt=""
+                  style="
+                    width:44px;
+                    height:44px;
+                    border-radius:50%;
+                    object-fit:cover;
+                    flex:none;
+                  "
+                >
+
+                <div style="min-width:0;flex:1;">
+                  <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:6px;
+                    margin-bottom:3px;
+                  ">
+                    <strong style="font-size:14px;color:#222;">
+                      ${name}
+                    </strong>
+                    ${role ? `
+                      <span style="
+                        font-size:10px;
+                        padding:2px 6px;
+                        border-radius:8px;
+                        background:#edf4ff;
+                        color:#2563eb;
+                      ">
+                        ${role}
+                      </span>
+                    ` : ''}
+                  </div>
+
+                  <div style="
+                    font-size:11px;
+                    color:#888;
+                    white-space:nowrap;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                  ">
+                    ${school} ${grade}
+                  </div>
+
+                  <div style="
+                    font-size:10px;
+                    color:#aaa;
+                    margin-top:2px;
+                    white-space:nowrap;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                  ">
+                    ${fakeEmail}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    } catch (error) {
+      console.error('TURTLESS 연락처 불러오기 실패:', error);
+
+      content.innerHTML = `
+        <div style="padding:40px 20px;text-align:center;color:#d33;">
+          연락처를 불러오지 못했습니다.
+        </div>
+      `;
+    }
   }
 
   button.addEventListener('click', () => {

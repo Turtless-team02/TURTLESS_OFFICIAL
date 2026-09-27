@@ -19,6 +19,26 @@ window.collection = collection;
 window.query = query;
 window.orderBy = orderBy;
 window.getDocs = getDocs;
+
+window.turtlessGetPublicMembers = async function () {
+  const snap = await getDocs(collection(db, "users"));
+
+  return snap.docs
+    .map(d => {
+      const data = d.data() || {};
+
+      return {
+        id: d.id,
+        name: data.name || "",
+        school: data.school || "",
+        grade: data.grade || "",
+        role: data.role || "",
+        profileImage: data.profileImage || ""
+      };
+    })
+    .filter(user => user.name);
+};
+
 window.doc = doc;
 window.deleteDoc = deleteDoc;
 
