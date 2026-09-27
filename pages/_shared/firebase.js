@@ -34,7 +34,6 @@ window.turtlessOpenDirectChat = async function (otherUserId) {
   const myUserId = currentUserId;
 
   // 상대방의 usersPrivate는 읽지 않는다.
-  // 공개 users 문서의 ID만 사용한다.
   const otherPublicSnap = await getDoc(
     doc(db, "users", otherUserId)
   );
@@ -45,26 +44,26 @@ window.turtlessOpenDirectChat = async function (otherUserId) {
 
   const otherPublicData = otherPublicSnap.data() || {};
 
-  // 사용자 ID 기준으로 정렬하여 항상 동일한 개인채팅 ID 생성
+  // 두 사용자 ID를 정렬하여 양쪽에서 동일한 채팅 ID를 사용한다.
   const memberUserIds = [myUserId, otherUserId].sort();
   const chatId = `direct_${memberUserIds.join("_")}`;
 
   const chatRef = doc(db, "chats", chatId);
-  const chatSnap = await getDoc(chatRef);
 
-  if (!chatSnap.exists()) {
-    await setDoc(chatRef, {
+  // getDoc()으로 존재 여부를 먼저 확인하지 않는다.
+  // 문서가 없으면 create, 이미 있으면 update(merge)로 처리한다.
+  await setDoc(
+    chatRef,
+    {
       type: "direct",
       name: otherPublicData.name || "개인채팅",
-
       memberUserIds: memberUserIds,
-
       createdByUserId: myUserId,
       createdByAuthUid: myAuthUid,
-
       createdAt: Date.now()
-    });
-  }
+    },
+    { merge: true }
+  );
 
   return {
     chatId,
