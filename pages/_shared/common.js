@@ -1541,21 +1541,246 @@ function initTurtlessMessenger() {
       return;
     }
 
-    // 팀채팅은 기존처럼 준비 중 상태 유지
+    // 팀채팅
     if (tab === 'team') {
       content.innerHTML = `
         <div style="
-          padding:40px 20px;
-          text-align:center;
-          color:#888;
+          display:flex;
+          flex-direction:column;
+          height:100%;
+          min-height:420px;
         ">
-          <div style="font-size:35px;margin-bottom:10px;">👥</div>
-          <strong>팀채팅</strong>
-          <p style="font-size:13px;margin-top:8px;">
-            팀채팅 기능을 연결하는 중입니다.
-          </p>
+          <div style="
+            padding:12px 16px;
+            border-bottom:1px solid #eee;
+            font-weight:700;
+            color:#222;
+            flex:none;
+          ">
+            👥 팀채팅
+          </div>
+
+          <div id="turtless-team-messages" style="
+            flex:1;
+            overflow-y:auto;
+            padding:14px;
+            background:#f7f9fc;
+          "></div>
+
+          <div style="
+            display:flex;
+            gap:8px;
+            padding:10px;
+            border-top:1px solid #eee;
+            background:#fff;
+            flex:none;
+          ">
+            <input
+              id="turtless-team-input"
+              type="text"
+              maxlength="2000"
+              placeholder="팀원들에게 메시지 보내기"
+              style="
+                flex:1;
+                min-width:0;
+                border:1px solid #ddd;
+                border-radius:10px;
+                padding:10px 12px;
+                outline:none;
+              "
+            >
+            <button
+              id="turtless-team-send"
+              type="button"
+              style="
+                border:0;
+                border-radius:10px;
+                padding:0 15px;
+                background:#1769ff;
+                color:#fff;
+                font-weight:700;
+                cursor:pointer;
+              "
+            >전송</button>
+          </div>
         </div>
       `;
+
+      try {
+        const teamChat = await window.turtlessOpenTeamChat();
+        const chatId = teamChat.id;
+
+        const messageBox =
+          document.getElementById('turtless-team-messages');
+        const input =
+          document.getElementById('turtless-team-input');
+        const sendButton =
+          document.getElementById('turtless-team-send');
+
+        function escapeHtml(value) {
+          return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+        }
+
+        function renderTeamMessages(messages) {
+          if (!messageBox) return;
+
+          const myUid = window.auth?.currentUser?.uid || '';
+
+          messageBox.innerHTML = messages.map(message => {
+            const mine =
+              message.senderAuthUid === myUid;
+
+            return `
+              <div style="
+                display:flex;
+                justify-content:${mine ? 'flex-end' : 'flex-start'};
+                margin:6px 0;
+              ">
+                <div style="
+                  max-width:78%;
+                  text-align:${mine ? 'right' : 'left'};
+                ">
+                  ${
+                    mine
+                      ? ''
+                      : `<div style="
+                          font-size:11px;
+                          color:#777;
+                          margin:0 4px 3px;
+                        ">${escapeHtml(message.senderName || '팀원')}</div>`
+                  }
+
+                  <div style="
+                    display:inline-block;
+                    padding:9px 12px;
+                    border-radius:12px;
+                    background:${mine ? '#1769ff' : '#fff'};
+                    color:${mine ? '#fff' : '#222'};
+                    border:${mine ? '0' : '1px solid #e8e8e8'};
+                    word-break:break-word;
+                    white-space:pre-wrap;
+                  ">${escapeHtml(message.text)}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          messageBox.scrollTop = messageBox.scrollHeight;
+        }
+
+        const unsubscribe =
+          window.turtlessListenChatMessages(
+            chatId,
+            renderTeamMessages
+          );
+
+        async function sendTeamMessage() {
+          const text =
+            String(input?.value || '').trim();
+
+          if (!text) return;
+
+          try {
+            sendButton.disabled = true;
+
+            await window.turtlessSendChatMessage(
+              chatId,
+              text
+            );
+
+            input.value = '';
+            input.focus();
+          } catch (error) {
+            console.error(
+              '[TURTLESS] 팀채팅 전송 실패:',
+              error
+            );
+            alert(
+              error?.message ||
+              '메시지를 보내지 못했습니다.'
+            );
+          } finally {
+            sendButton.disabled = false;
+          }
+        }
+
+        sendButton.addEventListener(
+          'click',
+          sendTeamMessage
+        );
+
+        input.addEventListener('keydown', event => {
+          if (
+            event.key === 'Enter' &&
+            !event.shiftKey
+          ) {
+            event.preventDefault();
+            sendTeamMessage();
+          }
+        });
+
+        const teamObserver =
+          new MutationObserver(() => {
+            const panel =
+              document.getElementById(
+                'turtless-messenger-panel'
+              );
+
+            if (
+              !panel ||
+              panel.style.display === 'none'
+            ) {
+              try {
+                if (typeof unsubscribe === 'function') {
+                  unsubscribe();
+                }
+              } catch (_) {}
+
+              teamObserver.disconnect();
+            }
+          });
+
+        const panel =
+          document.getElementById(
+            'turtless-messenger-panel'
+          );
+
+        if (panel) {
+          teamObserver.observe(panel, {
+            attributes: true,
+            attributeFilter: ['style']
+          });
+        }
+
+      } catch (error) {
+        console.error(
+          '[TURTLESS] 팀채팅 열기 실패:',
+          error
+        );
+
+        content.innerHTML = `
+          <div style="
+            padding:40px 20px;
+            text-align:center;
+            color:#888;
+          ">
+            <div style="font-size:35px;margin-bottom:10px;">⚠️</div>
+            <strong>팀채팅을 불러오지 못했습니다.</strong>
+            <p style="font-size:13px;margin-top:8px;">
+              ${String(
+                error?.message ||
+                '잠시 후 다시 시도해주세요.'
+              )}
+            </p>
+          </div>
+        `;
+      }
+
       return;
     }
 
