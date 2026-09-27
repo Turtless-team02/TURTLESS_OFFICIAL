@@ -2369,11 +2369,14 @@ function initTurtlessMessenger() {
               return `
                 <div style="
                   display:flex;
+                  width:100%;
                   justify-content:${mine ? 'flex-end' : 'flex-start'};
                   margin:6px 0;
+                  box-sizing:border-box;
                 ">
                   <div style="
                     max-width:78%;
+                    min-width:0;
                     text-align:${mine ? 'right' : 'left'};
                   ">
                     ${
@@ -2392,16 +2395,18 @@ function initTurtlessMessenger() {
 
                     <div style="
                       display:inline-block;
+                      max-width:100%;
+                      box-sizing:border-box;
                       padding:9px 12px;
                       border-radius:12px;
                       background:${mine ? '#1769ff' : '#fff'};
                       color:${mine ? '#fff' : '#222'};
                       border:${mine ? '0' : '1px solid #e8e8e8'};
                       word-break:break-word;
+                      overflow-wrap:anywhere;
                       white-space:pre-wrap;
-                    ">
-                      ${escapeHtml(message.text)}
-                    </div>
+                      text-align:left;
+                    ">${escapeHtml(message.text)}</div>
                   </div>
                 </div>
               `;
