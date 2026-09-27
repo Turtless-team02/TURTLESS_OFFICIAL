@@ -1163,23 +1163,201 @@ function initTurtlessMessenger() {
     document.getElementById('turtless-chat-title').textContent =
       titles[tab] || '메신저';
 
-    if (tab !== 'contacts') {
+    // 개인채팅 목록
+    if (tab === 'personal') {
+      content.innerHTML = `
+        <div style="
+          padding:18px 16px;
+          color:#777;
+          text-align:center;
+        ">
+          개인채팅을 불러오는 중...
+        </div>
+      `;
+
+      try {
+        const chats = await window.turtlessGetMyChats();
+
+        if (!Array.isArray(chats) || chats.length === 0) {
+          content.innerHTML = `
+            <div style="
+              padding:50px 20px;
+              text-align:center;
+              color:#888;
+            ">
+              <div style="font-size:35px;margin-bottom:10px;">💬</div>
+              <strong>개인채팅이 없습니다.</strong>
+              <p style="font-size:13px;margin-top:8px;">
+                연락처에서 팀원을 선택해 대화를 시작해보세요.
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        const myUserId =
+          typeof window.turtlessGetCurrentUserId === 'function'
+            ? window.turtlessGetCurrentUserId()
+            : null;
+
+        const users = await window.turtlessGetPublicMembers();
+
+        const userMap = new Map(
+          users.map(user => [user.id, user])
+        );
+
+        const chatItems = chats.map(chat => {
+          const memberIds = Array.isArray(chat.memberUserIds)
+            ? chat.memberUserIds
+            : [];
+
+          const otherUserId =
+            memberIds.find(id => id !== myUserId) || '';
+
+          const user = userMap.get(otherUserId) || {};
+
+          return {
+            chat,
+            otherUserId,
+            name: user.name || chat.name || '개인채팅',
+            profile: user.profileImage || ''
+          };
+        });
+
+        content.innerHTML = `
+          <div style="padding:8px 0;">
+            ${chatItems.map(item => `
+              <div
+                data-personal-chat="${item.chat.id}"
+                style="
+                  display:flex;
+                  align-items:center;
+                  gap:12px;
+                  padding:13px 16px;
+                  cursor:pointer;
+                  border-bottom:1px solid #eee;
+                "
+              >
+                <div style="
+                  width:44px;
+                  height:44px;
+                  border-radius:50%;
+                  overflow:hidden;
+                  background:#edf4ff;
+                  flex:none;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  font-size:20px;
+                ">
+                  ${
+                    item.profile
+                      ? `<img src="${item.profile}"
+                          style="width:100%;height:100%;object-fit:cover;">`
+                      : '👤'
+                  }
+                </div>
+
+                <div style="
+                  min-width:0;
+                  flex:1;
+                  text-align:left;
+                ">
+                  <div style="
+                    font-weight:700;
+                    color:#222;
+                  ">
+                    ${item.name}
+                  </div>
+
+                  <div style="
+                    color:#999;
+                    font-size:12px;
+                    margin-top:4px;
+                  ">
+                    개인채팅
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        content.querySelectorAll('[data-personal-chat]').forEach(item => {
+          item.addEventListener('click', async () => {
+            const chatId = item.dataset.personalChat;
+
+            const chatItem = chatItems.find(
+              value => value.chat.id === chatId
+            );
+
+            if (!chatItem) return;
+
+            try {
+              await openDirectChatUI(
+                chatId,
+                {
+                  id: chatItem.otherUserId,
+                  name: chatItem.name,
+                  profileImage: chatItem.profile
+                }
+              );
+            } catch (error) {
+              console.error(
+                '[TURTLESS] 개인채팅 열기 실패:',
+                error
+              );
+
+              alert(
+                error.message || '개인채팅을 열 수 없습니다.'
+              );
+            }
+          });
+        });
+
+      } catch (error) {
+        console.error(
+          '[TURTLESS] 개인채팅 목록 불러오기 실패:',
+          error
+        );
+
+        content.innerHTML = `
+          <div style="
+            padding:40px 20px;
+            text-align:center;
+            color:#888;
+          ">
+            <div style="font-size:32px;margin-bottom:10px;">⚠️</div>
+            <strong>개인채팅을 불러오지 못했습니다.</strong>
+            <p style="font-size:13px;margin-top:8px;">
+              ${error.message || '잠시 후 다시 시도해주세요.'}
+            </p>
+          </div>
+        `;
+      }
+
+      return;
+    }
+
+    // 팀채팅은 기존처럼 준비 중 상태 유지
+    if (tab === 'team') {
       content.innerHTML = `
         <div style="
           padding:40px 20px;
           text-align:center;
           color:#888;
         ">
-          <div style="font-size:35px;margin-bottom:10px;">💬</div>
-          <strong>${titles[tab] || '메신저'}</strong>
+          <div style="font-size:35px;margin-bottom:10px;">👥</div>
+          <strong>팀채팅</strong>
           <p style="font-size:13px;margin-top:8px;">
-            채팅 기능을 연결하는 중입니다.
+            팀채팅 기능을 연결하는 중입니다.
           </p>
         </div>
       `;
       return;
     }
 
+    // 연락처
     content.innerHTML = `
       <div style="padding:18px 16px;color:#777;text-align:center;">
         연락처를 불러오는 중...
@@ -1189,28 +1367,25 @@ function initTurtlessMessenger() {
     try {
       const users = await window.turtlessGetPublicMembers();
 
-      if (!Array.isArray(users) || users.length === 0) {
-        content.innerHTML = `
-          <div style="padding:40px 20px;text-align:center;color:#888;">
-            등록된 팀원이 없습니다.
-          </div>
-        `;
-        return;
-      }
-
       content.innerHTML = `
         <div style="padding:8px 0;">
           ${users.map(user => {
             const name = user.name || '이름 없음';
             const school = user.school || '';
-            const grade = user.grade ? `${user.grade}학년` : '';
+
+            // DB의 grade 값에 이미 "학년"이 포함되어 있으므로 그대로 표시
+            const grade = user.grade || '';
+
             const role = user.role || '';
             const id = user.id || '';
+
             const displayId =
               typeof window.turtlessGetDisplayLoginId === 'function'
                 ? window.turtlessGetDisplayLoginId(id, name)
                 : '';
-            const fakeEmail = displayId ? `${displayId}@turtless.com` : '';
+
+            const fakeEmail =
+              displayId ? `${displayId}@turtless.com` : '';
 
             const profile =
               user.profileImage ||
@@ -1252,6 +1427,7 @@ function initTurtlessMessenger() {
                     <strong style="font-size:14px;color:#222;">
                       ${name}
                     </strong>
+
                     ${role ? `
                       <span style="
                         font-size:10px;
@@ -1297,24 +1473,44 @@ function initTurtlessMessenger() {
           const otherUserId = item.dataset.contactUser;
 
           try {
-            const result = await window.turtlessOpenDirectChat(otherUserId);
+            const result =
+              await window.turtlessOpenDirectChat(otherUserId);
 
-            const user = users.find(u => u.id === otherUserId);
+            const user =
+              users.find(u => u.id === otherUserId);
+
             await openDirectChatUI(
               result.chatId,
-              user || { name: '개인채팅', profileImage: '' }
+              user || {
+                name: '개인채팅',
+                profileImage: ''
+              }
             );
           } catch (error) {
-            console.error('[TURTLESS] 개인채팅 열기 실패:', error);
-            alert(error.message || '개인채팅을 열 수 없습니다.');
+            console.error(
+              '[TURTLESS] 개인채팅 열기 실패:',
+              error
+            );
+
+            alert(
+              error.message || '개인채팅을 열 수 없습니다.'
+            );
           }
         });
       });
+
     } catch (error) {
-      console.error('TURTLESS 연락처 불러오기 실패:', error);
+      console.error(
+        'TURTLESS 연락처 불러오기 실패:',
+        error
+      );
 
       content.innerHTML = `
-        <div style="padding:40px 20px;text-align:center;color:#d33;">
+        <div style="
+          padding:40px 20px;
+          text-align:center;
+          color:#d33;
+        ">
           연락처를 불러오지 못했습니다.
         </div>
       `;
