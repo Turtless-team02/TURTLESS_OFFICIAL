@@ -802,6 +802,45 @@ function getAuthEmail(userId, userData = currentUserData) {
   return null;
 }
 
+
+// ============================================================
+// 로그인 후 보호 UI 동적 생성
+// ============================================================
+window.ensureProtectedHomeUI = function(isAdmin) {
+  const area = document.getElementById('home-member-admin-area');
+  if (!area) return;
+
+  let memberActions = document.getElementById('member-actions');
+
+  if (!memberActions) {
+    area.insertAdjacentHTML('afterbegin', "<div id=\"member-actions\">\n<h3 style=\"color: var(--primary-color); margin-bottom: 10px;\">📋 팀원 대시보드</h3>\n<div style=\"display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;\">\n<p id=\"welcome-msg\" style=\"font-weight:700; margin: 0;\"></p>\n<div style=\"display: flex; gap: 8px; flex-wrap:wrap;\">\n<input accept=\"image/*\" id=\"profile-file-input\" onchange=\"window.uploadProfileImage(this, 'profileImage')\" style=\"display: none;\" type=\"file\"/>\n<button class=\"dash-btn-sm\" onclick=\"document.getElementById('profile-file-input').click()\">📸 기본 프로필 변경</button>\n<input accept=\"image/*\" id=\"hover-file-input\" onchange=\"window.uploadProfileImage(this, 'profileHoverImage')\" style=\"display: none;\" type=\"file\"/>\n<button class=\"dash-btn-sm\" onclick=\"document.getElementById('hover-file-input').click()\" style=\"background:#555;\">✨ 호버용 사진 변경</button>\n<button class=\"dash-btn-sm\" onclick=\"window.resetProfileImage()\" style=\"background:#dc3545;\">🗑️ 사진 초기화</button>\n<button class=\"dash-btn-sm\" onclick=\"window.changeFirebasePassword()\" style=\"background:#2563eb;\">🔐 비밀번호 변경</button>\n</div>\n</div>\n<hr style=\"border:0; border-top:1px solid #eaeaea; margin: 20px 0;\"/>\n<div style=\"display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;\">\n<div style=\"background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);\">\n<h4 style=\"margin-bottom: 15px; font-size: 15px;\">✍️ 새로운 [주요 활동] 남기기</h4>\n<input class=\"dash-input\" id=\"new-act-title\" placeholder=\"활동 제목\" type=\"text\"/>\n<textarea class=\"dash-input\" id=\"new-act-content\" placeholder=\"활동 내용\" style=\"height: 80px; resize: none;\"></textarea>\n<label style=\"font-size:12px; color:#555;\">활동 사진 첨부 (선택)</label>\n<input accept=\"image/*\" class=\"dash-input\" id=\"new-act-file\" style=\"background: white;\" type=\"file\"/>\n<button class=\"action-btn\" onclick=\"window.uploadActivity()\" style=\"padding: 10px;\">활동 게시물 등록</button>\n</div>\n<div style=\"background: #fdfdfd; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);\">\n<h4 style=\"margin-bottom: 15px; font-size: 15px;\">🖼️ [PR 갤러리] 사진 올리기</h4>\n<label style=\"font-size:12px; font-weight:bold; color:var(--text-sub); display:block; margin-bottom:5px;\">등록일 (선택 날짜 기준으로 정렬됩니다)</label>\n<input class=\"dash-input\" id=\"new-gal-date\" style=\"margin-bottom: 12px;\" type=\"date\"/>\n<select class=\"dash-input\" id=\"new-gal-category\">\n<option value=\"종합\">카테고리 (기본: 종합)</option>\n<option value=\"팀\">팀</option><option value=\"엔지니어\">엔지니어</option><option value=\"마케팅\">마케팅</option>\n<option value=\"회계\">회계</option><option value=\"전략\">전략</option><option value=\"홍보자료\">홍보자료</option>\n</select>\n<input accept=\"image/*\" class=\"dash-input\" id=\"new-gal-file\" style=\"background: white;\" type=\"file\"/>\n<button class=\"action-btn\" onclick=\"window.uploadGalleryImage()\" style=\"padding: 10px; background: #111;\">사진 업로드</button>\n</div>\n</div>\n</div>");
+    memberActions = document.getElementById('member-actions');
+  }
+
+  if (memberActions) {
+    memberActions.style.display = 'block';
+  }
+
+  let adminPanel = document.getElementById('admin-panel');
+
+  if (isAdmin && !adminPanel) {
+    area.insertAdjacentHTML('beforeend', "<div id=\"admin-panel\">\n<h3 style=\"margin-bottom:12px; font-weight:900;\">👑 관리자 패널</h3>\n<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">\n<button onclick=\"openSliderEditModal()\" style=\"padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">메인 슬라이더 편집</button>\n<button onclick=\"openSponsorAdminModal()\" style=\"padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">후원사 슬라이더 관리</button>\n<button onclick=\"openCareerAdminModal()\" style=\"padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">💼 경력 사항 관리</button>\n<button onclick=\"openRobotModal()\" style=\"padding:10px 20px; cursor:pointer; background:#111; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">🤖 로봇 소개 관리</button>\n<button onclick=\"openLogoAdminModal()\" style=\"padding:10px 20px; cursor:pointer; background:#1769e0; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">🏷️ 팀 로고 관리</button>\n<button id=\"toggle-edit-btn\" onclick=\"window.toggleEditMode()\" style=\"padding:10px 20px; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">📝 직접 텍스트 수정 켜기</button>\n<button id=\"team-account-admin-btn\"\n        onclick=\"window.openTeamAccountAdminModal()\"\n        style=\"padding:10px 20px; cursor:pointer; background:#2c91f9; color:white; border:none; border-radius:10px; font-weight:800; font-size:13px;\">\n    👥 팀원 계정·프로필 관리\n</button>\n</div>\n</div>");
+    adminPanel = document.getElementById('admin-panel');
+  }
+
+  if (adminPanel) {
+    adminPanel.style.display = isAdmin ? 'block' : 'none';
+  }
+};
+
+window.removeProtectedHomeUI = function() {
+  const memberActions = document.getElementById('member-actions');
+  const adminPanel = document.getElementById('admin-panel');
+
+  if (memberActions) memberActions.remove();
+  if (adminPanel) adminPanel.remove();
+};
+
 // ============================================================
 // Firebase Auth 비밀번호 변경
 // ============================================================
@@ -1042,15 +1081,7 @@ if (loginIdMap[normalizedLoginId]) {
       welcomeMsg.innerText = `${s} ${g} [${n}]`;
     }
 
-    const memberActions = document.getElementById('member-actions');
-    if (memberActions) {
-      memberActions.style.display = 'block';
-    }
-
-    const adminPanel = document.getElementById('admin-panel');
-    if (adminPanel && currentUserData?.role === 'admin') {
-      adminPanel.style.display = 'block';
-    }
+    window.ensureProtectedHomeUI(currentUserData?.role === 'admin');
 
     const loginBtn = document.getElementById('main-login-btn');
     if (loginBtn) {
@@ -1153,16 +1184,7 @@ async function restoreLoginSession() {
         `${currentUserData.school || ''} ${currentUserData.grade || ''} [${currentUserData.name || ''}]`;
     }
 
-    const memberActions = document.getElementById('member-actions');
-    if (memberActions) {
-      memberActions.style.display = 'block';
-    }
-
-    const adminPanel = document.getElementById('admin-panel');
-
-    if (adminPanel && currentUserData?.role === 'admin') {
-      adminPanel.style.display = 'block';
-    }
+    window.ensureProtectedHomeUI(currentUserData?.role === 'admin');
 
     const loginBtn = document.getElementById('main-login-btn');
 
@@ -1217,15 +1239,7 @@ currentUserId = null;
 currentUserData = null;
 window.isAdmin = false;
 
-const memberActions = document.getElementById('member-actions');
-if(memberActions) {
-    memberActions.style.display = 'none';
-}
-
-const adminPanel = document.getElementById('admin-panel');
-if(adminPanel) {
-    adminPanel.style.display = 'none';
-}
+window.removeProtectedHomeUI();
 
 const loginBtn = document.getElementById('main-login-btn');
 
