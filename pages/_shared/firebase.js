@@ -31,51 +31,47 @@ window.turtlessOpenDirectChat = async function (otherUserId) {
   }
 
   const myAuthUid = window.auth.currentUser.uid;
+  const myUserId = currentUserId;
 
-  const otherPrivateSnap = await getDoc(
-    doc(db, "usersPrivate", otherUserId)
+  // 상대방의 usersPrivate는 읽지 않는다.
+  // 공개 users 문서의 ID만 사용한다.
+  const otherPublicSnap = await getDoc(
+    doc(db, "users", otherUserId)
   );
 
-  if (!otherPrivateSnap.exists()) {
-    throw new Error("상대방 인증 정보를 찾을 수 없습니다.");
+  if (!otherPublicSnap.exists()) {
+    throw new Error("상대방 팀원 정보를 찾을 수 없습니다.");
   }
 
-  const otherAuthUid = otherPrivateSnap.data().authUid;
+  const otherPublicData = otherPublicSnap.data() || {};
 
-  if (!otherAuthUid) {
-    throw new Error("상대방 계정 정보를 확인할 수 없습니다.");
-  }
-
-  const members = [myAuthUid, otherAuthUid].sort();
-  const chatId = `direct_${members.join("_")}`;
+  // 사용자 ID 기준으로 정렬하여 항상 동일한 개인채팅 ID 생성
+  const memberUserIds = [myUserId, otherUserId].sort();
+  const chatId = `direct_${memberUserIds.join("_")}`;
 
   const chatRef = doc(db, "chats", chatId);
   const chatSnap = await getDoc(chatRef);
 
   if (!chatSnap.exists()) {
-    const otherPublicSnap = await getDoc(
-      doc(db, "users", otherUserId)
-    );
-
-    const otherPublicData = otherPublicSnap.exists()
-      ? otherPublicSnap.data()
-      : {};
-
     await setDoc(chatRef, {
       type: "direct",
       name: otherPublicData.name || "개인채팅",
-      memberUids: members,
+
+      memberUserIds: memberUserIds,
+
+      createdByUserId: myUserId,
       createdByAuthUid: myAuthUid,
+
       createdAt: Date.now()
     });
   }
 
   return {
     chatId,
-    otherUserId,
-    otherAuthUid
+    otherUserId
   };
 };
+
 
 window.turtlessListenChatMessages = function (chatId, callback) {
   if (!chatId || !window.auth?.currentUser) {
@@ -111,6 +107,7 @@ window.turtlessListenChatMessages = function (chatId, callback) {
   );
 };
 
+
 window.turtlessSendChatMessage = async function (chatId, text) {
   if (!chatId || !window.auth?.currentUser) {
     throw new Error("로그인이 필요합니다.");
@@ -130,18 +127,24 @@ window.turtlessSendChatMessage = async function (chatId, text) {
     throw new Error("현재 사용자 정보를 확인할 수 없습니다.");
   }
 
+  const authUid = window.auth.currentUser.uid;
+
   await addDoc(
     collection(db, "chats", chatId, "messages"),
     {
-      senderAuthUid: window.auth.currentUser.uid,
-      senderId: currentUserId,
+      senderUserId: currentUserId,
+      senderAuthUid: authUid,
       senderName: currentUserData.name,
+
       text: cleanText,
+
       timestamp: Date.now(),
-      readBy: [window.auth.currentUser.uid]
+
+      readBy: [authUid]
     }
   );
 };
+
 
 window.turtlessGetPublicMembers = async function () {
   const snap = await getDocs(collection(db, "users"));
