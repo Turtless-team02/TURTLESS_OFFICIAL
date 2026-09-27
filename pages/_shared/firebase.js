@@ -764,6 +764,12 @@ function loadYoutubeFallback() {
 
 // --- Firebase Authentication 계정 전환 ---
 function getAuthEmail(userId, userData = currentUserData) {
+  // 1순위: Firestore에 저장된 실제 Auth 이메일
+  if (userData?.authEmail) {
+    return userData.authEmail;
+  }
+
+  // 기존에 이미 사용 중인 이메일 매핑은 호환용으로 유지
   const emailMap = {
     "박우영": "parkwooyoung02@turtless.com",
     "장혜나": "janghyena02@turtless.com",
@@ -783,32 +789,70 @@ function getAuthEmail(userId, userData = currentUserData) {
     "최원정": "choiwonjeong02@turtless.com",
     "천강숙": "cheongangsuk02@turtless.com",
     "홍우진": "hongwoojin02@turtless.com",
-    "채준현": "chaejunhyun02@turtless.com"
+    "채준현": "giea7ms7o2swbbdlmebz@turtless-web.firebaseapp.com"
   };
-
-  if (userData?.authEmail) {
-    return userData.authEmail;
-  }
 
   if (userData?.name && emailMap[userData.name]) {
     return emailMap[userData.name];
   }
 
-  return `${userId}@turtless-web.firebaseapp.com`;
+  /*
+   * 아직 Auth로 전환되지 않은 회원은
+   * Firestore 문서 ID 기반의 고유 이메일을 사용한다.
+   *
+   * 임의의 이름 이메일을 만들지 않기 때문에
+   * 영문 이름 표기 오류나 중복 문제가 없다.
+   */
+  if (userId) {
+    return `member-${userId}@turtless-web.firebaseapp.com`;
+  }
+
+  return null;
 }
 
 async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
   if (!window.auth || !userId || !userData) return false;
 
-  const authEmail = getAuthEmail(userId);
+  const authEmail = getAuthEmail(userId, userData);
 
-  // 이미 Auth UID가 연결되어 있으면 그대로 사용
+  if (!authEmail) {
+    alert(
+      "Firebase 계정 이메일을 확인할 수 없습니다.\\n" +
+      "관리자에게 문의해주세요."
+    );
+    return false;
+  }
+
+  // 이미 Auth UID가 연결된 회원
   if (userData.authUid) {
     try {
-      await signInWithEmailAndPassword(window.auth, authEmail, oldPassword);
+      await signInWithEmailAndPassword(
+        window.auth,
+        authEmail,
+        oldPassword
+      );
+
+      // authEmail이 아직 없던 기존 회원도 보완
+      if (userData.authEmail !== authEmail) {
+        await updateDoc(doc(db, "users", userId), {
+          authEmail
+        });
+
+        currentUserData = {
+          ...currentUserData,
+          authEmail
+        };
+      }
+
       return true;
-    } catch (e) {
-      console.warn("[TURTLESS] 기존 Auth 로그인 실패:", e.code);
+
+    } catch (error) {
+      console.warn(
+        "[TURTLESS] 기존 Auth 로그인 실패:",
+        error.code
+      );
+
+      alert("비밀번호가 올바르지 않습니다.");
       return false;
     }
   }
@@ -816,14 +860,14 @@ async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
   let authPassword = oldPassword;
   let passwordChanged = false;
 
-  // Firebase Auth 최소 6자 정책 때문에 4~5자리만 새 비밀번호 설정
+  // Firebase Auth는 최소 6자 비밀번호 필요
   if (oldPassword.length < 6) {
     const newPassword = prompt(
-      "보안 전환이 필요합니다.\n새 비밀번호를 6자 이상으로 설정해주세요."
+      "보안 전환이 필요합니다.\\n새 비밀번호를 6자 이상으로 설정해주세요."
     );
 
     if (newPassword === null) {
-      alert("보안 전환을 취소했습니다. 기존 방식으로 로그인합니다.");
+      alert("보안 전환을 취소했습니다.");
       return false;
     }
 
@@ -832,7 +876,9 @@ async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
       return false;
     }
 
-    const confirmPassword = prompt("새 비밀번호를 한 번 더 입력해주세요.");
+    const confirmPassword = prompt(
+      "새 비밀번호를 한 번 더 입력해주세요."
+    );
 
     if (confirmPassword !== newPassword) {
       alert("비밀번호가 일치하지 않습니다.");
@@ -854,16 +900,19 @@ async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
 
     const updateData = {
       authUid,
+      authEmail,
       authMigrated: true,
       authMigratedAt: Date.now()
     };
 
-    // 4~5자리 사용자는 새 비밀번호를 임시로 기존 pass에도 반영
     if (passwordChanged) {
       updateData.pass = authPassword;
     }
 
-    await updateDoc(doc(db, "users", userId), updateData);
+    await updateDoc(
+      doc(db, "users", userId),
+      updateData
+    );
 
     currentUserData = {
       ...userData,
@@ -879,43 +928,36 @@ async function migrateUserToFirebaseAuth(userId, userData, oldPassword) {
     return true;
 
   } catch (error) {
-    // 이미 같은 Auth 계정이 존재하는 경우
+
+    /*
+     * 이미 존재하는 이메일이라고 해서
+     * 다른 Auth 계정을 자동으로 가져오지 않는다.
+     */
     if (error.code === "auth/email-already-in-use") {
-      try {
-        const credential = await signInWithEmailAndPassword(
-          window.auth,
-          authEmail,
-          authPassword
-        );
+      console.warn(
+        "[TURTLESS] 이미 존재하는 Auth 이메일:",
+        authEmail
+      );
 
-        await updateDoc(doc(db, "users", userId), {
-          authUid: credential.user.uid,
-          authMigrated: true,
-          authMigratedAt: Date.now(),
-          ...(passwordChanged ? { pass: authPassword } : {})
-        });
+      alert(
+        "이 Firebase 계정은 이미 존재합니다.\\n\\n" +
+        "기존 계정과 자동으로 연결하지 않았습니다.\\n" +
+        "관리자 확인이 필요합니다."
+      );
 
-        currentUserData = {
-          ...userData,
-          authUid: credential.user.uid,
-          authMigrated: true,
-          ...(passwordChanged ? { pass: authPassword } : {})
-        };
-
-        return true;
-      } catch (signInError) {
-        console.error("[TURTLESS] 기존 Auth 계정 연결 실패:", signInError);
-        alert(
-          "Firebase 계정 연결에 실패했습니다.\n\n" +
-          "오류 코드: " + (signInError?.code || "없음") + "\n" +
-          "오류 내용: " + (signInError?.message || "없음")
-        );
-        return false;
-      }
+      return false;
     }
 
-    console.error("[TURTLESS] Auth 계정 생성 실패:", error);
-    alert("보안 전환에 실패했습니다. 기존 로그인은 유지됩니다.");
+    console.error(
+      "[TURTLESS] Auth 계정 생성 실패:",
+      error
+    );
+
+    alert(
+      "Firebase 계정 생성에 실패했습니다.\\n\\n" +
+      "오류 코드: " + (error?.code || "없음")
+    );
+
     return false;
   }
 }
