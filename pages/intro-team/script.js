@@ -149,8 +149,6 @@
     window.addEventListener('resize',run,{passive:true});
     document.addEventListener('input',e=>{if(e.target.closest('#page-intro_team'))run()});
     document.addEventListener('keyup',e=>{if(e.target.closest('#page-intro_team'))run()});
-    const track=document.getElementById('team-notebook-pages');
-    if(track&&window.ResizeObserver){const ro=new ResizeObserver(run);track.querySelectorAll('.editable-content').forEach(el=>ro.observe(el));}
     setTimeout(run,100);setTimeout(run,500);setTimeout(run,1200);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
