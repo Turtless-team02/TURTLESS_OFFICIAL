@@ -9,6 +9,7 @@
     track.dataset.ready='1';
     const pages=[...track.querySelectorAll('.team-note-page')];
     let index=0, startX=0, deltaX=0, dragging=false, animating=false;
+    let resizeLocked=false;
 
     function render(animate=true, direction=0){
       pages.forEach((page,i)=>{
@@ -59,6 +60,7 @@
       if(nextIndex===index)return;
       const direction=(nextIndex>index || (index===pages.length-1 && nextIndex===0))?1:-1;
       animating=true;
+      resizeLocked=true;
       index=nextIndex;
       render(true,direction);
       window.setTimeout(()=>{animating=false;render(false,0)},760);
