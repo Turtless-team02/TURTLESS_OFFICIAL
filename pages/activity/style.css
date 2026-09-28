@@ -616,3 +616,11 @@
     gap: 8px;
   }
 }
+
+/* 주요 활동 제목의 영문 폰트 span 테두리 제거 */
+#page-activity .act-list-item .turtless-english-text {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
