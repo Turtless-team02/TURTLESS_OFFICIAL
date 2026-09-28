@@ -20,12 +20,12 @@
 
         if(i===index){
           page.classList.add('is-current');
-          page.style.transform='translate3d(0,0,0) rotateZ(0deg)';
+          page.style.setProperty('transform','translate3d(0,0,0) rotateZ(0deg)','important');
           page.style.opacity='1';
           page.style.zIndex='6';
         }else if(i<index){
           page.classList.add('is-before');
-          page.style.transform='translate3d(-6px,6px,0) rotateZ(-0.6deg)';
+          page.style.setProperty('transform','translate3d(-6px,6px,0) rotateZ(-0.6deg)','important');
           page.style.opacity='1';
           page.style.zIndex=String(3+i);
         }else{
@@ -33,7 +33,7 @@
           const offset=(i-index)*8;
           const y=(i-index)*5.5;
           const r=(i-index)*0.45;
-          page.style.transform='translate3d('+offset+'px,'+y+'px,0) rotateZ('+r+'deg)';
+          page.style.setProperty('transform','translate3d('+offset+'px,'+y+'px,0) rotateZ('+r+'deg)','important');
           page.style.opacity='1';
           page.style.zIndex=String(5-i);
         }
