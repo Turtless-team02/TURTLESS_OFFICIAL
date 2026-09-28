@@ -101,35 +101,7 @@
 
 
 
-(function(){
-  function initNotebookHeight(){
-    const track=document.getElementById('team-notebook-pages');
-    if(!track) return;
-    const pages=[...track.querySelectorAll('.team-note-page')];
-    const current=pages.find(p=>p.classList.contains('is-current')) || pages[0];
-    if(!current) return;
-    const h=Math.max(660,current.scrollHeight+8);
-    track.style.height=h+'px';
-  }
-  function bind(){
-    const track=document.getElementById('team-notebook-pages');
-    if(!track || track.dataset.heightBound==='1') return;
-    track.dataset.heightBound='1';
-    const resize=()=>window.requestAnimationFrame(initNotebookHeight);
-    window.addEventListener('resize',resize,{passive:true});
-    const ro=window.ResizeObserver ? new ResizeObserver(resize) : null;
-    if(ro) track.querySelectorAll('.team-note-page').forEach(p=>ro.observe(p));
-    track.querySelectorAll('.editable-content').forEach(el=>{
-      el.addEventListener('input',resize);
-      el.addEventListener('keyup',resize);
-    });
-    setTimeout(resize,80);
-    setTimeout(resize,400);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind);
-  else bind();
-  window.updateTurtlessNotebookHeight=initNotebookHeight;
-})();
+
 
 
 
