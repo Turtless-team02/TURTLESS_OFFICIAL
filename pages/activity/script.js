@@ -259,56 +259,14 @@
 
 
     /*
-      4번 이후 활동을 담는 별도 자동 그리드.
-      활동 개수가 늘어나도 JS/CSS를 다시 수정할 필요가 없다.
+      act-list-item을 그대로 이동한다.
+      Firebase 데이터나 id는 건드리지 않는다.
     */
 
-    let secondary = collage.querySelector(
-      ':scope > .activity-secondary-grid'
-    );
+    items.forEach(function (item) {
 
-    if (!secondary) {
-
-      secondary = document.createElement('div');
-
-      secondary.className = 'activity-secondary-grid';
-
-      collage.appendChild(secondary);
-
-    }
-
-
-    /*
-      Firebase가 다시 로드되었을 때
-      기존 활동을 다시 정리한다.
-    */
-
-    items.forEach(function (item, index) {
-
-      /*
-        첫 번째 최신 활동
-        두 번째 / 세 번째 활동
-        → collage 직접 자식
-      */
-
-      if (index < 3) {
-
-        if (item.parentElement !== collage) {
-          collage.appendChild(item);
-        }
-
-      }
-
-      /*
-        네 번째부터는 전부 secondary grid
-      */
-
-      else {
-
-        if (item.parentElement !== secondary) {
-          secondary.appendChild(item);
-        }
-
+      if (item.parentElement !== collage) {
+        collage.appendChild(item);
       }
 
     });
