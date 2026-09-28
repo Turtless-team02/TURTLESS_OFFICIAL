@@ -430,3 +430,102 @@
     line-height: 1.55 !important;
   }
 }
+
+/* =========================================================
+   TURTLESS MOBILE FINAL V23
+   팀소개 노트 모바일 페이지 전환 안정화
+   PC / TABLET 영향 없음
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  #page-intro_team {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+  }
+
+  #page-intro_team .team-notebook {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 18px !important;
+    padding-right: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  #page-intro_team .team-notebook-pages {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    contain: layout paint !important;
+  }
+
+  #page-intro_team .team-notebook-pages .team-note-page {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    box-sizing: border-box !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+  }
+
+  /* 모바일에서는 페이지 내용이 넘치면서 부모 높이가 흔들리지 않도록 */
+  #page-intro_team .team-note-cover,
+  #page-intro_team .team-note-writing,
+  #page-intro_team .team-note-colors {
+    min-height: 600px !important;
+    height: 600px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 페이지 내부 콘텐츠가 높이를 다시 밀어내지 않도록 */
+  #page-intro_team .team-note-writing-content {
+    max-height: 350px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  #page-intro_team .team-color-history {
+    max-height: 390px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 페이지 넘김 중 브라우저의 스크롤/리플로우 개입 방지 */
+  #page-intro_team .team-notebook-pages,
+  #page-intro_team .team-notebook-pages .team-note-page {
+    touch-action: pan-y !important;
+  }
+
+  #page-intro_team .team-notebook-controls {
+    position: relative !important;
+    z-index: 30 !important;
+    transform: translateZ(0) !important;
+  }
+}
+
+@media (max-width: 520px) {
+
+  #page-intro_team .team-note-cover,
+  #page-intro_team .team-note-writing,
+  #page-intro_team .team-note-colors {
+    min-height: 600px !important;
+    height: 600px !important;
+  }
+
+  #page-intro_team .team-note-writing-content {
+    max-height: 340px !important;
+  }
+
+  #page-intro_team .team-color-history {
+    max-height: 375px !important;
+  }
+}
