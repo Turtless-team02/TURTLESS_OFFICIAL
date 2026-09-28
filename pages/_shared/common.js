@@ -604,7 +604,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+  function applyHanjaFont(root) {
+
+    if (!root || !root.ownerDocument) return;
+
+    const doc = root.ownerDocument;
+
+    const hanjaRegex = /[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/g;
+
+    const walker = doc.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+
+          const parent = node.parentElement;
+
+          if (!parent) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          if (
+            parent.closest('.turtless-hanja') ||
+            parent.closest('SCRIPT, STYLE, NOSCRIPT, TEXTAREA, INPUT, SELECT, OPTION, CODE, PRE, SVG')
+          ) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          hanjaRegex.lastIndex = 0;
+
+          return hanjaRegex.test(node.nodeValue)
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT;
+        }
+      }
+    );
+
+    const nodes = [];
+
+    let node;
+
+    while ((node = walker.nextNode())) {
+      nodes.push(node);
+    }
+
+    nodes.forEach(textNode => {
+
+      const text = textNode.nodeValue;
+
+      hanjaRegex.lastIndex = 0;
+
+      if (!hanjaRegex.test(text)) return;
+
+      hanjaRegex.lastIndex = 0;
+
+      const fragment = doc.createDocumentFragment();
+
+      let lastIndex = 0;
+      let match;
+
+      while ((match = hanjaRegex.exec(text)) !== null) {
+
+        if (match.index > lastIndex) {
+          fragment.appendChild(
+            doc.createTextNode(
+              text.slice(lastIndex, match.index)
+            )
+          );
+        }
+
+        const span = doc.createElement('span');
+
+        span.className = 'turtless-hanja';
+
+        span.textContent = match[0];
+
+        fragment.appendChild(span);
+
+        lastIndex = match.index + match[0].length;
+      }
+
+      if (lastIndex < text.length) {
+        fragment.appendChild(
+          doc.createTextNode(text.slice(lastIndex))
+        );
+      }
+
+      textNode.parentNode.replaceChild(fragment, textNode);
+
+    });
+
+  }
+
   function checkLanguageFont() {
+
+    // 한자는 CJK 기본 폰트 사용
+    applyHanjaFont(document.body);
 
     // 언어 선택과 관계없이 영문은 항상 Ethnocentric
     applyEnglishFont(document.body);
@@ -629,6 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     fontTimer = setTimeout(() => {
+      applyHanjaFont(document.body);
       applyEnglishFont(document.body);
     }, 100);
 
