@@ -178,8 +178,8 @@
 }
 
 #page-activity .activity-collage .act-list-item:nth-child(6) {
-  grid-column: 3 / span 3;
-  grid-row: span 4;
+  grid-column: 5 / span 4;
+  grid-row: 5 / span 5;
 }
 
 #page-activity .activity-collage .act-list-item:nth-child(7) {

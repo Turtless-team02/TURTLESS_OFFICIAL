@@ -1375,3 +1375,15 @@ footer * {
   color:#999!important;
   -webkit-text-fill-color:#999!important;
 }
+
+/* =========================================================
+   LANGUAGE SELECT - FOCUS BLUE BORDER FIX
+   ========================================================= */
+
+.turtless-footer .lang-select:focus,
+.turtless-footer .lang-select:focus-visible,
+.turtless-footer .lang-select:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
