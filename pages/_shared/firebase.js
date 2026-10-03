@@ -1113,7 +1113,12 @@ function getAuthEmail(userId, userData = currentUserData) {
     "이희담": "leeheedam02@turtless.com",
     "강석주": "gangseokju02@turtless.com",
     "김기율": "kimgiyul02@turtless.com",
-    "김도윤": "kimdoyun02@turtless.com"
+    "김도윤": "kimdoyun02@turtless.com",
+    "손동환": "sondonghwan02@turtless.com",
+    "우태윤": "wootaeyoon02@turtless.com",
+    "최승이": "choeseungyi02@turtless.com",
+    "최희립": "choeheerim02@turtless.com",
+    "한지우": "hanjiwoo02@turtless.com"
   };
 
   if (userData?.name && emailMap[userData.name]) {
@@ -1304,7 +1309,12 @@ const loginIdMap = {
     "leeheedam02": "이희담",
     "gangseokju02": "강석주",
     "kimgiyul02": "김기율",
-    "kimdoyun02": "김도윤"
+    "kimdoyun02": "김도윤",
+    "sondonghwan02": "손동환",
+    "wootaeyoon02": "우태윤",
+    "choeseungyi02": "최승이",
+    "choeheerim02": "최희립",
+    "hanjiwoo02": "한지우"
 };
 
 const normalizedLoginId = loginInput
