@@ -238,9 +238,10 @@
 </div>
 </div>
 <div class="dropdown">
-<a class="drop-btn" onclick="toggleDrop('engineering-dropdown')">엔지니어링</a>
+<a class="drop-btn" onclick="toggleDrop('engineering-dropdown')">엔지니어링 노트</a>
 <div class="dropdown-content" id="engineering-dropdown">
-<a href="../engineering/">엔지니어링 노트</a>
+<a href="../engineering/#frc">2026 FRC</a>
+<a href="../engineering/#ssrc">2026 SSRC</a>
 </div>
 </div>
 <div class="dropdown">
@@ -258,7 +259,20 @@
 <section class="subpage" id="engineering_note" style="min-height: 750px; padding: 40px 0;">
 <div class="inner">
 <h2 class="subpage-title" style="color: #333333 !important; margin-bottom: 20px;">엔지니어링 노트</h2>
-<div class="content-card" style="display: block !important; width: 100%; min-height: 620px; background: #ffffff; border-radius: 8px; padding: 15px; box-sizing: border-box; border: 1px solid #e1e4e8;">
+<div style="display:flex; border-bottom:1px solid #e1e4e8; margin-bottom:20px;">
+<button id="engineering-tab-frc"
+onclick="showEngineeringTab('frc')"
+style="flex:1; padding:14px 20px; border:0; border-bottom:3px solid #0969da; background:#fff; color:#0969da; font-weight:800; cursor:pointer;">
+2026 FRC
+</button>
+<button id="engineering-tab-ssrc"
+onclick="showEngineeringTab('ssrc')"
+style="flex:1; padding:14px 20px; border:0; border-bottom:3px solid transparent; background:#fff; color:#777; font-weight:800; cursor:pointer;">
+2026 SSRC
+</button>
+</div>
+
+<div id="engineering-content-frc"><div class="content-card" style="display: block !important; width: 100%; min-height: 620px; background: #ffffff; border-radius: 8px; padding: 15px; box-sizing: border-box; border: 1px solid #e1e4e8;">
 <div id="mhtml-viewer" style="width: 100%; height: 550px; overflow: auto; border: 1px solid #e1e4e8; border-radius: 6px; background: #ffffff; color: #333333;">
 <p style="padding: 20px; color: #666666;">엔지니어링 노트를 불러오는 중입니다...</p>
 </div>
@@ -267,8 +281,52 @@
 </div>
 </div>
 </div>
+
+<div id="engineering-content-ssrc" style="display:none; padding:40px 20px; text-align:center;">
+<h3 style="margin:0 0 12px; color:#222;">2026 SSRC Engineering Notebook</h3>
+<p style="margin:0 0 24px; color:#666; line-height:1.7;">
+2026 SSRC의 설계, 제작, 테스트 및 개선 기록을 확인할 수 있습니다.
+</p>
+<a href="https://github.com/Turtless-team02/TURTLESS_Engineering_Notebook/tree/main/2026/SSRC"
+target="_blank"
+rel="noopener noreferrer"
+style="display:inline-block; padding:12px 22px; border-radius:7px; background:#0969da; color:#fff; text-decoration:none; font-weight:800;">
+GitHub에서 2026 SSRC 기록 보기 →
+</a>
+</div>
+
+</div>
 </section>
 </main>
+
+<script>
+function showEngineeringTab(tab) {
+  const frc = document.getElementById('engineering-content-frc');
+  const ssrc = document.getElementById('engineering-content-ssrc');
+  const frcBtn = document.getElementById('engineering-tab-frc');
+  const ssrcBtn = document.getElementById('engineering-tab-ssrc');
+
+  if (tab === 'frc') {
+    frc.style.display = 'block';
+    ssrc.style.display = 'none';
+    frcBtn.style.borderBottomColor = '#0969da';
+    frcBtn.style.color = '#0969da';
+    ssrcBtn.style.borderBottomColor = 'transparent';
+    ssrcBtn.style.color = '#777';
+  } else {
+    frc.style.display = 'none';
+    ssrc.style.display = 'block';
+    frcBtn.style.borderBottomColor = 'transparent';
+    frcBtn.style.color = '#777';
+    ssrcBtn.style.borderBottomColor = '#0969da';
+    ssrcBtn.style.color = '#0969da';
+  }
+}
+
+if (location.hash === '#ssrc') {
+  setTimeout(() => showEngineeringTab('ssrc'), 0);
+}
+</script>
 <footer class="turtless-footer" style="position:relative;">
 <div class="turtless-footer-inner">
 <div class="turtless-footer-main">
