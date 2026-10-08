@@ -282,17 +282,14 @@ style="flex:1; padding:14px 20px; border:0; border-bottom:3px solid transparent;
 </div>
 </div>
 
-<div id="engineering-content-ssrc" style="display:none; padding:40px 20px; text-align:center;">
-<h3 style="margin:0 0 12px; color:#222;">2026 SSRC Engineering Notebook</h3>
-<p style="margin:0 0 24px; color:#666; line-height:1.7;">
-2026 SSRC의 설계, 제작, 테스트 및 개선 기록을 확인할 수 있습니다.
-</p>
-<a href="https://github.com/Turtless-team02/TURTLESS_Engineering_Notebook/tree/main/2026/SSRC"
-target="_blank"
-rel="noopener noreferrer"
-style="display:inline-block; padding:12px 22px; border-radius:7px; background:#0969da; color:#fff; text-decoration:none; font-weight:800;">
-GitHub에서 2026 SSRC 기록 보기 →
-</a>
+<div id="engineering-content-ssrc" style="display:none;">
+<div id="ssrc-note-list" style="width:100%;">
+
+<div style="padding:30px 20px; text-align:center; color:#777;">
+SSRC 엔지니어링 노트를 불러오는 중입니다...
+</div>
+
+</div>
 </div>
 
 </div>
@@ -326,6 +323,120 @@ function showEngineeringTab(tab) {
 if (location.hash === '#ssrc') {
   setTimeout(() => showEngineeringTab('ssrc'), 0);
 }
+
+async function loadSSRCNotes() {
+  const list = document.getElementById('ssrc-note-list');
+  if (!list) return;
+
+  const apiUrl =
+    'https://api.github.com/repos/Turtless-team02/TURTLESS_Engineering_Notebook/contents/2026/SSRC';
+
+  try {
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error('GitHub API 오류: ' + response.status);
+    }
+
+    const files = await response.json();
+
+    const notes = files
+      .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.md'))
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+    if (notes.length === 0) {
+      list.innerHTML = `
+        <div style="padding:40px 20px; text-align:center; color:#777;">
+          아직 등록된 SSRC 엔지니어링 노트가 없습니다.
+        </div>
+      `;
+      return;
+    }
+
+    const noteData = await Promise.all(
+      notes.map(async (file, index) => {
+        let date = '';
+
+        try {
+          const rawResponse = await fetch(file.download_url);
+          const markdown = await rawResponse.text();
+
+          const dateMatch = markdown.match(
+            /^Date:\s*(\d{4}-\d{2}-\d{2})/mi
+          );
+
+          if (dateMatch) {
+            date = dateMatch[1].replaceAll('-', '.');
+          }
+        } catch (e) {
+          console.warn('날짜를 읽을 수 없습니다:', file.name);
+        }
+
+        return {
+          week: index + 1,
+          date: date || '날짜 미입력',
+          url: file.html_url
+        };
+      })
+    );
+
+    list.innerHTML = noteData.map(note => `
+      <a href="${note.url}"
+         target="_blank"
+         rel="noopener noreferrer"
+         style="
+           display:flex;
+           align-items:center;
+           justify-content:space-between;
+           gap:20px;
+           width:100%;
+           box-sizing:border-box;
+           padding:22px 24px;
+           border-bottom:1px solid #e1e4e8;
+           background:#fff;
+           color:#222;
+           text-decoration:none;
+           transition:background .15s ease;
+         "
+         onmouseover="this.style.background='#f6f8fa'"
+         onmouseout="this.style.background='#fff'">
+
+        <span style="
+          font-size:16px;
+          font-weight:800;
+          text-align:left;
+        ">
+          ${note.week}주차 엔지니어링 노트
+        </span>
+
+        <span style="
+          flex-shrink:0;
+          font-size:14px;
+          color:#777;
+          font-weight:600;
+        ">
+          ${note.date}
+        </span>
+
+      </a>
+    `).join('');
+
+  } catch (error) {
+    console.error(error);
+
+    list.innerHTML = `
+      <div style="
+        padding:40px 20px;
+        text-align:center;
+        color:#777;
+      ">
+        SSRC 엔지니어링 노트를 불러오지 못했습니다.
+      </div>
+    `;
+  }
+}
+
+loadSSRCNotes();
 </script>
 <footer class="turtless-footer" style="position:relative;">
 <div class="turtless-footer-inner">
