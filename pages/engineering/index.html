@@ -355,7 +355,7 @@ async function loadSSRCNotes() {
             if (titleMatch) title = titleMatch[1].trim();
 
             // 노트 작성 시 입력한 날짜 사용
-            const dateMatch = markdown.match(/^Date:\s*(\d{4}-\d{2}-\d{2})\s*$/mi);
+            const dateMatch = markdown.match(/(\d{4}-\d{2}-\d{2})/);
             if (dateMatch) date = dateMatch[1];
           } catch (error) {
             console.warn('노트 정보 읽기 실패:', file.name, error);
