@@ -333,108 +333,80 @@ async function loadSSRCNotes() {
 
   try {
     const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error('GitHub API 오류: ' + response.status);
-    }
+    if (!response.ok) throw new Error('GitHub API 오류: ' + response.status);
 
     const files = await response.json();
 
-    const notes = files
-      .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.md'))
-      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+    const notes = await Promise.all(
+      files
+        .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.md'))
+        .map(async file => {
+          let title = file.name.replace(/\.md$/i, '');
+          let date = '';
+
+          try {
+            const res = await fetch(file.download_url);
+            if (!res.ok) throw new Error('Markdown 파일 읽기 실패');
+
+            const markdown = await res.text();
+
+            // Markdown 첫 번째 제목 사용
+            const titleMatch = markdown.match(/^#\s+(.+)$/m);
+            if (titleMatch) title = titleMatch[1].trim();
+
+            // 노트 작성 시 입력한 날짜 사용
+            const dateMatch = markdown.match(/^Date:\s*(\d{4}-\d{2}-\d{2})\s*$/mi);
+            if (dateMatch) date = dateMatch[1];
+          } catch (error) {
+            console.warn('노트 정보 읽기 실패:', file.name, error);
+          }
+
+          return { title, date, url: file.html_url };
+        })
+    );
+
+    // 날짜 최신순 정렬
+    notes.sort((a, b) => {
+      if (!a.date) return b.date ? 1 : 0;
+      if (!b.date) return -1;
+      return b.date.localeCompare(a.date);
+    });
 
     if (notes.length === 0) {
-      list.innerHTML = `
-        <div style="padding:40px 20px; text-align:center; color:#777;">
-          아직 등록된 SSRC 엔지니어링 노트가 없습니다.
-        </div>
-      `;
+      list.innerHTML = '<div style="padding:40px;text-align:center;color:#777;">등록된 SSRC 엔지니어링 노트가 없습니다.</div>';
       return;
     }
 
-    const noteData = await Promise.all(
-      notes.map(async (file, index) => {
-        let date = '';
-
-        try {
-          const rawResponse = await fetch(file.download_url);
-          const markdown = await rawResponse.text();
-
-          const dateMatch = markdown.match(
-            /^Date:\s*(\d{4}-\d{2}-\d{2})/mi
-          );
-
-          if (dateMatch) {
-            date = dateMatch[1].replaceAll('-', '.');
-          }
-        } catch (e) {
-          console.warn('날짜를 읽을 수 없습니다:', file.name);
-        }
-
-        return {
-          week: index + 1,
-          date: date || '날짜 미입력',
-          url: file.html_url
-        };
-      })
-    );
-
-    list.innerHTML = noteData.map(note => `
-      <a href="${note.url}"
-         target="_blank"
-         rel="noopener noreferrer"
-         style="
-           display:flex;
-           align-items:center;
-           justify-content:space-between;
-           gap:20px;
-           width:100%;
-           box-sizing:border-box;
-           padding:22px 24px;
-           border-bottom:1px solid #e1e4e8;
-           background:#fff;
-           color:#222;
-           text-decoration:none;
-           transition:background .15s ease;
-         "
+    list.innerHTML = notes.map(note => `
+      <a href="${note.url}" target="_blank" rel="noopener noreferrer"
+         style="display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;box-sizing:border-box;padding:22px 24px;border-bottom:1px solid #e1e4e8;background:#fff;color:#222;text-decoration:none;transition:background .15s ease;"
          onmouseover="this.style.background='#f6f8fa'"
          onmouseout="this.style.background='#fff'">
-
-        <span style="
-          font-size:16px;
-          font-weight:800;
-          text-align:left;
-        ">
-          ${note.week}주차 엔지니어링 노트
+        <span style="font-size:16px;font-weight:800;text-align:left;">
+          ${escapeHTML(note.title)}
         </span>
-
-        <span style="
-          flex-shrink:0;
-          font-size:14px;
-          color:#777;
-          font-weight:600;
-        ">
-          ${note.date}
+        <span style="flex-shrink:0;font-size:14px;color:#777;font-weight:600;">
+          ${note.date ? note.date.replaceAll('-', '.') : '날짜 미입력'}
         </span>
-
       </a>
     `).join('');
 
   } catch (error) {
     console.error(error);
-
-    list.innerHTML = `
-      <div style="
-        padding:40px 20px;
-        text-align:center;
-        color:#777;
-      ">
-        SSRC 엔지니어링 노트를 불러오지 못했습니다.
-      </div>
-    `;
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:#777;">SSRC 엔지니어링 노트를 불러오지 못했습니다.</div>';
   }
 }
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
 
 loadSSRCNotes();
 </script>
