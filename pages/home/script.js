@@ -69,7 +69,7 @@
 
 
 (function(){
-  const TARGET_DATE='2026-10-24T00:00:00+09:00';
+  const TARGET_DATE='2026-10-24T09:30:00+09:00';
   let initialized=false;
   function setDigit(id,next,animate){
     const card=document.getElementById(id);
