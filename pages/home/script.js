@@ -1,6 +1,6 @@
 
 (function(){
-  const TARGET_DATE = '2026-10-24T00:00:00+09:00'; // 공식 정확한 대회일 확정 시 이 한 줄만 변경
+  const TARGET_DATE = '2026-10-24T09:30:00+09:00'; 
   const target = new Date(TARGET_DATE);
 
   function makeHomeEnhancements(){
