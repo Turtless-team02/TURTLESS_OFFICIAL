@@ -223,18 +223,22 @@ async function loadRobotSlides() {
     });
 
 
-    /* 시즌 기준 정렬 */
+    /* 시즌 기준 정렬: 최신 연도 우선, 같은 연도는 SSRC 우선 */
+robotSlidesData.sort((a, b) => {
+  const yearA = parseInt(a.season.match(/\d{4}/)?.[0] || '0');
+  const yearB = parseInt(b.season.match(/\d{4}/)?.[0] || '0');
 
-    robotSlidesData.sort((a, b) => {
+  // 1순위: 연도 내림차순
+  if (yearA !== yearB) {
+    return yearB - yearA;
+  }
 
-      const yearA =
-        parseInt(a.season.match(/\d{4}/)?.[0] || '0');
+  // 2순위: 같은 연도에서는 SSRC 우선
+  const priorityA = /SSRC/i.test(a.season) ? 0 : 1;
+  const priorityB = /SSRC/i.test(b.season) ? 0 : 1;
 
-      const yearB =
-        parseInt(b.season.match(/\d{4}/)?.[0] || '0');
-
-      return yearB - yearA;
-    });
+  return priorityA - priorityB;
+});
 
 
     /* 등록된 로봇이 없을 때 */
